@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent" >
+
+    <LinearLayout
+        android:id="@+id/view_shared_refreshloadmorelistview_footer"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal" >
+
+        <ProgressBar
+            android:id="@+id/view_shared_refreshloadmoreview_progressbar"
+            style="@drawable/view_shared_refreshloadmoreview_loading"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginRight="3dp" />
+
+        <TextView
+            android:id="@+id/view_shared_refreshloadmoreview_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="loading..."
+            android:textColor="@color/refresh_loadmore_listview_footer_font_color"
+            android:textIsSelectable="false"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+</LinearLayout>

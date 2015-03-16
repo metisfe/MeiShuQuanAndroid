@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="yellow">#FFFF88</color>
+    <color name="darkgray">#5B5B5B</color>
+    <color name="ltgray">#D3D3D3</color>
+    <color name="lightergray">#F0F0F0</color>
+    <color name="gray">#D0D0D0</color>
+    <color name="blue">#3366CD</color>
+    <color name="green">#00FF00</color>
+    <color name="red">#FF0000</color>
+    <color name="text_red">#FD463E</color>
+    <color name="text_gray">#848484</color>
+    <color name="transparent">#00000000</color>
+    <color name="title_bar_bg">#FFdd5900</color>
+    <color name="btn_background">#FD463E</color>
+    <color name="btn_background_disabled">#C93730</color>
+    <color name="btn_gray">#5B5B5B</color>
+    <color name="background_gray">#efeee2</color>
+    <color name="mypurple">#E00084</color>
+    <color name="category_grid_bg_1">#FF995900</color>
+    <color name="category_grid_bg_2">#FFcc5900</color>
+    <color name="category_grid_bg_3">#FFFF5900</color>
+    <color name="bg_color">#FFE7E7E7</color>
+    <color name="link_color">#0072C5</color>
+    <color name="half_transparent">#66000000</color>
+    <color name="dialog_bg">#66000000</color>
+    <color name="error_text_color">#777160</color>
+    <color name="moment_source_color">#8a8372</color>
+    <color name="subtitle_gray">#a2a2a2</color>
+    <color name="fragment_shared_inappsociallogin_background">#f1f1f1</color>
+    <color name="fragment_shared_tab_default_background">#848484</color>
+    <color name="refreshloadmost_listview_footer_background_color">#F1F1F1</color>
+    <color name="refreshloadmost_listview_header_background_color">#F1F1F1</color>
+    <!-- Begin Colors for Moment Card -->
+    <color name="momentcard_background_color_for_innerview">#F1F1F1</color>
+    <color name="momentcard_separator_color">#b9b9b9</color>
+    <color name="momentcard_button_separator_color">#E2E2E2</color>
+    <color name="momentcard_title_color">#000000</color>
+    <color name="momentcard_description_color">#878787</color>
+    <color name="momentcard_description_color_for_innerview">#8E8E8E</color>
+    <color name="momentcard_display_source_color">#D0D0D0</color>
+    <color name="momentcard_display_source_color_for_innerview">#8E8E8E</color>
+    <color name="momentcard_timestamp_color">#D0D0D0</color>
+    <color name="momentcard_timestamp_color_for_innerview">#8E8E8E</color>
+    <color name="momentcard_score_color">#EE0750</color>
+    <color name="momentcard_user_name_color">#2F2F2F</color>
+    <color name="momentcard_tweet_background_color">#F1F1F1</color>
+    <color name="view_shared_socialactionbar_number_color">#989898</color>
+    <color name="view_shared_socialactionbar_number_color_for_innerview">#8E8E8E</color>
+    <!-- End of Moment Card -->
+
+    <!-- Begin MomentPlus News Card -->
+    <color name="view_timelineplus_newsmomentcontentview_subtitle_color">#66ffffff</color>
+    <color name="view_timelineplus_newsmomentcontentview_webfragment_subtitle_color">#4e4e4e</color>
+    <color name="view_shared_sectiontextview_color">#808080</color>
+    <color name="view_shared_imagecaptionview_caption_color">#848484</color>
+    <color name="view_shared_imagecaptionview_image_background_color">#E5E5E5</color>
+    <color name="view_timelineplus_newsmomentcontentview_button_text_color">#7fffffff</color>
+    <color name="view_timelineplus_newsmomentcontentview_button_backgroud_color">#19000000</color>
+    <!-- End MomentPlus News Card -->
+
+    <!-- Begin Colors for Activity Card -->
+    <color name="fragment_activity_myactivitygroupfragment_listview_background_color">#EDEDED</color>
+    <color name="fragment_main_activitygroupfragment_listview_background_color">#E2E2E2</color>
+    <color name="view_activity_activitycard_color">#FFFFFFFF</color>
+    <color name="view_activity_activitycard_tv_title_textcolor">#000000</color>
+    <color name="view_activity_activitycard_tv_time_textcolor">#FD463E</color>
+    <color name="view_activity_activitycard_tv_participantcount_textcolor">#b6b6b6</color>
+    <color name="view_activity_activitycard_tv_activitystatus_textcolor">#ffffff</color>
+    <color name="view_activity_activitycard_tv_activitystatus_disable_textcolor">#f1f1f1</color>
+    <!-- End of Activity Card -->
+
+
+    <!-- Begin Colors for RefreshLoadMoreView -->
+    <color name="refresh_loadmore_listview_footer_font_color">#A9A9A9</color>
+    <color name="refresh_loadmore_listview_header_font_color">#A9A9A9</color>
+    <!-- End of RefreshLoadMoreView -->
+
+    <color name="headbar_first_level_fragment_background_color">#FF4F93</color>
+    <color name="headbar_second_level_fragment_background_color">#66000000</color>
+    <color name="headbar_third_level_fragment_background_color">#999999</color>
+    <color name="headbar_send_btn_bg">#F24535</color>
+    <color name="headbar_send_btn_text_color">#FFFFFF</color>
+    <color name="headbar_send_btn_disabled_text_color">#E0E0E0</color>
+    <color name="searchbar_font_color">#FFFFFF</color>
+    <color name="searchbar_divide_color">#000000</color>
+    <color name="search_suggestion_bg_color">#FFFFFF</color>
+    <color name="search_suggestion_font_color">#000000</color>
+    <color name="search_suggestion_listview_divide_color">#E2E2E2</color>
+    <color name="search_history_bg_color">#FFFFFF</color>
+    <color name="search_history_tip_font_color">#848484</color>
+    <color name="search_history_cleartip_font_color">#848484</color>
+    <color name="search_history_query_font_color">#000000</color>
+    <color name="search_bg_color">#FFFFFF</color>
+    <color name="score_bg_color">#FF45A1</color>
+    <color name="search_result_category_font_color">#848484</color>
+    <color name="search_result_title_font_color">#000000</color>
+    <color name="search_result_description_font_color">#B6B6B6</color>
+    <color name="search_result_divide_color">#E5E5E5</color>
+    <color name="search_no_result_font_color">#848484</color>
+    <color name="search_no_result_divide_color">#E2E2E2</color>
+    <color name="fragment_tag_tagprofilegroupfragment_listview_background_color">#FFFFFF</color>
+    <color name="fragment_tag_tagtimelinefragment_listview_background_color">#FFFFFF</color>
+    <color name="fragment_shared_timelinebasedfragment_listview_background_color">#FFFFFF</color>
+    <color name="fragment_invitation_listview_background_color">#FFFFFF</color>
+    <color name="fragment_invitation_listview_selecting_color">#F1F1F1</color>
+    <color name="fragment_invitation_searchbox_surrounding_color">#ECECEC</color>
+    <color name="fragment_invitation_searchbox_hint_color">#C8C8C8</color>
+    <color name="view_shared_countdowntime_text_color">#919191</color>
+
+    <!-- Begin colors for Tag Title -->
+    <color name="view_tag_taggroup_title_font_color">#FFFFFF</color>
+    <color name="view_tag_taggroup_title_space_color">#FF87B7</color>
+    <!-- End colors for Tag Title -->
+
+
+    <!-- Begin colors for Welcome -->
+    <color name="view_welcome_show_subtitle_color">#f6b7b1</color>
+    <color name="view_welcome_show_login_unwant_color">#95FFFFFF</color>
+    <!-- End colors for Welcome -->
+
+
+    <!-- Begin colors for Tab bar -->
+    <color name="view_shared_tab_bar_selected_title_color">#fd463e</color>
+    <color name="view_shared_tab_bar_unselected_title_color">#6a6a6a</color>
+    <color name="view_shared_tab_bar_bg_color">#e2e2e2</color>
+    <!-- End colors for Tab bar -->
+
+    <color name="searchbar_edithit_font">#A80057</color>
+
+    <color name="view_shared_listview_item_default_font">#000000</color>
+    <color name="view_shared_listview_item_pressed_font">#F1F1F1</color>
+
+    <!-- Begin colors for Discovery -->
+    <color name="fragment_main_discoveryfragment_listview_background_color">#ebebeb</color>
+    <color name="view_discovery_topmover_followcount_color">#5e5e5e</color>
+    <color name="view_discovery_topic_default_color">#5a5a5a</color>
+    <color name="view_discovery_tag_getmore_color">#919191</color>
+    <color name="view_discovery_taggroup_divider_color">#e2e2e2</color>
+    <color name="view_discovery_firstleveltaggroupview_background">#dddddd</color>
+    <color name="view_discovery_firstleveltaggroupview_footerline_color">#f7564a</color>
+    <color name="view_discovery_topicitembannerview_tab_text">#919191</color>
+    <color name="view_discovery_topicitemcontentview_navigationitem_textcolor">#8e8e8e</color>
+    <!-- End colors for Discovery -->
+
+    <!-- Begin colors for Tag -->
+    <color name="view_tag_firstleveltagview_background_color">#f6f6f6</color>
+    <color name="view_tag_taggroupgridviewitem_default_color">#5a5a5a</color>
+    <!-- End colors for Tag -->
+
+    <!-- Begin colors for TimelinePlus -->
+    <color name="view_timelineplus_momentsocialactionbar_semitransparent_white">#d9ffffff</color>
+    <color name="view_timelineplus_momentsocialactionbar_textcolor_gray">#474747</color>
+    <color name="view_timelineplus_momentsocialactionbar_background_gray">#d4d4d4</color>
+    <color name="view_timelineplus_momentcontentview_tweet_video_textColor">#5b5b5b</color>
+    <color name="view_timelineplus_momentpage_nocomment_textColor">#c6c6c6</color>
+    <color name="view_timelineplus_momentpage_tweet_repost_textColor">#ababab</color>
+    <color name="view_timelineplus_momentpage_cover_image_blur_defaultColor">#d4d4d4</color>
+    <color name="fragment_timelineplus_profilepagerfragment_swipedownguidebackground">#ed0072ff</color>
+    <!-- End colors for TimelinePlus -->
+
+    <color name="view_promotion_default_color">#5a5a5a</color>
+
+    <color name="fragment_activity_activitywinnerfragment_font_color">#848484</color>
+
+    <color name="view_celebrity_celebrityprofile_gridview_headitem_followeecount_color">#777777</color>
+    <color name="view_celebrity_celebrityprofile_gridview_headitem_desc_color">#777777</color>
+
+    <color name="white_40_alpha">#66FFFFFF</color>
+    <color name="white_50_alpha">#80FFFFFF</color>
+    <color name="white_60_alpha">#95FFFFFF</color>
+
+    <color name="view_audio_musicaudioview_title_color">#fefefe</color>
+    <color name="view_audio_musicaudioview_seekbar_text_color">#70777777</color>
+    <color name="view_audio_musicaudioview_description_fontColor">#ababab</color>
+
+    <color name="view_audio_miniplayerview_textview_fontcolor">#99ffffff</color>
+    <color name="view_audio_miniplayerview_seekbar_thumbcolor">#FFDD00</color>
+</resources>

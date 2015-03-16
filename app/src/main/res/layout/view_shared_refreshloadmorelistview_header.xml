@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:gravity="center" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:id="@+id/view_shared_refreshloadmoreview_header"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp" >
+
+        <ImageView
+            android:id="@+id/view_shared_refreshloadmoreview_header_image"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="3dp"
+            android:src="@drawable/view_shared_refreshloadmoreview_loading"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/view_shared_refreshloadmoreview_header_progress"
+            style="@drawable/view_shared_refreshloadmoreview_loading"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="3dp"
+            android:indeterminate="true"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/view_shared_refreshloadmoreview_header_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="click to refresh"
+            android:textColor="@color/refresh_loadmore_listview_header_font_color"
+            android:textIsSelectable="false"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/view_shared_refreshloadmoreview_header_updated_at"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view_shared_refreshloadmoreview_header_text"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/refresh_loadmore_listview_header_font_color"
+            android:textIsSelectable="false"
+            android:textSize="14sp"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</RelativeLayout>

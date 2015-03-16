@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="FixedSizeImageView">
+        <attr name="fixedAspect">
+            <enum name="width" value="0" />
+            <enum name="height" value="1" />
+        </attr>
+        <attr name="fixedMaxWidth" format="reference|dimension" />
+        <attr name="fixedMaxHeight" format="reference|dimension" />
+    </declare-styleable>
+    <declare-styleable name="BSTitleBar">
+        <attr name="titleGravity">
+            <enum name="center" value="0" />
+            <enum name="left" value="1" />
+            <enum name="right" value="2" />
+        </attr>
+        <attr name="titleRowNum">
+            <enum name="one" value="1" />
+            <enum name="two" value="2" />
+        </attr>
+        <attr name="isNeedRefresh" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="CoverPagerView">
+        <attr name="controlPanel" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="HeadBar">
+        <attr name="headerType">
+            <enum name="title" value="0" />
+            <enum name="profile" value="1" />
+            <enum name="group" value="2" />
+            <enum name="none" value="3" />
+        </attr>
+        <attr name="leftButton">
+            <enum name="none" value="0" />
+            <enum name="back" value="1" />
+        </attr>
+        <attr name="rightButton">
+            <enum name="search" value="0" />
+            <enum name="setting" value="1" />
+            <enum name="none" value="2" />
+        </attr>
+        <attr name="barTitle" format="string" />
+        <attr name="buttonText" format="string" />
+        <attr name="buttonVisible" format="boolean" />
+        <attr name="socialButtonVisible" format="boolean" />
+        <attr name="followButtonVisible" format="boolean" />
+        <attr name="buttonEnable" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="RoundCornerImageView">
+        <attr name="cornerRadius" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="RefreshLoadMoreGridView">
+        <attr name="numColumns" format="integer" />
+        <attr name="itemHeight" format="dimension" />
+        <attr name="horizontalSpacing" format="dimension" />
+        <attr name="verticalSpacing" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="TabBar">
+        <attr name="tabbarType">
+            <enum name="followees" value="0" />
+            <enum name="topstory" value="1" />
+            <enum name="tag" value="2" />
+            <enum name="activity" value="3" />
+        </attr>
+    </declare-styleable>
+
+</resources>

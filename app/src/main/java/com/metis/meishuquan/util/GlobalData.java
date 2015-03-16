@@ -1,0 +1,46 @@
+package com.metis.meishuquan.util;
+
+import com.metis.meishuquan.ui.SelectedTabType;
+
+/**
+ * Created by wudi on 3/15/2015.
+ */
+public class GlobalData {
+    private static GlobalData instance = new GlobalData();
+
+    private SelectedTabType tabTypeSelected;
+    private int[] titleBarTypeSelected = new int[] { -1, -1, -1, -1, -1 };
+
+    public static GlobalData getInstance()
+    {
+        return instance;
+    }
+
+    public void resetTabTypeSelected()
+    {
+        for (int i = 0; i < titleBarTypeSelected.length; i++)
+        {
+            titleBarTypeSelected[i] = -1;
+        }
+    }
+
+    public SelectedTabType getTabTypeSelected()
+    {
+        return tabTypeSelected;
+    }
+
+    public void setTabTypeSelected(SelectedTabType tabTypeSelected)
+    {
+        this.tabTypeSelected = tabTypeSelected;
+    }
+
+    public int getTitleBarTypeSelected()
+    {
+        return titleBarTypeSelected[tabTypeSelected.ordinal()];
+    }
+
+    public void setTitleBarTypeSelected(int titleBarTypeSelected)
+    {
+        this.titleBarTypeSelected[tabTypeSelected.ordinal()] = titleBarTypeSelected;
+    }
+}

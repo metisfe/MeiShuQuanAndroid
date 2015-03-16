@@ -1,0 +1,37 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+    </style>
+
+    <style name="AppTheme" parent="AppBaseTheme">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="Dialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:background">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.6</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="ButtonBase">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:height">25dp</item>
+    </style>
+    <style name="ButtonRed" parent="ButtonBase">
+        <item name="android:background">#e00084</item>
+    </style>
+    <style name="ButtonGray" parent="ButtonBase">
+        <item name="android:background">#d8d3c6</item>
+    </style>
+
+    <style name="T_1">
+        <item name="android:textSize">26sp</item>
+        <item name="android:textColor">#302725</item>
+    </style>
+</resources>

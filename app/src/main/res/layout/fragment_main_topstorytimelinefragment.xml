@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bs="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <com.metis.meishuquan.view.shared.RefreshLoadMoreListView
+        android:id="@+id/fragment_shared_timelinebasedfragment_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/fragment_shared_timelinebasedfragment_listview_background_color"
+        android:cacheColorHint="@color/white"
+        android:divider="@null"
+        android:fadingEdge="none"
+        android:fadingEdgeLength="0dp"
+        android:persistentDrawingCache="scrolling"
+        android:smoothScrollbar="true"
+        android:layout_marginBottom="55dp">
+    </com.metis.meishuquan.view.shared.RefreshLoadMoreListView>
+
+    <com.metis.meishuquan.view.shared.TabBar
+        android:id="@+id/fragment_shared_timelinebasedfragment_tab_bar"
+        bs:tabbarType="topstory"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>
