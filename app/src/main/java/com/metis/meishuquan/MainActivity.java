@@ -45,6 +45,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
 
         self = this;
 
+
         doWantToQuite = false;
         setContentView(R.layout.activity_mainactivity);
 
