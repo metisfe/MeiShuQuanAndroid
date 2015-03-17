@@ -1,5 +1,8 @@
 package com.metis.meishuquan.framework.util;
 
+import com.metis.meishuquan.MainApplication;
+
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -30,4 +33,18 @@ public class ThreadPool
     {
         this.executor.execute(runnable);
     }
+
+    public static Executor getUIExcutor() {
+        return new Executor() {
+            @Override
+            public void execute(Runnable command) {
+                MainApplication.Handler.post(command);
+            }
+        };
+    }
+
+    public static Executor getExecutor() {
+        return APIThread.executor;
+    }
+
 }

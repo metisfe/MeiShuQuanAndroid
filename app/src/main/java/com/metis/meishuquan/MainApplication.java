@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 
+import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.model.provider.DataProvider;
 
 /**
@@ -36,6 +37,7 @@ public class MainApplication extends Application {
         Handler = new Handler();
 
         DataProvider.setDefaultUIThreadHandler(Handler);
+        ApiDataProvider.initProvider();
     }
 
     public static void setDisplayMetrics(DisplayMetrics dm)
