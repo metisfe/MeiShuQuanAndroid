@@ -27,19 +27,23 @@ public class TabBar extends LinearLayout implements View.OnClickListener
         public void onTabSelected(SelectedTabType type);
     }
 
+    //头条
     private int tabbarType;
     private View followeesTab;
     private ImageView followeesIcon;
     private TextView followeesTitle;
 
+    //点评
     private View topStoryTab;
     private ImageView topStoryIcon;
     private TextView topStoryTitle;
 
+    //课程
     private View discoverTab;
     private ImageView discoverIcon;
     private TextView discoverTitle;
 
+    //我
     private View activityTab;
     private ImageView activityIcon;
     private TextView activityTitle;
@@ -174,6 +178,7 @@ public class TabBar extends LinearLayout implements View.OnClickListener
         }
     }
 
+    //清除选中状态
     private void clearSelected()
     {
         selectedFolloweesTab(false);
@@ -182,22 +187,32 @@ public class TabBar extends LinearLayout implements View.OnClickListener
         selectedActivityTab(false);
     }
 
+    /**
+     * 底部Tab_头条
+     * @param isSelected 是否选中
+     */
     private void selectedFolloweesTab(boolean isSelected)
     {
-        if (isSelected)
+        this.followeesTitle.setText(R.string.tab_topLine);
+        if (isSelected)//选中
         {
             this.followeesIcon.setImageResource(R.drawable.icon_moments_following_selected);
             this.followeesTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_selected_title_color));
         }
-        else
+        else//未选中
         {
             this.followeesIcon.setImageResource(R.drawable.icon_moments_following_unselected);
             this.followeesTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_unselected_title_color));
         }
     }
 
+    /**
+     * 底部Tab_点评
+     * @param isSelected 选中状态
+     */
     private void selectedTopStoryTab(boolean isSelected)
     {
+        this.topStoryTitle.setText(R.string.tab_comment);
         if (isSelected)
         {
             this.topStoryIcon.setImageResource(R.drawable.icon_moments_all_selected);
@@ -210,8 +225,13 @@ public class TabBar extends LinearLayout implements View.OnClickListener
         }
     }
 
+    /**
+     * 底部Tab_课程
+     * @param isSelected 选中状态
+     */
     private void selectedDiscoverTab(boolean isSelected)
     {
+        this.discoverTitle.setText(R.string.tab_course);
         if (isSelected)
         {
             this.discoverIcon.setImageResource(R.drawable.icon_discover_selected);
@@ -224,8 +244,13 @@ public class TabBar extends LinearLayout implements View.OnClickListener
         }
     }
 
+    /**
+     * 底部Tab_我
+     * @param isSelected 选中状态
+     */
     private void selectedActivityTab(boolean isSelected)
     {
+        this.activityTitle.setText(R.string.tab_me);
         if (isSelected)
         {
             this.activityIcon.setImageResource(R.drawable.icon_activity_selected);
