@@ -3,19 +3,28 @@ package com.metis.meishuquan.model.provider;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.ProgressBar;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.loopj.android.http.AsyncHttpClient;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.framework.cache.DiskCache;
+import com.metis.meishuquan.framework.util.ThreadPool;
 import com.metis.meishuquan.model.contract.Pagination;
+import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.contract.Timeline;
 import com.metis.meishuquan.util.ContractUtility;
 import com.metis.meishuquan.util.SystemUtil;
+import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
+import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.entity.StringEntity;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,6 +34,7 @@ import java.util.Map;
  * Created by wudi on 3/15/2015.
  */
 public class ApiDataProvider extends DataProvider {
+    private static MobileServiceClient mClient;
     private static final AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
     private static final String DebugTag = "Model.Provider.ApiDataProvider";
     private static final String Default_Api_Version = "2";
@@ -67,6 +77,21 @@ public class ApiDataProvider extends DataProvider {
         setDefaultBed(defaultBed);
     }
 
+    public static boolean initProvider()
+    {
+        try {
+            mClient= new MobileServiceClient(
+                "https://metisapi.azure-mobile.net/",
+                "DBmEiVOmIckySlUzxBHZtoDqwBMUXQ94",
+                MainApplication.UIContext);
+            return true;
+        } catch (MalformedURLException e) {
+
+        }
+
+        return false;
+    }
+
     public static String getDefautlBed()
     {
         return currentDefaultBed;
@@ -83,6 +108,21 @@ public class ApiDataProvider extends DataProvider {
         API_ROOT = apiRoot;
 
         currentDefaultBed = bedName;
+    }
+
+    public static void test()
+    {
+        try {
+            mClient.invokeApi("v1.1/Channel/ChannelList?userId=1&type=1", null,HttpGet.METHOD_NAME,null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(),new ApiOperationCallback<ReturnInfo<String>>() {
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    Log.d("hello",result.getInfo());
+                }
+            });
+
+        } catch (Exception e) {
+            Log.e("hello",e.getMessage());
+        }
     }
 
     @Override
