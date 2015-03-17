@@ -6,23 +6,32 @@ android:layout_height="match_parent"
 android:orientation="vertical"
 android:background="@color/white">
 
-<HorizontalScrollView
-    android:id="@+id/fragment_shared_toplinefragment_nav_bar"
-    android:layout_width="match_parent"
-    android:layout_height="20dp"
-    android:scrollbars="none">
+    <LinearLayout
+        android:id="@+id/ll_topBar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:background="#cccccc">
+        <com.viewpagerindicator.TabPageIndicator
+            android:id="@+id/topbar_indicator"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"/>
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:src="@drawable/topbar_add_item"
+            android:background="@color/transparent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0"/>
+    </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:text="this is the nav bar.this is the nav bar.this is the nav bar.this is the nav bar.this is the nav bar.this is the nav bar." />
-</HorizontalScrollView>
 
 <android.support.v4.view.ViewPager
     android:id="@+id/fragment_shared_toplinefragment_viewpager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@id/fragment_shared_toplinefragment_nav_bar"
+    android:layout_below="@id/ll_topBar"
     android:layout_marginBottom="55dp" />
 
 <com.metis.meishuquan.view.shared.TabBar
