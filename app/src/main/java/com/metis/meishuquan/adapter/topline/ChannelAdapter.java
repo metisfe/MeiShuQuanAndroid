@@ -41,43 +41,40 @@ public class ChannelAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-//        final RefreshLoadMoreListView listView = new RefreshLoadMoreListView(context);
-//        final ToplineAdapter adapter = new ToplineAdapter(context);
-//        listView.setAdapter(adapter);
-//        listView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-//        listView.setOnRefreshListener(new RefreshLoadMoreListView.OnRefreshLoadMoreListener() {
-//            @Override
-//            public void onRefresh() {
-//                List<Moment> datas = new ArrayList<Moment>();
-//                datas.add(new Moment());
-//                datas.add(new Moment());
-//
-//                adapter.setData(ContractBase.CreateContractBase(datas));
-//                //TODO:1 use real api to get data onLoadCompleted in callback
-//                listView.onLoadDataCompletedWithMessage(true,"load two");
-//
-//            }
-//
-//            @Override
-//            public void onLoadMore() {
-//                //TODO:
-//            }
-//
-//            @Override
-//            public boolean hasMore() {
-//                //TODO:
-//                return false;
-//            }
-//        });
-//
-//        //TODO: use cache to firstRefresh then refresh again without cache
-//        listView.firstRefresh();
-//
-//        container.addView(listView, 0);
-//        return listView;
+        final RefreshLoadMoreListView listView = new RefreshLoadMoreListView(context);
+        final ToplineAdapter adapter = new ToplineAdapter(context);
+        listView.setAdapter(adapter);
+        listView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        listView.setOnRefreshListener(new RefreshLoadMoreListView.OnRefreshLoadMoreListener() {
+            @Override
+            public void onRefresh() {
+                List<Moment> datas = new ArrayList<Moment>();
+                datas.add(new Moment());
+                datas.add(new Moment());
 
-        TextView tv=new TextView(context);
-        return tv;
+                adapter.setData(ContractBase.CreateContractBase(datas));
+                //TODO:1 use real api to get data onLoadCompleted in callback
+                listView.onLoadDataCompletedWithMessage(true,"load two");
+
+            }
+
+            @Override
+            public void onLoadMore() {
+                //TODO:
+            }
+
+            @Override
+            public boolean hasMore() {
+                //TODO:
+                return false;
+            }
+        });
+
+        //TODO: use cache to firstRefresh then refresh again without cache
+        listView.firstRefresh();
+
+        container.addView(listView, 0);
+        return listView;
     }
 
     @Override

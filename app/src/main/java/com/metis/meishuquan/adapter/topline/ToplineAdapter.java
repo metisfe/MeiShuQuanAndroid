@@ -3,6 +3,7 @@ package com.metis.meishuquan.adapter.topline;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.TextView;
 
 import com.metis.meishuquan.adapter.shared.ContractBaseAdapter;
@@ -31,8 +32,8 @@ public class ToplineAdapter extends ContractBaseAdapter<Moment> {
     public View getView(int position, View convertView, ViewGroup parent) {
         TextView view = new TextView(this.context);
         view.setText("hello world");
-        view.setLayoutParams(new ViewGroup.LayoutParams(1000,1000));
-
+        view.setLayoutParams(new AbsListView.LayoutParams(1000,1000));
+        // this line cause the Cast Exception, change to use AbsListView's LayoutParams
         return view;
     }
 }
