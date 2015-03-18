@@ -16,11 +16,14 @@ import android.widget.Toast;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.ChannelManageActivity;
-import com.metis.meishuquan.adapter.topline.ChannelAdapter;
 import com.metis.meishuquan.fragment.BaseFragment;
 import com.metis.meishuquan.fragment.TopBarFragment.ItemFragment;
+import com.metis.meishuquan.model.topline.ChannelItem;
 import com.metis.meishuquan.view.shared.TabBar;
 import com.viewpagerindicator.TabPageIndicator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Fragment：头条
@@ -28,13 +31,19 @@ import com.viewpagerindicator.TabPageIndicator;
  * Created by wudi on 3/15/2015.
  */
 public class ToplineFragment extends BaseFragment implements View.OnClickListener{
-    private TabBar tabBar;
+    private TabBar tabBar;//底部导航栏
     private ViewPager viewPager;
     private FragmentPagerAdapter adapter;
     private TabPageIndicator indicator;
     private ImageView imgAddChannel;
 
-    private static final String[] TITLE = new String[] { "头条", "房产", "另一面", "女人",
+    private List<ChannelItem> lstUserItems=new ArrayList<ChannelItem>();
+    private List<ChannelItem> lstOtherItems=new ArrayList<ChannelItem>();
+
+
+    private static final String[] OTHER_CHANNEL = new String[] { "头条", "房产", "另一面", "女人",
+            "财经", "数码", "情感", "科技" };
+    private static final String[] USER_CHANNEL = new String[] { "头条", "房产", "另一面", "女人",
             "财经", "数码", "情感", "科技" };
 
     @Override
@@ -45,10 +54,27 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
         initView(rootView);
 
         //加载数据
-        //1、获取TopBar的频道数据
-        
+        //1、加载频道数据
+        //getChannelItems();
+
         //2、默认加载首个频道的内容
+
         return rootView;
+    }
+
+    /**
+     * 根据网络状态获取TopBar的频道数据（有网络时，从网络上获取；无网络时，从本地缓存中获取；缓存中无数据，加载默认数据）
+     */
+    private void getChannelItems() {
+        //加载默认数据
+        for (int i = 0; i <this.USER_CHANNEL.length ; i++) {
+            ChannelItem userItem=new ChannelItem(i,USER_CHANNEL[i],i,true);
+            lstUserItems.add(userItem);
+        }
+        for (int i = 0; i <this.OTHER_CHANNEL.length ; i++) {
+            ChannelItem otherItem=new ChannelItem(i,OTHER_CHANNEL[i],i,false);
+            lstOtherItems.add(otherItem);
+        }
     }
 
     @Override
@@ -119,7 +145,7 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
 
         @Override
         public void onPageSelected(int position) {
-            Toast.makeText(getActivity(), TITLE[position], Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), OTHER_CHANNEL[position], Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -144,7 +170,7 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
             //新建一个Fragment来展示ViewPager item的内容，并传递数据
             fragment = new ItemFragment();
             Bundle args = new Bundle();
-            args.putString("arg", TITLE[position]);
+            args.putString("arg", OTHER_CHANNEL[position]);
             fragment.setArguments(args);
 
             return fragment;
@@ -152,12 +178,12 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return TITLE[position % TITLE.length];
+            return OTHER_CHANNEL[position % OTHER_CHANNEL.length];
         }
 
         @Override
         public int getCount() {
-            return TITLE.length;
+            return OTHER_CHANNEL.length;
         }
     }
 }

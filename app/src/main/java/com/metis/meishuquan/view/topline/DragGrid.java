@@ -174,7 +174,7 @@ public class DragGrid extends GridView {
         // 显示刚拖动的ITEM  
         mDragAdapter.setShowDropItem(true);  
         // 刷新适配器，让对应的ITEM显示  
-        mDragAdapter.notifyDataSetChanged();  
+        mDragAdapter.notifyDataSetChanged();
     }  
   
     /** 
