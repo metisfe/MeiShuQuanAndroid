@@ -18,10 +18,12 @@ android:background="@color/white">
             android:layout_height="50dp"
             android:layout_weight="1"/>
         <ImageView
-            android:layout_width="40dp"
-            android:layout_height="50dp"
-            android:src="@drawable/topbar_add_item"
-            android:background="@color/transparent"
+            android:id="@+id/img_add_channel"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:scaleType="fitCenter"
+            android:layout_margin="5dp"
+            android:background="@drawable/btn_top_bar_additem_"
             android:layout_gravity="center_vertical"
             android:layout_weight="0"/>
     </LinearLayout>
