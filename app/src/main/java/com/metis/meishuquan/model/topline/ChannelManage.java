@@ -86,7 +86,7 @@ public class ChannelManage {
 	 * @return 返回更多频道集合
 	 */
 	public List<ChannelItem> getOtherChannel() {
-		// TODO:需要判断网络判断
+		// TODO:加载数据
 		// defaultOtherChannels = channelControl.getChannelCache(false);
 		if (defaultOtherChannels == null || defaultOtherChannels.size() == 0) {
 
@@ -126,7 +126,6 @@ public class ChannelManage {
 	 * 初始化默认频道
 	 */
 	private void initDefaultChannel() {
-		Log.d("deleteAll", "deleteAll");
 		deleteAllChannel();
 		saveUserChannel(defaultUserChannels);
 		saveOtherChannel(defaultOtherChannels);

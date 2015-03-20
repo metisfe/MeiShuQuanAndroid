@@ -1,21 +1,25 @@
 package com.metis.meishuquan.fragment.main;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.activity.ChannelManageActivity;
+import com.metis.meishuquan.view.topline.ChannelManageView;
 import com.metis.meishuquan.fragment.BaseFragment;
 import com.metis.meishuquan.fragment.TopBarFragment.ItemFragment;
 import com.metis.meishuquan.model.topline.ChannelItem;
@@ -30,21 +34,24 @@ import java.util.List;
  *
  * Created by wudi on 3/15/2015.
  */
-public class ToplineFragment extends BaseFragment implements View.OnClickListener{
+public class ToplineFragment extends BaseFragment implements View.OnClickListener,ChannelManageView.ChannelManageViewListener{
     private TabBar tabBar;//底部导航栏
     private ViewPager viewPager;
     private FragmentPagerAdapter adapter;
     private TabPageIndicator indicator;
     private ImageView imgAddChannel;
+    private ChannelManageView cmv;
+    private List<ChannelItem> lstUserItems=new ArrayList<>();
+    private List<ChannelItem> lstOtherItems=new ArrayList<>();
 
-    private List<ChannelItem> lstUserItems=new ArrayList<ChannelItem>();
-    private List<ChannelItem> lstOtherItems=new ArrayList<ChannelItem>();
 
-
-    private static final String[] OTHER_CHANNEL = new String[] { "头条", "房产", "另一面", "女人",
+    private static final String[] USER_CHANNEL = new String[] { "推荐", "热点", "素描", "色彩",
+            "速写", "创作", "设计", "动漫" ,"摄影"};
+    private static final String[] OTHER_CHANNEL = new String[] { "轻松一刻", "正能量", "另一面", "女人",
             "财经", "数码", "情感", "科技" };
-    private static final String[] USER_CHANNEL = new String[] { "头条", "房产", "另一面", "女人",
-            "财经", "数码", "情感", "科技" };
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -91,6 +98,7 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
         this.tabBar = (TabBar) rootView.findViewById(R.id.fragment_shared_toplinefragment_tab_bar);
         this.viewPager = (ViewPager)  rootView.findViewById(R.id.fragment_shared_toplinefragment_viewpager);
         this.indicator = (TabPageIndicator)rootView.findViewById(R.id.topbar_indicator);
+        cmv=new ChannelManageView(getActivity(),null,0);
 
         this.imgAddChannel= (ImageView) rootView.findViewById(R.id.img_add_channel);
         //this.channelAdapter = new ChannelAdapter(this.getActivity());
@@ -112,6 +120,8 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
         indicator.setOnPageChangeListener(new PageChangeListener());
 
         this.imgAddChannel.setOnClickListener(this);
+
+        this.cmv.setChannelManageViewListener(this);
     }
 
     @Override
@@ -119,18 +129,48 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
         switch (view.getId()){
             case R.id.img_add_channel:
                 //打开频道管理Activity
-                openChannelManageActivity();
+                openChannelManageView();
                 break;
         }
 
     }
 
     /**
-     * 打开频道管理Activity
+     * 打开频道管理
      */
-    private void openChannelManageActivity() {
-        Intent intent= new Intent(this.getActivity(),ChannelManageActivity.class);
-        this.getActivity().startActivity(intent);
+    private void openChannelManageView() {
+
+        ViewGroup topLineViewGroup= (ViewGroup) getActivity().findViewById(R.id.rl_topline);
+        topLineViewGroup.addView(this.cmv);
+        int yStart = -getActivity().getResources().getDisplayMetrics().heightPixels;
+        int yEnd = 0;
+        TranslateAnimation translateAnimation = new TranslateAnimation(0,0,yStart, yEnd);
+        getAnimation(translateAnimation);
+        cmv.startAnimation(translateAnimation);
+//        popupWindow = new PopupWindow(cmv,topLineViewGroup.getWidth(),topLineViewGroup.getHeight());
+//        Log.d("width",String.valueOf(topLineViewGroup.getWidth()));
+//        Log.d("height",String.valueOf(topLineViewGroup.getHeight()));
+//        popupWindow.setAnimationStyle(R.style.AnimationFade);
+//        popupWindow.showAsDropDown(cmv,0,-topLineViewGroup.getHeight());//20为系统标题栏的高度
+    }
+
+    @Override
+    public void hide(ViewGroup channelManageView) {
+        //ChannelManageView cmv=new ChannelManageView(getActivity(),null,0);
+        ViewGroup topLineViewGroup= (ViewGroup) getActivity().findViewById(R.id.rl_topline);
+        topLineViewGroup.removeView(channelManageView);
+        int yStart = -getActivity().getResources().getDisplayMetrics().heightPixels;
+        int yEnd = 0;
+        TranslateAnimation translateAnimation = new TranslateAnimation(0,0,yEnd, yStart);
+        getAnimation(translateAnimation);
+        channelManageView.startAnimation(translateAnimation);
+    }
+
+    private void getAnimation(TranslateAnimation animation){
+        animation.setFillAfter(true);
+        animation.setFillEnabled(true);
+        animation.setDuration(500);
+        animation.setInterpolator(new DecelerateInterpolator());
     }
 
     /**

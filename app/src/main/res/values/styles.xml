@@ -136,4 +136,14 @@
         <item name="android:textSize">13.0sp</item>
     </style>
     <!--end ChannelManageActivity-->
+
+    <!-- PopupWindow左右弹出的效果 -->
+
+    <style name="AnimationFade">
+
+        <!-- PopupWindow左右弹出的效果 -->
+        <item name="android:windowEnterAnimation">@anim/push_up_in</item>
+        <item name="android:windowExitAnimation">@anim/push_up_out</item>
+    </style>
+
 </resources>

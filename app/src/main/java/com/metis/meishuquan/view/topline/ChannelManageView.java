@@ -1,15 +1,16 @@
-package com.metis.meishuquan.activity;
+package com.metis.meishuquan.view.topline;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
@@ -20,6 +21,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.metis.meishuquan.R;
@@ -33,44 +35,47 @@ import com.metis.meishuquan.view.topline.OtherGridView;
 /**
  * Activity：频道管理主界面
  * 
- * @Author wj
+ * @Author wj on 3/18/2015
  */
-public class ChannelManageActivity extends FragmentActivity implements OnItemClickListener,View.OnClickListener{
+public class ChannelManageView extends RelativeLayout implements OnItemClickListener,View.OnClickListener{
 	private DragGrid userGridView;
 	private OtherGridView otherGridView;
     private DragAdapter userAdapter;
     private OtherAdapter otherAdapter;
     private Button btnBack;
-    private List<ChannelItem> otherChannelList = new ArrayList<ChannelItem>();
-    private List<ChannelItem> userChannelList = new ArrayList<ChannelItem>();
+    private List<ChannelItem> otherChannelList = new ArrayList<>();
+    private List<ChannelItem> userChannelList = new ArrayList<>();
 	boolean isMove = false;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_channel_manage_subscribe);
-		initView();
-		initData();
-	}
+    private Context context;
+    ChannelManageViewListener channelManageViewListener;
+
+    public ChannelManageView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context,attrs,defStyleAttr);
+        this.context=context;
+        LayoutInflater.from(context).inflate(R.layout.activity_channel_manage_subscribe,this);
+        initView(this);
+        initData();
+    }
 
 	private void initData() {
 		userChannelList = ChannelManage.getManage(
-                this).getUserChannel();
+                this.context).getUserChannel();
 		otherChannelList = ChannelManage.getManage(
-				this).getOtherChannel();
-		userAdapter = new DragAdapter(this, userChannelList);
+				this.context).getOtherChannel();
+		userAdapter = new DragAdapter(this.context, userChannelList);
 		userGridView.setAdapter(userAdapter);
-		otherAdapter = new OtherAdapter(this, otherChannelList);
+		otherAdapter = new OtherAdapter(this.context, otherChannelList);
 		otherGridView.setAdapter(this.otherAdapter);
 		otherGridView.setOnItemClickListener(this);
 		userGridView.setOnItemClickListener(this);
         btnBack.setOnClickListener(this);
 	}
 
-	private void initView() {
-		this.userGridView = (DragGrid) findViewById(R.id.userGridView);
-		this.otherGridView = (OtherGridView) findViewById(R.id.otherGridView);
-        this.btnBack= (Button) findViewById(R.id.activity_channel_btn_back);
+	private void initView(ViewGroup rootView) {
+		this.userGridView = (DragGrid) rootView.findViewById(R.id.userGridView);
+		this.otherGridView = (OtherGridView) rootView.findViewById(R.id.otherGridView);
+        this.btnBack= (Button) rootView.findViewById(R.id.activity_channel_btn_back);
     }
 
 	@Override
@@ -212,8 +217,8 @@ public class ChannelManageActivity extends FragmentActivity implements OnItemCli
 	}
 
 	private ViewGroup getMoveViewGroup() {
-		ViewGroup moveViewGroup = (ViewGroup) getWindow().getDecorView();
-		LinearLayout moveLinearLayout = new LinearLayout(this);
+		ViewGroup moveViewGroup = (ViewGroup) ((Activity)this.context).getWindow().getDecorView();
+		LinearLayout moveLinearLayout = new LinearLayout(this.context);
 		moveLinearLayout.setLayoutParams(new LinearLayout.LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		moveViewGroup.addView(moveLinearLayout);
@@ -225,31 +230,43 @@ public class ChannelManageActivity extends FragmentActivity implements OnItemCli
 		view.setDrawingCacheEnabled(true);
 		Bitmap cache = Bitmap.createBitmap(view.getDrawingCache());
 		view.setDrawingCacheEnabled(false);
-		ImageView iv = new ImageView(this);
+		ImageView iv = new ImageView(this.context);
 		iv.setImageBitmap(cache);
 		return iv;
 	}
 
 	private void saveChannel() {
-		ChannelManage.getManage(this).deleteAllChannel();
-		ChannelManage.getManage(this).saveUserChannel(
+		ChannelManage.getManage(this.context).deleteAllChannel();
+		ChannelManage.getManage(this.context).saveUserChannel(
 				userAdapter.getChannnelLst());
-		ChannelManage.getManage(this).saveOtherChannel(
+		ChannelManage.getManage(this.context).saveOtherChannel(
 				otherAdapter.getChannnelLst());
 	}
 
-	@Override
-	public void onBackPressed() {
-		saveChannel();
-		super.onBackPressed();
-	}
+//	@Override
+//	public void onBackPressed() {
+//		saveChannel();
+//		super.onBackPressed();
+//	}
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.activity_channel_btn_back:
-                this.onBackPressed();
+                hide();
                 break;
         }
+    }
+
+    private void hide(){
+        channelManageViewListener.hide(this);
+    }
+
+    public void setChannelManageViewListener(ChannelManageViewListener channelManageViewListener){
+        this.channelManageViewListener=channelManageViewListener;
+    }
+
+    public interface ChannelManageViewListener{
+        void hide(ViewGroup viewGroup);
     }
 }

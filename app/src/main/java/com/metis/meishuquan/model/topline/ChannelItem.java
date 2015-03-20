@@ -11,8 +11,6 @@ import java.io.Serializable;
 
 public class ChannelItem implements Serializable {
 
-	private static final long serialVersionUID = -6465237897027410019L;
-
 	private Integer id;
 	private String name;
 	private Integer orderId;

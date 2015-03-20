@@ -113,10 +113,10 @@ public class ApiDataProvider extends DataProvider {
     public static void test()
     {
         try {
-            mClient.invokeApi("v1.1/Channel/ChannelList?userId=1&type=1", null,HttpGet.METHOD_NAME,null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(),new ApiOperationCallback<ReturnInfo<String>>() {
+            mClient.invokeApi("v1.1/Channel/ChannelList?userId=1&type=1", null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    Log.d("hello",result.getInfo());
+                    Log.d("hello", result.getInfo());
                 }
             });
 
