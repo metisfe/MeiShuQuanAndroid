@@ -77,6 +77,10 @@ public class ApiDataProvider extends DataProvider {
         setDefaultBed(defaultBed);
     }
 
+    public static MobileServiceClient getmClient() {
+        return mClient;
+    }
+
     public static boolean initProvider()
     {
         try {

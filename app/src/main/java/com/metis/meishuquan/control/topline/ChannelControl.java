@@ -1,21 +1,25 @@
 package com.metis.meishuquan.control.topline;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.topline.ChannelItem;
 
-public class ChannelControl  {
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+public class ChannelControl{
 	private SharedPreferences sp = null;
 	private Editor editor = null;
+    private List<ChannelItem> lstChannelItems;
+
+    private TopLineOperator topLineOperator;
 
 	public ChannelControl(Context context) {
 		if (context != null) {
@@ -24,6 +28,11 @@ public class ChannelControl  {
 		}
 	}
 
+    /**
+     * 添加缓存
+     * @param item
+     * @return
+     */
 	public boolean addCache(ChannelItem item) {
 		boolean flag = false;
 		if (editor != null) {
@@ -34,6 +43,11 @@ public class ChannelControl  {
 		return flag;
 	}
 
+    /**
+     * 删除缓存
+     * @param keys
+     * @return
+     */
 	public boolean deleteCache(String[] keys) {
 		boolean flag = false;
 		if (editor != null) {
@@ -45,6 +59,12 @@ public class ChannelControl  {
 		return flag;
 	}
 
+    /**
+     * 更新缓存
+     * @param id
+     * @param item
+     * @return
+     */
 	public boolean updateCache(int id, ChannelItem item) {
 		boolean flag = false;
 		if (editor != null) {
@@ -54,12 +74,17 @@ public class ChannelControl  {
 		return flag;
 	}
 
+    /**
+     * 获取缓存集合
+     * @param seleced
+     * @return
+     */
 	@SuppressWarnings("unchecked")
 	public List<ChannelItem> getChannelCache(boolean seleced) {
 		List<ChannelItem> lstChannelItem = new ArrayList<ChannelItem>();
-		
+
 		Map<String, String> map=(Map<String, String>) sp.getAll();
-		
+
 		for (String key : map.keySet()) {
 			if (key.equals(seleced)) {
 				String itemStr=map.get(key);
@@ -94,25 +119,10 @@ public class ChannelControl  {
 		}
 		return item;
 	}
-	
+
 	public void clearFeedTable() {
 		if (editor != null) {
 			editor.clear();
 		}
 	}
-
-	// public void clearFeedTable() {
-	// String sql = "DELETE FROM " + SQLHelper.TABLE_CHANNEL + ";";
-	// SQLiteDatabase db = sp.getWritableDatabase();
-	// db.execSQL(sql);
-	// revertSeq();
-	// }
-
-	// private void revertSeq() {
-	// String sql = "update sqlite_sequence set seq=0 where name='"
-	// + SQLHelper.TABLE_CHANNEL + "'";
-	// SQLiteDatabase db = sp.getWritableDatabase();
-	// db.execSQL(sql);
-	// }
-
 }

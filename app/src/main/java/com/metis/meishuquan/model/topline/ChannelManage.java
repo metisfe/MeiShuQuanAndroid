@@ -9,6 +9,9 @@ import com.metis.meishuquan.control.topline.ChannelControl;
 
 public class ChannelManage {
 	public static ChannelManage channelManage;
+
+
+
 	/**
 	 * Ĭ我的频道集合
 	 * */
@@ -72,9 +75,9 @@ public class ChannelManage {
 	 */
 	public List<ChannelItem> getUserChannel() {
 
-		defaultUserChannels = channelControl.getChannelCache(true);
+		//defaultUserChannels = channelControl.getChannelCache(true);
 		if (defaultUserChannels == null || defaultUserChannels.size() == 0) {
-			initDefaultData();
+			//initDefaultData();//加载测试数据
 			initDefaultChannel();
 		}
 		return defaultUserChannels;
