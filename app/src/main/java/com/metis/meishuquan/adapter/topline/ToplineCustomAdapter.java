@@ -35,7 +35,7 @@ public class ToplineCustomAdapter extends ToplineAdapter {
 
     @Override
     public int getCount() {
-        return 1;
+        return 10;
     }
 
     @Override

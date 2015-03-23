@@ -257,13 +257,14 @@ public class ChannelManageView extends RelativeLayout implements OnItemClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.activity_channel_btn_back:
+                //saveChannel();
                 hide();
                 break;
         }
     }
 
     private void hide() {
-        channelManageViewListener.hide(this);
+        channelManageViewListener.hide(this,this.userChannelList,this.otherChannelList);
     }
 
     public void setChannelManageViewListener(ChannelManageViewListener channelManageViewListener) {
@@ -271,6 +272,6 @@ public class ChannelManageView extends RelativeLayout implements OnItemClickList
     }
 
     public interface ChannelManageViewListener {
-        void hide(ViewGroup viewGroup);
+        void hide(ViewGroup viewGroup,List<ChannelItem> lstUserChannel,List<ChannelItem> lstOtherChannel);
     }
 }

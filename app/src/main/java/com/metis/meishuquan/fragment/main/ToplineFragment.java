@@ -18,16 +18,12 @@ import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.control.topline.ChannelControl;
 import com.metis.meishuquan.fragment.BaseFragment;
-import com.metis.meishuquan.fragment.TopBarFragment.ItemFragment;
+import com.metis.meishuquan.fragment.ToplineFragment.ItemFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
-import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.topline.ChannelItem;
 import com.metis.meishuquan.view.shared.TabBar;
 import com.metis.meishuquan.view.topline.ChannelManageView;
-import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
-import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.viewpagerindicator.TabPageIndicator;
 
 import org.json.JSONArray;
@@ -154,7 +150,7 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
         this.imgAddChannel = (ImageView) rootView.findViewById(R.id.img_add_channel);
         this.fragmentPagerAdapter = new TabPageIndicatorAdapter(getActivity().getSupportFragmentManager());
 
-        Context context=getActivity();
+        Context context = getActivity();
         this.cmv = new ChannelManageView(context, null, 0);
         this.cmv.setChannelManageViewListener(this);
     }
@@ -205,8 +201,19 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
     }
 
     @Override
-    public void hide(ViewGroup channelManageView) {
-        //ChannelManageView cmv=new ChannelManageView(getActivity(),null,0);
+    public void hide(ViewGroup channelManageView, List<ChannelItem> lstUserChannel, List<ChannelItem> lstOtherChannel) {
+        this.lstUserItems = lstUserChannel;
+        this.lstOtherItems = lstOtherChannel;
+
+//        //设置ViewPager适配器
+//        this.viewPager.notify();
+//
+//        //实例化TabPageIndicator然后设置ViewPager与之关联
+//        this.indicator.notifyDataSetChanged();
+//
+//        //如果我们要对ViewPager设置监听，用indicator设置就行了
+//        indicator.setOnPageChangeListener(new PageChangeListener());
+
         ViewGroup topLineViewGroup = (ViewGroup) getActivity().findViewById(R.id.rl_topline);
         topLineViewGroup.removeView(channelManageView);
         int yStart = -getActivity().getResources().getDisplayMetrics().heightPixels;

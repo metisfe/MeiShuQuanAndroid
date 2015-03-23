@@ -1,31 +1,31 @@
-package com.metis.meishuquan.fragment.TopBarFragment;
+package com.metis.meishuquan.fragment.ToplineFragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.adapter.topline.ToplineAdapter;
 import com.metis.meishuquan.adapter.topline.ToplineCustomAdapter;
 import com.metis.meishuquan.fragment.BaseFragment;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.metis.meishuquan.fragment.main.ToplineFragment;
 
 /**
  * Fragment:TopBar Fragment
  * <p/>
  * Created by wj on 15/3/17.
  */
-public class ItemFragment extends BaseFragment {
+public class ItemFragment extends BaseFragment implements AdapterView.OnItemClickListener {
 
     private ListView listView;
+
 
     private ToplineCustomAdapter toplineAdapter;
     private ArrayAdapter adapter;
@@ -39,8 +39,11 @@ public class ItemFragment extends BaseFragment {
         //初始化
         initView(contextView);
 
+        initEvent();
         return contextView;
     }
+
+
 
     /**
      * 初始化
@@ -58,16 +61,8 @@ public class ItemFragment extends BaseFragment {
 
     }
 
-    public static List<String> getDataSource() {
-        List<String> data = new ArrayList<String>();
-        data.add("北京");
-        data.add("上海");
-        data.add("广州");
-        data.add("天津");
-        data.add("重庆");
-        data.add("四川");
-        data.add("黑龙江");
-        return data;
+    private void initEvent() {
+        this.listView.setOnItemClickListener(this);
     }
 
     @Override
@@ -76,4 +71,17 @@ public class ItemFragment extends BaseFragment {
         //接收数据
         //加载数据
     }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        ItemInfoFragment itemInfoFragment= new ItemInfoFragment();
+        FragmentManager fm=getActivity().getSupportFragmentManager();
+        FragmentTransaction ft=fm.beginTransaction();
+        ft.setCustomAnimations(R.anim.fragment_in,R.anim.fragment_out);
+        ft.add(R.id.content_container, itemInfoFragment);
+        ft.commit();
+    }
+
+
+
 }
