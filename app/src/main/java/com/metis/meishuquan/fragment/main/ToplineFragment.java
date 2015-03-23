@@ -38,7 +38,7 @@ import java.util.List;
  * <p/>
  * Created by wudi on 3/15/2015.
  */
-public class ToplineFragment extends BaseFragment implements View.OnClickListener, ChannelManageView.ChannelManageViewListener {
+public class ToplineFragment extends BaseFragment implements View.OnClickListener {
     private TabBar tabBar;//底部导航栏
     private ViewPager viewPager;
     private FragmentPagerAdapter fragmentPagerAdapter;
@@ -48,6 +48,7 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
     private List<ChannelItem> lstAllChannels;
     private List<ChannelItem> lstUserItems = new ArrayList<>();
     private List<ChannelItem> lstOtherItems = new ArrayList<>();
+    private boolean addChannelPoped;
 
     private static final String[] USER_CHANNEL = new String[]{"推荐", "热点", "素描", "色彩",
             "速写", "创作", "设计", "动漫", "摄影"};
@@ -152,7 +153,36 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
 
         Context context = getActivity();
         this.cmv = new ChannelManageView(context, null, 0);
-        this.cmv.setChannelManageViewListener(this);
+        this.cmv.setChannelManageViewListener(new ChannelManageView.ChannelManageViewListener() {
+            @Override
+            public void hide(ViewGroup channelManageView, List<ChannelItem> lstUserChannel, List<ChannelItem> lstOtherChannel) {
+                if (!addChannelPoped) {
+                    return;
+                }
+
+                addChannelPoped = false;
+                ToplineFragment.this.lstUserItems = lstUserChannel;
+                ToplineFragment.this.lstOtherItems = lstOtherChannel;
+
+                //TODO: copy the data from lstuserchannel to viewpager's adapter's data then notifydatasetchanged.
+                //        //设置ViewPager适配器
+                //        this.viewPager.notify();
+                //
+                //        //实例化TabPageIndicator然后设置ViewPager与之关联
+                //        this.indicator.notifyDataSetChanged();
+                //
+                //        //如果我们要对ViewPager设置监听，用indicator设置就行了
+                //        indicator.setOnPageChangeListener(new PageChangeListener());
+
+                ViewGroup topLineViewGroup = (ViewGroup) getActivity().findViewById(R.id.rl_topline);
+                topLineViewGroup.removeView(channelManageView);
+                int yStart = -getActivity().getResources().getDisplayMetrics().heightPixels;
+                int yEnd = 0;
+                TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, yEnd, yStart);
+                getAnimation(translateAnimation);
+                channelManageView.startAnimation(translateAnimation);
+            }
+        });
     }
 
     //初始化事件
@@ -188,6 +218,12 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
      * 打开频道管理
      */
     private void openChannelManageView() {
+        if (addChannelPoped)
+        {
+            return;
+        }
+
+        addChannelPoped = true;
         ViewGroup topLineViewGroup = (ViewGroup) getActivity().findViewById(R.id.rl_topline);
         topLineViewGroup.addView(this.cmv);
         cmv.setUserChannelList(this.lstUserItems);//将加载出来的数据传递给View
@@ -198,29 +234,6 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
         TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, yStart, yEnd);
         getAnimation(translateAnimation);
         cmv.startAnimation(translateAnimation);
-    }
-
-    @Override
-    public void hide(ViewGroup channelManageView, List<ChannelItem> lstUserChannel, List<ChannelItem> lstOtherChannel) {
-        this.lstUserItems = lstUserChannel;
-        this.lstOtherItems = lstOtherChannel;
-
-//        //设置ViewPager适配器
-//        this.viewPager.notify();
-//
-//        //实例化TabPageIndicator然后设置ViewPager与之关联
-//        this.indicator.notifyDataSetChanged();
-//
-//        //如果我们要对ViewPager设置监听，用indicator设置就行了
-//        indicator.setOnPageChangeListener(new PageChangeListener());
-
-        ViewGroup topLineViewGroup = (ViewGroup) getActivity().findViewById(R.id.rl_topline);
-        topLineViewGroup.removeView(channelManageView);
-        int yStart = -getActivity().getResources().getDisplayMetrics().heightPixels;
-        int yEnd = 0;
-        TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, yEnd, yStart);
-        getAnimation(translateAnimation);
-        channelManageView.startAnimation(translateAnimation);
     }
 
     private void getAnimation(TranslateAnimation animation) {
