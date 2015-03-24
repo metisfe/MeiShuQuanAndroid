@@ -47,7 +47,7 @@ public class OtherAdapter extends BaseAdapter {
 		View view = LayoutInflater.from(context).inflate(R.layout.activity_channel_manage_subscribe_category_item, null);
 		item_text = (TextView) view.findViewById(R.id.text_item);
 		ChannelItem channel = getItem(position);
-		item_text.setText(channel.getName());
+		item_text.setText(channel.getChannelName());
 		if (!isVisible && (position == -1 + channelList.size())){
 			item_text.setText("");
 		}

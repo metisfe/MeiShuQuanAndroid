@@ -35,11 +35,7 @@ public class ChannelControl{
      */
 	public boolean addCache(ChannelItem item) {
 		boolean flag = false;
-		if (editor != null) {
-			editor.putString(String.valueOf(item.getSelected()),
-					item.toString());
-			flag = editor.commit();
-		}
+
 		return flag;
 	}
 
@@ -96,33 +92,33 @@ public class ChannelControl{
 	}
 
 	private ChannelItem getChannelItemObjectByString(String itemStr){
-		JSONTokener jsonParser = null;
-		JSONObject jItem = null;
-		ChannelItem item = null;
-		try {
-			jsonParser = new JSONTokener(itemStr);
-			// 此时还未读取任何json文本，直接读取就是一个JSONObject对象。
-			jItem = (JSONObject) jsonParser.nextValue();
-			// 接下来的就是JSON对象的操作了
-			int id = jItem.getInt("id");
-			String name = jItem.getString("name");
-			int orderId = jItem.getInt("orderId");
-			boolean selected = jItem.getBoolean("selected");
-
-			item = new ChannelItem();
-			item.setId(id);
-			item.setName(name);
-			item.setOrderId(orderId);
-			item.setSelected(selected);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return item;
+//		JSONTokener jsonParser = null;
+//		JSONObject jItem = null;
+//		ChannelItem item = null;
+//		try {
+//			jsonParser = new JSONTokener(itemStr);
+//			// 此时还未读取任何json文本，直接读取就是一个JSONObject对象。
+//			jItem = (JSONObject) jsonParser.nextValue();
+//			// 接下来的就是JSON对象的操作了
+//			int id = jItem.getInt("id");
+//			String name = jItem.getString("name");
+//			int orderId = jItem.getInt("orderId");
+//			boolean selected = jItem.getBoolean("selected");
+//
+//			item = new ChannelItem();
+//			item.setId(id);
+//			item.setName(name);
+//			item.setOrderId(orderId);
+//			item.setSelected(selected);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+		return null;
 	}
 
 	public void clearFeedTable() {
-		if (editor != null) {
-			editor.clear();
-		}
+//		if (editor != null) {
+//			editor.clear();
+//		}
 	}
 }

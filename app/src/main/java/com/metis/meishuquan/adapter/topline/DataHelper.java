@@ -39,18 +39,17 @@ public class DataHelper {
         try {
             JSONObject jsonObject = new JSONObject(jsonStr);
             JSONObject chennels = jsonObject.getJSONObject("data");//得到两个集合（已选择频道集合，未选择频道集合）
-            JSONArray selectedChennels = chennels.getJSONArray("unSelectedChannels");
-            JSONArray unSelectedChennels = chennels.getJSONArray("unSelectedChannels");
+            JSONArray selectedChennels = chennels.getJSONArray("SelectedChannels");
             for (int i = 0; i < selectedChennels.length(); i++) {
                 JSONObject chennel = selectedChennels.getJSONObject(i);
                 ChannelItem item = new ChannelItem();
-                item.setId(chennel.getInt("channelId"));
-                item.setName(chennel.getString("channelName"));
-                item.setOrderId(chennel.getInt("orderNum"));
-                item.setSelected(chennel.getBoolean("isAllowReset"));
+                item.setChannelId(chennel.getInt("channelId"));
+                item.setChannelName(chennel.getString("channelName"));
+                item.setOrderNum(chennel.getInt("orderNum"));
+                item.setAllowReset(chennel.getBoolean("isAllowReset"));
                 lstUserItems.add(item);
             }
-            Log.i("lstOtherItems", String.valueOf(lstUserItems.size()));
+            Log.i("lstUserItems", String.valueOf(lstUserItems.size()));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -70,10 +69,10 @@ public class DataHelper {
             for (int i = 0; i < unSelectedChennels.length(); i++) {
                 JSONObject chennel = unSelectedChennels.getJSONObject(i);
                 ChannelItem item = new ChannelItem();
-                item.setId(chennel.getInt("channelId"));
-                item.setName(chennel.getString("channelName"));
-                item.setOrderId(chennel.getInt("orderNum"));
-                item.setSelected(chennel.getBoolean("isAllowReset"));
+                item.setChannelId(chennel.getInt("channelId"));
+                item.setChannelName(chennel.getString("channelName"));
+                item.setOrderNum(chennel.getInt("orderNum"));
+                item.setAllowReset(chennel.getBoolean("isAllowReset"));
                 lstOtherItems.add(item);
             }
             Log.i("lstOtherItems", String.valueOf(lstOtherItems.size()));
@@ -84,21 +83,29 @@ public class DataHelper {
     }
 
     public List<ChannelItem> getLocalUserChannel(){
-        List<ChannelItem> lstUserChannel= new ArrayList<>();
+        List<ChannelItem> lstItems= new ArrayList<>();
         ChannelItem item1=new ChannelItem(1, USER_CHANNEL[1], 1, true);
         ChannelItem item2=new ChannelItem(2, USER_CHANNEL[2], 2, true);
         ChannelItem item3=new ChannelItem(3, USER_CHANNEL[3], 3, true);
         ChannelItem item4=new ChannelItem(4, USER_CHANNEL[4], 4, true);
-        return lstUserChannel;
+        lstItems.add(item1);
+        lstItems.add(item2);
+        lstItems.add(item3);
+        lstItems.add(item4);
+        return lstItems;
     }
 
     public List<ChannelItem> getLocalOtherChannel(){
-        List<ChannelItem> lstUserChannel= new ArrayList<>();
-        ChannelItem item1=new ChannelItem(1, USER_CHANNEL[1], 1, true);
-        ChannelItem item2=new ChannelItem(2, USER_CHANNEL[2], 2, true);
-        ChannelItem item3=new ChannelItem(3, USER_CHANNEL[3], 3, true);
-        ChannelItem item4=new ChannelItem(4, USER_CHANNEL[4], 4, true);
-        return lstUserChannel;
+        List<ChannelItem> lstItems= new ArrayList<>();
+        ChannelItem item1=new ChannelItem(1, OTHER_CHANNEL[1], 1, true);
+        ChannelItem item2=new ChannelItem(2, OTHER_CHANNEL[2], 2, true);
+        ChannelItem item3=new ChannelItem(3, OTHER_CHANNEL[3], 3, true);
+        ChannelItem item4=new ChannelItem(4, OTHER_CHANNEL[4], 4, true);
+        lstItems.add(item1);
+        lstItems.add(item2);
+        lstItems.add(item3);
+        lstItems.add(item4);
+        return lstItems;
     }
 
 }

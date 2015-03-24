@@ -67,6 +67,24 @@ public class ChannelManageView extends RelativeLayout implements OnItemClickList
 
     //初始化数据
     public void initData() {
+        List<ChannelItem> userChannelList,otherChannelList;
+        DataHelper helper=null;
+        //从缓存中读取数据
+        String jsonStr = spu.getStringByKey(SharedPreferencesUtil.CHANNELS);
+        if (!jsonStr.equals("")) {
+            helper = new DataHelper(jsonStr);
+            userChannelList = helper.getUserChannels();
+            if (userChannelList.size()==0){//若缓存中的用户频道为空时，加载本地数据
+                userChannelList=helper.getLocalUserChannel();
+            }
+            otherChannelList = helper.getOtherChannels();
+            Log.e("sources", String.valueOf(otherChannelList.size()));
+            Log.e("sources", " data from SharedPreferences");
+        }else{
+            helper= new DataHelper();
+            userChannelList=helper.getLocalUserChannel();
+            otherChannelList=helper.getLocalOtherChannel();
+        }
         userAdapter = new DragAdapter(this.context, userChannelList);
         userGridView.setAdapter(userAdapter);
         otherAdapter = new OtherAdapter(this.context, otherChannelList);
@@ -74,14 +92,34 @@ public class ChannelManageView extends RelativeLayout implements OnItemClickList
         otherGridView.setOnItemClickListener(this);
         userGridView.setOnItemClickListener(this);
         btnBack.setOnClickListener(this);
+    }
 
+    public void refreshData() {
+        List<ChannelItem> userChannelList,otherChannelList;
+        DataHelper helper;
         //从缓存中读取数据
         String jsonStr = spu.getStringByKey(SharedPreferencesUtil.CHANNELS);
-        DataHelper helper = new DataHelper(jsonStr);
-        userChannelList = helper.getUserChannels();
-        otherChannelList = helper.getOtherChannels();
-        Log.e("sources",String.valueOf(otherChannelList.size()));
-        Log.e("sources"," data from SharedPreferences");
+        if (!jsonStr.equals("")) {
+            helper = new DataHelper(jsonStr);
+            userChannelList = helper.getUserChannels();
+            if (userChannelList.size()==0){//若缓存中的用户频道为空时，加载本地数据
+                userChannelList=helper.getLocalUserChannel();
+            }
+            otherChannelList = helper.getOtherChannels();
+            Log.e("sources", String.valueOf(otherChannelList.size()));
+            Log.e("sources", " data from SharedPreferences");
+        }else{
+            helper= new DataHelper();
+            userChannelList=helper.getLocalUserChannel();
+            otherChannelList=helper.getLocalOtherChannel();
+        }
+        userAdapter = new DragAdapter(this.context, userChannelList);
+        userGridView.setAdapter(userAdapter);
+        otherAdapter = new OtherAdapter(this.context, otherChannelList);
+        otherGridView.setAdapter(this.otherAdapter);
+        otherGridView.setOnItemClickListener(this);
+        userGridView.setOnItemClickListener(this);
+        btnBack.setOnClickListener(this);
     }
 
     private void initView(ViewGroup rootView) {
@@ -248,11 +286,36 @@ public class ChannelManageView extends RelativeLayout implements OnItemClickList
     }
 
     private void saveChannel() {
-        ChannelManage.getManage(this.context).deleteAllChannel();
-        ChannelManage.getManage(this.context).saveUserChannel(
-                userAdapter.getChannnelLst());
-        ChannelManage.getManage(this.context).saveOtherChannel(
-                otherAdapter.getChannnelLst());
+
+        List<ChannelItem> userItems=userAdapter.getChannnelLst();
+        List<ChannelItem> otherItems=otherAdapter.getChannnelLst();
+//        {"option":{"status":"0"},
+//            "data":{"selectedChannels":[],
+//            "unSelectedChannels":[{"channelId":6,"channelName":"头条","isAllowReset":true,"orderNum":1}]}
+
+        //删除原有缓存
+        SharedPreferencesUtil spu=SharedPreferencesUtil.getInstanse(this.context);
+        spu.delete(SharedPreferencesUtil.CHANNELS);
+        StringBuilder sb=new StringBuilder("{\"option\":{\"status\":\"0\"},\"data\":{\"selectedChannels\":[");
+        //userItem
+        for(int i=0;i<userItems.size();i++){
+            sb.append(userItems.get(i).toString());
+            if (i< userItems.size()-1){
+                sb.append(',');
+            }
+        }
+        sb.append("],\"unSelectedChannels\":[");
+        //otherItem
+        for(int i=0;i<otherItems.size();i++){
+            sb.append(otherItems.get(i).toString());
+            if (i< otherItems.size()-1){
+                sb.append(',');
+            }
+        }
+        sb.append("]}");
+        String val=sb.toString();
+        Log.i("val",val);
+        spu.add(SharedPreferencesUtil.CHANNELS,val);
     }
 
 //	@Override
@@ -265,7 +328,7 @@ public class ChannelManageView extends RelativeLayout implements OnItemClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.activity_channel_btn_back:
-                //saveChannel();
+                saveChannel();
                 hide();
                 break;
         }

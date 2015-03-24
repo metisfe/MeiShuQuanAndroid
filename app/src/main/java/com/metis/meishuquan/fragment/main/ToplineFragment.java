@@ -42,7 +42,7 @@ import java.util.List;
  * <p/>
  * Created by wudi on 3/15/2015.
  */
-public class ToplineFragment extends BaseFragment implements View.OnClickListener {
+public class ToplineFragment extends BaseFragment {
     private TabBar tabBar;//底部导航栏
     private ViewPager viewPager;
     private FragmentPagerAdapter fragmentPagerAdapter;
@@ -50,11 +50,11 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
     private ImageView imgAddChannel;
     private ChannelManageView cmv;
     private ViewGroup rootView;
+    private SharedPreferencesUtil spu;
 
     private List<News> lstNews = new ArrayList<>();
     private boolean addChannelPoped;
     private int lastNewsId = 0;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -67,6 +67,7 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
 
         //初始化视图及成员
         initView(rootView);
+        initEvent();
 
         //2、默认加载首个频道的内容
 //        if (lstOtherItems.size() > 0) {
@@ -83,9 +84,15 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 
         //初始化事件
-        initEvent();
+//        initEvent();
 
         super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+//        initEvent();
+        super.onResume();
     }
 
     /**
@@ -127,12 +134,11 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
         }
 
         //加载缓存中的数据
-        SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
+        spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
         String jsonStr = spu.getStringByKey(SharedPreferencesUtil.CHANNELS);
         //判断在缓存中是否有数据
         if (!jsonStr.equals("")) {
             this.fragmentPagerAdapter = new TabPageIndicatorAdapter(getActivity().getSupportFragmentManager(), jsonStr);
-            this.fragmentPagerAdapter.notifyDataSetChanged();
         } else {
             //缓存无数据时加载默认数据
             this.fragmentPagerAdapter = new TabPageIndicatorAdapter(getActivity().getSupportFragmentManager(), "");
@@ -146,6 +152,16 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
         this.indicator = (TabPageIndicator) rootView.findViewById(R.id.topbar_indicator);
 
         this.imgAddChannel = (ImageView) rootView.findViewById(R.id.img_add_channel);
+        this.imgAddChannel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //打开频道管理Activity
+                openChannelManageView();
+            }
+        });
+
+//        spu=SharedPreferencesUtil.getInstanse(getActivity());
+//        String json=spu.getStringByKey(SharedPreferencesUtil.CHANNELS);
         this.fragmentPagerAdapter = new TabPageIndicatorAdapter(getActivity().getSupportFragmentManager(), "");
 
         this.cmv = new ChannelManageView(getActivity(), null, 0);
@@ -166,6 +182,12 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
                 TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, yEnd, yStart);
                 getAnimation(translateAnimation);
                 channelManageView.startAnimation(translateAnimation);
+
+                //重新加载数据
+//                String json=spu.getStringByKey(SharedPreferencesUtil.CHANNELS);
+//                fragmentPagerAdapter= new TabPageIndicatorAdapter(getActivity().getSupportFragmentManager(),json);
+//                viewPager.setAdapter(fragmentPagerAdapter);
+//                indicator.setViewPager(viewPager);
             }
         });
     }
@@ -184,18 +206,6 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
         //如果我们要对ViewPager设置监听，用indicator设置就行了
         indicator.setOnPageChangeListener(new PageChangeListener());
 
-        this.imgAddChannel.setOnClickListener(this);
-
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.img_add_channel:
-                //打开频道管理Activity
-                openChannelManageView();
-                break;
-        }
     }
 
     /**
@@ -209,6 +219,7 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
         addChannelPoped = true;
         ViewGroup topLineViewGroup = (ViewGroup) getActivity().findViewById(R.id.rl_topline);
         topLineViewGroup.addView(this.cmv);
+        this.cmv.refreshData();//重新加载数据（数据来源于网络缓存）
         int yStart = -getActivity().getResources().getDisplayMetrics().heightPixels;
         int yEnd = 0;
         TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, yStart, yEnd);
@@ -245,6 +256,10 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
         }
     }
 
+    public void refreshData(){
+    }
+
+
     /**
      * ViewPager适配器
      */
@@ -261,8 +276,8 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
         }
 
         //交换数据
-        private void changeData(String jsonStr){
-            DataHelper helper= new DataHelper();
+        public void changeData(String jsonStr){
+            DataHelper helper= new DataHelper(jsonStr);
             if (jsonStr.equals("")){
                 userItems=helper.getLocalUserChannel();
                 otherItems=helper.getLocalOtherChannel();
@@ -285,7 +300,7 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return userItems.get(position % userItems.size()).getName();
+            return userItems.get(position % userItems.size()).getChannelName();
         }
 
         @Override

@@ -78,7 +78,7 @@ public class ChannelManage {
 		//defaultUserChannels = channelControl.getChannelCache(true);
 		if (defaultUserChannels == null || defaultUserChannels.size() == 0) {
 			//initDefaultData();//加载测试数据
-			initDefaultChannel();
+			//initDefaultChannel();
 		}
 		return defaultUserChannels;
 	}
@@ -102,14 +102,14 @@ public class ChannelManage {
 	 * 
 	 * @param userList
 	 */
-	public void saveUserChannel(List<ChannelItem> userList) {
-		for (int i = 0; i < userList.size(); i++) {
-			ChannelItem channelItem = (ChannelItem) userList.get(i);
-			channelItem.setOrderId(i);
-			channelItem.setSelected(true);
-			channelControl.addCache(channelItem);
-		}
-	}
+//	public void saveUserChannel(List<ChannelItem> userList) {
+//		for (int i = 0; i < userList.size(); i++) {
+//			ChannelItem channelItem = (ChannelItem) userList.get(i);
+//			channelItem.setOrderId(i);
+//			channelItem.setSelected(true);
+//			channelControl.addCache(channelItem);
+//		}
+//	}
 
 	/**
 	 * 保存更多频道
@@ -117,20 +117,20 @@ public class ChannelManage {
 	 * @param otherList
 	 */
 	public void saveOtherChannel(List<ChannelItem> otherList) {
-		for (int i = 0; i < otherList.size(); i++) {
-			ChannelItem channelItem = otherList.get(i);
-			channelItem.setOrderId(i);
-			channelItem.setSelected(false);
-			channelControl.addCache(channelItem);
-		}
+//		for (int i = 0; i < otherList.size(); i++) {
+//			ChannelItem channelItem = otherList.get(i);
+//			channelItem.setOrderId(i);
+//			channelItem.setSelected(false);
+//			channelControl.addCache(channelItem);
+//		}
 	}
 
 	/**
 	 * 初始化默认频道
 	 */
-	private void initDefaultChannel() {
-		deleteAllChannel();
-		saveUserChannel(defaultUserChannels);
-		saveOtherChannel(defaultOtherChannels);
-	}
+//	private void initDefaultChannel() {
+//		deleteAllChannel();
+//		saveUserChannel(defaultUserChannels);
+//		saveOtherChannel(defaultOtherChannels);
+//	}
 }

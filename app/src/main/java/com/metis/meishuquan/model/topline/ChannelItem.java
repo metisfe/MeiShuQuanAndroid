@@ -11,55 +11,59 @@ import java.io.Serializable;
 
 public class ChannelItem implements Serializable {
 
-	private Integer id;
-	private String name;
-	private Integer orderId;
-	private boolean selected;
+	private Integer channelId;
+	private String channelName;
+	private Integer orderNum;
+	private boolean isAllowReset;
 
 	public ChannelItem() {
 	}
 
-	public ChannelItem(int id, String name, int orderId, boolean selected) {
-		this.id = Integer.valueOf(id);
-		this.name = name;
-		this.orderId = Integer.valueOf(orderId);
-		this.selected = selected;
+	public ChannelItem(int channelId, String channelName, int orderNum, boolean isAllowReset) {
+		this.channelId = Integer.valueOf(channelId);
+		this.channelName = channelName;
+		this.orderNum = Integer.valueOf(orderNum);
+		this.isAllowReset = isAllowReset;
 	}
 
-	public int getId() {
-		return this.id.intValue();
-	}
+    public Integer getChannelId() {
+        return channelId;
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public void setChannelId(Integer channelId) {
+        this.channelId = channelId;
+    }
 
-	public int getOrderId() {
-		return this.orderId.intValue();
-	}
+    public String getChannelName() {
+        return channelName;
+    }
 
-	public boolean getSelected() {
-		return this.selected;
-	}
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
+    }
 
-	public void setId(int paramInt) {
-		this.id = Integer.valueOf(paramInt);
-	}
+    public Integer getOrderNum() {
+        return orderNum;
+    }
 
-	public void setName(String paramString) {
-		this.name = paramString;
-	}
+    public void setOrderNum(Integer orderNum) {
+        this.orderNum = orderNum;
+    }
 
-	public void setOrderId(int paramInt) {
-		this.orderId = Integer.valueOf(paramInt);
-	}
+    public boolean isAllowReset() {
+        return isAllowReset;
+    }
 
-	public void setSelected(boolean paramInteger) {
-		this.selected = paramInteger;
-	}
+    public void setAllowReset(boolean isAllowReset) {
+        this.isAllowReset = isAllowReset;
+    }
 
-	public String toString() {
-		return "ChannelItem [id=" + this.id + ", name=" + this.name + ",orderId="
-				+ this.orderId + ", selected=" + this.selected + "]";
-	}
+    @Override
+    public String toString() {
+        return "{channelId:" + channelId +
+                ", channelName:'" + channelName + '\'' +
+                ", orderNum:" + orderNum +
+                ", isAllowReset:" + isAllowReset +
+                '}';
+    }
 }

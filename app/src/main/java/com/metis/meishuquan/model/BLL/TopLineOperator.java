@@ -1,8 +1,5 @@
 package com.metis.meishuquan.model.BLL;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -52,11 +49,12 @@ public class TopLineOperator {
                         new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                                if (result.getInfo().equals(0)) {
+                                if (result.getInfo().equals(String.valueOf(0))) {
                                     Gson gson = new Gson();
                                     String json = gson.toJson(result);
                                     SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
-                                    spu.add(SharedPreferencesUtil.CHANNELS, json);
+                                    spu.delete(SharedPreferencesUtil.CHANNELS);
+                                    spu.add(SharedPreferencesUtil.CHANNELS, json);//添加至缓存中
                                 } else {
                                     Log.e("meishuquan", "网络状态码不为0");
                                 }
