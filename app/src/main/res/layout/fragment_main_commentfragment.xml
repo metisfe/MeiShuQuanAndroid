@@ -3,18 +3,48 @@
     xmlns:bs="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white" >
+    android:background="@color/white">
 
-    <TextView
+    <RelativeLayout
+        android:id="@+id/rl_title_bar"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:text="this is the comment"/>
+        android:layout_height="88dp"
+        android:background="#fddd6e">
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="全国" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="全部" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="right"
+            android:text="提问" />
+    </RelativeLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_title_bar"
+        android:background="#cccccc"
+        android:layout_above="@+id/fragment_shared_commentfragment_tab_bar" />
 
     <com.metis.meishuquan.view.shared.TabBar
         android:id="@+id/fragment_shared_commentfragment_tab_bar"
-        bs:tabbarType="topstory"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        bs:tabbarType="topstory" />
 </RelativeLayout>

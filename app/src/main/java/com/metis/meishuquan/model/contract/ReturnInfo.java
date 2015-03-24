@@ -7,6 +7,7 @@ public class ReturnInfo<E> {
     @com.google.gson.annotations.SerializedName("option")
     private OptionSettings option;
 
+
     public String getInfo()
     {
         if (option!=null && option.status!=null)
@@ -15,6 +16,7 @@ public class ReturnInfo<E> {
         }
         return "";
     }
+
 
     private E data;
 }
