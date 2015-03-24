@@ -4,9 +4,14 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
+import com.metis.meishuquan.util.SharedPreferencesUtil;
+import com.metis.meishuquan.util.SystemUtil;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
@@ -36,16 +41,42 @@ public class TopLineOperator {
     }
 
     /**
-     * 根据网络状态获取TopBar的频道数据（有网络时，从网络上获取；无网络时，从本地缓存中获取；缓存中无数据，加载默认数据）
+     * 将频道集合数据添加至sharedPreferences中
      */
-    public void getChannelItems(ApiOperationCallback<ReturnInfo<String>> callBack) {
-        if (flag) {
-            ApiDataProvider.getmClient().invokeApi(CHANNELLIST_URL, null, HttpGet.METHOD_NAME, null,
-                    (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callBack);
+    public void addChannelItemsToLoacal() {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {//判断网络状态
+            //加载网络数据
+            if (flag) {
+                ApiDataProvider.getmClient().invokeApi("v1.1/Channel/ChannelList?userId=1&type=1", null,
+                        HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(),
+                        new ApiOperationCallback<ReturnInfo<String>>() {
+                            @Override
+                            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                                if (result.getInfo().equals(0)) {
+                                    Gson gson = new Gson();
+                                    String json = gson.toJson(result);
+                                    SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
+                                    spu.add(SharedPreferencesUtil.CHANNELS, json);
+                                } else {
+                                    Log.e("meishuquan", "网络状态码不为0");
+                                }
+                            }
+                        });
+            } else {
+                Toast.makeText(MainApplication.UIContext, "网络异常", Toast.LENGTH_LONG).show();
+            }
+
         }
     }
 
 
+    /**
+     * 根据频道Id获取新闻列表
+     *
+     * @param callBack
+     * @param channelId
+     * @param lastNewsId 等于0时，获取最新数据;设为newId时，用于加载数据（分页）
+     */
     public void getNewsListByChannelId(ApiOperationCallback<ReturnInfo<String>> callBack, int channelId, int lastNewsId) {
         if (flag) {
             StringBuffer PATH = new StringBuffer(CHANNEL_INFO_URL);
@@ -57,60 +88,5 @@ public class TopLineOperator {
         }
     }
 
-    /**
-     * 判断是否有网络
-     *
-     * @param context 上下文
-     * @return
-     */
-    public boolean isNetworkConnected(Context context) {
-        if (context != null) {
-            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
-                    .getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
-            if (mNetworkInfo != null) {
-                return mNetworkInfo.isAvailable();
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 判断WIFI网络是否可用
-     *
-     * @param context 上下文
-     * @return
-     */
-    public boolean isWifiConnected(Context context) {
-        if (context != null) {
-            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
-                    .getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo mWiFiNetworkInfo = mConnectivityManager
-                    .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-            if (mWiFiNetworkInfo != null) {
-                return mWiFiNetworkInfo.isAvailable();
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 判断MOBILE网络是否可用
-     *
-     * @param context
-     * @return
-     */
-    public boolean isMobileConnected(Context context) {
-        if (context != null) {
-            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
-                    .getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo mMobileNetworkInfo = mConnectivityManager
-                    .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-            if (mMobileNetworkInfo != null) {
-                return mMobileNetworkInfo.isAvailable();
-            }
-        }
-        return false;
-    }
     //更新服务器数据
 }

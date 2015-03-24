@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +23,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.adapter.topline.DataHelper;
 import com.metis.meishuquan.adapter.topline.DragAdapter;
 import com.metis.meishuquan.adapter.topline.OtherAdapter;
+import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.topline.ChannelItem;
 import com.metis.meishuquan.model.topline.ChannelManage;
+import com.metis.meishuquan.util.SharedPreferencesUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +47,7 @@ public class ChannelManageView extends RelativeLayout implements OnItemClickList
     private DragAdapter userAdapter;
     private OtherAdapter otherAdapter;
     private Button btnBack;
+    private SharedPreferencesUtil spu;
 
     private List<ChannelItem> otherChannelList = new ArrayList<>();
     private List<ChannelItem> userChannelList = new ArrayList<>();
@@ -53,17 +59,10 @@ public class ChannelManageView extends RelativeLayout implements OnItemClickList
     public ChannelManageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
+        this.spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
         LayoutInflater.from(context).inflate(R.layout.activity_channel_manage_subscribe, this);
         initView(this);
         initData();
-    }
-
-    public void setOtherChannelList(List<ChannelItem> otherChannelList) {
-        this.otherChannelList = otherChannelList;
-    }
-
-    public void setUserChannelList(List<ChannelItem> userChannelList) {
-        this.userChannelList = userChannelList;
     }
 
     //初始化数据
@@ -75,6 +74,14 @@ public class ChannelManageView extends RelativeLayout implements OnItemClickList
         otherGridView.setOnItemClickListener(this);
         userGridView.setOnItemClickListener(this);
         btnBack.setOnClickListener(this);
+
+        //从缓存中读取数据
+        String jsonStr = spu.getStringByKey(SharedPreferencesUtil.CHANNELS);
+        DataHelper helper = new DataHelper(jsonStr);
+        userChannelList = helper.getUserChannels();
+        otherChannelList = helper.getOtherChannels();
+        Log.e("sources",String.valueOf(otherChannelList.size()));
+        Log.e("sources"," data from SharedPreferences");
     }
 
     private void initView(ViewGroup rootView) {
@@ -265,7 +272,7 @@ public class ChannelManageView extends RelativeLayout implements OnItemClickList
     }
 
     private void hide() {
-        channelManageViewListener.hide(this,this.userChannelList,this.otherChannelList);
+        channelManageViewListener.hide(this, this.userChannelList, this.otherChannelList);
     }
 
     public void setChannelManageViewListener(ChannelManageViewListener channelManageViewListener) {
@@ -273,6 +280,6 @@ public class ChannelManageView extends RelativeLayout implements OnItemClickList
     }
 
     public interface ChannelManageViewListener {
-        void hide(ViewGroup viewGroup,List<ChannelItem> lstUserChannel,List<ChannelItem> lstOtherChannel);
+        void hide(ViewGroup viewGroup, List<ChannelItem> lstUserChannel, List<ChannelItem> lstOtherChannel);
     }
 }

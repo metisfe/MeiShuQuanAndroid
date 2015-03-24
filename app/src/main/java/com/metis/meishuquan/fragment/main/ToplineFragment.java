@@ -1,6 +1,5 @@
 package com.metis.meishuquan.fragment.main;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,24 +15,24 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.control.topline.ChannelControl;
+import com.metis.meishuquan.adapter.topline.DataHelper;
 import com.metis.meishuquan.fragment.BaseFragment;
 import com.metis.meishuquan.fragment.ToplineFragment.ItemFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.topline.ChannelItem;
+import com.metis.meishuquan.model.topline.News;
+import com.metis.meishuquan.util.SharedPreferencesUtil;
+import com.metis.meishuquan.util.SystemUtil;
 import com.metis.meishuquan.view.shared.TabBar;
 import com.metis.meishuquan.view.topline.ChannelManageView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.viewpagerindicator.TabPageIndicator;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,27 +49,24 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
     private TabPageIndicator indicator;
     private ImageView imgAddChannel;
     private ChannelManageView cmv;
-    private List<ChannelItem> lstAllChannels;
-    private List<ChannelItem> lstUserItems = new ArrayList<>();
-    private List<ChannelItem> lstOtherItems = new ArrayList<>();
+    private ViewGroup rootView;
+
+    private List<News> lstNews = new ArrayList<>();
     private boolean addChannelPoped;
     private int lastNewsId = 0;
-
-    private static final String[] USER_CHANNEL = new String[]{"推荐", "热点", "素描", "色彩",
-            "速写", "创作", "设计", "动漫", "摄影"};
-    private static final String[] OTHER_CHANNEL = new String[]{"轻松一刻", "正能量", "另一面", "女人",
-            "财经", "数码", "情感", "科技"};
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_toplinefragment, container, false);
+
+        //TODO: read channel cache if not exist read from hard code
+        //加载频道数据
+        getChannelItems();
+
+        rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_toplinefragment, container, false);
 
         //初始化视图及成员
         initView(rootView);
-
-        //1、加载频道数据
-        getChannelItems();
 
         //2、默认加载首个频道的内容
 //        if (lstOtherItems.size() > 0) {
@@ -80,6 +75,7 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
 //            initNews(6,0);
 //        }
 
+        initNews(6, 0);
         return rootView;
     }
 
@@ -106,8 +102,18 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
                 Gson gson = new Gson();
                 String jsonStr = gson.toJson(result);
                 Log.i("jsonStr", jsonStr);
+                //lstNews=getListNews(jsonStr);
+                Log.i("jsonStr", String.valueOf(lstNews.size()));
             }
         }, channelId, lastNewsId);
+    }
+
+    public static List<News> getListNews(String jsonString) {
+        List<News> list = new ArrayList<News>();
+        Gson gson = new Gson();
+        list = gson.fromJson(jsonString, new TypeToken<List<News>>() {
+        }.getType());
+        return list;
     }
 
     /**
@@ -115,72 +121,21 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
      */
     private void getChannelItems() {
         TopLineOperator topLineOperator = TopLineOperator.getInstance();
-        ChannelControl channelContol = new ChannelControl(getActivity());
-        List<ChannelItem> lstUserCache = channelContol.getChannelCache(true);
-        //判断网络状态
-        if (topLineOperator.isNetworkConnected(getActivity())) {
-            //加载网络数据
-            topLineOperator.getChannelItems(new ApiOperationCallback<ReturnInfo<String>>() {
-                @Override
-                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    Log.i("result", result.getInfo());
-                    Gson gson = new Gson();
-                    String str = gson.toJson(result);
-                    Log.i("str", str);
-                    if (str.isEmpty()) {
-                        lstUserItems.clear();
-                        lstOtherItems.clear();
-                        getHttpChannels(str);
-                        initEvent();
-                    }
-                }
-            });
+        //将网络返回的数据添加至缓存中
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            topLineOperator.addChannelItemsToLoacal();
         }
-        if (lstUserCache.size() > 0) {//判断缓存中是否有数据，有数据则加载数据
-            this.lstUserItems = lstUserCache;
-            this.lstOtherItems = channelContol.getChannelCache(false);
+
+        //加载缓存中的数据
+        SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
+        String jsonStr = spu.getStringByKey(SharedPreferencesUtil.CHANNELS);
+        //判断在缓存中是否有数据
+        if (!jsonStr.equals("")) {
+            this.fragmentPagerAdapter = new TabPageIndicatorAdapter(getActivity().getSupportFragmentManager(), jsonStr);
+            this.fragmentPagerAdapter.notifyDataSetChanged();
         } else {
-            //加载默认数据
-            for (int i = 0; i < USER_CHANNEL.length; i++) {
-                ChannelItem item = new ChannelItem(i, USER_CHANNEL[i], i, true);
-                this.lstUserItems.add(item);
-            }
-
-            for (int i = 0; i < OTHER_CHANNEL.length; i++) {
-                ChannelItem item = new ChannelItem(i, OTHER_CHANNEL[i], i, false);
-                this.lstOtherItems.add(item);
-            }
-        }
-    }
-
-    //根据json串解析数据
-    public void getHttpChannels(String jsonStr) {
-        try {
-            JSONObject jsonObject = new JSONObject(jsonStr);
-            JSONObject chennels = jsonObject.getJSONObject("data");//得到两个集合（已选择频道集合，未选择频道集合）
-            JSONArray selectedChennels = chennels.getJSONArray("unSelectedChannels");
-            JSONArray unSelectedChennels = chennels.getJSONArray("unSelectedChannels");
-            for (int i = 0; i < selectedChennels.length(); i++) {
-                JSONObject chennel = selectedChennels.getJSONObject(i);
-                ChannelItem item = new ChannelItem();
-                item.setId(chennel.getInt("channelId"));
-                item.setName(chennel.getString("channelName"));
-                item.setOrderId(chennel.getInt("orderNum"));
-                item.setSelected(chennel.getBoolean("isAllowReset"));
-                lstUserItems.add(item);
-            }
-            for (int i = 0; i < unSelectedChennels.length(); i++) {
-                JSONObject chennel = unSelectedChennels.getJSONObject(i);
-                ChannelItem item = new ChannelItem();
-                item.setId(chennel.getInt("channelId"));
-                item.setName(chennel.getString("channelName"));
-                item.setOrderId(chennel.getInt("orderNum"));
-                item.setSelected(chennel.getBoolean("isAllowReset"));
-                lstOtherItems.add(item);
-            }
-            Log.i("lstOtherItems", String.valueOf(lstOtherItems.size()));
-        } catch (JSONException e) {
-            e.printStackTrace();
+            //缓存无数据时加载默认数据
+            this.fragmentPagerAdapter = new TabPageIndicatorAdapter(getActivity().getSupportFragmentManager(), "");
         }
     }
 
@@ -191,7 +146,7 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
         this.indicator = (TabPageIndicator) rootView.findViewById(R.id.topbar_indicator);
 
         this.imgAddChannel = (ImageView) rootView.findViewById(R.id.img_add_channel);
-        this.fragmentPagerAdapter = new TabPageIndicatorAdapter(getActivity().getSupportFragmentManager());
+        this.fragmentPagerAdapter = new TabPageIndicatorAdapter(getActivity().getSupportFragmentManager(), "");
 
         this.cmv = new ChannelManageView(getActivity(), null, 0);
         this.cmv.setChannelManageViewListener(new ChannelManageView.ChannelManageViewListener() {
@@ -202,9 +157,6 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
                 }
 
                 addChannelPoped = false;
-                ToplineFragment.this.lstUserItems = lstUserChannel;
-                ToplineFragment.this.lstOtherItems = lstOtherChannel;
-
                 //TODO: copy the data from lstuserchannel to viewpager's adapter's data then notifydatasetchanged.
 
                 ViewGroup topLineViewGroup = (ViewGroup) getActivity().findViewById(R.id.rl_topline);
@@ -244,7 +196,6 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
                 openChannelManageView();
                 break;
         }
-
     }
 
     /**
@@ -258,9 +209,6 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
         addChannelPoped = true;
         ViewGroup topLineViewGroup = (ViewGroup) getActivity().findViewById(R.id.rl_topline);
         topLineViewGroup.addView(this.cmv);
-        cmv.setUserChannelList(this.lstUserItems);//将加载出来的数据传递给View
-        cmv.setOtherChannelList(this.lstOtherItems);
-        this.cmv.initData();
         int yStart = -getActivity().getResources().getDisplayMetrics().heightPixels;
         int yEnd = 0;
         TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, yStart, yEnd);
@@ -287,7 +235,8 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
 
         @Override
         public void onPageSelected(int position) {
-            Toast.makeText(getActivity(), lstUserItems.get(position).getName(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), lstUserItems.get(position).getName(), Toast.LENGTH_SHORT).show();
+            //切换Fragment并加载数据
         }
 
         @Override
@@ -301,11 +250,26 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
      */
     class TabPageIndicatorAdapter extends FragmentPagerAdapter {
         private Fragment fragment = null;
+        public List<ChannelItem> userItems = null;
+        public List<ChannelItem> otherItems=null;
 
 
-        public TabPageIndicatorAdapter(FragmentManager fm) {
+        public TabPageIndicatorAdapter(FragmentManager fm, String jsonStr) {
             super(fm);
             fragment = null;
+            changeData(jsonStr);
+        }
+
+        //交换数据
+        private void changeData(String jsonStr){
+            DataHelper helper= new DataHelper();
+            if (jsonStr.equals("")){
+                userItems=helper.getLocalUserChannel();
+                otherItems=helper.getLocalOtherChannel();
+            }else{
+                userItems=helper.getUserChannels();
+                otherItems=helper.getOtherChannels();
+            }
         }
 
         @Override
@@ -313,7 +277,7 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
             //新建一个Fragment来展示ViewPager item的内容，并传递数据
             fragment = new ItemFragment();
             Bundle args = new Bundle();
-            args.putString("arg", lstUserItems.get(position).getName());
+            args.putString("arg", "test");
             fragment.setArguments(args);
 
             return fragment;
@@ -321,13 +285,12 @@ public class ToplineFragment extends BaseFragment implements View.OnClickListene
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return lstUserItems.get(position % lstUserItems.size()).getName();
-            //return OTHER_CHANNEL[position % OTHER_CHANNEL.length];
+            return userItems.get(position % userItems.size()).getName();
         }
 
         @Override
         public int getCount() {
-            return lstUserItems.size();
+            return userItems.size();
             //return OTHER_CHANNEL.length;
         }
     }
