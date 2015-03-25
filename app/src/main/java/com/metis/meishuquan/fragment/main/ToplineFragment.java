@@ -45,12 +45,13 @@ import java.util.List;
 public class ToplineFragment extends BaseFragment {
     private TabBar tabBar;//底部导航栏
     private ViewPager viewPager;
-    private FragmentPagerAdapter fragmentPagerAdapter;
+    private TabPageIndicatorAdapter fragmentPagerAdapter;
     private TabPageIndicator indicator;
     private ImageView imgAddChannel;
     private ChannelManageView cmv;
     private ViewGroup rootView;
     private SharedPreferencesUtil spu;
+    private String channelJsonStr;
 
     private List<News> lstNews = new ArrayList<>();
     private boolean addChannelPoped;
@@ -87,12 +88,6 @@ public class ToplineFragment extends BaseFragment {
 //        initEvent();
 
         super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onResume() {
-//        initEvent();
-        super.onResume();
     }
 
     /**
@@ -135,10 +130,10 @@ public class ToplineFragment extends BaseFragment {
 
         //加载缓存中的数据
         spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
-        String jsonStr = spu.getStringByKey(SharedPreferencesUtil.CHANNELS);
+        channelJsonStr = spu.getStringByKey(SharedPreferencesUtil.CHANNELS);
         //判断在缓存中是否有数据
-        if (!jsonStr.equals("")) {
-            this.fragmentPagerAdapter = new TabPageIndicatorAdapter(getActivity().getSupportFragmentManager(), jsonStr);
+        if (!channelJsonStr.equals("")) {
+            this.fragmentPagerAdapter = new TabPageIndicatorAdapter(getActivity().getSupportFragmentManager(), channelJsonStr);
         } else {
             //缓存无数据时加载默认数据
             this.fragmentPagerAdapter = new TabPageIndicatorAdapter(getActivity().getSupportFragmentManager(), "");
@@ -162,7 +157,7 @@ public class ToplineFragment extends BaseFragment {
 
 //        spu=SharedPreferencesUtil.getInstanse(getActivity());
 //        String json=spu.getStringByKey(SharedPreferencesUtil.CHANNELS);
-        this.fragmentPagerAdapter = new TabPageIndicatorAdapter(getActivity().getSupportFragmentManager(), "");
+//        this.fragmentPagerAdapter = new TabPageIndicatorAdapter(getActivity().getSupportFragmentManager(), "");
 
         this.cmv = new ChannelManageView(getActivity(), null, 0);
         this.cmv.setChannelManageViewListener(new ChannelManageView.ChannelManageViewListener() {
@@ -174,6 +169,10 @@ public class ToplineFragment extends BaseFragment {
 
                 addChannelPoped = false;
                 //TODO: copy the data from lstuserchannel to viewpager's adapter's data then notifydatasetchanged.
+
+                channelJsonStr=spu.getStringByKey(SharedPreferencesUtil.CHANNELS);
+                ((FragmentPagerAdapter)fragmentPagerAdapter).notifyDataSetChanged();
+                ((TabPageIndicator)indicator).notifyDataSetChanged();
 
                 ViewGroup topLineViewGroup = (ViewGroup) getActivity().findViewById(R.id.rl_topline);
                 topLineViewGroup.removeView(channelManageView);
@@ -283,6 +282,9 @@ public class ToplineFragment extends BaseFragment {
                 otherItems=helper.getLocalOtherChannel();
             }else{
                 userItems=helper.getUserChannels();
+                if (userItems.size()==0){
+                    userItems=helper.getLocalUserChannel();
+                }
                 otherItems=helper.getOtherChannels();
             }
         }
