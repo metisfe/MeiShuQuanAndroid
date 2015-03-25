@@ -26,7 +26,7 @@ public class TopLineOperator {
     private boolean flag;
     private static TopLineOperator operator = null;
 
-    private final String CHANNELLIST_URL = "v1.1/Channel/ChannelList?userId=1&type=1";
+    private final String CHANNELLIST_URL = "v1.1/Channel/ChannelList?userId=1&type=0";
     private final String CHANNEL_INFO_URL = "v1.1/News/NewsList?";
 
     private TopLineOperator() {

@@ -20,10 +20,10 @@ import java.util.List;
 public class DataHelper {
     private String jsonStr = "";
 
-    private static final String[] USER_CHANNEL = new String[]{"推荐", "热点", "素描", "色彩",
-            "速写", "创作", "设计", "动漫", "摄影"};
-    private static final String[] OTHER_CHANNEL = new String[]{"轻松一刻", "正能量", "另一面", "女人",
-            "财经", "数码", "情感", "科技"};
+    private static final String[] USER_CHANNEL = new String[]{"头条", "画室", "视频", "试卷",
+            "联考", "校考", "专业", "志愿", "录取"};
+    private static final String[] OTHER_CHANNEL = new String[]{"入学", "动态", "访谈", "网站",
+            "播报"};
 
 
     public DataHelper() {
@@ -40,7 +40,6 @@ public class DataHelper {
      * @return 用户已订阅频道
      */
     public List<ChannelItem> getUserChannels() {
-
         List<ChannelItem> lstUserItems = new ArrayList<>();
         try {
             Gson gson= new Gson();
@@ -73,27 +72,39 @@ public class DataHelper {
 
     public List<ChannelItem> getLocalUserChannel() {
         List<ChannelItem> lstItems = new ArrayList<>();
-        ChannelItem item1 = new ChannelItem(1, USER_CHANNEL[1], 1, true);
-        ChannelItem item2 = new ChannelItem(2, USER_CHANNEL[2], 2, true);
-        ChannelItem item3 = new ChannelItem(3, USER_CHANNEL[3], 3, true);
-        ChannelItem item4 = new ChannelItem(4, USER_CHANNEL[4], 4, true);
+        ChannelItem item1 = new ChannelItem(6, OTHER_CHANNEL[0], 1, true);
+        ChannelItem item2 = new ChannelItem(17, OTHER_CHANNEL[1], 1, true);
+        ChannelItem item3 = new ChannelItem(18, OTHER_CHANNEL[2], 1, true);
+        ChannelItem item4 = new ChannelItem(19, OTHER_CHANNEL[3], 1, true);
+        ChannelItem item5 = new ChannelItem(20, OTHER_CHANNEL[4], 1, true);
+        ChannelItem item6 = new ChannelItem(21, OTHER_CHANNEL[5], 1, true);
+        ChannelItem item7 = new ChannelItem(22, OTHER_CHANNEL[6], 1, true);
+        ChannelItem item8 = new ChannelItem(23, OTHER_CHANNEL[7], 1, true);
+        ChannelItem item9 = new ChannelItem(24, OTHER_CHANNEL[8], 1, true);
         lstItems.add(item1);
         lstItems.add(item2);
         lstItems.add(item3);
         lstItems.add(item4);
+        lstItems.add(item5);
+        lstItems.add(item6);
+        lstItems.add(item7);
+        lstItems.add(item8);
+        lstItems.add(item9);
         return lstItems;
     }
 
     public List<ChannelItem> getLocalOtherChannel() {
         List<ChannelItem> lstItems = new ArrayList<>();
-        ChannelItem item1 = new ChannelItem(1, OTHER_CHANNEL[1], 1, true);
-        ChannelItem item2 = new ChannelItem(2, OTHER_CHANNEL[2], 2, true);
-        ChannelItem item3 = new ChannelItem(3, OTHER_CHANNEL[3], 3, true);
-        ChannelItem item4 = new ChannelItem(4, OTHER_CHANNEL[4], 4, true);
+        ChannelItem item1 = new ChannelItem(25, OTHER_CHANNEL[0], 1, true);
+        ChannelItem item2 = new ChannelItem(26, OTHER_CHANNEL[1], 1, true);
+        ChannelItem item3 = new ChannelItem(27, OTHER_CHANNEL[2], 1, true);
+        ChannelItem item4 = new ChannelItem(28, OTHER_CHANNEL[3], 1, true);
+        ChannelItem item5 = new ChannelItem(29, OTHER_CHANNEL[4], 1, true);
         lstItems.add(item1);
         lstItems.add(item2);
         lstItems.add(item3);
         lstItems.add(item4);
+        lstItems.add(item5);
         return lstItems;
     }
 
