@@ -171,8 +171,9 @@ public class ToplineFragment extends BaseFragment {
                 //TODO: copy the data from lstuserchannel to viewpager's adapter's data then notifydatasetchanged.
 
                 channelJsonStr=spu.getStringByKey(SharedPreferencesUtil.CHANNELS);
-                ((FragmentPagerAdapter)fragmentPagerAdapter).notifyDataSetChanged();
-                ((TabPageIndicator)indicator).notifyDataSetChanged();
+                fragmentPagerAdapter.changeData(channelJsonStr);
+                fragmentPagerAdapter.notifyDataSetChanged();
+                indicator.notifyDataSetChanged();
 
                 ViewGroup topLineViewGroup = (ViewGroup) getActivity().findViewById(R.id.rl_topline);
                 topLineViewGroup.removeView(channelManageView);
@@ -299,6 +300,8 @@ public class ToplineFragment extends BaseFragment {
 
             return fragment;
         }
+
+
 
         @Override
         public CharSequence getPageTitle(int position) {

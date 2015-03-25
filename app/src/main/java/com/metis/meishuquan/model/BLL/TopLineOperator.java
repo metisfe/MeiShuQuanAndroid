@@ -1,5 +1,6 @@
 package com.metis.meishuquan.model.BLL;
 
+import android.util.JsonReader;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,6 +14,8 @@ import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import org.apache.http.client.methods.HttpGet;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * 业务逻辑类：头条
@@ -52,18 +55,25 @@ public class TopLineOperator {
                                 if (result.getInfo().equals(String.valueOf(0))) {
                                     Gson gson = new Gson();
                                     String json = gson.toJson(result);
-                                    SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
-                                    spu.delete(SharedPreferencesUtil.CHANNELS);
-                                    spu.add(SharedPreferencesUtil.CHANNELS, json);//添加至缓存中
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(json);
+                                        JSONObject chennels = jsonObject.getJSONObject("data");
+                                        String data=chennels.toString();
+                                        SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
+                                        spu.delete(SharedPreferencesUtil.CHANNELS);
+                                        Log.i("data",data);
+                                        spu.add(SharedPreferencesUtil.CHANNELS, data);//添加至缓存中
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                 } else {
-                                    Log.e("meishuquan", "网络状态码不为0");
+                                    Log.e("meishuquan_statue", "网络状态码不为0");
                                 }
                             }
                         });
             } else {
                 Toast.makeText(MainApplication.UIContext, "网络异常", Toast.LENGTH_LONG).show();
             }
-
         }
     }
 

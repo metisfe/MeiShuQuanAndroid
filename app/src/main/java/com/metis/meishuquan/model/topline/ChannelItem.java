@@ -60,10 +60,10 @@ public class ChannelItem implements Serializable {
 
     @Override
     public String toString() {
-        return "{channelId:" + channelId +
-                ", channelName:'" + channelName + '\'' +
-                ", orderNum:" + orderNum +
-                ", isAllowReset:" + isAllowReset +
-                '}';
+        return "{'channelId':" + channelId +
+                ", 'channelName':'" + channelName + '\'' +
+                ", 'orderNum':" + orderNum +
+                ", 'isAllowReset':" + isAllowReset +
+                "}";
     }
 }
