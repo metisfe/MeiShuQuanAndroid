@@ -1,11 +1,9 @@
 package com.metis.meishuquan.model.topline;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import android.content.Context;
-import android.util.Log;
-import com.metis.meishuquan.control.topline.ChannelControl;
 
 public class ChannelManage {
 	public static ChannelManage channelManage;
@@ -21,7 +19,6 @@ public class ChannelManage {
 	 * */
 	public List<ChannelItem> defaultOtherChannels;
 
-	private ChannelControl channelControl;
 
 	private boolean userExist = false;
 
@@ -50,8 +47,6 @@ public class ChannelManage {
 	}
 
 	private ChannelManage(Context context) {
-		if (channelControl == null)
-			channelControl = new ChannelControl(context);
 		return;
 	}
 
@@ -60,77 +55,4 @@ public class ChannelManage {
 			channelManage = new ChannelManage(context);
 		return channelManage;
 	}
-
-	/**
-	 * 删除所有频道
-	 */
-	public void deleteAllChannel() {
-		channelControl.clearFeedTable();
-	}
-
-	/**
-	 * 获得我的频道
-	 * 
-	 * @return 我的频道集合
-	 */
-	public List<ChannelItem> getUserChannel() {
-
-		//defaultUserChannels = channelControl.getChannelCache(true);
-		if (defaultUserChannels == null || defaultUserChannels.size() == 0) {
-			//initDefaultData();//加载测试数据
-			//initDefaultChannel();
-		}
-		return defaultUserChannels;
-	}
-
-	/**
-	 * 获得更多频道
-	 * 
-	 * @return 返回更多频道集合
-	 */
-	public List<ChannelItem> getOtherChannel() {
-		// TODO:加载数据
-		// defaultOtherChannels = channelControl.getChannelCache(false);
-		if (defaultOtherChannels == null || defaultOtherChannels.size() == 0) {
-
-		}
-		return defaultOtherChannels;
-	}
-
-	/**
-	 * 保存我的频道
-	 * 
-	 * @param userList
-	 */
-//	public void saveUserChannel(List<ChannelItem> userList) {
-//		for (int i = 0; i < userList.size(); i++) {
-//			ChannelItem channelItem = (ChannelItem) userList.get(i);
-//			channelItem.setOrderId(i);
-//			channelItem.setSelected(true);
-//			channelControl.addCache(channelItem);
-//		}
-//	}
-
-	/**
-	 * 保存更多频道
-	 * 
-	 * @param otherList
-	 */
-	public void saveOtherChannel(List<ChannelItem> otherList) {
-//		for (int i = 0; i < otherList.size(); i++) {
-//			ChannelItem channelItem = otherList.get(i);
-//			channelItem.setOrderId(i);
-//			channelItem.setSelected(false);
-//			channelControl.addCache(channelItem);
-//		}
-	}
-
-	/**
-	 * 初始化默认频道
-	 */
-//	private void initDefaultChannel() {
-//		deleteAllChannel();
-//		saveUserChannel(defaultUserChannels);
-//		saveOtherChannel(defaultOtherChannels);
-//	}
 }

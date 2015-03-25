@@ -72,15 +72,15 @@ public class DataHelper {
 
     public List<ChannelItem> getLocalUserChannel() {
         List<ChannelItem> lstItems = new ArrayList<>();
-        ChannelItem item1 = new ChannelItem(6, OTHER_CHANNEL[0], 1, true);
-        ChannelItem item2 = new ChannelItem(17, OTHER_CHANNEL[1], 1, true);
-        ChannelItem item3 = new ChannelItem(18, OTHER_CHANNEL[2], 1, true);
-        ChannelItem item4 = new ChannelItem(19, OTHER_CHANNEL[3], 1, true);
-        ChannelItem item5 = new ChannelItem(20, OTHER_CHANNEL[4], 1, true);
-        ChannelItem item6 = new ChannelItem(21, OTHER_CHANNEL[5], 1, true);
-        ChannelItem item7 = new ChannelItem(22, OTHER_CHANNEL[6], 1, true);
-        ChannelItem item8 = new ChannelItem(23, OTHER_CHANNEL[7], 1, true);
-        ChannelItem item9 = new ChannelItem(24, OTHER_CHANNEL[8], 1, true);
+        ChannelItem item1 = new ChannelItem(6, USER_CHANNEL[0], 1, true);
+        ChannelItem item2 = new ChannelItem(17, USER_CHANNEL[1], 1, true);
+        ChannelItem item3 = new ChannelItem(18, USER_CHANNEL[2], 1, true);
+        ChannelItem item4 = new ChannelItem(19, USER_CHANNEL[3], 1, true);
+        ChannelItem item5 = new ChannelItem(20, USER_CHANNEL[4], 1, true);
+        ChannelItem item6 = new ChannelItem(21, USER_CHANNEL[5], 1, true);
+        ChannelItem item7 = new ChannelItem(22, USER_CHANNEL[6], 1, true);
+        ChannelItem item8 = new ChannelItem(23, USER_CHANNEL[7], 1, true);
+        ChannelItem item9 = new ChannelItem(24, USER_CHANNEL[8], 1, true);
         lstItems.add(item1);
         lstItems.add(item2);
         lstItems.add(item3);

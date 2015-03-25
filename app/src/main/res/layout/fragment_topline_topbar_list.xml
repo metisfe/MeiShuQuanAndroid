@@ -4,10 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <ListView
+    <com.metis.meishuquan.view.shared.DragListView
         android:id="@+id/listview_topbar_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </ListView>
+    </com.metis.meishuquan.view.shared.DragListView>
 
 </LinearLayout>

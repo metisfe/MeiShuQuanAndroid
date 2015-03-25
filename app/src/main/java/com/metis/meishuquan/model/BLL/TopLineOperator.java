@@ -47,7 +47,7 @@ public class TopLineOperator {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {//判断网络状态
             //加载网络数据
             if (flag) {
-                ApiDataProvider.getmClient().invokeApi("v1.1/Channel/ChannelList?userId=1&type=1", null,
+                ApiDataProvider.getmClient().invokeApi(CHANNELLIST_URL, null,
                         HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(),
                         new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override

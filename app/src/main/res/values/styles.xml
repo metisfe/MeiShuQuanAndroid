@@ -1,7 +1,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppBaseTheme" parent="android:Theme.Light">
-    </style>
+    <style name="AppBaseTheme" parent="android:Theme.Light"></style>
 
     <style name="AppTheme" parent="AppBaseTheme">
         <item name="android:windowNoTitle">true</item>
@@ -23,9 +22,11 @@
         <item name="android:textColor">#ffffff</item>
         <item name="android:height">25dp</item>
     </style>
+
     <style name="ButtonRed" parent="ButtonBase">
         <item name="android:background">#e00084</item>
     </style>
+
     <style name="ButtonGray" parent="ButtonBase">
         <item name="android:background">#d8d3c6</item>
     </style>
@@ -140,10 +141,18 @@
     <!-- PopupWindow左右弹出的效果 -->
 
     <style name="AnimationFade">
-
         <!-- PopupWindow左右弹出的效果 -->
         <item name="android:windowEnterAnimation">@anim/push_up_in</item>
         <item name="android:windowExitAnimation">@anim/push_up_out</item>
     </style>
+
+    <!--ListView 下拉后的进度条样式-->
+    <style name="customProgressBar" parent="@android:style/Widget.ProgressBar.Small">
+        <item name="android:indeterminateDrawable">@drawable/custom_progress_bar</item>
+        <item name="android:layout_width">21dip</item>
+        <item name="android:layout_height">21dip</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
 
 </resources>

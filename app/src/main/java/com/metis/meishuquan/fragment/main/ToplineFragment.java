@@ -155,10 +155,6 @@ public class ToplineFragment extends BaseFragment {
             }
         });
 
-//        spu=SharedPreferencesUtil.getInstanse(getActivity());
-//        String json=spu.getStringByKey(SharedPreferencesUtil.CHANNELS);
-//        this.fragmentPagerAdapter = new TabPageIndicatorAdapter(getActivity().getSupportFragmentManager(), "");
-
         this.cmv = new ChannelManageView(getActivity(), null, 0);
         this.cmv.setChannelManageViewListener(new ChannelManageView.ChannelManageViewListener() {
             @Override
@@ -182,12 +178,6 @@ public class ToplineFragment extends BaseFragment {
                 TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, yEnd, yStart);
                 getAnimation(translateAnimation);
                 channelManageView.startAnimation(translateAnimation);
-
-                //重新加载数据
-//                String json=spu.getStringByKey(SharedPreferencesUtil.CHANNELS);
-//                fragmentPagerAdapter= new TabPageIndicatorAdapter(getActivity().getSupportFragmentManager(),json);
-//                viewPager.setAdapter(fragmentPagerAdapter);
-//                indicator.setViewPager(viewPager);
             }
         });
     }
@@ -256,10 +246,6 @@ public class ToplineFragment extends BaseFragment {
         }
     }
 
-    public void refreshData(){
-    }
-
-
     /**
      * ViewPager适配器
      */
@@ -292,16 +278,14 @@ public class ToplineFragment extends BaseFragment {
 
         @Override
         public Fragment getItem(int position) {
-            //新建一个Fragment来展示ViewPager item的内容，并传递数据
-            fragment = new ItemFragment();
+                fragment = new ItemFragment();
+            //int channelId=userItems.get(position).getChannelId();
             Bundle args = new Bundle();
-            args.putString("arg", "test");
+            //args.putInt("channelId", channelId);
             fragment.setArguments(args);
 
             return fragment;
         }
-
-
 
         @Override
         public CharSequence getPageTitle(int position) {

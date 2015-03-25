@@ -332,4 +332,15 @@ public class Utils
         imageUrl = Utils.decodeImageUrl(imageUrl);
         return Utils.getDownloadImageDir() + File.separator + SystemUtil.hashKeyForDisk(imageUrl) + suffix;
     }
+
+    public static String getCurrentTime(String format) {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.getDefault());
+        String currentTime = sdf.format(date);
+        return currentTime;
+    }
+
+    public static String getCurrentTime() {
+        return getCurrentTime("yyyy-MM-dd  HH:mm:ss");
+    }
 }
