@@ -216,4 +216,6 @@ public class ImageUtil
         return Bitmap.createScaledBitmap(roughBitmap, (int) (roughBitmap.getWidth() * values[0]), (int) (roughBitmap.getHeight() * values[4]), true);
     }
 
+
+
 }
