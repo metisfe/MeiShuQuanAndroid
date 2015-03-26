@@ -58,10 +58,10 @@ public class TopLineOperator {
                                     try {
                                         JSONObject jsonObject = new JSONObject(json);
                                         JSONObject chennels = jsonObject.getJSONObject("data");
-                                        String data = chennels.toString();
+                                        String data=chennels.toString();
                                         SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
                                         spu.delete(SharedPreferencesUtil.CHANNELS);
-                                        Log.i("data", data);
+                                        Log.i("data",data);
                                         spu.add(SharedPreferencesUtil.CHANNELS, data);//添加至缓存中
                                     } catch (JSONException e) {
                                         e.printStackTrace();
@@ -91,7 +91,7 @@ public class TopLineOperator {
             PATH.append("&");
             PATH.append("lastNewsId=" + lastNewsId);
             ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
-                    (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+                    (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>(){
 
                         @Override
                         public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
@@ -100,13 +100,10 @@ public class TopLineOperator {
                                 Gson gson = new Gson();
                                 String json = gson.toJson(result);
                                 try {
-                                    JSONObject jsonObject = new JSONObject(json);
-                                    JSONObject news = jsonObject.getJSONObject("data");
-                                    String data = news.toString();
                                     SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
                                     spu.delete(String.valueOf(channelId));
-                                    Log.i("channelId", json);
-                                    spu.add(String.valueOf(channelId), data);//添加至缓存中
+                                    Log.i("channelId",json);
+                                    spu.add(String.valueOf(channelId), json);//添加至缓存中
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
