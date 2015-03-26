@@ -6,6 +6,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +23,13 @@ import com.metis.meishuquan.adapter.topline.ToplineCustomAdapter;
 import com.metis.meishuquan.fragment.BaseFragment;
 import com.metis.meishuquan.fragment.main.ToplineFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
+import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.topline.News;
+import com.metis.meishuquan.model.topline.ToplineNewsList;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.shared.DragListView;
+import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +45,7 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
     private DragListView listView;
     private List<News> list = new ArrayList<>();
     private int channelId = -1;
+    private boolean isCache = true;
 
     private ToplineCustomAdapter toplineAdapter;
 
@@ -114,7 +120,10 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
         this.listView.setOnLoadListener(new DragListView.OnLoadListener() {
             @Override
             public void onLoad() {
-                loadData(DragListView.LOAD);
+                //loadData(DragListView.LOAD);
+                if (channelId!=-1){
+                    getData(list.get(list.size()-1).getNewsId());
+                }
             }
         });
     }
@@ -150,7 +159,11 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
                 }
                 Message msg = handler.obtainMessage();
                 msg.what = what;
-                msg.obj = getData();
+                if (what==DragListView.LOAD){
+                    msg.obj=getData();
+                }else if (what==DragListView.REFRESH){
+                    msg.obj = getData();
+                }
                 handler.sendMessage(msg);
             }
         }).start();
@@ -158,22 +171,35 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
 
     // 测试数据
     public List<News> getData() {
-        List<News> result = new ArrayList<News>();
+        ToplineNewsList result = new ToplineNewsList();
         SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
         if (channelId != -1) {
             String jsonString = spu.getStringByKey(String.valueOf(channelId));
             if (!jsonString.equals("")) {
                 Gson gson = new Gson();
-                result = gson.fromJson(jsonString, new TypeToken<List<News>>() {
+                result = gson.fromJson(jsonString, new TypeToken<ToplineNewsList>() {
                 }.getType());
-            } else {
-                TopLineOperator operator = TopLineOperator.getInstance();
-                operator.getNewsListByChannelId(channelId, 0);
-                getData();
             }
-
         }
-        return result;
+        return result.getData();
+    }
+
+    public void getData(int lastNewsId) {
+        TopLineOperator operator = TopLineOperator.getInstance();
+        operator.getNewsListByChannelId(new ApiOperationCallback<ReturnInfo<String>>() {
+            @Override
+            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                Message msg=handler.obtainMessage();
+                msg.what=DragListView.LOAD;
+                Gson gson = new Gson();
+                String json = gson.toJson(result);
+                ToplineNewsList data = gson.fromJson(json, new TypeToken<ToplineNewsList>() {
+                }.getType());
+                msg.obj=data.getData();
+                handler.sendMessage(msg);
+                //TODO:添加至缓存
+            }
+        }, channelId, lastNewsId);
     }
 
 

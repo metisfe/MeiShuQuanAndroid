@@ -84,7 +84,7 @@ public class TopLineOperator {
      * @param channelId
      * @param lastNewsId 等于0时，获取最新数据;设为newId时，用于加载数据（分页）
      */
-    public void getNewsListByChannelId(final int channelId, int lastNewsId) {
+    public void addNewsListByChannelIdToCache(final int channelId, int lastNewsId) {
         if (flag) {
             StringBuffer PATH = new StringBuffer(CHANNEL_INFO_URL);
             PATH.append("ChanelId=" + channelId);
@@ -113,6 +113,17 @@ public class TopLineOperator {
 
                         }
                     });
+        }
+    }
+
+    public void getNewsListByChannelId(ApiOperationCallback<ReturnInfo<String>> callback,int channelId,int lastNewsId) {
+        if (flag) {
+            StringBuffer PATH = new StringBuffer(CHANNEL_INFO_URL);
+            PATH.append("ChanelId=" + channelId);
+            PATH.append("&");
+            PATH.append("lastNewsId=" + lastNewsId);
+            ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
+                    (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
         }
     }
 

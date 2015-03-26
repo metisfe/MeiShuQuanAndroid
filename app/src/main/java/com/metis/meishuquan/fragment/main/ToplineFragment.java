@@ -6,32 +6,25 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.adapter.topline.DataHelper;
 import com.metis.meishuquan.fragment.BaseFragment;
 import com.metis.meishuquan.fragment.ToplineFragment.ItemFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
-import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.topline.ChannelItem;
 import com.metis.meishuquan.model.topline.News;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.SystemUtil;
 import com.metis.meishuquan.view.shared.TabBar;
 import com.metis.meishuquan.view.topline.ChannelManageView;
-import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
-import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.viewpagerindicator.TabPageIndicator;
 
 import java.util.ArrayList;
@@ -97,7 +90,7 @@ public class ToplineFragment extends BaseFragment {
      */
     private void initNews(int channelId, int lastNewsId) {
         TopLineOperator topLineOperator = TopLineOperator.getInstance();
-        topLineOperator.getNewsListByChannelId(channelId, lastNewsId);
+        topLineOperator.addNewsListByChannelIdToCache(channelId, lastNewsId);
     }
 
     /**
