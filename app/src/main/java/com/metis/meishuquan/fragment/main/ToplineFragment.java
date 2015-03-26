@@ -22,7 +22,6 @@ import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.topline.ChannelItem;
 import com.metis.meishuquan.model.topline.News;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
-import com.metis.meishuquan.util.SystemUtil;
 import com.metis.meishuquan.view.shared.TabBar;
 import com.metis.meishuquan.view.topline.ChannelManageView;
 import com.viewpagerindicator.TabPageIndicator;
@@ -66,14 +65,6 @@ public class ToplineFragment extends BaseFragment {
         initView(rootView);
         initEvent();
 
-        //2、默认加载首个频道的内容
-//        if (lstOtherItems.size() > 0) {
-//            lastNewsId = 0;
-//            //initNews(lstOtherItems.get(0).getId(), lastNewsId);
-//            initNews(6,0);
-//        }
-
-        //initNews(6, 0);
         return rootView;
     }
 
@@ -99,9 +90,8 @@ public class ToplineFragment extends BaseFragment {
     private void getChannelItems() {
         TopLineOperator topLineOperator = TopLineOperator.getInstance();
         //将网络返回的数据添加至缓存中
-        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
-            topLineOperator.addChannelItemsToLoacal();
-        }
+        topLineOperator.addChannelItemsToLoacal();
+
 
         //加载缓存中的数据
         spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
@@ -137,9 +127,7 @@ public class ToplineFragment extends BaseFragment {
                 if (!addChannelPoped) {
                     return;
                 }
-
                 addChannelPoped = false;
-                //TODO: copy the data from lstuserchannel to viewpager's adapter's data then notifydatasetchanged.
 
                 channelJsonStr = spu.getStringByKey(SharedPreferencesUtil.CHANNELS);
                 fragmentPagerAdapter.changeData(channelJsonStr);

@@ -1,34 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/id_btn_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="返回" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_launcher" />
-
-    <TextView
+    <LinearLayout
+        android:id="@+id/id_ll_news_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="       李光耀先生我见过他很多次，非常的佩服。他确实是新加坡的国父，自从被马来西亚赶出来，被迫独立之后，新加坡只用了一代人就发展起来了，世界上再也找不到这样的地方。要知道世界上小国家多得是，有几个发展成这样的？北欧那些小国，也是用了一百多年才发展起来。
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp">
 
-　　我觉得，二战以后反殖民的独立国家，他可能是最后一位政治强人了，跟他同辈的伟大政治人物，他是最后一位了，再也没有了。对他评价高的不仅仅是我们中国人，在世界上的地位也大抵如此。他从不空讲理想，而是讲可行的理想，是一个现实主义者，时时以国家利益为重。新加坡人对李光耀非常敬佩，因为他所做的就是为了新加坡。
+        <TextView
+            android:id="@+id/id_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="素描静物深刻入画"
+            android:textSize="25sp"
+            android:textStyle="bold" />
 
-　　他对西方媒体说过很有名的话，大意就是，我是新加坡人民选举出来的，你们不是。我总结，这就是新加坡取得那么大成就的原因。他的想法是，只要我这个政策是为了新加坡社会和人民的长远利益，即使很多人反对，也要坚决执行。" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="40dp"
-        android:text="赞" />
-</LinearLayout>
+            <TextView
+                android:id="@+id/id_createtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2014-03-04 12:00" />
+
+            <TextView
+                android:id="@+id/id_source"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="信息来源" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</ScrollView>

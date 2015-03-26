@@ -3,8 +3,11 @@ package com.metis.meishuquan.adapter.topline;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +15,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.topline.News;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -77,9 +82,9 @@ public class ToplineCustomAdapter extends ToplineAdapter {
 
         if (convertView == null) {
             holder = new ViewHolder();
-
             convertView = mInflater.inflate(R.layout.fragment_topline_topbar_list_item, null, false);
-            holder.img_thumbnail = (ImageView) convertView.findViewById(R.id.img_thumbnail);
+
+            holder.img_thumbnail = (SmartImageView) convertView.findViewById(R.id.img_thumbnail);
             holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
             holder.tv_source_and_readcount = (TextView) convertView.findViewById(R.id.tv_source_and_readcount);
             holder.tv_comment_count = (TextView) convertView.findViewById(R.id.tv_comment_count);
@@ -89,12 +94,7 @@ public class ToplineCustomAdapter extends ToplineAdapter {
         }
 
         News news = lstData.get(position);
-        if (!news.getImgUrl().equals("")) {
-            getImageByURL(news.getImgUrl());
-        }else {
-            Bitmap bmp = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.icon);
-            holder.img_thumbnail.setImageBitmap(bmp);
-        }
+        holder.img_thumbnail.setImageUrl(news.getImgUrl().trim(),R.drawable.icon);
         holder.tv_title.setText(news.getTitle());
         holder.tv_source_and_readcount.setText(news.getSource().getTitle() + " | " + "阅读(" + news.getPageViewCount() + ")");
         holder.tv_comment_count.setText("评论(" + news.getCommentCount() + ")");
@@ -103,51 +103,35 @@ public class ToplineCustomAdapter extends ToplineAdapter {
     }
 
     private static class ViewHolder {
-        ImageView img_thumbnail;
+        SmartImageView img_thumbnail;
         TextView tv_title, tv_source_and_readcount, tv_comment_count;
     }
 
-    private void getImageByURL(final String url) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Bitmap bitmap = getHttpBitmap(url);
-                Message msg = handler.obtainMessage();
-                msg.obj = bitmap;
-            }
-        }).start();
-    }
-
-    /**
-     * 获取网落图片资源
-     *
-     * @param url
-     * @return
-     */
-    public Bitmap getHttpBitmap(String url) {
-        URL myFileURL;
-        Bitmap bitmap = null;
-        try {
-            myFileURL = new URL(url);
-            // 获得连接
-            HttpURLConnection conn = (HttpURLConnection) myFileURL
-                    .openConnection();
-            // 设置超时时间为6000毫秒，conn.setConnectionTiem(0);表示没有时间限制
-            conn.setConnectTimeout(3000);
-            // 连接设置获得数据流
-            conn.setDoInput(true);
-            // 不使用缓存
-            conn.setUseCaches(false);
-            // 得到数据流
-            InputStream is = conn.getInputStream();
-            // 解析得到图片
-            bitmap = BitmapFactory.decodeStream(is);
-            // 关闭数据流
-            is.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return bitmap;
-
-    }
+//    private class DownloadImageTask extends AsyncTask<String, Void, Drawable> {
+//
+//        protected Drawable doInBackground(String... urls) {
+//            return loadImageFromNetwork(urls[0]);
+//        }
+//
+//        protected void onPostExecute(Drawable result) {
+//            holder.img_thumbnail.setImageDrawable(result);
+//        }
+//    }
+//
+//    private Drawable loadImageFromNetwork(String imageUrl) {
+//        Drawable drawable = null;
+//        try {
+//            // 可以在这里通过文件名来判断，是否本地有此图片
+//            drawable = Drawable.createFromStream(
+//                    new URL(imageUrl).openStream(), "image.jpg");
+//        } catch (IOException e) {
+//            Log.d("test", e.getMessage());
+//        }
+//        if (drawable == null) {
+//            Log.d("test", "null drawable");
+//        } else {
+//            Log.d("test", "not null drawable");
+//        }
+//        return drawable;
+//    }
 }

@@ -8,15 +8,12 @@ public class ReturnInfo<E> {
     private OptionSettings option;
 
 
-    public String getInfo()
-    {
-        if (option!=null && option.status!=null)
-        {
+    public String getInfo() {
+        if (option != null && option.status != null) {
             return option.status;
         }
         return "";
     }
-
 
     private E data;
 }

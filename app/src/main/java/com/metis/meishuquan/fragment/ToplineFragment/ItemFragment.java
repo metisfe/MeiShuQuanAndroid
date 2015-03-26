@@ -45,7 +45,6 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
     private DragListView listView;
     private List<News> list = new ArrayList<>();
     private int channelId = -1;
-    private boolean isCache = true;
 
     private ToplineCustomAdapter toplineAdapter;
 
@@ -135,7 +134,12 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        int newsId=list.get(i).getNewsId();//获取新闻Id
         ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
+        Bundle args= new Bundle();
+        args.putInt("newsId", newsId);
+        itemInfoFragment.setArguments(args);
+
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
@@ -169,7 +173,7 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
         }).start();
     }
 
-    // 测试数据
+    // 从缓存中拿之前加载好的数据
     public List<News> getData() {
         ToplineNewsList result = new ToplineNewsList();
         SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
@@ -184,6 +188,7 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
         return result.getData();
     }
 
+    //加载更多
     public void getData(int lastNewsId) {
         TopLineOperator operator = TopLineOperator.getInstance();
         operator.getNewsListByChannelId(new ApiOperationCallback<ReturnInfo<String>>() {
