@@ -10,6 +10,7 @@ import java.util.Map;
  */
 public class SharedPreferencesUtil {
     public static final String CHANNELS="channels";
+    public static final String CHANNELID_NEWS="news";
 
     private static SharedPreferencesUtil spu = null;
     private Context context;

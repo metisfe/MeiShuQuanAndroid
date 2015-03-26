@@ -64,29 +64,28 @@ public class ToplineFragment extends BaseFragment {
         //加载频道数据
         getChannelItems();
 
+        //加载默认频道的数据
+        initNews(6, 0);
+
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_toplinefragment, container, false);
 
-        //初始化视图及成员
+        //初始化视图及成员变量
         initView(rootView);
         initEvent();
 
         //2、默认加载首个频道的内容
 //        if (lstOtherItems.size() > 0) {
 //            lastNewsId = 0;
-//            //initNews(lstOtherItems.get(0).getId(), lastNewsId);//TODO:测试数据在lstOtherItems中，应改成lstUserItems  获取最新数据
+//            //initNews(lstOtherItems.get(0).getId(), lastNewsId);
 //            initNews(6,0);
 //        }
 
-        initNews(6, 0);
+        //initNews(6, 0);
         return rootView;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-
-        //初始化事件
-//        initEvent();
-
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -98,24 +97,7 @@ public class ToplineFragment extends BaseFragment {
      */
     private void initNews(int channelId, int lastNewsId) {
         TopLineOperator topLineOperator = TopLineOperator.getInstance();
-        topLineOperator.getNewsListByChannelId(new ApiOperationCallback<ReturnInfo<String>>() {
-            @Override
-            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                Gson gson = new Gson();
-                String jsonStr = gson.toJson(result);
-                Log.i("jsonStr", jsonStr);
-                //lstNews=getListNews(jsonStr);
-                Log.i("jsonStr", String.valueOf(lstNews.size()));
-            }
-        }, channelId, lastNewsId);
-    }
-
-    public static List<News> getListNews(String jsonString) {
-        List<News> list = new ArrayList<News>();
-        Gson gson = new Gson();
-        list = gson.fromJson(jsonString, new TypeToken<List<News>>() {
-        }.getType());
-        return list;
+        topLineOperator.getNewsListByChannelId(channelId, lastNewsId);
     }
 
     /**
@@ -166,7 +148,7 @@ public class ToplineFragment extends BaseFragment {
                 addChannelPoped = false;
                 //TODO: copy the data from lstuserchannel to viewpager's adapter's data then notifydatasetchanged.
 
-                channelJsonStr=spu.getStringByKey(SharedPreferencesUtil.CHANNELS);
+                channelJsonStr = spu.getStringByKey(SharedPreferencesUtil.CHANNELS);
                 fragmentPagerAdapter.changeData(channelJsonStr);
                 fragmentPagerAdapter.notifyDataSetChanged();
                 indicator.notifyDataSetChanged();
@@ -193,7 +175,7 @@ public class ToplineFragment extends BaseFragment {
         //实例化TabPageIndicator然后设置ViewPager与之关联
         this.indicator.setViewPager(viewPager);
 
-        //如果我们要对ViewPager设置监听，用indicator设置就行了
+        //对ViewPager设置监听，用indicator设置就行了
         indicator.setOnPageChangeListener(new PageChangeListener());
 
     }
@@ -250,9 +232,9 @@ public class ToplineFragment extends BaseFragment {
      * ViewPager适配器
      */
     class TabPageIndicatorAdapter extends FragmentPagerAdapter {
-        private Fragment fragment = null;
+        private ItemFragment fragment = null;
         public List<ChannelItem> userItems = null;
-        public List<ChannelItem> otherItems=null;
+        public List<ChannelItem> otherItems = null;
 
 
         public TabPageIndicatorAdapter(FragmentManager fm, String jsonStr) {
@@ -262,29 +244,34 @@ public class ToplineFragment extends BaseFragment {
         }
 
         //交换数据
-        public void changeData(String jsonStr){
-            DataHelper helper= new DataHelper(jsonStr);
-            if (jsonStr.equals("")){
-                userItems=helper.getLocalUserChannel();
-                otherItems=helper.getLocalOtherChannel();
-            }else{
-                userItems=helper.getUserChannels();
-                if (userItems.size()==0){
-                    userItems=helper.getLocalUserChannel();
+        public void changeData(String jsonStr) {
+            DataHelper helper = new DataHelper(jsonStr);
+            if (jsonStr.equals("")) {
+                userItems = helper.getLocalUserChannel();
+                otherItems = helper.getLocalOtherChannel();
+            } else {
+                userItems = helper.getUserChannels();
+                if (userItems.size() == 0) {
+                    userItems = helper.getLocalUserChannel();
                 }
-                otherItems=helper.getOtherChannels();
+                otherItems = helper.getOtherChannels();
             }
         }
 
         @Override
         public Fragment getItem(int position) {
-                fragment = new ItemFragment();
-            //int channelId=userItems.get(position).getChannelId();
+            int channelId = userItems.get(position).getChannelId();
+            initNews(channelId,0);
+            fragment = new ItemFragment();
             Bundle args = new Bundle();
-            //args.putInt("channelId", channelId);
+            args.putInt("channelId", channelId);
             fragment.setArguments(args);
-
             return fragment;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            return super.instantiateItem(container, position);
         }
 
         @Override

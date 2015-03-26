@@ -81,18 +81,38 @@ public class TopLineOperator {
     /**
      * 根据频道Id获取新闻列表
      *
-     * @param callBack
      * @param channelId
      * @param lastNewsId 等于0时，获取最新数据;设为newId时，用于加载数据（分页）
      */
-    public void getNewsListByChannelId(ApiOperationCallback<ReturnInfo<String>> callBack, int channelId, int lastNewsId) {
+    public void getNewsListByChannelId(final int channelId, int lastNewsId) {
         if (flag) {
             StringBuffer PATH = new StringBuffer(CHANNEL_INFO_URL);
             PATH.append("ChanelId=" + channelId);
             PATH.append("&");
             PATH.append("lastNewsId=" + lastNewsId);
             ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
-                    (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callBack);
+                    (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>(){
+
+                        @Override
+                        public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                            //添加至缓存
+                            if (result.getInfo().equals(String.valueOf(0))) {
+                                Gson gson = new Gson();
+                                String json = gson.toJson(result);
+                                try {
+                                    SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
+                                    spu.delete(String.valueOf(channelId));
+                                    Log.i("channelId",json);
+                                    spu.add(String.valueOf(channelId), json);//添加至缓存中
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                Log.e("meishuquan_statue", "网络状态码不为0");
+                            }
+
+                        }
+                    });
         }
     }
 

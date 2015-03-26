@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.model.topline.News;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class ToplineCustomAdapter extends ToplineAdapter {
 
     private int resourseId;
     private LayoutInflater mInflater;
-    private List<String> lstData;
+    private List<News> lstData;
     private Context context;
 
     private ViewHolder holder;
@@ -33,7 +34,7 @@ public class ToplineCustomAdapter extends ToplineAdapter {
         this.mInflater = LayoutInflater.from(context);
     }
 
-    public ToplineCustomAdapter(Context context,List<String> lstData ) {
+    public ToplineCustomAdapter(Context context,List<News> lstData ) {
         super(context);
         this.context = context;
         this.lstData = lstData;
@@ -72,11 +73,13 @@ public class ToplineCustomAdapter extends ToplineAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
+        News news =lstData.get(position);
+
         Bitmap bmp = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.icon);
         holder.img_thumbnail.setImageBitmap(bmp);
-        holder.tv_title.setText(lstData.get(position));
-        holder.tv_source_and_readcount.setText("消息来源"+" | "+"阅读("+100+")");
-        holder.tv_comment_count.setText("评论("+10+")");
+        holder.tv_title.setText(news.getTitle());
+        holder.tv_source_and_readcount.setText(news.getSource().getTitle()+" | "+"阅读("+news.getPageViewCount()+")");
+        holder.tv_comment_count.setText("评论("+news.getCommentCount()+")");
 
         return convertView;
     }

@@ -7,13 +7,13 @@ package com.metis.meishuquan.model.topline;
  */
 public class News {
 
-    private int newsId;
-    private String title;
-    private String desc;
-    private String createTime;
-    private String imgUrl;
-    private int pageViewCount;//阅读数量
-    private int commentCount;//评论数量
+    private int newsId=0;
+    private String title="";
+    private String desc="";
+    private String createTime="";
+    private String imgUrl="";
+    private int pageViewCount=0;//阅读数量
+    private int commentCount=0;//评论数量
 
     private Source source;
 

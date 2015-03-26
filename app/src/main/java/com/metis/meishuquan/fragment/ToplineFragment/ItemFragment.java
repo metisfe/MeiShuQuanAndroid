@@ -14,10 +14,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.adapter.topline.ToplineCustomAdapter;
 import com.metis.meishuquan.fragment.BaseFragment;
 import com.metis.meishuquan.fragment.main.ToplineFragment;
+import com.metis.meishuquan.model.BLL.TopLineOperator;
+import com.metis.meishuquan.model.topline.News;
+import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.shared.DragListView;
 
 import java.util.ArrayList;
@@ -32,13 +38,14 @@ import java.util.Random;
 public class ItemFragment extends BaseFragment implements AdapterView.OnItemClickListener {
 
     private DragListView listView;
-    private List<String> list = new ArrayList<String>();
+    private List<News> list = new ArrayList<>();
+    private int channelId = -1;
 
     private ToplineCustomAdapter toplineAdapter;
 
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
-            List<String> result = (List<String>) msg.obj;
+            List<News> result = (List<News>) msg.obj;
             switch (msg.what) {
                 case DragListView.REFRESH:
                     listView.onRefreshComplete();
@@ -52,15 +59,16 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
             }
             listView.setResultSize(result.size());
             toplineAdapter.notifyDataSetChanged();
-        };
+        }
+
+        ;
     };
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-//        Bundle mBundle= this.getArguments();
-//        int channelId=mBundle.getInt("channelId");
+
         //TODO:根据频道Id，获取频道列表数据
 
         View contextView = inflater.inflate(R.layout.fragment_topline_topbar_list, container, false);
@@ -68,6 +76,12 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
         //初始化
         initView(contextView);
         initData();
+
+        //接收频道ID
+        Bundle mBundle = this.getArguments();
+        if (mBundle != null) {
+            channelId = mBundle.getInt("channelId");
+        }
         //初始化事件
         initEvent();
         return contextView;
@@ -84,7 +98,6 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
 
         //初始化成员
         toplineAdapter = new ToplineCustomAdapter(getActivity(), list);
-        //this.adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, getDataSource());
         this.listView.setAdapter(toplineAdapter);
 
     }
@@ -121,9 +134,6 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
         ft.commit();
     }
 
-
-
-
     private void initData() {
         loadData(DragListView.REFRESH);
     }
@@ -131,11 +141,10 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
     private void loadData(final int what) {
         // 这里模拟从服务器获取数据
         new Thread(new Runnable() {
-
             @Override
             public void run() {
                 try {
-                    Thread.sleep(700);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -148,12 +157,21 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
     }
 
     // 测试数据
-    public List<String> getData() {
-        List<String> result = new ArrayList<String>();
-        Random random = new Random();
-        for (int i = 0; i < 10; i++) {
-            long l = random.nextInt(10000);
-            result.add("当前条目的ID：" + l);
+    public List<News> getData() {
+        List<News> result = new ArrayList<News>();
+        SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
+        if (channelId != -1) {
+            String jsonString = spu.getStringByKey(String.valueOf(channelId));
+            if (!jsonString.equals("")) {
+                Gson gson = new Gson();
+                result = gson.fromJson(jsonString, new TypeToken<List<News>>() {
+                }.getType());
+            } else {
+                TopLineOperator operator = TopLineOperator.getInstance();
+                operator.getNewsListByChannelId(channelId, 0);
+                getData();
+            }
+
         }
         return result;
     }
