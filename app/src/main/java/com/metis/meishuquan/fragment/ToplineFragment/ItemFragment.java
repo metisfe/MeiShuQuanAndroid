@@ -45,6 +45,7 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
     private DragListView listView;
     private List<News> list = new ArrayList<>();
     private int channelId = -1;
+    private TopLineOperator operator;
 
     private ToplineCustomAdapter toplineAdapter;
 
@@ -120,8 +121,8 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
             @Override
             public void onLoad() {
                 //loadData(DragListView.LOAD);
-                if (channelId!=-1){
-                    getData(list.get(list.size()-1).getNewsId());
+                if (channelId != -1) {
+                    getData(list.get(list.size() - 1).getNewsId());
                 }
             }
         });
@@ -134,9 +135,9 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        int newsId=list.get(i).getNewsId();//获取新闻Id
+        int newsId = list.get(i).getNewsId();//获取新闻Id
         ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
-        Bundle args= new Bundle();
+        Bundle args = new Bundle();
         args.putInt("newsId", newsId);
         itemInfoFragment.setArguments(args);
 
@@ -152,7 +153,7 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
     }
 
     private void loadData(final int what) {
-        // 这里模拟从服务器获取数据
+        // 从本地或服务器获取数据
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -163,11 +164,7 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
                 }
                 Message msg = handler.obtainMessage();
                 msg.what = what;
-                if (what==DragListView.LOAD){
-                    msg.obj=getData();
-                }else if (what==DragListView.REFRESH){
-                    msg.obj = getData();
-                }
+                msg.obj = getData();
                 handler.sendMessage(msg);
             }
         }).start();
@@ -183,25 +180,31 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
                 Gson gson = new Gson();
                 result = gson.fromJson(jsonString, new TypeToken<ToplineNewsList>() {
                 }.getType());
+            } else {
+                this.getData(0);
             }
         }
         return result.getData();
     }
 
     //加载更多
-    public void getData(int lastNewsId) {
-        TopLineOperator operator = TopLineOperator.getInstance();
+    public void getData(final int lastNewsId) {
+        operator = TopLineOperator.getInstance();
         operator.getNewsListByChannelId(new ApiOperationCallback<ReturnInfo<String>>() {
             @Override
             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                Message msg=handler.obtainMessage();
-                msg.what=DragListView.LOAD;
+                Message msg = handler.obtainMessage();
+                msg.what = DragListView.LOAD;
                 Gson gson = new Gson();
-                String json = gson.toJson(result);
-                ToplineNewsList data = gson.fromJson(json, new TypeToken<ToplineNewsList>() {
-                }.getType());
-                msg.obj=data.getData();
-                handler.sendMessage(msg);
+                if (result != null) {
+                    String json = gson.toJson(result);
+                    ToplineNewsList data = gson.fromJson(json, new TypeToken<ToplineNewsList>() {
+                    }.getType());
+                    msg.obj = data.getData();
+                    handler.sendMessage(msg);
+                }else{
+                    getData(lastNewsId);
+                }
                 //TODO:添加至缓存
             }
         }, channelId, lastNewsId);

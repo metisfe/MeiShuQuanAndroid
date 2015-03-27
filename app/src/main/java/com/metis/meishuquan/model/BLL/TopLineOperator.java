@@ -132,7 +132,7 @@ public class TopLineOperator {
     public void getNewsListByChannelId(ApiOperationCallback<ReturnInfo<String>> callback, int channelId, int lastNewsId) {
         if (flag) {
             StringBuffer PATH = new StringBuffer(CHANNEL_NEW_LIST_URL);
-            PATH.append("ChanelId=" + channelId);
+            PATH.append("?ChanelId=" + channelId);
             PATH.append("&");
             PATH.append("lastNewsId=" + lastNewsId);
             ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,

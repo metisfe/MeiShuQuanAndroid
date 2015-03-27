@@ -1,5 +1,6 @@
 package com.metis.meishuquan.model.topline;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,6 +10,9 @@ public class ToplineNewsList {
     private List<News> data;
 
     public List<News> getData() {
+        if (data==null){
+            data= new ArrayList<>();
+        }
         return data;
     }
 
