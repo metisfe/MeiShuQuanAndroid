@@ -73,21 +73,19 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-
-        //TODO:根据频道Id，获取频道列表数据
-
-        View contextView = inflater.inflate(R.layout.fragment_topline_topbar_list, container, false);
-
-        //初始化
-        initView(contextView);
-        initData();
-
         //接收频道ID
         Bundle mBundle = this.getArguments();
         if (mBundle != null) {
             channelId = mBundle.getInt("channelId");
         }
+        //初始化列表数据
+        initData();
+
+        View contextView = inflater.inflate(R.layout.fragment_topline_topbar_list, container, false);
+
+        //初始化
+        initView(contextView);
+
         //初始化事件
         initEvent();
         return contextView;
@@ -135,7 +133,7 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        int newsId = list.get(i).getNewsId();//获取新闻Id
+        int newsId = list.get(i-1).getNewsId();//获取新闻Id
         ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
         Bundle args = new Bundle();
         args.putInt("newsId", newsId);

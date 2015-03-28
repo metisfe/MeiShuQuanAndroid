@@ -16,9 +16,9 @@ public class Urls {
 
     private String time;
 
-    private String width;
+    private int width;
 
-    private String height;
+    private int height;
 
     private String description;
 
@@ -72,19 +72,19 @@ public class Urls {
         this.time = time;
     }
 
-    public String getWidth() {
+    public int getWidth() {
         return width;
     }
 
-    public void setWidth(String width) {
+    public void setWidth(int width) {
         this.width = width;
     }
 
-    public String getHeight() {
+    public int getHeight() {
         return height;
     }
 
-    public void setHeight(String height) {
+    public void setHeight(int height) {
         this.height = height;
     }
 

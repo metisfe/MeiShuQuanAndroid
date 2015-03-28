@@ -5,24 +5,28 @@
     android:orientation="horizontal">
 
     <Button
+        android:id="@+id/id_btn_writecomment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:text="写评论" />
 
     <Button
+        android:id="@+id/id_btn_commentlist"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:text="评论列表" />
 
     <Button
+        android:id="@+id/id_btn_private"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:text="收藏" />
 
     <Button
+        android:id="@+id/id_btn_share"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"

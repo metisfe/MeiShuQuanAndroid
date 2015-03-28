@@ -29,9 +29,9 @@ public class TopLineOperator {
     private final String CHANNEL_NEW_LIST_URL = "v1.1/News/NewsList";//根据频道获取news列表
     private final String NEWS_INFO_URL = "v1.1/News/NewsDetail";//根据newsId获得详情
     private final String COMMENT_LIST_NEWSID = "v1.1/Comment/CommentList";//根据newsId获得评论列表
-    private final String COMMENT_SUPPORT="v1.1/Comment/Support";//赞/踩
-    private final String PUBLISHCOMMENT="v1.1/Comment/PublishComment";//发表评论
-    private final String FAVORITE="v1.1/Comment/Favorite";//收藏
+    private final String COMMENT_SUPPORT = "v1.1/Comment/Support";//赞/踩
+    private final String PUBLISHCOMMENT = "v1.1/Comment/PublishComment";//发表评论
+    private final String FAVORITE = "v1.1/Comment/Favorite";//收藏
 
 
     private TopLineOperator() {
@@ -140,21 +140,108 @@ public class TopLineOperator {
         }
     }
 
-    public void getNewsInfoById(int newsId,ApiOperationCallback<ReturnInfo<String>> callback) {
+    /**
+     * 根据newsId获得newsInfo
+     * @param newsId
+     * @param callback
+     */
+    public void getNewsInfoById(int newsId, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
-            if (flag){
-                StringBuffer path=new StringBuffer(NEWS_INFO_URL);
-                path.append("?newId="+newsId);
-                ApiDataProvider.getmClient().invokeApi(path.toString(),null,HttpGet.METHOD_NAME,null,
+            if (flag) {
+                StringBuffer path = new StringBuffer(NEWS_INFO_URL);
+                path.append("?newsId=" + newsId);
+                ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
         }
     }
 
 
-    public void getCommentListByNewId(ApiOperationCallback<ReturnInfo<String>> callback, int userId, int newsId, int type) {
-
+    /**
+     * 根据NewsId获得评论列表数据
+     * @param userId
+     * @param newsId
+     * @param type 模块
+     * @param callback
+     */
+    public void getCommentListByNewId(int userId, int newsId, int type, ApiOperationCallback<ReturnInfo<String>> callback) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuffer path = new StringBuffer(COMMENT_LIST_NEWSID);
+                path.append("?userid=" + userId);
+                path.append("&id=" + newsId);
+                path.append("&type=" + type);
+                ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+            }
+        }
     }
 
-    //更新服务器数据
+    /**
+     * news 赞/踩
+     * @param userid
+     * @param newsid
+     * @param commentid
+     * @param type
+     * @param result 1赞 2踩
+     * @param callback
+     */
+    public void commentSurpot(int userid, int newsid, int commentid, int type,int result,ApiOperationCallback<ReturnInfo<String>> callback) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuffer path = new StringBuffer(COMMENT_SUPPORT);
+                path.append("?userid=" + userid);
+                path.append("&id=" + newsid);
+                path.append("&commentid="+commentid);
+                path.append("&type=" + type);
+                path.append("&result=" + result);
+                ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+            }
+        }
+    }
+
+    /**
+     * 收藏news
+     * @param userid
+     * @param newsId
+     * @param type
+     * @param callback
+     */
+    public void newsPrivate(int userid,int newsId,int type,ApiOperationCallback<ReturnInfo<String>> callback){
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuffer path = new StringBuffer(FAVORITE);
+                path.append("?userid=" + userid);
+                path.append("&id=" + newsId);
+                path.append("&type="+type);
+                ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+            }
+        }
+    }
+
+    /**
+     * 发表评论
+     * @param userid
+     * @param newsId
+     * @param replyCid 不是子评论时默认为0
+     * @param blockType 0头条，1点评，2课程
+     * @param callback
+     */
+    public void publishComment(int userid,int newsId,int replyCid,int blockType,ApiOperationCallback<ReturnInfo<String>> callback){
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuffer path = new StringBuffer(PUBLISHCOMMENT);
+                path.append("?userid=" + userid);
+                path.append("&newsid=" + newsId);
+                path.append("&replyCid="+replyCid);
+                path.append("&blockType="+blockType);
+                ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+            }
+        }
+    }
+
+
 }

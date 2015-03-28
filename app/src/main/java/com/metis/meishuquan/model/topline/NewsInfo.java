@@ -15,7 +15,7 @@ public class NewsInfo {
 
     private String author;
 
-    private String source;
+    private Source source;
 
     private String commentEnable;
 
@@ -23,7 +23,7 @@ public class NewsInfo {
 
     private String content;
 
-    private List<Urls> urlss ;
+    private List<Urls> urls ;
 
     private String commentDefaultText;
 
@@ -61,11 +61,11 @@ public class NewsInfo {
         this.author = author;
     }
 
-    public String getSource() {
+    public Source getSource() {
         return source;
     }
 
-    public void setSource(String source) {
+    public void setSource(Source source) {
         this.source = source;
     }
 
@@ -94,11 +94,11 @@ public class NewsInfo {
     }
 
     public List<Urls> getUrlss() {
-        return urlss;
+        return urls;
     }
 
     public void setUrlss(List<Urls> urlss) {
-        this.urlss = urlss;
+        this.urls = urlss;
     }
 
     public String getCommentDefaultText() {
