@@ -9,6 +9,7 @@ import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.SystemUtil;
+import com.metis.meishuquan.util.Utils;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
@@ -102,19 +103,21 @@ public class TopLineOperator {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 //添加至缓存
-                                if (result.getInfo().equals(String.valueOf(0))) {
-                                    Gson gson = new Gson();
-                                    String json = gson.toJson(result);
-                                    try {
-                                        SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
-                                        spu.delete(String.valueOf(channelId));
-                                        Log.i("channelId", json);
-                                        spu.add(String.valueOf(channelId), json);//添加至缓存中
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
+                                if (result != null) {
+                                    if (result.getInfo().equals(String.valueOf(0))) {
+                                        Gson gson = new Gson();
+                                        String json = gson.toJson(result);
+                                        try {
+                                            SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
+                                            spu.delete(String.valueOf(channelId));
+                                            Log.i("channelId", json);
+                                            spu.add(String.valueOf(channelId), json);//添加至缓存中
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    } else {
+                                        Log.e("meishuquan_statue", "网络状态码不为0");
                                     }
-                                } else {
-                                    Log.e("meishuquan_statue", "网络状态码不为0");
                                 }
                             }
                         });
@@ -142,6 +145,7 @@ public class TopLineOperator {
 
     /**
      * 根据newsId获得newsInfo
+     *
      * @param newsId
      * @param callback
      */
@@ -159,18 +163,19 @@ public class TopLineOperator {
 
     /**
      * 根据NewsId获得评论列表数据
-     * @param userId
+     *
+     * @param type          模块
      * @param newsId
-     * @param type 模块
+     * @param lastCommentId
      * @param callback
      */
-    public void getCommentListByNewId(int userId, int newsId, int type, ApiOperationCallback<ReturnInfo<String>> callback) {
+    public void getCommentListByNewId(int type, int newsId, int lastCommentId, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuffer path = new StringBuffer(COMMENT_LIST_NEWSID);
-                path.append("?userid=" + userId);
-                path.append("&id=" + newsId);
-                path.append("&type=" + type);
+                path.append("?type=" + type);
+                path.append("&newsId=" + newsId);
+                path.append("&lastCommentId=" + lastCommentId);
                 ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
@@ -179,42 +184,50 @@ public class TopLineOperator {
 
     /**
      * news 赞/踩
+     *
      * @param userid
      * @param newsid
      * @param commentid
      * @param type
-     * @param result 1赞 2踩
-     * @param callback
+     * @param result    1赞 2踩
      */
-    public void commentSurpot(int userid, int newsid, int commentid, int type,int result,ApiOperationCallback<ReturnInfo<String>> callback) {
+    public void commentSurpot(int userid, int newsid, int commentid, int type, int result) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuffer path = new StringBuffer(COMMENT_SUPPORT);
                 path.append("?userid=" + userid);
                 path.append("&id=" + newsid);
-                path.append("&commentid="+commentid);
+                path.append("&commentid=" + commentid);
                 path.append("&type=" + type);
                 path.append("&result=" + result);
                 ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
-                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+                            @Override
+                            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                                if (result.getInfo().equals(String.valueOf(0))) {
+                                    Utils.alertMessageDialog("提示", "点赞成功");
+                                }
+                            }
+                        });
             }
         }
     }
 
     /**
      * 收藏news
+     *
      * @param userid
      * @param newsId
      * @param type
      * @param callback
      */
-    public void newsPrivate(int userid,int newsId,int type,ApiOperationCallback<ReturnInfo<String>> callback){
+    public void newsPrivate(int userid, int newsId, int type, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuffer path = new StringBuffer(FAVORITE);
                 path.append("?userid=" + userid);
                 path.append("&id=" + newsId);
-                path.append("&type="+type);
+                path.append("&type=" + type);
                 ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
@@ -223,20 +236,22 @@ public class TopLineOperator {
 
     /**
      * 发表评论
+     *
      * @param userid
      * @param newsId
-     * @param replyCid 不是子评论时默认为0
+     * @param replyCid  不是子评论时默认为0
      * @param blockType 0头条，1点评，2课程
      * @param callback
      */
-    public void publishComment(int userid,int newsId,int replyCid,int blockType,ApiOperationCallback<ReturnInfo<String>> callback){
+    public void publishComment(int userid, int newsId,String content, int replyCid, int blockType, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuffer path = new StringBuffer(PUBLISHCOMMENT);
                 path.append("?userid=" + userid);
                 path.append("&newsid=" + newsId);
-                path.append("&replyCid="+replyCid);
-                path.append("&blockType="+blockType);
+                path.append("&content="+content);
+                path.append("&replyCid=" + replyCid);
+                path.append("&blockType=" + blockType);
                 ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }

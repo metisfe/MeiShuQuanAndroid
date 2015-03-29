@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#cccccc"
+    android:background="#FFFFFF"
     android:padding="20dp">
 
     <com.loopj.android.image.SmartImageView
@@ -12,70 +12,72 @@
         android:background="@drawable/icon" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="张三"
-        android:singleLine="true"
-        android:layout_marginLeft="10dp"
         android:id="@+id/id_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignTop="@+id/id_img_portrait"
-        android:layout_toRightOf="@+id/id_img_portrait"
-        android:layout_toEndOf="@+id/id_img_portrait" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="北京" android:singleLine="true"
         android:layout_marginLeft="10dp"
-        android:id="@+id/textView2"
-        android:layout_alignBottom="@+id/id_username"
-        android:layout_toRightOf="@+id/id_username"
-        android:layout_toEndOf="@+id/id_username" />
+        android:layout_toEndOf="@+id/id_img_portrait"
+        android:layout_toRightOf="@+id/id_img_portrait"
+        android:singleLine="true"
+        android:text="张三"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="45分钟前" android:singleLine="true"
-        android:id="@+id/更新时间"
-        android:layout_alignBottom="@+id/textView2"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignBottom="@+id/id_username"
+        android:layout_marginLeft="10dp"
+        android:layout_toEndOf="@+id/id_username"
+        android:layout_toRightOf="@+id/id_username"
+        android:singleLine="true"
+        android:text="北京"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
+        android:id="@+id/id_notifytime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView2"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:singleLine="true"
+        android:text="45分钟前"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/id_textview_comment_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情"
-        android:id="@+id/id_textview_comment_content"
-        android:maxLines="10"
-        android:layout_below="@+id/id_username"
         android:layout_alignLeft="@+id/id_username"
-        android:layout_alignStart="@+id/id_username" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/id_username"
+        android:layout_below="@+id/id_username"
         android:layout_marginTop="10dp"
-        android:text="评论"
-        android:id="@+id/id_btn_comment"
-        android:layout_below="@+id/id_textview_comment_content"
-        android:layout_alignRight="@+id/更新时间"
-        android:layout_alignEnd="@+id/更新时间" />
+        android:maxLines="10"
+        android:text="本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情" />
 
     <Button
+        android:id="@+id/id_btn_comment"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
-        android:text="赞"
+        android:layout_alignEnd="@+id/id_notifytime"
+        android:layout_alignRight="@+id/id_notifytime"
+        android:layout_below="@+id/id_textview_comment_content"
+        android:layout_marginTop="10dp"
+        android:text="评论" />
+
+    <Button
         android:id="@+id/id_btn_support"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/id_btn_comment"
+        android:layout_marginRight="10dp"
         android:layout_toLeftOf="@+id/id_btn_comment"
-        android:layout_toStartOf="@+id/id_btn_comment" />
+        android:layout_toStartOf="@+id/id_btn_comment"
+        android:text="赞" />
 
 
 </RelativeLayout>

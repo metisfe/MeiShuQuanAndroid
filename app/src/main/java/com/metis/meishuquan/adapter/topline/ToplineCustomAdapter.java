@@ -26,7 +26,7 @@ import java.net.URL;
 import java.util.List;
 
 /**
- * Created by wudi on 3/15/2015.
+ * Created by wj on 3/15/2015.
  */
 public class ToplineCustomAdapter extends ToplineAdapter {
 

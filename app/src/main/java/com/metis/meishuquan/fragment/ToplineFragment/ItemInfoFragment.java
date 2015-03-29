@@ -7,13 +7,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -25,6 +29,8 @@ import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
 import com.metis.meishuquan.util.Utils;
+import com.metis.meishuquan.view.topline.CommentInputView;
+import com.metis.meishuquan.view.topline.NewsShareView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
@@ -36,19 +42,26 @@ import java.util.StringTokenizer;
  * Created by wj on 15/3/23.
  */
 public class ItemInfoFragment extends BaseFragment {
-    private Button btnBack;
+    private int newsId = 0;
+    private Button btnBack,btnShare;
     private ViewGroup rootView;
     private LinearLayout ll_content;
     private TopLineNewsInfo newsInfo;
     private TextView tv_title, tv_createtime, tv_sourse;
-    private Button btn_writeCommont,btn_commontList,btn_private,btn_share;
+    private Button btn_writeCommont, btn_commontList, btn_private, btn_share;
+    private ScrollView contentScrollView;
+
+    private CommentInputView commentInputView;
+    private NewsShareView newsShareView;
+    private boolean addCommentPoped;
+    private boolean addSharePoped;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //加载新闻详细
         Bundle args = this.getArguments();
         if (args != null) {
-            int newsId = args.getInt("newsId");
+            newsId = args.getInt("newsId");
             //根据新闻Id获取新闻内容
             getInfoData(newsId);
         }
@@ -72,10 +85,14 @@ public class ItemInfoFragment extends BaseFragment {
         tv_title = (TextView) rootView.findViewById(R.id.id_title);
         tv_createtime = (TextView) rootView.findViewById(R.id.id_createtime);
         tv_sourse = (TextView) rootView.findViewById(R.id.id_source);
-        btn_writeCommont= (Button) rootView.findViewById(R.id.id_btn_writecomment);
-        btn_commontList= (Button) rootView.findViewById(R.id.id_btn_commentlist);
-        btn_private= (Button) rootView.findViewById(R.id.id_btn_private);
-        btn_share= (Button) rootView.findViewById(R.id.id_btn_share);
+        btn_writeCommont = (Button) rootView.findViewById(R.id.id_btn_writecomment);
+        btn_commontList = (Button) rootView.findViewById(R.id.id_btn_commentlist);
+        btn_private = (Button) rootView.findViewById(R.id.id_btn_private);
+        btn_share = (Button) rootView.findViewById(R.id.id_btn_share);
+        contentScrollView = (ScrollView) rootView.findViewById(R.id.id_scrollview_info_content);
+
+        commentInputView = new CommentInputView(getActivity(), null, 0);
+        newsShareView= new NewsShareView(getActivity(),null,0);
     }
 
     private void addViewByContent() {
@@ -96,7 +113,7 @@ public class ItemInfoFragment extends BaseFragment {
             for (int j = 0; j < str.length; j++) {
                 if (str[j].contains("<p>") || str[j].contains("</p>")) {
                     String wordTemp = str[j].replace("<p>", "  ");
-                    String word=wordTemp.replace("</p>","");
+                    String word = wordTemp.replace("</p>", "");
                     addTextView(word);
                 }
                 if (str[j].contains("<!--img")) {
@@ -109,7 +126,7 @@ public class ItemInfoFragment extends BaseFragment {
 
     //添加视图控件
     private void addImageView(String name) {
-        String url="";
+        String url = "";
         int width = 0;
         int height = 0;
 
@@ -121,12 +138,10 @@ public class ItemInfoFragment extends BaseFragment {
         for (int i = 0; i < newsInfo.getData().getUrlss().size(); i++) {
             if (newsInfo.getData().getUrlss().get(i).getNewShowContent().equals(name)) {
                 url = newsInfo.getData().getUrlss().get(i).getDir();
-                //width = newsInfo.getData().getUrlss().get(i).getWidth();
-                //height = newsInfo.getData().getUrlss().get(i).getHeight();
             }
         }
 
-        imageView.setImageUrl(url.trim(),R.drawable.icon);
+        imageView.setImageUrl(url.trim(), R.drawable.icon);
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.topMargin = 10;
@@ -160,7 +175,7 @@ public class ItemInfoFragment extends BaseFragment {
         textView.setTextColor(Color.BLACK);
 
         ll_content.addView(textView);
-        int yStart = -this.getResources().getDisplayMetrics().heightPixels;
+        int yStart = -getActivity().getResources().getDisplayMetrics().heightPixels;
         int yEnd = 0;
         TranslateAnimation tranlateAnimation = new TranslateAnimation(0, 0, yStart, yEnd);
         tranlateAnimation.setFillAfter(true);
@@ -175,7 +190,7 @@ public class ItemInfoFragment extends BaseFragment {
     private void initEvent() {
         this.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view) {//返回
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.remove(ItemInfoFragment.this);
@@ -183,33 +198,194 @@ public class ItemInfoFragment extends BaseFragment {
             }
         });
 
-        this.btn_writeCommont.setOnClickListener(new View.OnClickListener() {
+        this.contentScrollView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                boolean isOpen=imm.isActive();//isOpen若返回true，则表示输入法打开
+                if (isOpen) {
+                    //隐藏写评论
+                    if (!addCommentPoped) {
+                        return;
+                    }
+                    addCommentPoped = false;
+                    showOrHideCommentInputView(false);
+                    Utils.hideInputMethod(getActivity(),commentInputView.editText);
+                }
             }
         });
 
-        this.btn_commontList.setOnClickListener(new View.OnClickListener() {
+        this.contentScrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                boolean isOpen=imm.isActive();//isOpen若返回true，则表示输入法打开
+                if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                    if (isOpen) {
+                        //隐藏写评论
+                        if (!addCommentPoped) {
+                            return false;
+                        }
+                        addCommentPoped = false;
+                        showOrHideCommentInputView(false);
+                        Utils.hideInputMethod(getActivity(),commentInputView.editText);
+                    }
+                }
+                return false;
+            }
+        });
 
+        this.btn_writeCommont.setOnClickListener(new View.OnClickListener() {//写评论
+            @Override
+            public void onClick(View view) {//写评论
+                if (addCommentPoped) {
+                    return;
+                }
+                addCommentPoped = true;
+                showOrHideCommentInputView(true);
+                Utils.showInputMethod(getActivity(), commentInputView.editText);
+            }
+        });
+
+        this.commentInputView.btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {//写评论-发送
+                String content = commentInputView.editText.getText().toString().trim();
+                if (content.length() > 0) {
+                    TopLineOperator topLineOperator = TopLineOperator.getInstance();
+                    topLineOperator.publishComment(0, newsId, content, 0, 0, new ApiOperationCallback<ReturnInfo<String>>() {
+                        @Override
+                        public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                            if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                Toast.makeText(getActivity(), "发送成功", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    showOrHideCommentInputView(false);
+                    Utils.hideInputMethod(getActivity(),commentInputView.editText);
+                } else {
+                    Toast.makeText(getActivity(), "请输入内容", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        this.btn_commontList.setOnClickListener(new View.OnClickListener() {//评论列表
+            @Override
+            public void onClick(View view) {//查看评论列表
+                Bundle args = new Bundle();
+                if (newsId != 0) {
+                    args.putInt("newsId", newsId);
+                }
+                //跳转至评论列表
+                CommentListFragment commentListFragment = new CommentListFragment();
+                commentListFragment.setArguments(args);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add(R.id.content_container, commentListFragment);
+                fragmentTransaction.commit();
             }
         });
 
         this.btn_private.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Utils.alertMessageDialog("提示","收藏成功！");
+            public void onClick(View view) {//收藏
+                Utils.alertMessageDialog("提示", "收藏成功！");//TODO:
             }
         });
 
-        this.btn_share.setOnClickListener(new View.OnClickListener() {
+        this.btn_share.setOnClickListener(new View.OnClickListener() {//分享
             @Override
             public void onClick(View view) {
-
+                if (addSharePoped) {
+                    return;
+                }
+                addSharePoped = true;
+                showOrHideNewsShareView(true);
             }
         });
+
+        this.newsShareView.btnFriends.setOnClickListener(new View.OnClickListener() {//分享至朋友圈
+            @Override
+            public void onClick(View view) {
+                if (!addSharePoped){
+                    return;
+                }
+                addSharePoped=false;
+                Toast.makeText(getActivity(),"分享至微信朋友圈",Toast.LENGTH_SHORT).show();
+                showOrHideNewsShareView(false);
+            }
+        });
+
+        this.newsShareView.btnWeixin.setOnClickListener(new View.OnClickListener() {//分享至好友
+            @Override
+            public void onClick(View view) {
+                if (!addSharePoped){
+                    return;
+                }
+                addSharePoped=false;
+                Toast.makeText(getActivity(),"分享至微信",Toast.LENGTH_SHORT).show();
+                showOrHideNewsShareView(false);
+            }
+        });
+
+        this.newsShareView.btnCancel.setOnClickListener(new View.OnClickListener() {//分享-取消
+            @Override
+            public void onClick(View view) {
+                if (!addSharePoped){
+                    return;
+                }
+                addSharePoped=false;
+                showOrHideNewsShareView(false);
+            }
+        });
+    }
+
+    //显示或隐藏评论视图
+    private void showOrHideCommentInputView(boolean isShow) {
+        ViewGroup parent = (ViewGroup) getActivity().findViewById(R.id.ll_parent);
+        TranslateAnimation translateAnimation = null;
+        int yStart = -getActivity().getResources().getDisplayMetrics().heightPixels;
+        int yEnd = 0;
+        if (isShow) {
+            if (commentInputView != null) {
+                parent.addView(commentInputView);
+            }
+            translateAnimation = new TranslateAnimation(0, 0, yStart, yEnd);
+        } else {
+            if (commentInputView != null) {
+                parent.removeView(commentInputView);
+            }
+            translateAnimation = new TranslateAnimation(0, 0, yEnd, yStart);
+        }
+        translateAnimation.setFillAfter(true);
+        translateAnimation.setFillEnabled(true);
+        translateAnimation.setDuration(100);
+        translateAnimation.setInterpolator(new DecelerateInterpolator());
+        commentInputView.startAnimation(translateAnimation);
+    }
+
+    //显示或隐藏分享视图
+    private void showOrHideNewsShareView(boolean isShow) {
+        ViewGroup parent = (ViewGroup) getActivity().findViewById(R.id.ll_parent);
+        TranslateAnimation translateAnimation = null;
+        int yStart = -getActivity().getResources().getDisplayMetrics().heightPixels;
+        int yEnd = 0;
+        if (isShow) {
+            if (newsShareView != null) {
+                parent.addView(newsShareView);
+            }
+            translateAnimation = new TranslateAnimation(0, 0, yStart,yEnd);
+        } else {
+            if (newsShareView != null) {
+                parent.removeView(newsShareView);
+            }
+            translateAnimation = new TranslateAnimation(0, 0, yEnd, yStart);
+        }
+        translateAnimation.setFillAfter(true);
+        translateAnimation.setFillEnabled(true);
+        translateAnimation.setDuration(100);
+        translateAnimation.setInterpolator(new DecelerateInterpolator());
+        newsShareView.startAnimation(translateAnimation);
     }
 
     //为控件绑定数据
@@ -236,8 +412,9 @@ public class ItemInfoFragment extends BaseFragment {
                             }.getType());
                         }
                     }
-                    addViewByContent();
                     bindData();
+                    addViewByContent();
+
                 } else {
                     getInfoData(newsId);
                 }

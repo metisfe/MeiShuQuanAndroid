@@ -1,7 +1,7 @@
 package com.metis.meishuquan.model.topline;
 
 /**
- * Created by xiaoxiao on 15/3/26.
+ * Created by wj on 15/3/26.
  */
 public class RelatedNewsList {
     private String newsId;
@@ -10,7 +10,7 @@ public class RelatedNewsList {
 
     private String modifyTime;
 
-    private String source;
+    private Source source;
 
     public String getNewsId() {
         return newsId;
@@ -36,11 +36,11 @@ public class RelatedNewsList {
         this.modifyTime = modifyTime;
     }
 
-    public String getSource() {
+    public Source getSource() {
         return source;
     }
 
-    public void setSource(String source) {
+    public void setSource(Source source) {
         this.source = source;
     }
 }

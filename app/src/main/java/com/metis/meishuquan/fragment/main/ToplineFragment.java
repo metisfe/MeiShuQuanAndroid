@@ -115,7 +115,7 @@ public class ToplineFragment extends BaseFragment {
         this.imgAddChannel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //打开频道管理Activity
+                //打开频道管理
                 openChannelManageView();
             }
         });
