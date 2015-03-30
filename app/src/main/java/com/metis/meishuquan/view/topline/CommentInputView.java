@@ -29,6 +29,5 @@ public class CommentInputView extends RelativeLayout {
     private void initView(ViewGroup viewGroup) {
         editText= (EditText) viewGroup.findViewById(R.id.id_comment_edittext);
         btnSend= (Button) viewGroup.findViewById(R.id.id_btn_comment_send);
-        Utils.showInputMethod(context,editText);
     }
 }

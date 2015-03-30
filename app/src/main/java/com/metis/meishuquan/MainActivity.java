@@ -1,14 +1,11 @@
 package com.metis.meishuquan;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.metis.meishuquan.fragment.BaseFragment;
@@ -18,7 +15,6 @@ import com.metis.meishuquan.fragment.main.MyInfoFragment;
 import com.metis.meishuquan.fragment.main.ToplineFragment;
 import com.metis.meishuquan.framework.util.TextureRender;
 import com.metis.meishuquan.ui.SelectedTabType;
-import com.metis.meishuquan.util.ContractUtility;
 import com.metis.meishuquan.util.Environments;
 import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.SystemUtil;
@@ -152,7 +148,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
         }
     }
 
-    public void navigateTo(Class<? extends BaseFragment> fragment, Bundle args, boolean isNeedToBack) {
+        public void navigateTo(Class<? extends BaseFragment> fragment, Bundle args, boolean isNeedToBack) {
         FragmentTransaction ft = fm.beginTransaction();
         int size = fm.getBackStackEntryCount();
 

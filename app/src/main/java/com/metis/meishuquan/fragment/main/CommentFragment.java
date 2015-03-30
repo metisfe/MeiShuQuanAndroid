@@ -12,6 +12,8 @@ import com.metis.meishuquan.fragment.BaseFragment;
 import com.metis.meishuquan.view.shared.TabBar;
 
 /**
+ * 模块：点评
+ *
  * Created by wudi on 3/15/2015.
  */
 public class CommentFragment extends BaseFragment {

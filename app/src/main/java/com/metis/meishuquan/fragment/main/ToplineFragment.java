@@ -48,6 +48,7 @@ public class ToplineFragment extends BaseFragment {
     private List<News> lstNews = new ArrayList<>();
     private boolean addChannelPoped;
     private int lastNewsId = 0;
+    private boolean isFirstVisit=false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -71,6 +72,11 @@ public class ToplineFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     /**
@@ -158,7 +164,6 @@ public class ToplineFragment extends BaseFragment {
 
         //对ViewPager设置监听，用indicator设置就行了
         indicator.setOnPageChangeListener(new PageChangeListener());
-
     }
 
     /**
@@ -242,7 +247,7 @@ public class ToplineFragment extends BaseFragment {
         @Override
         public Fragment getItem(int position) {
             int channelId = userItems.get(position).getChannelId();
-            initNews(channelId,0);
+            initNews(channelId, 0);
             fragment = new ItemFragment();
             Bundle args = new Bundle();
             args.putInt("channelId", channelId);

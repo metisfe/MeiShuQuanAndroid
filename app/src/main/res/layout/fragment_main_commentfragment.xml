@@ -34,7 +34,7 @@
             android:text="提问" />
     </RelativeLayout>
 
-    <ListView
+    <com.metis.meishuquan.view.shared.DragListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/rl_title_bar"

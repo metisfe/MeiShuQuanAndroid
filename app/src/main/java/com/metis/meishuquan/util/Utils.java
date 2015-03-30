@@ -352,6 +352,6 @@ public class Utils
 
     public static void hideInputMethod(Context context,View view){
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);
+        imm.hideSoftInputFromWindow(view.getApplicationWindowToken() , 0);
     }
 }

@@ -1,5 +1,6 @@
 package com.metis.meishuquan.fragment.ToplineFragment;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -43,7 +44,7 @@ import java.util.StringTokenizer;
  */
 public class ItemInfoFragment extends BaseFragment {
     private int newsId = 0;
-    private Button btnBack,btnShare;
+    private Button btnBack, btnShare;
     private ViewGroup rootView;
     private LinearLayout ll_content;
     private TopLineNewsInfo newsInfo;
@@ -92,7 +93,7 @@ public class ItemInfoFragment extends BaseFragment {
         contentScrollView = (ScrollView) rootView.findViewById(R.id.id_scrollview_info_content);
 
         commentInputView = new CommentInputView(getActivity(), null, 0);
-        newsShareView= new NewsShareView(getActivity(),null,0);
+        newsShareView = new NewsShareView(getActivity(), null, 0);
     }
 
     private void addViewByContent() {
@@ -201,25 +202,21 @@ public class ItemInfoFragment extends BaseFragment {
         this.contentScrollView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
-                boolean isOpen=imm.isActive();//isOpen若返回true，则表示输入法打开
-                if (isOpen) {
-                    //隐藏写评论
-                    if (!addCommentPoped) {
-                        return;
-                    }
-                    addCommentPoped = false;
-                    showOrHideCommentInputView(false);
-                    Utils.hideInputMethod(getActivity(),commentInputView.editText);
+                //隐藏写评论
+                if (!addCommentPoped) {
+                    return;
                 }
+                addCommentPoped = false;
+                showOrHideCommentInputView(false);
+                Utils.hideInputMethod(getActivity(), commentInputView.editText);
             }
         });
 
         this.contentScrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
-                boolean isOpen=imm.isActive();//isOpen若返回true，则表示输入法打开
+                InputMethodManager imm = ( InputMethodManager ) commentInputView.editText.getContext( ).getSystemService( Context.INPUT_METHOD_SERVICE );
+                boolean isOpen=imm.isActive();
                 if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
                     if (isOpen) {
                         //隐藏写评论
@@ -228,7 +225,7 @@ public class ItemInfoFragment extends BaseFragment {
                         }
                         addCommentPoped = false;
                         showOrHideCommentInputView(false);
-                        Utils.hideInputMethod(getActivity(),commentInputView.editText);
+                        Utils.hideInputMethod(getActivity(), commentInputView.editText);
                     }
                 }
                 return false;
@@ -262,7 +259,7 @@ public class ItemInfoFragment extends BaseFragment {
                         }
                     });
                     showOrHideCommentInputView(false);
-                    Utils.hideInputMethod(getActivity(),commentInputView.editText);
+                    Utils.hideInputMethod(getActivity(), commentInputView.editText);
                 } else {
                     Toast.makeText(getActivity(), "请输入内容", Toast.LENGTH_SHORT).show();
                 }
@@ -307,11 +304,11 @@ public class ItemInfoFragment extends BaseFragment {
         this.newsShareView.btnFriends.setOnClickListener(new View.OnClickListener() {//分享至朋友圈
             @Override
             public void onClick(View view) {
-                if (!addSharePoped){
+                if (!addSharePoped) {
                     return;
                 }
-                addSharePoped=false;
-                Toast.makeText(getActivity(),"分享至微信朋友圈",Toast.LENGTH_SHORT).show();
+                addSharePoped = false;
+                Toast.makeText(getActivity(), "分享至微信朋友圈", Toast.LENGTH_SHORT).show();
                 showOrHideNewsShareView(false);
             }
         });
@@ -319,11 +316,11 @@ public class ItemInfoFragment extends BaseFragment {
         this.newsShareView.btnWeixin.setOnClickListener(new View.OnClickListener() {//分享至好友
             @Override
             public void onClick(View view) {
-                if (!addSharePoped){
+                if (!addSharePoped) {
                     return;
                 }
-                addSharePoped=false;
-                Toast.makeText(getActivity(),"分享至微信",Toast.LENGTH_SHORT).show();
+                addSharePoped = false;
+                Toast.makeText(getActivity(), "分享至微信", Toast.LENGTH_SHORT).show();
                 showOrHideNewsShareView(false);
             }
         });
@@ -331,10 +328,10 @@ public class ItemInfoFragment extends BaseFragment {
         this.newsShareView.btnCancel.setOnClickListener(new View.OnClickListener() {//分享-取消
             @Override
             public void onClick(View view) {
-                if (!addSharePoped){
+                if (!addSharePoped) {
                     return;
                 }
-                addSharePoped=false;
+                addSharePoped = false;
                 showOrHideNewsShareView(false);
             }
         });
@@ -357,9 +354,9 @@ public class ItemInfoFragment extends BaseFragment {
             }
             translateAnimation = new TranslateAnimation(0, 0, yEnd, yStart);
         }
-        translateAnimation.setFillAfter(true);
+        translateAnimation.setFillBefore(true);
         translateAnimation.setFillEnabled(true);
-        translateAnimation.setDuration(100);
+        translateAnimation.setDuration(0);
         translateAnimation.setInterpolator(new DecelerateInterpolator());
         commentInputView.startAnimation(translateAnimation);
     }
@@ -374,7 +371,7 @@ public class ItemInfoFragment extends BaseFragment {
             if (newsShareView != null) {
                 parent.addView(newsShareView);
             }
-            translateAnimation = new TranslateAnimation(0, 0, yStart,yEnd);
+            translateAnimation = new TranslateAnimation(0, 0, yStart, yEnd);
         } else {
             if (newsShareView != null) {
                 parent.removeView(newsShareView);
