@@ -142,8 +142,8 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemClic
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
-        ft.add(R.id.content_container, itemInfoFragment, ItemInfoFragment.class.getSimpleName() );
-        ft.addToBackStack(ItemInfoFragment.class.getSimpleName());
+        ft.add(R.id.content_container, itemInfoFragment);
+        ft.addToBackStack(null);
         ft.commit();
     }
 

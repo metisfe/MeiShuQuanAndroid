@@ -29,10 +29,8 @@ import java.util.Properties;
 
 public class MainActivity extends FragmentActivity implements TabBar.TabSelectedListener {
     private static FragmentManager fm;
-    private static final String PressBackAgainToQuiteApplicationMessage = "Back agin to quit";
+    private static final String PressBackAgainToQuiteApplicationMessage = "Back again to quit";
     private boolean doWantToQuite;
-
-    private String currentFragment;
 
     public static MainActivity self;
 
@@ -72,7 +70,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
                 }
             }, 5000);
         } else {
-            navigateTo(ToplineFragment.class, false);
+            navigateTo(ToplineFragment.class);
         }
 
         Utils.showConfigureNetwork(this);
@@ -89,10 +87,10 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
             //new SettingCheckUpdate().start(false);
 
             // auto Unified Configuration Override
-            new UnifiedConfigurationOverride().start();
+            //new UnifiedConfigurationOverride().start();
 
             // check recommend Apps
-            String url = Environments.CDNURL + Environments.RecommendAppsName;
+            //String url = Environments.CDNURL + Environments.RecommendAppsName;
             //new SettingRecommendAppsFragment().DownloadRecommendApps(url);
 
             // check for new dev reply to user feedbacks
@@ -129,58 +127,40 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
 
     @Override
     public void onTabSelected(SelectedTabType type) {
-        //UMengSA.clickTabAndDuration(type, false, false);
         GlobalData.getInstance().setTabTypeSelected(type);
         switch (type) {
             case TopLine:
-                navigateTo(ToplineFragment.class, null, false);
+                navigateTo(ToplineFragment.class);
                 break;
             case Comment:
-                navigateTo(AssessFragment.class, null, false);
+                navigateTo(AssessFragment.class);
                 break;
             case Class:
-                navigateTo(ClassFragment.class, null, false);
+                navigateTo(ClassFragment.class);
                 break;
             case MyInfo:
             default:
-                navigateTo(MyInfoFragment.class, null, false);
+                navigateTo(MyInfoFragment.class);
                 break;
         }
     }
 
-    public void navigateTo(Class<? extends BaseFragment> fragment, Bundle args, boolean isNeedToBack) {
+    public void navigateTo(Class<? extends BaseFragment> fragment) {
         FragmentTransaction ft = fm.beginTransaction();
-        int size = fm.getBackStackEntryCount();
-
         BaseFragment baseFragment = null;
         try {
             baseFragment = fragment.newInstance();
-        } catch (java.lang.InstantiationException e) {
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
         }
 
-        if (args != null) {
-            baseFragment.setArguments(args);
-        }
-
-        if (!isFirstLevlPage(fragment.getSimpleName())) {
+        if (!isFirstLevelPage(fragment.getSimpleName())) {
             ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out, R.anim.fragment_popin, R.anim.fragment_popout);
         } else {
             ft.setTransition(FragmentTransaction.TRANSIT_NONE);
         }
 
-        ft.add(R.id.content_container, baseFragment, fragment.getSimpleName());
-        ft.addToBackStack(fragment.getSimpleName());
-        ft.commitAllowingStateLoss();
-
-        if (isFirstLevlPage(fragment)) {
-            this.showTabBar();
-        }
-
-    }
-
-    public void navigateTo(Class<? extends BaseFragment> fragment, boolean isNeedToBack) {
-        navigateTo(fragment, null, isNeedToBack);
+        ft.replace(R.id.content_container, baseFragment, fragment.getSimpleName());
+        ft.commit();
     }
 
     public void clearBackStackAndThenNavigateTo(Class<? extends BaseFragment> fragment) {
@@ -191,40 +171,13 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
             ft.commitAllowingStateLoss();
         }
 
-        this.navigateTo(fragment, false);
-    }
-
-    public void hideTabBar() {
-    }
-
-    public void showTabBar() {
-    }
-
-    public boolean handleBackPressedInTopFragment() {
-        if (fm == null)
-        {
-            return false;
-        }
-
-        String topFragmentName = fm.getBackStackEntryAt(fm.getBackStackEntryCount() - 1).getName();
-        if (topFragmentName.equals(ItemInfoFragment.class.getSimpleName()))
-        {
-            ItemInfoFragment fragment = (ItemInfoFragment) getSupportFragmentManager().findFragmentByTag(topFragmentName);
-            return fragment.onBackPressed();
-        }
-
-        return false;
+        this.navigateTo(fragment);
     }
 
     @Override
     public void onBackPressed() {
         int size = fm.getBackStackEntryCount();
-
-        if (this.handleBackPressedInTopFragment()) {
-            return;
-        }
-
-        if (size == 1 || isOnlyFirstLevelPageLeft()) {
+        if (size == 0) {
             if (doWantToQuite) {
                 this.finish();
             } else {
@@ -242,39 +195,13 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
         }
     }
 
-    public String getFragmentNameInStack(int offsetIndex) {
-        if (fm == null) {
-            return null;
-        }
-
-        int bsCount = fm.getBackStackEntryCount();
-
-        if (offsetIndex >= bsCount) {
-            return null;
-        }
-
-        return fm.getBackStackEntryAt(bsCount - offsetIndex - 1).getName();
-    }
-
-    public void popupTopFragment() {
-        if (fm == null) {
-            return;
-        }
-
-        int bsCount = fm.getBackStackEntryCount();
-
-        if (bsCount > 0) {
-            fm.popBackStack();
-        }
-    }
-
     @Override
     public void onDestroy() {
         DialogManager.getInstance().dismissDialog();
         super.onDestroy();
     }
 
-    private boolean isFirstLevlPage(String name) {
+    private boolean isFirstLevelPage(String name) {
         if (name == null || name.length() == 0) {
             return false;
         }
@@ -284,38 +211,4 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
                 || name.equals(AssessFragment.class.getSimpleName())
                 || name.equals(ClassFragment.class.getSimpleName());
     }
-
-    private boolean isFirstLevlPage(Class<? extends BaseFragment> fragment) {
-        if (fragment == null) {
-            return false;
-        }
-
-        return isFirstLevlPage(fragment.getSimpleName());
-    }
-
-    private boolean isOnlyFirstLevelPageLeft() {
-        int size = fm.getBackStackEntryCount();
-        for (int i = size - 1; i >= 0; i--) {
-            if (!isFirstLevlPage(fm.getBackStackEntryAt(size - 1).getName())) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private void hideFragments(FragmentManager fm, FragmentTransaction ft, int size) {
-        for (int i = 0; i < size; i++) {
-            String name = fm.getBackStackEntryAt(i).getName();
-            if (TextUtils.isEmpty(name)) {
-                continue;
-            }
-
-            BaseFragment stackFragment = (BaseFragment) fm.findFragmentByTag(name);
-            if (stackFragment != null && !stackFragment.isHidden()) {
-                ft.hide(stackFragment);
-            }
-        }
-    }
-
 }
