@@ -12,6 +12,7 @@
         android:background="#fddd6e">
 
         <Button
+            android:id="@+id/id_btn_region"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -19,6 +20,7 @@
             android:text="全国" />
 
         <Button
+            android:id="@+id/id_btn_commentlist_filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -26,6 +28,7 @@
             android:text="全部" />
 
         <Button
+            android:id="@+id/id_btn_assess_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -35,6 +38,7 @@
     </RelativeLayout>
 
     <com.metis.meishuquan.view.shared.DragListView
+        android:id="@+id/id_fragment_comment_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/rl_title_bar"

@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by wj on 15/3/29.
  */
-public class Comments {
+public class Comment {
     private int id;
 
     private User user;

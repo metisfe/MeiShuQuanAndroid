@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.metis.meishuquan.fragment.BaseFragment;
 import com.metis.meishuquan.fragment.main.ClassFragment;
-import com.metis.meishuquan.fragment.main.CommentFragment;
+import com.metis.meishuquan.fragment.main.AssessFragment;
 import com.metis.meishuquan.fragment.main.MyInfoFragment;
 import com.metis.meishuquan.fragment.main.ToplineFragment;
 import com.metis.meishuquan.framework.util.TextureRender;
@@ -136,7 +136,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
                 navigateTo(ToplineFragment.class, null, false);
                 break;
             case Comment:
-                navigateTo(CommentFragment.class, null, false);
+                navigateTo(AssessFragment.class, null, false);
                 break;
             case Class:
                 navigateTo(ClassFragment.class, null, false);
@@ -287,7 +287,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
 
         return name.equals(ToplineFragment.class.getSimpleName())
                 || name.equals(MyInfoFragment.class.getSimpleName())
-                || name.equals(CommentFragment.class.getSimpleName())
+                || name.equals(AssessFragment.class.getSimpleName())
                 || name.equals(ClassFragment.class.getSimpleName());
     }
 
