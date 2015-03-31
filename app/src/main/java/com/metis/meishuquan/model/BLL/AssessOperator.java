@@ -1,8 +1,6 @@
 package com.metis.meishuquan.model.BLL;
 
 import android.graphics.Bitmap;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
@@ -10,7 +8,6 @@ import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.SystemUtil;
-import com.metis.meishuquan.util.Utils;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
@@ -29,28 +26,28 @@ import java.util.List;
  *
  * Created by wj on 15/3/20.
  */
-public class CommentOperator {
+public class AssessOperator {
     private boolean flag;
-    private static CommentOperator operator = null;
+    private static AssessOperator operator = null;
 
     private final String AssessList = "v1.1/Assess/AssessList";//点评列表
     private final String AssessChannelList = "v1.1/Channel/ChannelList";//所有标签
     private final String UploadAssess = "";//上传作品
     private final String Assess_Comment_Share = "v1.1/Assess/Share";//作品分享
     private final String Comment_Favorite = "v1.1/Comment/Favorite";//收藏(暂无此功能)
-    private final String AttentionUser = "";//关注用户
-    private final String PushComment = "";//发表评价
+    private final String AttentionUser = "";//关注用户(暂无此功能)
+    private final String PushComment = "v1.1/AssessComment/PushComment";//发表评价
     private final String Friend = "";//获取好友/老师
     private final String FileUpload = "v1.1/File/Upload";//文件上传
+    private final String Region="v1.1/UserCenter/Region";
 
-
-    private CommentOperator() {
+    private AssessOperator() {
         flag = ApiDataProvider.initProvider();
     }
 
-    public static CommentOperator getInstance() {
+    public static AssessOperator getInstance() {
         if (operator == null) {
-            operator = new CommentOperator();
+            operator = new AssessOperator();
         }
         return operator;
     }
@@ -190,5 +187,22 @@ public class CommentOperator {
             e.printStackTrace();
         }
         return out.toByteArray();
+    }
+
+    /**
+     * 获取地区
+     * @param callback
+     */
+    public void getRegion(ApiOperationCallback<ReturnInfo<String>> callback){
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag){
+                ApiDataProvider.getmClient().invokeApi(Region,null,HttpGet.METHOD_NAME,null,
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+            }
+        }
+    }
+
+    public void publishComment(){
+
     }
 }

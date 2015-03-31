@@ -1,11 +1,9 @@
-package com.metis.meishuquan.fragment.ToplineFragment;
+package com.metis.meishuquan.fragment.main;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +17,14 @@ import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.fragment.BaseFragment;
+import com.metis.meishuquan.model.BLL.AssessOperator;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
+import com.metis.meishuquan.model.assess.Assess;
+import com.metis.meishuquan.model.assess.AssessData;
 import com.metis.meishuquan.model.contract.ReturnInfo;
-import com.metis.meishuquan.model.topline.AllComments;
 import com.metis.meishuquan.model.topline.Comment;
 import com.metis.meishuquan.view.shared.DragListView;
+import com.metis.meishuquan.view.shared.TabBar;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
@@ -31,32 +32,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 评论列表
+ * 模块：点评
  * <p/>
- * Created by wj on 15/3/27.
+ * Created by wudi on 3/15/2015.
  */
-public class CommentListFragment extends BaseFragment {
+public class AssessFragment extends BaseFragment {
 
-    private ViewGroup rootView;
+    private TabBar tabBar;
+
     private DragListView listView;
-    private Button btnBack;
-
-    private int newsId = 0;
-    private List<Comment> lstAllComments = new ArrayList<>();
+    private Button btnRegion, btnFilter, btnPublishComment;
+    private List<Assess> lstAllAssess = new ArrayList<>();
     private CommentsAdapter adapter;
 
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
-            List<Comment> result = (List<Comment>) msg.obj;
+            List<Assess> result = (List<Assess>) msg.obj;
             switch (msg.what) {
                 case DragListView.REFRESH:
                     listView.onRefreshComplete();
-                    lstAllComments.clear();
-                    lstAllComments.addAll(result);
+                    lstAllAssess.clear();
+                    lstAllAssess.addAll(result);
                     break;
                 case DragListView.LOAD:
                     listView.onLoadComplete();
-                    lstAllComments.addAll(result);
+                    lstAllAssess.addAll(result);
                     break;
             }
             listView.setResultSize(result.size());
@@ -66,97 +66,89 @@ public class CommentListFragment extends BaseFragment {
         ;
     };
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        //接收数据
-        Bundle args = this.getArguments();
-        if (args != null) {
-            newsId = args.getInt("newsId");
-            //加载评论列表数据
-            getData(newsId, DragListView.REFRESH);
-        }
+        //加载列表数据
+        //getData();
 
-        rootView = (ViewGroup) inflater.inflate(R.layout.fragment_topline_comment_list, null, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_commentfragment, container, false);
         initView(rootView);
         initEvent();
         return rootView;
     }
 
-    //初始化视图
     private void initView(ViewGroup rootView) {
-        listView = (DragListView) rootView.findViewById(R.id.id_topline_comment_list);
-        btnBack = (Button) rootView.findViewById(R.id.id_btn_back);
-
-        adapter = new CommentsAdapter(lstAllComments);
-        listView.setAdapter(adapter);
+        this.tabBar = (TabBar) rootView.findViewById(R.id.fragment_shared_commentfragment_tab_bar);
+        this.tabBar.setTabSelectedListener(MainApplication.MainActivity);
+        this.listView = (DragListView) rootView.findViewById(R.id.id_fragment_comment_listview);
+        this.btnRegion = (Button) rootView.findViewById(R.id.id_btn_region);
+        this.btnPublishComment = (Button) rootView.findViewById(R.id.id_btn_assess_comment);
+        this.btnFilter = (Button) rootView.findViewById(R.id.id_btn_commentlist_filter);
     }
 
-    public void initEvent() {
-        listView.setOnRefreshListener(new DragListView.OnRefreshListener() {//列表刷新
+    private void initEvent() {
+        this.listView.setOnRefreshListener(new DragListView.OnRefreshListener() {//刷新
             @Override
             public void onRefresh() {
-                getData(newsId, DragListView.REFRESH);
+
             }
         });
 
-        listView.setOnLoadListener(new DragListView.OnLoadListener() {//列表加载
+        this.listView.setOnLoadListener(new DragListView.OnLoadListener() {//加载更多
             @Override
             public void onLoad() {
-                getData(newsId, DragListView.LOAD);
+
             }
         });
 
-        btnBack.setOnClickListener(new View.OnClickListener() {//返回
+        this.btnRegion.setOnClickListener(new View.OnClickListener() {//区域
             @Override
-            public void onClick(View view) {
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.remove(CommentListFragment.this);
-                ft.commit();
+            public void onClick(View v) {
+
+            }
+        });
+
+        this.btnFilter.setOnClickListener(new View.OnClickListener() {//过滤条件
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        this.btnPublishComment.setOnClickListener(new View.OnClickListener() {//发表评论
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }
 
-    //加载评论列表数据
-    private void getData(int newsId, final int type) {
-        TopLineOperator topLineOperator = TopLineOperator.getInstance();
-        topLineOperator.getCommentListByNewId(0, newsId, 0, new ApiOperationCallback<ReturnInfo<String>>() {
+    private void getData(boolean isAll, final int type, List<Integer> grades, List<Integer> channelIds, int index) {
+        AssessOperator assessOperator = AssessOperator.getInstance();
+        assessOperator.getAssessList(isAll, type, grades, channelIds, index, new ApiOperationCallback<ReturnInfo<String>>() {
             @Override
             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                AllComments commentsData = new AllComments();
+                AssessData assessData = new AssessData();
                 if (result != null) {
                     Gson gson = new Gson();
                     String json = gson.toJson(result);
-                    commentsData = gson.fromJson(json, new TypeToken<AllComments>() {
-                    }.getType());
-                    List<Comment> data = new ArrayList<Comment>();
-                    if (commentsData != null) {
-                        List<Comment> lstHostComments = commentsData.getData().getHostComments();
-                        List<Comment> lstNewComments = commentsData.getData().getNewComments();
+                    assessData = gson.fromJson(json, new TypeToken<AssessData>() {}.getType());
+                    if (assessData != null) {
 
-                        if (lstHostComments != null && lstHostComments.size() > 0) {
-                            Comment commentGroup = new Comment();
-                            commentGroup.setGroup("热门评论");
-                            data.add(commentGroup);
-                            data.addAll(lstHostComments);
-                        }
-                        if (lstNewComments != null && lstNewComments.size() > 0) {
-                            Comment commentGroup = new Comment();
-                            commentGroup.setGroup("最新评论");
-                            data.add(commentGroup);
-                            data.addAll(lstNewComments);
-                        }
                     }
                     Message msg = handler.obtainMessage();
                     msg.what = type;
-                    msg.obj = data;
+                    msg.obj = assessData;
                     handler.sendMessage(msg);
                 }
             }
         });
     }
 
-
+    /**
+     * 点评列表适配器
+     */
     private class CommentsAdapter extends BaseAdapter {
         private List<Comment> lstAllComments = new ArrayList<>();
         private ViewHolder holder;
@@ -205,7 +197,7 @@ public class CommentListFragment extends BaseFragment {
                     holder.tag = (TextView) view.findViewById(R.id.id_tv_listview_tag);
                     holder.tag.setText(lstAllComments.get(i).getGroup());
                 } else {
-                    view = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_comment_list_item, null);
+                    view = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_assess_list_item, null);
                     //holder.portrait= (SmartImageView) view.findViewById(R.id.id_img_portrait);
                     holder.userName = (TextView) view.findViewById(R.id.id_username);
                     //holder.source= (TextView) view.findViewById(R.id.id_username);
@@ -217,7 +209,7 @@ public class CommentListFragment extends BaseFragment {
                         @Override
                         public void onClick(View view) {
                             TopLineOperator operator = TopLineOperator.getInstance();
-                            operator.commentSurpot(0, newsId, lstAllComments.get(i).getId(), 0, 1);
+                            //operator.commentSurpot(0, newsId, lstAllComments.get(i).getId(), 0, 1);
                         }
                     });
 
