@@ -113,7 +113,7 @@ public class ToplineFragment extends BaseFragment {
     }
 
     //初始化视图及成员
-    private void initView(ViewGroup rootView) {
+    private void initView(final ViewGroup rootView) {
         this.tabBar = (TabBar) rootView.findViewById(R.id.fragment_shared_toplinefragment_tab_bar);
         this.viewPager = (ViewPager) rootView.findViewById(R.id.fragment_shared_toplinefragment_viewpager);
         this.indicator = (TabPageIndicator) rootView.findViewById(R.id.topbar_indicator);
@@ -141,7 +141,7 @@ public class ToplineFragment extends BaseFragment {
                 fragmentPagerAdapter.notifyDataSetChanged();
                 indicator.notifyDataSetChanged();
 
-                ViewGroup topLineViewGroup = (ViewGroup) getActivity().findViewById(R.id.rl_topline);
+                ViewGroup topLineViewGroup = (ViewGroup) rootView.findViewById(R.id.rl_topline);
                 topLineViewGroup.removeView(channelManageView);
                 int yStart = -getActivity().getResources().getDisplayMetrics().heightPixels;
                 int yEnd = 0;
@@ -173,7 +173,7 @@ public class ToplineFragment extends BaseFragment {
         }
 
         addChannelPoped = true;
-        ViewGroup topLineViewGroup = (ViewGroup) getActivity().findViewById(R.id.rl_topline);
+        ViewGroup topLineViewGroup = (ViewGroup) rootView.findViewById(R.id.rl_topline);
         topLineViewGroup.addView(this.cmv);
         this.cmv.refreshData();//重新加载数据（数据来源于网络缓存）
         int yStart = -getActivity().getResources().getDisplayMetrics().heightPixels;
