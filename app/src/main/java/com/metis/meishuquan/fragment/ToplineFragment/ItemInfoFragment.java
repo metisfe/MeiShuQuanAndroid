@@ -192,10 +192,7 @@ public class ItemInfoFragment extends BaseFragment {
         this.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//返回
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.remove(ItemInfoFragment.this);
-                ft.commit();
+                onBackPressed();
             }
         });
 
@@ -417,5 +414,14 @@ public class ItemInfoFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+    public boolean onBackPressed()
+    {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.remove(ItemInfoFragment.this);
+        ft.commit();
+        return true;
     }
 }

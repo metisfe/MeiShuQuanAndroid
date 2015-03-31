@@ -9,6 +9,7 @@ import android.util.DisplayMetrics;
 import android.widget.Toast;
 
 import com.metis.meishuquan.fragment.BaseFragment;
+import com.metis.meishuquan.fragment.ToplineFragment.ItemInfoFragment;
 import com.metis.meishuquan.fragment.main.ClassFragment;
 import com.metis.meishuquan.fragment.main.CommentFragment;
 import com.metis.meishuquan.fragment.main.MyInfoFragment;
@@ -70,8 +71,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
                     ViewUtils.createAppShortcut(self);
                 }
             }, 5000);
-        }
-        else {
+        } else {
             navigateTo(ToplineFragment.class, false);
         }
 
@@ -148,7 +148,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
         }
     }
 
-        public void navigateTo(Class<? extends BaseFragment> fragment, Bundle args, boolean isNeedToBack) {
+    public void navigateTo(Class<? extends BaseFragment> fragment, Bundle args, boolean isNeedToBack) {
         FragmentTransaction ft = fm.beginTransaction();
         int size = fm.getBackStackEntryCount();
 
@@ -171,9 +171,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
 
         ft.add(R.id.content_container, baseFragment, fragment.getSimpleName());
         ft.addToBackStack(fragment.getSimpleName());
-
         ft.commitAllowingStateLoss();
-
 
         if (isFirstLevlPage(fragment)) {
             this.showTabBar();
@@ -202,23 +200,19 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
     public void showTabBar() {
     }
 
-    public void goBack() {
-        if (fm == null) {
-            return;
-        }
-
-        // tag navigation
-        String topFragmentName = fm.getBackStackEntryAt(fm.getBackStackEntryCount() - 1).getName();
-        fm.popBackStackImmediate();
-
-    }
-
     public boolean handleBackPressedInTopFragment() {
-        if (fm == null) {
+        if (fm == null)
+        {
             return false;
         }
 
-        //TODO: if we support back on fragment
+        String topFragmentName = fm.getBackStackEntryAt(fm.getBackStackEntryCount() - 1).getName();
+        if (topFragmentName.equals(ItemInfoFragment.class.getSimpleName()))
+        {
+            ItemInfoFragment fragment = (ItemInfoFragment) getSupportFragmentManager().findFragmentByTag(topFragmentName);
+            return fragment.onBackPressed();
+        }
+
         return false;
     }
 

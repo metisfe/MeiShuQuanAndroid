@@ -76,6 +76,7 @@ public class ToplineFragment extends BaseFragment {
 
     @Override
     public void onResume() {
+
         super.onResume();
     }
 
@@ -161,9 +162,6 @@ public class ToplineFragment extends BaseFragment {
 
         //实例化TabPageIndicator然后设置ViewPager与之关联
         this.indicator.setViewPager(viewPager);
-
-        //对ViewPager设置监听，用indicator设置就行了
-        indicator.setOnPageChangeListener(new PageChangeListener());
     }
 
     /**
@@ -190,28 +188,6 @@ public class ToplineFragment extends BaseFragment {
         animation.setFillEnabled(true);
         animation.setDuration(500);
         animation.setInterpolator(new DecelerateInterpolator());
-    }
-
-    /**
-     * ViewPager监听类
-     */
-    private class PageChangeListener implements ViewPager.OnPageChangeListener {
-
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            //Toast.makeText(getActivity(), lstUserItems.get(position).getName(), Toast.LENGTH_SHORT).show();
-            //切换Fragment并加载数据
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-
-        }
     }
 
     /**
