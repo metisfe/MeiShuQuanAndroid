@@ -24,7 +24,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/id_tv_grade"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/id_username"
@@ -32,52 +32,76 @@
         android:layout_toEndOf="@+id/id_username"
         android:layout_toRightOf="@+id/id_username"
         android:singleLine="true"
-        android:text="北京"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:text="高三" />
 
     <TextView
         android:id="@+id/id_notifytime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView2"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
+        android:layout_below="@+id/id_username"
+        android:layout_alignLeft="@+id/id_username"
+        android:layout_marginTop="10dp"
         android:singleLine="true"
-        android:text="45分钟前"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:text="45分钟前" />
 
     <TextView
         android:id="@+id/id_textview_comment_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/id_username"
-        android:layout_alignStart="@+id/id_username"
-        android:layout_below="@+id/id_username"
+        android:layout_alignLeft="@+id/id_img_portrait"
+        android:layout_alignStart="@+id/id_img_portrait"
+        android:layout_below="@+id/id_img_portrait"
         android:layout_marginTop="10dp"
         android:maxLines="10"
         android:text="本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情" />
 
-    <Button
-        android:id="@+id/id_btn_comment"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/id_notifytime"
-        android:layout_alignRight="@+id/id_notifytime"
+    <com.loopj.android.image.SmartImageView
+        android:id="@+id/id_img_content"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_below="@+id/id_textview_comment_content"
         android:layout_marginTop="10dp"
-        android:text="评论" />
+        android:src="@drawable/icon"/>
 
-    <Button
-        android:id="@+id/id_btn_support"
-        style="?android:attr/buttonStyleSmall"
+    <TextView
+        android:id="@+id/id_tv_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/id_btn_comment"
-        android:layout_marginRight="10dp"
-        android:layout_toLeftOf="@+id/id_btn_comment"
-        android:layout_toStartOf="@+id/id_btn_comment"
-        android:text="赞" />
+        android:layout_alignBottom="@+id/id_img_content"
+        android:layout_alignParentRight="true"
+        android:textColor="#cccccc"
+        android:text="评论(123)" />
+
+    <TextView
+        android:id="@+id/id_btn_support"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#cccccc"
+        android:text="赞(123)"
+        android:layout_alignTop="@+id/id_tv_comment"
+        android:layout_toLeftOf="@+id/id_tv_comment"
+        android:layout_toStartOf="@+id/id_tv_comment" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="素描"
+        android:id="@+id/textView"
+        android:layout_alignTop="@+id/id_username"
+        android:layout_alignRight="@+id/id_textview_comment_content"
+        android:layout_alignEnd="@+id/id_textview_comment_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="已点评"
+        android:textColor="@color/red"
+        android:id="@+id/textView3"
+        android:layout_alignTop="@+id/id_notifytime"
+        android:layout_alignRight="@+id/id_textview_comment_content"
+        android:layout_alignEnd="@+id/id_textview_comment_content" />
 
 
 </RelativeLayout>

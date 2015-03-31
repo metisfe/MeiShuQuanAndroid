@@ -4,7 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+<<<<<<< Updated upstream
 import android.support.v4.app.FragmentPagerAdapter;
+=======
+>>>>>>> Stashed changes
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -49,7 +52,6 @@ public class ToplineFragment extends BaseFragment {
     private List<News> lstNews = new ArrayList<>();
     private boolean addChannelPoped;
     private int lastNewsId = 0;
-    private boolean isFirstVisit=false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

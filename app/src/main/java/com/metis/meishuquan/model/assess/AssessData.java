@@ -9,29 +9,29 @@ import java.util.List;
  * Created by WJ on 2015/3/31.
  */
 public class AssessData {
-    private List<Assess> lastAssessLists ;
+    private List<Assess> lastAssessList ;//最新点评
 
-    private List<Assess> hotAssessLists ;
+    private List<Assess> hotAssessList ;//热门点评
 
     public List<Assess> getLastAssessLists() {
-        if (lastAssessLists==null){
-            lastAssessLists= new ArrayList<>();
+        if (lastAssessList==null){
+            lastAssessList= new ArrayList<>();
         }
-        return lastAssessLists;
+        return lastAssessList;
     }
 
     public void setLastAssessLists(List<Assess> lastAssessLists) {
-        this.lastAssessLists = lastAssessLists;
+        this.lastAssessList = lastAssessLists;
     }
 
     public List<Assess> getHotAssessLists() {
-        if (hotAssessLists==null){
-            hotAssessLists=new ArrayList<>();
+        if (hotAssessList==null){
+            hotAssessList=new ArrayList<>();
         }
-        return hotAssessLists;
+        return hotAssessList;
     }
 
     public void setHotAssessLists(List<Assess> hotAssessLists) {
-        this.hotAssessLists = hotAssessLists;
+        this.hotAssessList = hotAssessLists;
     }
 }

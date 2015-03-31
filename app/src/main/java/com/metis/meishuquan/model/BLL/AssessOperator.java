@@ -62,16 +62,17 @@ public class AssessOperator {
      * @param index      index=1取最新数据，排序先按照默认时间排序
      * @param callback
      */
-    public void getAssessList(boolean isAll, int type, List<Integer> grades, List<Integer> channelIds, int index,
+    public void getAssessList(boolean isAll, int type, List<Integer> grades, List<Integer> channelIds, int index,int queryType,
                               ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuilder PATH = new StringBuilder(AssessList);
                 PATH.append("?isAll=" + isAll);
-                PATH.append("?type=" + type);
-                PATH.append("?grades=" + grades);
-                PATH.append("?channelIds=" + channelIds);
-                PATH.append("?index=" + index);
+                PATH.append("&type=" + type);
+                PATH.append("&grades=" + grades);
+                PATH.append("&channelIds=" + channelIds);
+                PATH.append("&index=" + index);
+                PATH.append("&queryType=" + queryType);
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
