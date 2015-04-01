@@ -4,12 +4,10 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.widget.Toast;
 
 import com.metis.meishuquan.fragment.BaseFragment;
-import com.metis.meishuquan.fragment.ToplineFragment.ItemInfoFragment;
 import com.metis.meishuquan.fragment.main.ClassFragment;
 import com.metis.meishuquan.fragment.main.AssessFragment;
 import com.metis.meishuquan.fragment.main.MyInfoFragment;

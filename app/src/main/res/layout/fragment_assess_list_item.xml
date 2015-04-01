@@ -35,7 +35,7 @@
         android:text="高三" />
 
     <TextView
-        android:id="@+id/id_notifytime"
+        android:id="@+id/id_createtime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/id_username"
@@ -45,7 +45,7 @@
         android:text="45分钟前" />
 
     <TextView
-        android:id="@+id/id_textview_comment_content"
+        android:id="@+id/id_tv_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/id_img_portrait"
@@ -59,12 +59,12 @@
         android:id="@+id/id_img_content"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_below="@+id/id_textview_comment_content"
+        android:layout_below="@+id/id_tv_content"
         android:layout_marginTop="10dp"
         android:src="@drawable/icon"/>
 
     <TextView
-        android:id="@+id/id_tv_comment"
+        android:id="@+id/id_tv_comment_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/id_img_content"
@@ -73,24 +73,24 @@
         android:text="评论(123)" />
 
     <TextView
-        android:id="@+id/id_btn_support"
+        android:id="@+id/id_tv_support_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#cccccc"
         android:text="赞(123)"
-        android:layout_alignTop="@+id/id_tv_comment"
-        android:layout_toLeftOf="@+id/id_tv_comment"
-        android:layout_toStartOf="@+id/id_tv_comment" />
+        android:layout_alignTop="@+id/id_tv_comment_count"
+        android:layout_toLeftOf="@+id/id_tv_comment_count"
+        android:layout_toStartOf="@+id/id_tv_comment_count" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="素描"
-        android:id="@+id/textView"
+        android:id="@+id/id_tv_content_type"
         android:layout_alignTop="@+id/id_username"
-        android:layout_alignRight="@+id/id_textview_comment_content"
-        android:layout_alignEnd="@+id/id_textview_comment_content" />
+        android:layout_alignRight="@+id/id_tv_content"
+        android:layout_alignEnd="@+id/id_tv_content" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -98,10 +98,10 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="已点评"
         android:textColor="@color/red"
-        android:id="@+id/textView3"
-        android:layout_alignTop="@+id/id_notifytime"
-        android:layout_alignRight="@+id/id_textview_comment_content"
-        android:layout_alignEnd="@+id/id_textview_comment_content" />
+        android:id="@+id/id_tv_comment_state"
+        android:layout_alignTop="@+id/id_createtime"
+        android:layout_alignRight="@+id/id_tv_content"
+        android:layout_alignEnd="@+id/id_tv_content" />
 
 
 </RelativeLayout>

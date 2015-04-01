@@ -4,10 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-<<<<<<< Updated upstream
-import android.support.v4.app.FragmentPagerAdapter;
-=======
->>>>>>> Stashed changes
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -21,7 +17,7 @@ import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.adapter.topline.DataHelper;
 import com.metis.meishuquan.fragment.BaseFragment;
-import com.metis.meishuquan.fragment.ToplineFragment.ItemFragment;
+import com.metis.meishuquan.fragment.Topline.ItemFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.topline.ChannelItem;
 import com.metis.meishuquan.model.topline.News;

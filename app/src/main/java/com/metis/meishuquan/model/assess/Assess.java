@@ -21,7 +21,7 @@ public class Assess {
 
     private OriginalImage originalImage;
 
-    private AssessChannel assessChannel;
+    private AssessChannel assessChannel=null;
 
     private int region;
 
@@ -37,7 +37,7 @@ public class Assess {
 
     private String desc = "";
 
-    private String group;//分组
+    private String group="";//分组
 
     public int getId() {
         return id;
@@ -83,6 +83,9 @@ public class Assess {
     }
 
     public AssessChannel getAssessChannel() {
+        if (assessChannel==null){
+            assessChannel= new AssessChannel();
+        }
         return assessChannel;
     }
 

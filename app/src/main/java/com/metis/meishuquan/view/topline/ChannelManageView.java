@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,15 +28,9 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.adapter.topline.DataHelper;
 import com.metis.meishuquan.adapter.topline.DragAdapter;
 import com.metis.meishuquan.adapter.topline.OtherAdapter;
-import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.topline.AllChannel;
 import com.metis.meishuquan.model.topline.ChannelItem;
-import com.metis.meishuquan.model.topline.ChannelManage;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONStringer;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -4,9 +4,9 @@ package com.metis.meishuquan.model.assess;
  * Created by WJ on 2015/3/31.
  */
 public class AssessChannel {
-    private int channelId;
+    private int channelId=0;
 
-    private String channelName;
+    private String channelName="";
 
     public int getChannelId() {
         return channelId;

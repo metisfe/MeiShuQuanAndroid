@@ -2,7 +2,7 @@ package com.metis.meishuquan.model.assess;
 
 /**
  * POJO:City
- * 
+ * <p/>
  * Created by WJ on 2015/3/31.
  */
 public class City {
@@ -13,6 +13,8 @@ public class City {
     private String cityName;
 
     private boolean hotCity;
+
+    private String groupName;
 
     public int getCodeid() {
         return codeid;
@@ -44,5 +46,13 @@ public class City {
 
     public void setHotCity(boolean hotCity) {
         this.hotCity = hotCity;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 }

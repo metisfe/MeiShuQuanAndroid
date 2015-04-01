@@ -4,17 +4,17 @@ package com.metis.meishuquan.model.topline;
  * Created by wj on 15/3/29.
  */
 public class User {
-    private int userId;
+    private int userId=0;
 
-    private String name;
+    private String name="";
 
-    private String remarkName;
+    private String remarkName="";
 
-    private String avatar;
+    private String avatar="";
 
-    private String grade;
+    private String grade="";
 
-    private int identity;
+    private int identity=0;
 
     public int getUserId() {
         return userId;

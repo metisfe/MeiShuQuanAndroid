@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * 业务逻辑类：点评
- *
+ * <p/>
  * Created by wj on 15/3/20.
  */
 public class AssessOperator {
@@ -39,7 +39,7 @@ public class AssessOperator {
     private final String PushComment = "v1.1/AssessComment/PushComment";//发表评价
     private final String Friend = "";//获取好友/老师
     private final String FileUpload = "v1.1/File/Upload";//文件上传
-    private final String Region="v1.1/UserCenter/Region";
+    private final String Region = "v1.1/UserCenter/Region";
 
     private AssessOperator() {
         flag = ApiDataProvider.initProvider();
@@ -62,7 +62,7 @@ public class AssessOperator {
      * @param index      index=1取最新数据，排序先按照默认时间排序
      * @param callback
      */
-    public void getAssessList(boolean isAll, int type, List<Integer> grades, List<Integer> channelIds, int index,int queryType,
+    public void getAssessList(boolean isAll, int type, List<Integer> grades, List<Integer> channelIds, int index, int queryType,
                               ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
@@ -192,18 +192,28 @@ public class AssessOperator {
 
     /**
      * 获取地区
-     * @param callback
      */
-    public void getRegion(ApiOperationCallback<ReturnInfo<String>> callback){
+    public void AddRegionToCache() {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
-            if (flag){
-                ApiDataProvider.getmClient().invokeApi(Region,null,HttpGet.METHOD_NAME,null,
-                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+            if (flag) {
+                ApiDataProvider.getmClient().invokeApi(Region, null, HttpGet.METHOD_NAME, null,
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+                            @Override
+                            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                    Gson gson = new Gson();
+                                    String json = gson.toJson(result);
+                                    //缓存至本地
+                                    SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
+                                    spu.add(SharedPreferencesUtil.REGION, json);
+                                }
+                            }
+                        });
             }
         }
     }
 
-    public void publishComment(){
+    public void publishComment() {
 
     }
 }

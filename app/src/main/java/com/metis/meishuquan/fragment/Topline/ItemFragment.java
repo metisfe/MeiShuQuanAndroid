@@ -1,4 +1,4 @@
-package com.metis.meishuquan.fragment.ToplineFragment;
+package com.metis.meishuquan.fragment.Topline;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -6,14 +6,10 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -21,7 +17,6 @@ import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.adapter.topline.ToplineCustomAdapter;
 import com.metis.meishuquan.fragment.BaseFragment;
-import com.metis.meishuquan.fragment.main.ToplineFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.topline.News;
@@ -33,7 +28,6 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Fragment:TopBar Fragment

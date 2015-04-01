@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +18,13 @@ import com.google.gson.reflect.TypeToken;
 import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.fragment.Assess.ChooseCityFragment;
 import com.metis.meishuquan.fragment.BaseFragment;
 import com.metis.meishuquan.model.BLL.AssessOperator;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.assess.AllAssess;
 import com.metis.meishuquan.model.assess.Assess;
-import com.metis.meishuquan.model.assess.AssessData;
 import com.metis.meishuquan.model.contract.ReturnInfo;
-import com.metis.meishuquan.model.topline.Comment;
 import com.metis.meishuquan.view.shared.DragListView;
 import com.metis.meishuquan.view.shared.TabBar;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -35,7 +36,7 @@ import java.util.List;
 /**
  * 模块：点评
  * <p/>
- * Created by wudi on 3/15/2015.
+ * Created by wj on 3/15/2015.
  */
 public class AssessFragment extends BaseFragment {
 
@@ -70,8 +71,12 @@ public class AssessFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        //TODO:定位
+        AssessOperator assessOperator=AssessOperator.getInstance();
+        assessOperator.AddRegionToCache();
         //加载列表数据
-        //getData(DragListView.REFRESH, true, 1, null, null, 1, 0);
+        getData(DragListView.REFRESH, true, 1, null, null, 1, 0);
+
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_commentfragment, container, false);
         initView(rootView);
@@ -88,27 +93,32 @@ public class AssessFragment extends BaseFragment {
         this.btnFilter = (Button) rootView.findViewById(R.id.id_btn_commentlist_filter);
 
         this.adapter = new AssessAdapter(this.lstAllAssess);
+        this.listView.setAdapter(adapter);
     }
 
     private void initEvent() {
         this.listView.setOnRefreshListener(new DragListView.OnRefreshListener() {//刷新
             @Override
             public void onRefresh() {
-                //getData(DragListView.REFRESH, true, 1, null, null, 1, 0);
+                getData(DragListView.REFRESH, true, 1, null, null, 1, 0);
             }
         });
 
         this.listView.setOnLoadListener(new DragListView.OnLoadListener() {//加载更多
             @Override
             public void onLoad() {
-                //getData(DragListView.LOAD, true, 1, null, null, 1, 0);
+                getData(DragListView.LOAD, true, 1, null, null, 1, 0);
             }
         });
 
         this.btnRegion.setOnClickListener(new View.OnClickListener() {//区域
             @Override
             public void onClick(View v) {
-
+                ChooseCityFragment chooseCityFragment=new ChooseCityFragment();
+                FragmentManager fm=getActivity().getSupportFragmentManager();
+                FragmentTransaction ft= fm.beginTransaction();
+                ft.add(R.id.content_container,chooseCityFragment);
+                ft.commit();
             }
         });
 
@@ -168,28 +178,28 @@ public class AssessFragment extends BaseFragment {
      * 点评列表适配器
      */
     private class AssessAdapter extends BaseAdapter {
-        private List<Assess> lstAllAssess = new ArrayList<>();
+        private List<Assess> lstAssess = new ArrayList<>();
         private ViewHolder holder;
 
         public AssessAdapter(List<Assess> lstAllComments) {
-            this.lstAllAssess = lstAllComments;
+            this.lstAssess = lstAllComments;
         }
 
         private class ViewHolder {
-            SmartImageView portrait;
-            TextView userName, source, notifyTime, content, tag;
-            Button btn_support, btn_comment;
+            SmartImageView portrait,img_content;
+            TextView userName, grade, createTime, content, tag;
+            TextView tvSupportCount, tvCommentCount,tvContentType,tvCommentState;
 
         }
 
         @Override
         public int getCount() {
-            return lstAllAssess.size();
+            return lstAssess.size();
         }
 
         @Override
         public Object getItem(int i) {
-            return lstAllAssess.get(i);
+            return lstAssess.get(i);
         }
 
         @Override
@@ -199,31 +209,34 @@ public class AssessFragment extends BaseFragment {
 
         @Override
         public boolean isEnabled(int position) {
-            if (lstAllAssess.get(position).getGroup().equals("热门评论") || lstAllAssess.get(position).getGroup().equals(("最新评论"))) {
+            if (lstAssess.get(position).getGroup().equals("热门点评") || lstAssess.get(position).getGroup().equals(("最新点评"))) {
                 return false;
             }
-            return super.isEnabled(position);
+            return true;
         }
 
         @Override
         public View getView(final int i, View convertView, ViewGroup viewGroup) {
-            View view = convertView;
-            if (convertView == null) {
+            View view = null;
+            if (view == null) {
                 holder = new ViewHolder();
-                if (lstAllAssess.get(i).getGroup().equals("热门评论") || lstAllAssess.get(i).getGroup().equals(("最新评论"))) {
+                Assess assess= lstAssess.get(i);
+                if (assess.getGroup().equals("热门点评") || assess.getGroup().equals(("最新点评"))) {
                     view = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_topline_comment_list_item_tag, null);
                     holder.tag = (TextView) view.findViewById(R.id.id_tv_listview_tag);
-                    holder.tag.setText(lstAllAssess.get(i).getGroup());
+                    holder.tag.setText(assess.getGroup());
                 } else {
                     view = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_assess_list_item, null);
                     //holder.portrait= (SmartImageView) view.findViewById(R.id.id_img_portrait);
                     holder.userName = (TextView) view.findViewById(R.id.id_username);
-                    //holder.source= (TextView) view.findViewById(R.id.id_username);
-                    holder.notifyTime = (TextView) view.findViewById(R.id.id_notifytime);
-                    holder.content = (TextView) view.findViewById(R.id.id_textview_comment_content);
-                    holder.btn_support = (Button) view.findViewById(R.id.id_btn_support);
-                    holder.btn_comment = (Button) view.findViewById(R.id.id_btn_comment);
-                    holder.btn_support.setOnClickListener(new View.OnClickListener() {
+                    holder.grade= (TextView) view.findViewById(R.id.id_tv_grade);
+                    holder.createTime = (TextView) view.findViewById(R.id.id_createtime);
+                    holder.content = (TextView) view.findViewById(R.id.id_tv_content);
+                    holder.img_content= (SmartImageView) view.findViewById(R.id.id_img_content);
+                    holder.tvSupportCount = (TextView) view.findViewById(R.id.id_tv_support_count);
+                    holder.tvCommentCount = (TextView) view.findViewById(R.id.id_tv_comment_count);
+                    holder.tvContentType= (TextView) view.findViewById(R.id.id_tv_content_type);
+                    holder.tvSupportCount.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             TopLineOperator operator = TopLineOperator.getInstance();
@@ -231,10 +244,15 @@ public class AssessFragment extends BaseFragment {
                         }
                     });
 
-                    holder.userName.setText(this.lstAllAssess.get(i).getUser().getName());
-                    //holder.source.setText(this.lstAllComments.get(i).getCommentDateTime());
-                    holder.notifyTime.setText(this.lstAllAssess.get(i).getCreateTime());
-                    holder.content.setText(this.lstAllAssess.get(i).getDesc());
+                    holder.userName.setText(assess.getUser().getName());//用户名
+                    //holder.grade.setText(assess());
+                    holder.createTime.setText(assess.getCreateTime());//创建时间
+                    holder.content.setText(assess.getDesc());//内容描述
+                    holder.img_content.setImageUrl(assess.getThumbnails().getUrl());//内容图片
+                    holder.tvSupportCount.setText("赞("+assess.getSupportCount()+")");//赞数量
+                    holder.tvCommentCount.setText("评论("+assess.getCommentCount()+")");//评论数量
+                    holder.tvContentType.setText(assess.getAssessChannel().getChannelName());//内容类型
+                    //TODO:点评状态
                 }
                 holder = (ViewHolder) view.getTag();
             }
