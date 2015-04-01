@@ -8,6 +8,7 @@ import android.util.DisplayMetrics;
 import android.widget.Toast;
 
 import com.metis.meishuquan.fragment.BaseFragment;
+import com.metis.meishuquan.fragment.main.CircleFragment;
 import com.metis.meishuquan.fragment.main.ClassFragment;
 import com.metis.meishuquan.fragment.main.AssessFragment;
 import com.metis.meishuquan.fragment.main.MyInfoFragment;
@@ -137,8 +138,10 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
                 navigateTo(ClassFragment.class);
                 break;
             case MyInfo:
-            default:
                 navigateTo(MyInfoFragment.class);
+                break;
+            default:
+                navigateTo(CircleFragment.class);
                 break;
         }
     }
@@ -207,6 +210,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
         return name.equals(ToplineFragment.class.getSimpleName())
                 || name.equals(MyInfoFragment.class.getSimpleName())
                 || name.equals(AssessFragment.class.getSimpleName())
+                || name.equals(CircleFragment.class.getSimpleName())
                 || name.equals(ClassFragment.class.getSimpleName());
     }
 }

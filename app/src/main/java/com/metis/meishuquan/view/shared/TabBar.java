@@ -21,6 +21,7 @@ public class TabBar extends LinearLayout implements View.OnClickListener
     private static final int TABBAR_TYPE_TOPSTORY = 0x01;
     private static final int TABBAR_TYPE_TAG = 0x02;
     private static final int TABBAR_TYPE_ACTIVITY = 0x03;
+    private static final int TABBAR_TYPE_CIRCLE = 0x04;
 
     public interface TabSelectedListener
     {
@@ -37,6 +38,11 @@ public class TabBar extends LinearLayout implements View.OnClickListener
     private View topStoryTab;
     private ImageView topStoryIcon;
     private TextView topStoryTitle;
+
+    //circle
+    private View circleTab;
+    private ImageView circleIcon;
+    private TextView circleTitle;
 
     //课程
     private View discoverTab;
@@ -78,35 +84,6 @@ public class TabBar extends LinearLayout implements View.OnClickListener
         selectedFolloweesTab(true);
     }
 
-    public void jump(SelectedTabType type)
-    {
-        clearSelected();
-
-        switch (type)
-        {
-            case TopLine:
-                selectedFolloweesTab(true);
-                break;
-            case Comment:
-                selectedTopStoryTab(true);
-                break;
-            case Class:
-                selectedDiscoverTab(true);
-                break;
-            case MyInfo:
-                selectedActivityTab(true);
-                break;
-            default:
-                type = SelectedTabType.TopLine;
-                selectedFolloweesTab(true);
-        }
-
-        if (this.tabSelectedListener != null)
-        {
-            this.tabSelectedListener.onTabSelected(type);
-        }
-    }
-
     @Override
     public void onClick(View v)
     {
@@ -126,6 +103,9 @@ public class TabBar extends LinearLayout implements View.OnClickListener
                     break;
                 case R.id.view_shared_tabbar_activity:
                     type = SelectedTabType.MyInfo;
+                    break;
+                case R.id.view_shared_tabbar_circle:
+                    type = SelectedTabType.Circle;
                     break;
             }
 
@@ -154,10 +134,14 @@ public class TabBar extends LinearLayout implements View.OnClickListener
         this.activityTab = this.findViewById(R.id.view_shared_tabbar_activity);
         this.activityIcon = (ImageView) this.findViewById(R.id.view_shared_tabbar_activity_icon);
         this.activityTitle = (TextView) this.findViewById(R.id.view_shared_tabbar_activity_title);
+        this.circleTab = this.findViewById(R.id.view_shared_tabbar_circle);
+        this.circleIcon = (ImageView) this.findViewById(R.id.view_shared_tabbar_circle_icon);
+        this.circleTitle = (TextView) this.findViewById(R.id.view_shared_tabbar_circle_title);
         this.followeesTab.setOnClickListener(this);
         this.topStoryTab.setOnClickListener(this);
         this.discoverTab.setOnClickListener(this);
         this.activityTab.setOnClickListener(this);
+        this.circleTab.setOnClickListener(this);
 
         clearSelected();
         switch (this.tabbarType)
@@ -172,8 +156,11 @@ public class TabBar extends LinearLayout implements View.OnClickListener
                 selectedActivityTab(true);
                 break;
             case TABBAR_TYPE_FOLLOWEES:
-            default:
                 selectedFolloweesTab(true);
+                break;
+            case TABBAR_TYPE_CIRCLE:
+            default:
+                selectedCircleTab(true);
                 break;
         }
     }
@@ -185,6 +172,7 @@ public class TabBar extends LinearLayout implements View.OnClickListener
         selectedTopStoryTab(false);
         selectedDiscoverTab(false);
         selectedActivityTab(false);
+        selectedCircleTab(false);
     }
 
     /**
@@ -260,6 +248,25 @@ public class TabBar extends LinearLayout implements View.OnClickListener
         {
             this.activityIcon.setImageResource(R.drawable.icon_activity_unselected);
             this.activityTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_unselected_title_color));
+        }
+    }
+
+    /**
+     * 底部Tab_circle
+     * @param isSelected 选中状态
+     */
+    private void selectedCircleTab(boolean isSelected)
+    {
+        this.circleTitle.setText(R.string.tab_circle);
+        if (isSelected)
+        {
+            this.circleIcon.setImageResource(R.drawable.icon_activity_selected);
+            this.circleTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_selected_title_color));
+        }
+        else
+        {
+            this.circleIcon.setImageResource(R.drawable.icon_activity_unselected);
+            this.circleTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_unselected_title_color));
         }
     }
 }
