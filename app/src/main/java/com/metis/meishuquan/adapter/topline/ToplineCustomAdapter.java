@@ -94,7 +94,7 @@ public class ToplineCustomAdapter extends ToplineAdapter {
         }
 
         News news = lstData.get(position);
-        holder.img_thumbnail.setImageUrl(news.getImgUrl().trim(),R.drawable.icon);
+        holder.img_thumbnail.setImageUrl(news.getImgUrl().trim());
         holder.tv_title.setText(news.getTitle());
         holder.tv_source_and_readcount.setText(news.getSource().getTitle() + " | " + "阅读(" + news.getPageViewCount() + ")");
         holder.tv_comment_count.setText("评论(" + news.getCommentCount() + ")");
@@ -106,32 +106,4 @@ public class ToplineCustomAdapter extends ToplineAdapter {
         SmartImageView img_thumbnail;
         TextView tv_title, tv_source_and_readcount, tv_comment_count;
     }
-
-//    private class DownloadImageTask extends AsyncTask<String, Void, Drawable> {
-//
-//        protected Drawable doInBackground(String... urls) {
-//            return loadImageFromNetwork(urls[0]);
-//        }
-//
-//        protected void onPostExecute(Drawable result) {
-//            holder.img_thumbnail.setImageDrawable(result);
-//        }
-//    }
-//
-//    private Drawable loadImageFromNetwork(String imageUrl) {
-//        Drawable drawable = null;
-//        try {
-//            // 可以在这里通过文件名来判断，是否本地有此图片
-//            drawable = Drawable.createFromStream(
-//                    new URL(imageUrl).openStream(), "image.jpg");
-//        } catch (IOException e) {
-//            Log.d("test", e.getMessage());
-//        }
-//        if (drawable == null) {
-//            Log.d("test", "null drawable");
-//        } else {
-//            Log.d("test", "not null drawable");
-//        }
-//        return drawable;
-//    }
 }
