@@ -40,6 +40,11 @@ public class ExpandeAdapter extends BaseExpandableListAdapter {
         changeData();
     }
 
+    public void setData(AllCity allCity){
+        this.mData=allCity;
+        changeData();
+    }
+
     private void changeData(){
         if (mData.getData().size()>0){
             List<Province> all=new ArrayList<>();

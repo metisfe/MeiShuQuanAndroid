@@ -142,7 +142,7 @@ public class ItemInfoFragment extends BaseFragment {
             }
         }
 
-        imageView.setImageUrl(url.trim(), R.drawable.icon);
+        imageView.setImageUrl(url.trim());
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.topMargin = 10;
@@ -150,15 +150,15 @@ public class ItemInfoFragment extends BaseFragment {
         imageView.setLayoutParams(lp);
 
         ll_content.addView(imageView);
-        int yStart = -this.getResources().getDisplayMetrics().heightPixels;
-        int yEnd = 0;
-        TranslateAnimation tranlateAnimation = new TranslateAnimation(0, 0, yStart, yEnd);
-        tranlateAnimation.setFillAfter(true);
-        tranlateAnimation.setFillEnabled(true);
-        tranlateAnimation.setDuration(300);
-        tranlateAnimation.setInterpolator(new DecelerateInterpolator());
-
-        imageView.startAnimation(tranlateAnimation);
+//        int yStart = -this.getResources().getDisplayMetrics().heightPixels;
+//        int yEnd = 0;
+//        TranslateAnimation tranlateAnimation = new TranslateAnimation(0, 0, yStart, yEnd);
+//        tranlateAnimation.setFillAfter(true);
+//        tranlateAnimation.setFillEnabled(true);
+//        tranlateAnimation.setDuration(0);
+//        tranlateAnimation.setInterpolator(new DecelerateInterpolator());
+//
+//        imageView.startAnimation(tranlateAnimation);
     }
 
     //添加文本控件
@@ -176,15 +176,15 @@ public class ItemInfoFragment extends BaseFragment {
         textView.setTextColor(Color.BLACK);
 
         ll_content.addView(textView);
-        int yStart = -getActivity().getResources().getDisplayMetrics().heightPixels;
-        int yEnd = 0;
-        TranslateAnimation tranlateAnimation = new TranslateAnimation(0, 0, yStart, yEnd);
-        tranlateAnimation.setFillAfter(true);
-        tranlateAnimation.setFillEnabled(true);
-        tranlateAnimation.setDuration(300);
-        tranlateAnimation.setInterpolator(new DecelerateInterpolator());
-
-        textView.startAnimation(tranlateAnimation);
+//        int yStart = -getActivity().getResources().getDisplayMetrics().heightPixels;
+//        int yEnd = 0;
+//        TranslateAnimation tranlateAnimation = new TranslateAnimation(0, 0, yStart, yEnd);
+//        tranlateAnimation.setFillAfter(true);
+//        tranlateAnimation.setFillEnabled(true);
+//        tranlateAnimation.setDuration(300);
+//        tranlateAnimation.setInterpolator(new DecelerateInterpolator());
+//
+//        textView.startAnimation(tranlateAnimation);
     }
 
     //初始化事件

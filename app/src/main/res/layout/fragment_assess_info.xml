@@ -1,12 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#e3e3e3">
+    android:layout_height="match_parent"
+    android:background="#cccccc"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/id_rl_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#2d2a40">
+
+        <Button
+            android:id="@+id/id_btn_assess_info_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:background="#2d2a40"
+            android:text="返回"
+            android:textColor="@color/white"
+            android:textSize="17sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="问题详情"
+            android:textColor="@color/red"
+            android:textSize="20sp" />
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/id_rl_topbar"
+        android:layout_margin="5dp"
         android:background="#F1F1F1"
         android:padding="20dp">
 
@@ -64,30 +95,33 @@
 
         <com.loopj.android.image.SmartImageView
             android:id="@+id/id_img_content"
-            android:layout_width="220dp"
+            android:layout_width="200dp"
             android:layout_height="150dp"
             android:layout_below="@+id/id_tv_content"
             android:layout_marginTop="10dp"
             android:src="@drawable/icon" />
 
-        <TextView
+        <Button
             android:id="@+id/id_tv_comment_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/id_img_content"
             android:layout_alignParentRight="true"
+            android:background="#F1F1F1"
             android:text="评论(123)"
-            android:textColor="#cccccc" />
+            android:textColor="#909090" />
 
-        <TextView
+        <Button
             android:id="@+id/id_tv_support_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/id_tv_comment_count"
             android:layout_toLeftOf="@+id/id_tv_comment_count"
             android:layout_toStartOf="@+id/id_tv_comment_count"
+            android:layout_marginRight="10dp"
+            android:background="#F1F1F1"
             android:text="赞(123)"
-            android:textColor="#cccccc" />
+            android:textColor="#909090" />
 
         <TextView
             android:id="@+id/id_tv_content_type"
@@ -106,11 +140,10 @@
             android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/id_tv_content"
             android:layout_alignRight="@+id/id_tv_content"
-            android:layout_alignTop="@+id/id_createtime"
+            android:layout_alignBottom="@+id/id_createtime"
             android:text="已点评"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/red" />
     </RelativeLayout>
-
 
 </RelativeLayout>

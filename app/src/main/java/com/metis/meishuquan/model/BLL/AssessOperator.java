@@ -80,6 +80,42 @@ public class AssessOperator {
     }
 
     /**
+     * 根据条件获得点评列表
+     *
+     * @param isAll      全部 isAll为True时，其他条件失效
+     * @param type       类型 type 1最新 2已评价 3未评价
+     * @param grades     年级
+     * @param channelIds 标签
+     * @param index      index=1取最新数据，排序先按照默认时间排序
+     */
+    public void addAssessListToCache(boolean isAll, int type, List<Integer> grades, List<Integer> channelIds, int index, int queryType) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuilder PATH = new StringBuilder(AssessList);
+                PATH.append("?isAll=" + true);
+                PATH.append("&type=" + 1);
+                PATH.append("&grades=" + 0);
+                PATH.append("&channelIds=" + 0);
+                PATH.append("&index=" + index);
+                PATH.append("&queryType=" + queryType);
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+                            @Override
+                            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                    Gson gson = new Gson();
+                                    String json = gson.toJson(result);
+                                    SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
+                                    spu.delete(SharedPreferencesUtil.ALLASSESSLIST);
+                                    spu.add(SharedPreferencesUtil.ALLASSESSLIST, json);
+                                }
+                            }
+                        });
+            }
+        }
+    }
+
+    /**
      * 获取标签及年级
      */
     public void addAssessChannelListToCach() {

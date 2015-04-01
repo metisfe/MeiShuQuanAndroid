@@ -8,9 +8,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
@@ -21,7 +21,11 @@ import com.metis.meishuquan.adapter.ExpandeAdapter;
 import com.metis.meishuquan.fragment.BaseFragment;
 import com.metis.meishuquan.model.assess.AllCity;
 import com.metis.meishuquan.model.assess.City;
+import com.metis.meishuquan.model.assess.Province;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Fragment:城市选择
@@ -31,7 +35,7 @@ import com.metis.meishuquan.util.SharedPreferencesUtil;
 public class ChooseCityFragment extends BaseFragment {
     private ExpandableListView listView;
     private Button btnBack;
-    private AutoCompleteTextView autoCompleteTextView;
+    private SearchView searchView;
     private ExpandeAdapter adapter;
     private AllCity mAllCity;
 
@@ -47,13 +51,17 @@ public class ChooseCityFragment extends BaseFragment {
 
     private void initView(ViewGroup rootView) {
         this.listView = (ExpandableListView) rootView.findViewById(R.id.id_assess_city_listview);
-        this.btnBack = (Button) rootView.findViewById(R.id.id_assess_city_btn_back);
-        this.autoCompleteTextView = (AutoCompleteTextView) rootView.findViewById(R.id.id_assess_city_autocomplete_textview);
-
         this.listView.setGroupIndicator(null);
-        this.listView.setBackgroundColor(Color.rgb(255,255,255));
+        this.listView.setBackgroundColor(Color.rgb(255, 255, 255));
+        this.listView.setTextFilterEnabled(true);
 
-        this.adapter=new ExpandeAdapter(MainApplication.UIContext,mAllCity);
+        this.btnBack = (Button) rootView.findViewById(R.id.id_assess_city_btn_back);
+
+        this.searchView = (SearchView) rootView.findViewById(R.id.id_assess_city_autocomplete_searchView);
+        this.searchView.setSubmitButtonEnabled(false);
+
+
+        this.adapter = new ExpandeAdapter(MainApplication.UIContext, mAllCity);
         this.listView.setAdapter(adapter);
     }
 
@@ -61,8 +69,8 @@ public class ChooseCityFragment extends BaseFragment {
         this.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentManager fm=getActivity().getSupportFragmentManager();
-                FragmentTransaction ft= fm.beginTransaction();
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
                 ft.remove(ChooseCityFragment.this);
                 ft.commit();
             }
@@ -71,17 +79,59 @@ public class ChooseCityFragment extends BaseFragment {
         this.listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView listView, View view, int groupPosition, int childPosition, long id) {
-                City city=adapter.getChild(groupPosition,childPosition);
-                Toast.makeText(MainApplication.UIContext,"您选择的城市为:"+city.getCityName(),Toast.LENGTH_SHORT).show();
+                City city = adapter.getChild(groupPosition, childPosition);
+                Toast.makeText(MainApplication.UIContext, "您选择的城市为:" + city.getCityName(), Toast.LENGTH_SHORT).show();
                 return true;
+            }
+        });
+
+        this.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                AllCity allCity = searchItem(s);
+                if (allCity.getData().size() > 0) {
+                    adapter.setData(allCity);
+                    adapter.notifyDataSetChanged();
+                }
+                return false;
             }
         });
     }
 
-    private void getData(){
-        SharedPreferencesUtil spu=SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
-        String json=spu.getStringByKey(SharedPreferencesUtil.REGION);
-        Gson gson= new Gson();
-        mAllCity=gson.fromJson(json,new TypeToken<AllCity>(){}.getType());
+    public AllCity searchItem(String val) {
+        AllCity allCity = new AllCity();
+        List<Province> provinces = new ArrayList<>();
+        for (int i = 0; i < mAllCity.getData().size(); i++) {
+            List<City> citys = new ArrayList<>();
+            Province province = mAllCity.getData().get(i);
+            List<City> citysTemp = province.getCityList();
+            for (int j = 0; j < citysTemp.size(); j++) {
+                City city = citysTemp.get(j);
+                if (city.getCityName().indexOf(val) != -1) {
+                    citys.add(city);
+                }
+            }
+            if (citys.size() > 0) {
+                province.setCityList(citys);
+                provinces.add(province);
+            }
+        }
+        allCity.setData(provinces);
+        return allCity;
+    }
+
+
+    private void getData() {
+        SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
+        String json = spu.getStringByKey(SharedPreferencesUtil.REGION);
+        Gson gson = new Gson();
+        mAllCity = gson.fromJson(json, new TypeToken<AllCity>() {
+        }.getType());
     }
 }
