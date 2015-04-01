@@ -13,6 +13,7 @@ public class SharedPreferencesUtil {
     public static final String CHANNELID_NEWS="news";
     public static final String ASSESS_CHANNEL_LIST="assess_channel_list";
     public static final String REGION="region";
+    public static final String ALLASSESSLIST="all_assess_list";
 
     private static SharedPreferencesUtil spu = null;
     private Context context;

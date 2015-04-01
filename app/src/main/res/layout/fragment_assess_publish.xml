@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bs="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E3E3E3">
+    android:background="#CCCCCC">
 
     <RelativeLayout
         android:id="@+id/rl_title_bar"
@@ -12,7 +11,7 @@
         android:background="#2d2a40">
 
         <Button
-            android:id="@+id/id_btn_region"
+            android:id="@+id/id_btn_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/id_btn_commentlist_filter"
@@ -20,7 +19,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:background="#2d2a40"
-            android:text="全国"
+            android:text="取消"
             android:textColor="#CFD3ED"
             android:textSize="17sp" />
 
@@ -31,7 +30,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:background="#2d2a40"
-            android:text="全部"
+            android:text="发布新作品"
             android:textColor="#FF5363"
             android:textSize="20sp" />
 
@@ -45,25 +44,59 @@
             android:layout_gravity="right"
             android:layout_marginRight="20dp"
             android:background="#2d2a40"
-            android:text="提问"
+            android:text="发布"
             android:textColor="#CFD3ED"
             android:textSize="17sp" />
     </RelativeLayout>
 
-    <com.metis.meishuquan.view.shared.DragListView
-        android:id="@+id/id_fragment_comment_listview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/fragment_shared_commentfragment_tab_bar"
-        android:layout_below="@+id/rl_title_bar"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:background="#E3E3E3"/>
 
-    <com.metis.meishuquan.view.shared.TabBar
-        android:id="@+id/fragment_shared_commentfragment_tab_bar"
+    <Button
+        android:id="@+id/id_btn_choose_type"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_alignParentBottom="true"
-        bs:tabbarType="topstory" />
+        android:layout_height="70dp"
+        android:layout_below="@+id/rl_title_bar"
+        android:layout_marginTop="10dp"
+        android:background="#F0F0F0"
+        android:text="选择类别∨"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:id="@+id/ll_image"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:layout_below="@+id/id_btn_choose_type"
+        android:layout_marginTop="20dp"
+        android:background="#F0F0F0"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/id_btn_choose_image"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="选择图片"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/id_edt_desc"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:background="#F0F0F0"
+            android:gravity="top"
+            android:hint="请简述描述下你的作品吧..."
+            android:inputType="text"
+            android:padding="5dp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/id_btn_request_teacher_assess"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_below="@+id/ll_image"
+        android:layout_marginTop="20dp"
+        android:background="#F0F0F0"
+        android:text="邀请老师点评"
+        android:textSize="20sp" />
+
 </RelativeLayout>
