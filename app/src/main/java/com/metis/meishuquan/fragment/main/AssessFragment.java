@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -24,7 +25,6 @@ import com.metis.meishuquan.fragment.Assess.AssessInfoFragment;
 import com.metis.meishuquan.fragment.Assess.AssessPublishFragment;
 import com.metis.meishuquan.fragment.Assess.ChooseCityFragment;
 import com.metis.meishuquan.fragment.Assess.FilterConditionForAssessListFragment;
-import com.metis.meishuquan.fragment.BaseFragment;
 import com.metis.meishuquan.model.BLL.AssessOperator;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.assess.AllAssess;
@@ -47,7 +47,7 @@ import java.util.List;
  * <p/>
  * Created by wj on 3/15/2015.
  */
-public class AssessFragment extends BaseFragment {
+public class AssessFragment extends Fragment {
 
     private final String HOT = "热门点评";
     private final String NEW = "最新点评";

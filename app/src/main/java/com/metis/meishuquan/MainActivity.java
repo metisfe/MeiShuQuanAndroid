@@ -1,13 +1,13 @@
 package com.metis.meishuquan;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.widget.Toast;
 
-import com.metis.meishuquan.fragment.BaseFragment;
 import com.metis.meishuquan.fragment.main.CircleFragment;
 import com.metis.meishuquan.fragment.main.ClassFragment;
 import com.metis.meishuquan.fragment.main.AssessFragment;
@@ -146,9 +146,9 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
         }
     }
 
-    public void navigateTo(Class<? extends BaseFragment> fragment) {
+    public void navigateTo(Class<? extends Fragment> fragment) {
         FragmentTransaction ft = fm.beginTransaction();
-        BaseFragment baseFragment = null;
+        Fragment baseFragment = null;
         try {
             baseFragment = fragment.newInstance();
         } catch (Exception e) {
@@ -164,7 +164,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
         ft.commit();
     }
 
-    public void clearBackStackAndThenNavigateTo(Class<? extends BaseFragment> fragment) {
+    public void clearBackStackAndThenNavigateTo(Class<? extends Fragment> fragment) {
         int bsCount = fm.getBackStackEntryCount();
         for (int i = 0; i < bsCount; i++) {
             FragmentTransaction ft = fm.beginTransaction();

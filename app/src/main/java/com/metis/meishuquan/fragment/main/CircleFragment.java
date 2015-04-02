@@ -2,27 +2,34 @@ package com.metis.meishuquan.fragment.main;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.fragment.BaseFragment;
-import com.metis.meishuquan.fragment.Topline.ItemInfoFragment;
 import com.metis.meishuquan.fragment.circle.PostMomentFragment;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
 import com.metis.meishuquan.view.shared.TabBar;
+import com.viewpagerindicator.TabPageIndicator;
+
+import java.util.List;
 
 /**
  * Created by wudi on 4/2/2015.
  */
-public class CircleFragment extends BaseFragment {
+public class CircleFragment extends Fragment {
 
     private TabBar tabBar;
     private CircleTitleBar titleBar;
+    private ViewPager viewPager;
+    private TabPageIndicatorAdapter fragmentPagerAdapter;
+    private TabPageIndicator indicator;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,5 +55,34 @@ public class CircleFragment extends BaseFragment {
             }
         });
         return rootView;
+    }
+
+    class TabPageIndicatorAdapter extends FragmentStatePagerAdapter {
+        public TabPageIndicatorAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+//            Fragment new fra
+//            fragment.setArguments(args);
+//            return fragment;
+            return null;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            return super.instantiateItem(container, position);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return String.valueOf(position);
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
     }
 }

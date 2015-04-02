@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.adapter.topline.DataHelper;
-import com.metis.meishuquan.fragment.BaseFragment;
 import com.metis.meishuquan.fragment.Topline.ItemFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.topline.ChannelItem;
@@ -34,7 +33,7 @@ import java.util.List;
  * <p/>
  * Created by wudi on 3/15/2015.
  */
-public class ToplineFragment extends BaseFragment {
+public class ToplineFragment extends Fragment {
     private TabBar tabBar;//底部导航栏
     private ViewPager viewPager;
     private TabPageIndicatorAdapter fragmentPagerAdapter;
@@ -193,14 +192,12 @@ public class ToplineFragment extends BaseFragment {
      * ViewPager适配器
      */
     class TabPageIndicatorAdapter extends FragmentStatePagerAdapter {
-        private ItemFragment fragment = null;
         public List<ChannelItem> userItems = null;
         public List<ChannelItem> otherItems = null;
 
 
         public TabPageIndicatorAdapter(FragmentManager fm, String jsonStr) {
             super(fm);
-            fragment = null;
             changeData(jsonStr);
         }
 
@@ -223,7 +220,7 @@ public class ToplineFragment extends BaseFragment {
         public Fragment getItem(int position) {
             int channelId = userItems.get(position).getChannelId();
             initNews(channelId, 0);
-            fragment = new ItemFragment();
+            ItemFragment fragment = new ItemFragment();
             Bundle args = new Bundle();
             args.putInt("channelId", channelId);
             fragment.setArguments(args);

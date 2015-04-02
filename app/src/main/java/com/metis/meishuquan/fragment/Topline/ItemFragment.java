@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -16,7 +17,6 @@ import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.adapter.topline.ToplineCustomAdapter;
-import com.metis.meishuquan.fragment.BaseFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.topline.News;
@@ -34,7 +34,7 @@ import java.util.List;
  * <p/>
  * Created by wj on 15/3/17.
  */
-public class ItemFragment extends BaseFragment implements AdapterView.OnItemClickListener {
+public class ItemFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private DragListView listView;
     private List<News> list = new ArrayList<>();

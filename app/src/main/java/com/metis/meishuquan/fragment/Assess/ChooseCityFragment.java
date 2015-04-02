@@ -3,6 +3,7 @@ package com.metis.meishuquan.fragment.Assess;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -18,7 +19,6 @@ import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.adapter.ExpandeAdapter;
-import com.metis.meishuquan.fragment.BaseFragment;
 import com.metis.meishuquan.model.assess.AllCity;
 import com.metis.meishuquan.model.assess.City;
 import com.metis.meishuquan.model.assess.Province;
@@ -32,7 +32,7 @@ import java.util.List;
  * <p/>
  * Created by wj on 15/4/1.
  */
-public class ChooseCityFragment extends BaseFragment {
+public class ChooseCityFragment extends Fragment {
     private ExpandableListView listView;
     private Button btnBack;
     private SearchView searchView;

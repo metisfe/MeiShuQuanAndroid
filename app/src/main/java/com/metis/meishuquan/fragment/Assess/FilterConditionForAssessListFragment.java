@@ -1,5 +1,6 @@
 package com.metis.meishuquan.fragment.Assess;
 
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,13 +11,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.fragment.BaseFragment;
 
 /**
  * Fragment:点评列表过滤条件
  * Created by wj on 15/4/1.
  */
-public class FilterConditionForAssessListFragment extends BaseFragment {
+public class FilterConditionForAssessListFragment extends Fragment {
     private FragmentManager fm;
     private Button btnConfirm;
 

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -18,7 +19,6 @@ import com.google.gson.reflect.TypeToken;
 import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.fragment.BaseFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.topline.AllComments;
@@ -35,7 +35,7 @@ import java.util.List;
  * <p/>
  * Created by wj on 15/3/27.
  */
-public class CommentListFragment extends BaseFragment {
+public class CommentListFragment extends Fragment {
 
     private ViewGroup rootView;
     private DragListView listView;
