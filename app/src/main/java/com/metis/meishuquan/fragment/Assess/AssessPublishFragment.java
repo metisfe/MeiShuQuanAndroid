@@ -11,11 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.metis.meishuquan.R;
-<<<<<<< HEAD
-import com.metis.meishuquan.fragment.BaseFragment;
 import com.metis.meishuquan.model.BLL.AssessOperator;
-=======
->>>>>>> origin/master
 
 /**
  * Fragment:发布点评

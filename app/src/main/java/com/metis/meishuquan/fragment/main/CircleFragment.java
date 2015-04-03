@@ -13,6 +13,9 @@ import android.view.ViewGroup;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.fragment.circle.ChatListFragment;
+import com.metis.meishuquan.fragment.circle.ContactListFragment;
+import com.metis.meishuquan.fragment.circle.MomentsFragment;
 import com.metis.meishuquan.fragment.circle.PostMomentFragment;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
 import com.metis.meishuquan.view.shared.TabBar;
@@ -39,7 +42,7 @@ public class CircleFragment extends Fragment {
         this.tabBar.setTabSelectedListener(MainApplication.MainActivity);
         this.titleBar = (CircleTitleBar) rootView.findViewById(R.id.fragment_shared_circlefragment_title_bar);
         titleBar.setText("user name");
-        titleBar.setRight("post",new View.OnClickListener() {
+        titleBar.setRight("post", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PostMomentFragment postMomentFragment = new PostMomentFragment();
@@ -54,6 +57,12 @@ public class CircleFragment extends Fragment {
                 ft.commit();
             }
         });
+
+        this.viewPager = (ViewPager) rootView.findViewById(R.id.fragment_shared_circlefragment_viewpager);
+        this.indicator = (TabPageIndicator) rootView.findViewById(R.id.fragment_shared_circlefragment_topbar_indicator);
+        fragmentPagerAdapter = new TabPageIndicatorAdapter(getActivity().getSupportFragmentManager());
+        this.viewPager.setAdapter(fragmentPagerAdapter);
+        this.indicator.setViewPager(viewPager);
         return rootView;
     }
 
@@ -64,10 +73,20 @@ public class CircleFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-//            Fragment new fra
-//            fragment.setArguments(args);
-//            return fragment;
-            return null;
+            Fragment fragment = null;
+            switch (position)
+            {
+                case 0:
+                    fragment = new MomentsFragment();
+                    break;
+                case 1:
+                    fragment = new ChatListFragment();
+                    break;
+                case 2:
+                    fragment = new ContactListFragment();
+                    break;
+            }
+            return fragment;
         }
 
         @Override
@@ -77,7 +96,16 @@ public class CircleFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return String.valueOf(position);
+            switch (position)
+            {
+                case 0:
+                    return "Moments";
+                case 1:
+                    return "Chats";
+                case 2:
+                    return "Contacts";
+            }
+            return "";
         }
 
         @Override
