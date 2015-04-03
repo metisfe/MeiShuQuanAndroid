@@ -12,12 +12,17 @@ import com.metis.meishuquan.R;
 /**
  * Created by wudi on 4/2/2015.
  */
-public class ContactListFragment extends Fragment {
+public class ContactListFragment extends CircleBaseFragment {
     private ViewGroup rootView;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_circle_contactlistfragment, container, false);
 
         return rootView;
+    }
+
+    @Override
+    public void timeToSetTitleBar() {
+        getTitleBar().setText("this is the contact page");
     }
 }

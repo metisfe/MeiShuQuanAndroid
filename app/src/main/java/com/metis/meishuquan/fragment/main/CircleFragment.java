@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.fragment.circle.ChatListFragment;
+import com.metis.meishuquan.fragment.circle.CircleBaseFragment;
 import com.metis.meishuquan.fragment.circle.ContactListFragment;
 import com.metis.meishuquan.fragment.circle.MomentsFragment;
 import com.metis.meishuquan.fragment.circle.PostMomentFragment;
@@ -41,25 +42,50 @@ public class CircleFragment extends Fragment {
         this.tabBar = (TabBar) rootView.findViewById(R.id.fragment_shared_circlefragment_tab_bar);
         this.tabBar.setTabSelectedListener(MainApplication.MainActivity);
         this.titleBar = (CircleTitleBar) rootView.findViewById(R.id.fragment_shared_circlefragment_title_bar);
-        titleBar.setText("user name");
-        titleBar.setRight("post", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PostMomentFragment postMomentFragment = new PostMomentFragment();
-                Bundle args = new Bundle();
-                postMomentFragment.setArguments(args);
-
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
-                ft.add(R.id.content_container, postMomentFragment);
-                ft.addToBackStack(null);
-                ft.commit();
-            }
-        });
+//        titleBar.setText("user name");
+//        titleBar.setRightButton("post", 0, new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                PostMomentFragment postMomentFragment = new PostMomentFragment();
+//                Bundle args = new Bundle();
+//                postMomentFragment.setArguments(args);
+//                FragmentManager fm = getActivity().getSupportFragmentManager();
+//                FragmentTransaction ft = fm.beginTransaction();
+//                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+//                ft.add(R.id.content_container, postMomentFragment);
+//                ft.addToBackStack(null);
+//                ft.commit();
+//            }
+//        });
+//
+//        titleBar.setLeftButton("cancel",0,new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FragmentManager fm = getActivity().getSupportFragmentManager();
+//                FragmentTransaction ft = fm.beginTransaction();
+//                ft.remove(CircleFragment.this);
+//                ft.commit();
+//            }
+//        });
 
         this.viewPager = (ViewPager) rootView.findViewById(R.id.fragment_shared_circlefragment_viewpager);
         this.indicator = (TabPageIndicator) rootView.findViewById(R.id.fragment_shared_circlefragment_topbar_indicator);
+        this.indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                fragmentPagerAdapter.fragments[position].timeToSetTitleBar();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         fragmentPagerAdapter = new TabPageIndicatorAdapter(getActivity().getSupportFragmentManager());
         this.viewPager.setAdapter(fragmentPagerAdapter);
         this.indicator.setViewPager(viewPager);
@@ -67,15 +93,23 @@ public class CircleFragment extends Fragment {
     }
 
     class TabPageIndicatorAdapter extends FragmentStatePagerAdapter {
+        boolean firstTimeLoad=true;
         public TabPageIndicatorAdapter(FragmentManager fm) {
             super(fm);
         }
 
+        public CircleBaseFragment[] fragments = new CircleBaseFragment[3];
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            super.destroyItem(container, position, object);
+            fragments[position] = null;
+        }
+
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = null;
-            switch (position)
-            {
+            CircleBaseFragment fragment = null;
+            switch (position) {
                 case 0:
                     fragment = new MomentsFragment();
                     break;
@@ -86,6 +120,14 @@ public class CircleFragment extends Fragment {
                     fragment = new ContactListFragment();
                     break;
             }
+
+            fragment.setTitleBar(titleBar);
+            if (firstTimeLoad)
+            {
+                firstTimeLoad = false;
+                fragment.timeToSetTitleBar();
+            }
+            fragments[position] = fragment;
             return fragment;
         }
 
@@ -96,8 +138,7 @@ public class CircleFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position)
-            {
+            switch (position) {
                 case 0:
                     return "Moments";
                 case 1:

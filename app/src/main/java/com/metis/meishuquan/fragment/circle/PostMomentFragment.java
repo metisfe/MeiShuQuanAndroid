@@ -28,8 +28,8 @@ public class PostMomentFragment extends Fragment {
 
         this.titleBar = (CircleTitleBar) rootView.findViewById(R.id.fragment_circle_postmoment_title_bar);
         titleBar.setText("post moment");
-        titleBar.setRight("send", null);
-        titleBar.setLeft("cancel", new View.OnClickListener() {
+        titleBar.setRightButton("send",0, null);
+        titleBar.setLeftButton("cancel",0, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentManager fm = getActivity().getSupportFragmentManager();
