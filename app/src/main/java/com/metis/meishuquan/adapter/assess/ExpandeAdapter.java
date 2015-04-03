@@ -1,4 +1,4 @@
-package com.metis.meishuquan.adapter;
+package com.metis.meishuquan.adapter.assess;
 
 import android.content.Context;
 import android.graphics.Color;

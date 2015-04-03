@@ -70,7 +70,6 @@ public class ItemInfoFragment extends BaseFragment {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_topline_topbar_list_item_info, null, false);
 
         initView(rootView);
-        //addViewByContent();
         initEvent();
         return rootView;
     }

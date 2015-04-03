@@ -3,7 +3,8 @@
 
     android:id="@+id/id_scrollview_info_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#F7F5F5">
 
     <LinearLayout
         android:id="@+id/id_ll_news_content"
@@ -16,7 +17,7 @@
             android:id="@+id/id_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="素描静物深刻入画"
+            android:text="12312"
             android:textSize="25sp"
             android:textStyle="bold" />
 
@@ -26,17 +27,20 @@
             android:layout_marginTop="10dp">
 
             <TextView
-                android:id="@+id/id_createtime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2014-03-04 12:00" />
-
-            <TextView
                 android:id="@+id/id_source"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="#fb6d6d"
+                android:text="123123" />
+
+            <TextView
+                android:id="@+id/id_createtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="信息来源" />
+                android:text="123123" />
+
+
         </LinearLayout>
 
     </LinearLayout>

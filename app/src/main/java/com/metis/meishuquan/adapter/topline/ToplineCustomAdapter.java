@@ -36,16 +36,6 @@ public class ToplineCustomAdapter extends ToplineAdapter {
     private Context context;
 
     private ViewHolder holder;
-    //绑定数据
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            if (holder.img_thumbnail != null) {
-                Bitmap bitmap = (Bitmap) msg.obj;
-                holder.img_thumbnail.setImageBitmap(bitmap);
-            }
-        }
-    };
 
     public ToplineCustomAdapter(Context context, int resourseId) {
         super(context);

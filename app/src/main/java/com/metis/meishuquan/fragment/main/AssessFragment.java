@@ -86,6 +86,9 @@ public class AssessFragment extends BaseFragment {
         //TODO:定位
         AssessOperator assessOperator = AssessOperator.getInstance();
         assessOperator.AddRegionToCache();
+        //加载过滤条件之标签数据
+        assessOperator = AssessOperator.getInstance();
+        assessOperator.addAssessChannelListToCache();//将过滤条件（年级、标签）加载至缓存
         //加载列表数据
         getData(DragListView.REFRESH, true, 1, null, null, 1, 0);
 
@@ -96,7 +99,7 @@ public class AssessFragment extends BaseFragment {
     }
 
     private void initView(ViewGroup rootView) {
-        this.fm=getActivity().getSupportFragmentManager();
+        this.fm = getActivity().getSupportFragmentManager();
         this.tabBar = (TabBar) rootView.findViewById(R.id.fragment_shared_commentfragment_tab_bar);
         this.tabBar.setTabSelectedListener(MainApplication.MainActivity);
         this.listView = (DragListView) rootView.findViewById(R.id.id_fragment_comment_listview);
@@ -129,7 +132,7 @@ public class AssessFragment extends BaseFragment {
 //                Assess assess=adapter.getItem(position);
 //                Bundle bundle= new Bundle();
 //                bundle.
-                AssessInfoFragment assessInfoFragment= new AssessInfoFragment();
+                AssessInfoFragment assessInfoFragment = new AssessInfoFragment();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.add(R.id.content_container, assessInfoFragment);
                 ft.commit();
@@ -149,9 +152,9 @@ public class AssessFragment extends BaseFragment {
         this.btnFilter.setOnClickListener(new View.OnClickListener() {//过滤条件
             @Override
             public void onClick(View v) {
-                FilterConditionForAssessListFragment filterConditionForAssessListFragment= new FilterConditionForAssessListFragment();
-                FragmentTransaction ft=fm.beginTransaction();
-                ft.add(R.id.content_container,filterConditionForAssessListFragment);
+                FilterConditionForAssessListFragment filterConditionForAssessListFragment = new FilterConditionForAssessListFragment();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.add(R.id.content_container, filterConditionForAssessListFragment);
                 ft.commit();
             }
         });
@@ -159,9 +162,9 @@ public class AssessFragment extends BaseFragment {
         this.btnPublishComment.setOnClickListener(new View.OnClickListener() {//发表评论
             @Override
             public void onClick(View v) {
-                AssessPublishFragment assessPublishFragment =new AssessPublishFragment();
-                FragmentTransaction ft=fm.beginTransaction();
-                ft.add(R.id.content_container,assessPublishFragment);
+                AssessPublishFragment assessPublishFragment = new AssessPublishFragment();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.add(R.id.content_container, assessPublishFragment);
                 ft.commit();
             }
         });
@@ -179,7 +182,7 @@ public class AssessFragment extends BaseFragment {
                     allAssess = gson.fromJson(json, new TypeToken<AllAssess>() {
                     }.getType());
                     List<Assess> data = new ArrayList<>();
-                    if (allAssess != null) {
+                    if (allAssess != null && allAssess.getData() != null) {
                         List<Assess> lastAssessLists = allAssess.getData().getLastAssessLists();//最新点评
                         List<Assess> hotAssessLists = allAssess.getData().getHotAssessLists();//热门点评
                         if (hotAssessLists != null && hotAssessLists.size() > 0) {

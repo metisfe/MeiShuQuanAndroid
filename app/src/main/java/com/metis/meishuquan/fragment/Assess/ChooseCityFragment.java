@@ -17,7 +17,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.adapter.ExpandeAdapter;
+import com.metis.meishuquan.adapter.assess.ExpandeAdapter;
 import com.metis.meishuquan.fragment.BaseFragment;
 import com.metis.meishuquan.model.assess.AllCity;
 import com.metis.meishuquan.model.assess.City;

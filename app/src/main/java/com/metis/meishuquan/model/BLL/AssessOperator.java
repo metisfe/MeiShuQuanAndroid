@@ -31,7 +31,7 @@ public class AssessOperator {
     private static AssessOperator operator = null;
 
     private final String AssessList = "v1.1/Assess/AssessList";//点评列表
-    private final String AssessChannelList = "v1.1/Channel/ChannelList";//所有标签
+    private final String AssessChannelList = "v1.1/Channel/AssessChannelList";//所有标签
     private final String UploadAssess = "";//上传作品
     private final String Assess_Comment_Share = "v1.1/Assess/Share";//作品分享
     private final String Comment_Favorite = "v1.1/Comment/Favorite";//收藏(暂无此功能)
@@ -60,6 +60,7 @@ public class AssessOperator {
      * @param grades     年级
      * @param channelIds 标签
      * @param index      index=1取最新数据，排序先按照默认时间排序
+     * @param queryType  0为全部，1为热点，2为最新
      * @param callback
      */
     public void getAssessList(boolean isAll, int type, List<Integer> grades, List<Integer> channelIds, int index, int queryType,
@@ -118,7 +119,7 @@ public class AssessOperator {
     /**
      * 获取标签及年级
      */
-    public void addAssessChannelListToCach() {
+    public void addAssessChannelListToCache() {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuilder PATH = new StringBuilder(AssessChannelList);
@@ -131,6 +132,7 @@ public class AssessOperator {
                                     String json = gson.toJson(result);
                                     //将json串添加至缓存
                                     SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
+                                    spu.delete(SharedPreferencesUtil.ASSESS_CHANNEL_LIST);
                                     spu.add(SharedPreferencesUtil.ASSESS_CHANNEL_LIST, json);
                                 }
                             }

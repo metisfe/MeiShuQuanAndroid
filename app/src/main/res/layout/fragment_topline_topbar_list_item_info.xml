@@ -14,7 +14,7 @@
             android:id="@+id/id_topbar"
             layout="@layout/fragment_topline_topbar_list_item_info_topbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
             android:layout_alignParentTop="true" />
 
         <include

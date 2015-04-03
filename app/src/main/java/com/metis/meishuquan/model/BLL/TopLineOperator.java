@@ -58,7 +58,7 @@ public class TopLineOperator {
                         new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                                if (result.getInfo().equals(String.valueOf(0))) {
+                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
                                     Gson gson = new Gson();
                                     String json = gson.toJson(result);
                                     try {
@@ -66,14 +66,17 @@ public class TopLineOperator {
                                         JSONObject chennels = jsonObject.getJSONObject("data");
                                         String data = chennels.toString();
                                         SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
-                                        spu.delete(SharedPreferencesUtil.CHANNELS);
+                                        String val = spu.getStringByKey(SharedPreferencesUtil.CHANNELS);
+                                        if (val.length() > 0) {
+                                            spu.delete(SharedPreferencesUtil.CHANNELS);
+                                        }
                                         Log.i("data", data);
                                         spu.add(SharedPreferencesUtil.CHANNELS, data);//添加至缓存中
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
                                 } else {
-                                    Log.e("meishuquan_statue", "网络状态码不为0");
+                                    Log.e("addChannelItemsToLoacal", "网络状态码不为0");
                                 }
                             }
                         });
@@ -109,14 +112,17 @@ public class TopLineOperator {
                                         String json = gson.toJson(result);
                                         try {
                                             SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
-                                            spu.delete(String.valueOf(channelId));
+                                            String val = spu.getStringByKey(String.valueOf(channelId));
+                                            if (val.length() > 0) {
+                                                spu.delete(String.valueOf(channelId));
+                                            }
                                             Log.i("channelId", json);
                                             spu.add(String.valueOf(channelId), json);//添加至缓存中
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
                                     } else {
-                                        Log.e("meishuquan_statue", "网络状态码不为0");
+                                        Log.e("addNewsListToCache", "网络状态码不为0");
                                     }
                                 }
                             }
@@ -243,13 +249,13 @@ public class TopLineOperator {
      * @param blockType 0头条，1点评，2课程
      * @param callback
      */
-    public void publishComment(int userid, int newsId,String content, int replyCid, int blockType, ApiOperationCallback<ReturnInfo<String>> callback) {
+    public void publishComment(int userid, int newsId, String content, int replyCid, int blockType, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuffer path = new StringBuffer(PUBLISHCOMMENT);
                 path.append("?userid=" + userid);
                 path.append("&newsid=" + newsId);
-                path.append("&content="+content);
+                path.append("&content=" + content);
                 path.append("&replyCid=" + replyCid);
                 path.append("&blockType=" + blockType);
                 ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,

@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="140dp"
     android:padding="10dp">
 
     <com.loopj.android.image.SmartImageView
         android:id="@+id/img_thumbnail"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_centerVertical="true"
-        android:background="@drawable/ic_launcher" />
+        android:layout_width="100dp"
+        android:layout_height="75dp"
+        android:layout_centerVertical="true" />
 
     <RelativeLayout
         android:id="@+id/rl_title"
