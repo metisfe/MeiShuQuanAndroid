@@ -62,6 +62,7 @@
             <enum name="topstory" value="1" />
             <enum name="tag" value="2" />
             <enum name="activity" value="3" />
+            <enum name="circle" value="4" />
         </attr>
     </declare-styleable>
 

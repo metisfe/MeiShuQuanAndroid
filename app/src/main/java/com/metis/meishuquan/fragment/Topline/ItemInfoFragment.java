@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
@@ -25,7 +26,6 @@ import com.google.gson.Gson;
 import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.fragment.BaseFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
@@ -42,7 +42,7 @@ import java.util.StringTokenizer;
  * <p/>
  * Created by wj on 15/3/23.
  */
-public class ItemInfoFragment extends BaseFragment {
+public class ItemInfoFragment extends Fragment {
     private int newsId = 0;
     private Button btnBack, btnShare;
     private ViewGroup rootView;
