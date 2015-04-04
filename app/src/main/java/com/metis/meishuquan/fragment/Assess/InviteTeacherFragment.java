@@ -2,6 +2,7 @@ package com.metis.meishuquan.fragment.Assess;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -10,12 +11,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.fragment.BaseFragment;
 
 /**
  * Created by wj on 15/4/2.
  */
-public class InviteTeacherFragment  extends BaseFragment{
+public class InviteTeacherFragment  extends Fragment{
 
     private FragmentManager fm;
     private Button btnBack;

@@ -18,12 +18,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-<<<<<<< HEAD
 import com.metis.meishuquan.adapter.assess.ExpandeAdapter;
-import com.metis.meishuquan.fragment.BaseFragment;
-=======
-import com.metis.meishuquan.adapter.ExpandeAdapter;
->>>>>>> origin/master
 import com.metis.meishuquan.model.assess.AllCity;
 import com.metis.meishuquan.model.assess.City;
 import com.metis.meishuquan.model.assess.Province;
@@ -130,7 +125,6 @@ public class ChooseCityFragment extends Fragment {
         allCity.setData(provinces);
         return allCity;
     }
-
 
     private void getData() {
         SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);

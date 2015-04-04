@@ -16,14 +16,15 @@
         android:layout_height="match_parent"
         android:layout_alignBottom="@+id/img_thumbnail"
         android:layout_alignTop="@+id/img_thumbnail"
-        android:layout_toRightOf="@+id/img_thumbnail"
-        android:layout_marginLeft="10dp">
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/img_thumbnail">
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="2"
+            android:paddingTop="-1dp"
             android:text="雅虎北京全球研发中心将关闭"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -47,5 +48,4 @@
             android:text="评论(10)"
             android:textColor="#cccccc" />
     </RelativeLayout>
-
 </RelativeLayout>

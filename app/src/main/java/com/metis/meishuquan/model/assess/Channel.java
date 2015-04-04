@@ -7,7 +7,7 @@ package com.metis.meishuquan.model.assess;
 public class Channel {
     private int channelId;
 
-    private String channelName;
+    private String channelName="";
 
     public int getChannelId() {
         return channelId;

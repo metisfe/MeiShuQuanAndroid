@@ -1,4 +1,4 @@
-package com.metis.meishuquan.fragment;
+package com.metis.meishuquan.fragment.Assess;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

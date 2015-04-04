@@ -1,5 +1,6 @@
 package com.metis.meishuquan;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -14,6 +15,7 @@ import com.metis.meishuquan.fragment.main.AssessFragment;
 import com.metis.meishuquan.fragment.main.MyInfoFragment;
 import com.metis.meishuquan.fragment.main.ToplineFragment;
 import com.metis.meishuquan.framework.util.TextureRender;
+import com.metis.meishuquan.model.assess.Bimp;
 import com.metis.meishuquan.ui.SelectedTabType;
 import com.metis.meishuquan.util.Environments;
 import com.metis.meishuquan.util.GlobalData;

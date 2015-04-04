@@ -112,26 +112,23 @@ public class AssessFragment extends Fragment {
     }
 
     private void initEvent() {
-        this.listView.setOnRefreshListener(new DragListView.OnRefreshListener() {//刷新
+        this.listView.setOnRefreshListener(new DragListView.OnRefreshListener() {//列表刷新
             @Override
             public void onRefresh() {
                 getData(DragListView.REFRESH, true, 1, null, null, 1, 0);
             }
         });
 
-        this.listView.setOnLoadListener(new DragListView.OnLoadListener() {//加载更多
+        this.listView.setOnLoadListener(new DragListView.OnLoadListener() {//列表加载更多
             @Override
             public void onLoad() {
                 getData(DragListView.LOAD, true, 1, null, null, 1, 0);
             }
         });
 
-        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {//列表项点击
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-//                Assess assess=adapter.getItem(position);
-//                Bundle bundle= new Bundle();
-//                bundle.
                 AssessInfoFragment assessInfoFragment = new AssessInfoFragment();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.add(R.id.content_container, assessInfoFragment);
@@ -139,7 +136,7 @@ public class AssessFragment extends Fragment {
             }
         });
 
-        this.btnRegion.setOnClickListener(new View.OnClickListener() {//区域
+        this.btnRegion.setOnClickListener(new View.OnClickListener() {//全国
             @Override
             public void onClick(View v) {
                 ChooseCityFragment chooseCityFragment = new ChooseCityFragment();

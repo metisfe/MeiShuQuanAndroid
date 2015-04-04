@@ -2,6 +2,7 @@ package com.metis.meishuquan.fragment.Assess;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -10,13 +11,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.fragment.BaseFragment;
 
 /**
  * Fragment:问题详情
  * Created by wj on 15/4/2.
  */
-public class AssessInfoFragment extends BaseFragment {
+public class AssessInfoFragment extends Fragment {
 
     private FragmentManager fm;
     private Button btnBack;

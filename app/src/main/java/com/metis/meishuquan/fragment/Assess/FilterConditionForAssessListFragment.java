@@ -1,14 +1,11 @@
 package com.metis.meishuquan.fragment.Assess;
 
-<<<<<<< HEAD
 import android.graphics.Color;
-=======
-import android.support.v4.app.Fragment;
->>>>>>> origin/master
-import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,21 +18,15 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-<<<<<<< HEAD
 import com.metis.meishuquan.adapter.assess.ChannelGridViewAdapter;
 import com.metis.meishuquan.adapter.assess.GradeGridViewAdapter;
-import com.metis.meishuquan.fragment.BaseFragment;
 import com.metis.meishuquan.model.assess.Channel;
 import com.metis.meishuquan.model.assess.ChannelAndGradeData;
 import com.metis.meishuquan.model.assess.Grade;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
-=======
->>>>>>> origin/master
 
 /**
  * Fragment:点评列表过滤条件
