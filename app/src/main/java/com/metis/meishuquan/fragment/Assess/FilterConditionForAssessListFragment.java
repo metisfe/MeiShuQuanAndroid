@@ -1,6 +1,11 @@
 package com.metis.meishuquan.fragment.Assess;
 
 import android.graphics.Color;
+<<<<<<< HEAD
+=======
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+>>>>>>> origin/master
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,7 +29,10 @@ import com.metis.meishuquan.model.assess.Channel;
 import com.metis.meishuquan.model.assess.ChannelAndGradeData;
 import com.metis.meishuquan.model.assess.Grade;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
 import java.util.ArrayList;
 import java.util.List;
 

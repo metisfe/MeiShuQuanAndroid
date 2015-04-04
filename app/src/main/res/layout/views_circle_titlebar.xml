@@ -4,12 +4,23 @@
     android:layout_height="40dp"
     android:background="#555555">
 
-    <Button
+    <RelativeLayout
         android:id="@+id/views_circle_titlebar_leftbutton"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:visibility="gone" />
+        android:minWidth="50dp">
+
+        <TextView
+            android:id="@+id/views_circle_titlebar_leftbuttontext"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/views_circle_titlebar_leftbuttonimage"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        </RelativeLayout>
 
     <TextView
         android:id="@+id/views_circle_titlebar_text"
@@ -18,11 +29,22 @@
         android:layout_centerInParent="true"
         android:textSize="20sp"/>
 
-    <Button
+    <RelativeLayout
         android:id="@+id/views_circle_titlebar_rightbutton"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:visibility="gone" />
+        android:minWidth="50dp">
+
+        <TextView
+            android:id="@+id/views_circle_titlebar_rightbuttontext"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/views_circle_titlebar_rightbuttonimage"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
 
 </RelativeLayout>

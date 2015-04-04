@@ -27,6 +27,7 @@ import android.widget.PopupWindow;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.BLL.AssessOperator;
+<<<<<<< HEAD
 import com.metis.meishuquan.model.assess.Bimp;
 import com.metis.meishuquan.model.assess.Channel;
 import com.metis.meishuquan.model.contract.ReturnInfo;
@@ -38,6 +39,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+=======
+>>>>>>> origin/master
 
 /**
  * Fragment:发布点评
