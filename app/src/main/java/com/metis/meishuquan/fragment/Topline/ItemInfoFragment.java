@@ -26,9 +26,11 @@ import com.google.gson.Gson;
 import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.fragment.login.LoginFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
+import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.view.topline.CommentInputView;
 import com.metis.meishuquan.view.topline.NewsShareView;
@@ -56,6 +58,7 @@ public class ItemInfoFragment extends Fragment {
     private NewsShareView newsShareView;
     private boolean addCommentPoped;
     private boolean addSharePoped;
+    private FragmentManager fm;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -93,6 +96,8 @@ public class ItemInfoFragment extends Fragment {
 
         commentInputView = new CommentInputView(getActivity(), null, 0);
         newsShareView = new NewsShareView(getActivity(), null, 0);
+
+        fm = getActivity().getSupportFragmentManager();
     }
 
     private void addViewByContent() {
@@ -149,15 +154,6 @@ public class ItemInfoFragment extends Fragment {
         imageView.setLayoutParams(lp);
 
         ll_content.addView(imageView);
-//        int yStart = -this.getResources().getDisplayMetrics().heightPixels;
-//        int yEnd = 0;
-//        TranslateAnimation tranlateAnimation = new TranslateAnimation(0, 0, yStart, yEnd);
-//        tranlateAnimation.setFillAfter(true);
-//        tranlateAnimation.setFillEnabled(true);
-//        tranlateAnimation.setDuration(0);
-//        tranlateAnimation.setInterpolator(new DecelerateInterpolator());
-//
-//        imageView.startAnimation(tranlateAnimation);
     }
 
     //添加文本控件
@@ -175,15 +171,6 @@ public class ItemInfoFragment extends Fragment {
         textView.setTextColor(Color.BLACK);
 
         ll_content.addView(textView);
-//        int yStart = -getActivity().getResources().getDisplayMetrics().heightPixels;
-//        int yEnd = 0;
-//        TranslateAnimation tranlateAnimation = new TranslateAnimation(0, 0, yStart, yEnd);
-//        tranlateAnimation.setFillAfter(true);
-//        tranlateAnimation.setFillEnabled(true);
-//        tranlateAnimation.setDuration(300);
-//        tranlateAnimation.setInterpolator(new DecelerateInterpolator());
-//
-//        textView.startAnimation(tranlateAnimation);
     }
 
     //初始化事件
@@ -191,7 +178,6 @@ public class ItemInfoFragment extends Fragment {
         this.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//返回
-                FragmentManager fm = getActivity().getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.remove(ItemInfoFragment.this);
                 ft.commit();
@@ -214,8 +200,8 @@ public class ItemInfoFragment extends Fragment {
         this.contentScrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                InputMethodManager imm = ( InputMethodManager ) commentInputView.editText.getContext( ).getSystemService( Context.INPUT_METHOD_SERVICE );
-                boolean isOpen=imm.isActive();
+                InputMethodManager imm = (InputMethodManager) commentInputView.editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                boolean isOpen = imm.isActive();
                 if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
                     if (isOpen) {
                         //隐藏写评论
@@ -238,8 +224,19 @@ public class ItemInfoFragment extends Fragment {
                     return;
                 }
                 addCommentPoped = true;
-                showOrHideCommentInputView(true);
-                Utils.showInputMethod(getActivity(), commentInputView.editText);
+                SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
+                String loginState = spu.getStringByKey(SharedPreferencesUtil.LOGIN_STATE);
+                if (loginState != null && loginState.equals("已登录")) {
+                    showOrHideCommentInputView(true);
+                    Utils.showInputMethod(getActivity(), commentInputView.editText);
+                } else {
+                    LoginFragment loginFragment = new LoginFragment();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.add(R.id.content_container, loginFragment);
+                    ft.commit();
+                }
+
+
             }
         });
 

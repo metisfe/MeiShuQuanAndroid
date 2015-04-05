@@ -1,4 +1,4 @@
-package com.metis.meishuquan.fragment.Assess;
+package com.metis.meishuquan.fragment.assess;
 
 import android.graphics.Color;
 import android.os.Bundle;

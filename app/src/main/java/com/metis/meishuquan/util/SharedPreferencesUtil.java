@@ -14,6 +14,7 @@ public class SharedPreferencesUtil {
     public static final String ASSESS_CHANNEL_LIST="assess_channel_list";
     public static final String REGION="region";
     public static final String ALLASSESSLIST="all_assess_list";
+    public static final String LOGIN_STATE="login_state";
 
     private static SharedPreferencesUtil spu = null;
     private Context context;

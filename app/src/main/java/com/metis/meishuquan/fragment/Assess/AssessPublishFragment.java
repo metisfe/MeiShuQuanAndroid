@@ -1,4 +1,4 @@
-package com.metis.meishuquan.fragment.Assess;
+package com.metis.meishuquan.fragment.assess;
 
 import android.content.Context;
 import android.content.Intent;

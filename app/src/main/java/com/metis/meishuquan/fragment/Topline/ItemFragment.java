@@ -121,11 +121,6 @@ public class ItemFragment extends Fragment implements AdapterView.OnItemClickLis
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         int newsId = list.get(i-1).getNewsId();//获取新闻Id
         ItemInfoFragment itemInfoFragment = new ItemInfoFragment();

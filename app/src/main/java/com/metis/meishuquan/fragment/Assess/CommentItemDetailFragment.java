@@ -1,4 +1,4 @@
-package com.metis.meishuquan.fragment.Assess;
+package com.metis.meishuquan.fragment.assess;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -6,8 +6,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.metis.meishuquan.R;
 
 /**
  * Fragment:点评列表项详细

@@ -158,7 +158,7 @@ public class AssessOperator {
             if (flag) {
                 StringBuilder FILEUPLOAD = new StringBuilder(FileUpload);
                 FILEUPLOAD.append("?type=" + type);
-                FILEUPLOAD.append("&define" + define);
+                FILEUPLOAD.append("&define=" + define);
                 ApiDataProvider.getmClient().invokeApi(FILEUPLOAD.toString(), imgByte, HttpPost.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(),
                         new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
