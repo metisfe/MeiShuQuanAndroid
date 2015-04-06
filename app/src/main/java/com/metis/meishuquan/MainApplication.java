@@ -10,6 +10,9 @@ import android.util.DisplayMetrics;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.model.provider.DataProvider;
 
+import io.rong.imkit.RongIM;
+import io.rong.imlib.RongIMClient;
+
 /**
  * Created by wudi on 3/15/2015.
  */
@@ -38,6 +41,24 @@ public class MainApplication extends Application {
 
         DataProvider.setDefaultUIThreadHandler(Handler);
         ApiDataProvider.initProvider();
+        RongIM.init(this);
+        String token = "RSorSOtm5wg2/54VUeDTdIGn6Ui0bBlr+zHn5QT+0f+TueCwMF65klKIr/oHR2+OU+SxbJgwLt/epq+dCRo5w8z59djPCUVA";
+
+        // 连接融云服务器。
+        try {
+            RongIM.connect(token, new RongIMClient.ConnectCallback() {
+
+                @Override
+                public void onSuccess(String s) {
+                }
+
+                @Override
+                public void onError(ErrorCode errorCode) {
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void setDisplayMetrics(DisplayMetrics dm)

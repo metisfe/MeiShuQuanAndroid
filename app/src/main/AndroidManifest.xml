@@ -28,9 +28,6 @@
         android:label="@string/app_name"
         android:theme="@style/StyledIndicators">
 
-        <meta-data
-            android:name="RONG_CLOUD_APP_KEY"
-            android:value="z3v5yqkbv8v30"></meta-data>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -42,11 +39,17 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".activity.ChatActivity"
+            android:configChanges="locale|layoutDirection|fontScale"
+            android:screenOrientation="portrait">
+        </activity>
+
         <!-- Begin Rong Cloud -->
 
         <meta-data
             android:name="RONG_CLOUD_APP_KEY"
-            android:value="z3v5yqkbv8v30"></meta-data>
+            android:value="8luwapkvuf53l"></meta-data>
         <service android:name="io.rong.imlib.RongService" />
 
         <activity
@@ -56,7 +59,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data
-                    android:host="io.rong.imkit.demo"
+                    android:host="com.metis.meishuquan"
                     android:pathPrefix="/conversationsetting/"
                     android:scheme="rong" />
             </intent-filter>
@@ -65,7 +68,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data
-                    android:host="io.rong.imkit.demo"
+                    android:host="com.metis.meishuquan"
                     android:path="/grouplist"
                     android:scheme="rong" />
             </intent-filter>
@@ -74,7 +77,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data
-                    android:host="io.rong.imkit.demo"
+                    android:host="com.metis.meishuquan"
                     android:path="/conversationgrouplist"
                     android:scheme="rong" />
             </intent-filter>
@@ -83,7 +86,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data
-                    android:host="io.rong.imkit.demo"
+                    android:host="com.metis.meishuquan"
                     android:pathPrefix="/friend/"
                     android:scheme="rong" />
             </intent-filter>
@@ -98,7 +101,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data
-                    android:host="io.rong.imkit.demo"
+                    android:host="com.metis.meishuquan"
                     android:path="/conversationlist"
                     android:scheme="rong" />
             </intent-filter>
@@ -112,7 +115,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data
-                    android:host="io.rong.imkit.demo"
+                    android:host="com.metis.meishuquan"
                     android:pathPrefix="/conversation/private"
                     android:scheme="rong" />
             </intent-filter>
@@ -120,7 +123,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data
-                    android:host="io.rong.imkit.demo"
+                    android:host="com.metis.meishuquan"
                     android:pathPrefix="/conversation/chatroom"
                     android:scheme="rong" />
             </intent-filter>
@@ -128,7 +131,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data
-                    android:host="io.rong.imkit.demo"
+                    android:host="com.metis.meishuquan"
                     android:pathPrefix="/conversation/group"
                     android:scheme="rong" />
             </intent-filter>
@@ -136,7 +139,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data
-                    android:host="io.rong.imkit.demo"
+                    android:host="com.metis.meishuquan"
                     android:pathPrefix="/conversation/discussion"
                     android:scheme="rong" />
             </intent-filter>
@@ -144,7 +147,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data
-                    android:host="io.rong.imkit.demo"
+                    android:host="com.metis.meishuquan"
                     android:pathPrefix="/conversation/system"
                     android:scheme="rong" />
             </intent-filter>
@@ -162,7 +165,7 @@
                 <action android:name="io.rong.voipkit.calledSideActivity.action" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data
-                    android:host="io.rong.imkit.demo"
+                    android:host="com.metis.meishuquan"
                     android:path="/calledsideactivity"
                     android:scheme="rong" />
             </intent-filter>
