@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="140dp"
+    android:layout_height="wrap_content"
+    android:background="@color/bg_listview"
     android:padding="10dp">
 
     <com.loopj.android.image.SmartImageView
         android:id="@+id/img_thumbnail"
         android:layout_width="100dp"
         android:layout_height="75dp"
+        android:src="@drawable/img_topline_default"
         android:layout_centerVertical="true" />
 
     <RelativeLayout
@@ -16,6 +18,8 @@
         android:layout_height="match_parent"
         android:layout_alignBottom="@+id/img_thumbnail"
         android:layout_alignTop="@+id/img_thumbnail"
+        android:layout_marginTop="-2dp"
+        android:layout_marginBottom="-2dp"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/img_thumbnail">
 
@@ -26,8 +30,7 @@
             android:maxLines="2"
             android:paddingTop="-1dp"
             android:text="雅虎北京全球研发中心将关闭"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/tv_source_and_readcount"
@@ -35,7 +38,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:text="消息来源 | 阅读(100)"
-            android:textColor="#cccccc" />
+            android:textColor="#cccccc"
+            android:textSize="11sp" />
 
         <TextView
             android:id="@+id/tv_comment_count"
@@ -46,6 +50,7 @@
             android:layout_toRightOf="@id/tv_source_and_readcount"
             android:gravity="end"
             android:text="评论(10)"
-            android:textColor="#cccccc" />
+            android:textColor="#cccccc"
+            android:textSize="11sp" />
     </RelativeLayout>
 </RelativeLayout>

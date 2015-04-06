@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="55dp"
-    android:background="@drawable/bg_navigation"
-    android:orientation="horizontal"
-    android:baselineAligned="false" >
+    android:layout_height="44dp"
+    android:background="@color/view_shared_tab_bar_bg_color"
+    android:baselineAligned="false"
+    android:orientation="horizontal">
 
     <RelativeLayout
         android:id="@+id/view_shared_tabbar_followees"
@@ -12,40 +12,36 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@null"
-        android:clickable="true" >
+        android:clickable="true">
 
         <ImageView
             android:id="@+id/view_shared_tabbar_followees_icon"
-            android:layout_width="46dp"
-            android:layout_height="46dp"
-            android:background="@null"
-            android:clickable="false"
-            android:scaleType="fitCenter"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="-1dp" />
+            android:layout_marginTop="-1dp"
+            android:background="@null"
+            android:clickable="false"
+            android:scaleType="fitCenter" />
 
         <TextView
             android:id="@+id/view_shared_tabbar_followees_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="3dp"
             android:background="@null"
             android:clickable="false"
             android:ellipsize="end"
             android:gravity="center"
             android:includeFontPadding="false"
             android:singleLine="true"
-            android:layout_marginBottom="3dp"
             android:text="Top line"
-            android:textSize="12sp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" />
+            android:textSize="11dp" />
     </RelativeLayout>
 
-    <View
-        android:layout_width="1px"
-        android:layout_height="match_parent"
-        android:background="@color/view_shared_tab_bar_bg_color" />
 
     <RelativeLayout
         android:id="@+id/view_shared_tabbar_topstory"
@@ -53,40 +49,35 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@null"
-        android:clickable="true" >
+        android:clickable="true">
 
         <ImageView
             android:id="@+id/view_shared_tabbar_topstory_icon"
-            android:layout_width="46dp"
-            android:layout_height="46dp"
-            android:background="@null"
-            android:clickable="false"
-            android:scaleType="fitCenter"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="-1dp" />
+            android:layout_marginTop="-1dp"
+            android:background="@null"
+            android:clickable="false"
+            android:scaleType="fitCenter" />
 
         <TextView
             android:id="@+id/view_shared_tabbar_topstory_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="3dp"
             android:background="@null"
             android:clickable="false"
             android:ellipsize="end"
             android:gravity="center"
             android:includeFontPadding="false"
             android:singleLine="true"
-            android:layout_marginBottom="3dp"
             android:text="Comment"
-            android:textSize="12sp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"  />
+            android:textSize="11dp" />
     </RelativeLayout>
-
-    <View
-        android:layout_width="1px"
-        android:layout_height="match_parent"
-        android:background="@color/view_shared_tab_bar_bg_color" />
 
     <RelativeLayout
         android:id="@+id/view_shared_tabbar_circle"
@@ -94,40 +85,35 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@null"
-        android:clickable="true" >
+        android:clickable="true">
 
         <ImageView
             android:id="@+id/view_shared_tabbar_circle_icon"
-            android:layout_width="46dp"
-            android:layout_height="46dp"
-            android:background="@null"
-            android:clickable="false"
-            android:scaleType="fitCenter"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="-1dp" />
+            android:layout_marginTop="-1dp"
+            android:background="@null"
+            android:clickable="false"
+            android:scaleType="fitCenter" />
 
         <TextView
             android:id="@+id/view_shared_tabbar_circle_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="3dp"
             android:background="@null"
             android:clickable="false"
             android:ellipsize="end"
             android:gravity="center"
             android:includeFontPadding="false"
             android:singleLine="true"
-            android:layout_marginBottom="3dp"
             android:text="Comment"
-            android:textSize="12sp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"  />
+            android:textSize="11dp" />
     </RelativeLayout>
-
-    <View
-        android:layout_width="1px"
-        android:layout_height="match_parent"
-        android:background="@color/view_shared_tab_bar_bg_color" />
 
     <RelativeLayout
         android:id="@+id/view_shared_tabbar_discover"
@@ -135,40 +121,35 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@null"
-        android:clickable="true" >
+        android:clickable="true">
 
         <ImageView
             android:id="@+id/view_shared_tabbar_discover_icon"
-            android:layout_width="46dp"
-            android:layout_height="46dp"
-            android:background="@null"
-            android:clickable="false"
-            android:scaleType="fitCenter"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="-1dp" />
+            android:layout_marginTop="-1dp"
+            android:background="@null"
+            android:clickable="false"
+            android:scaleType="fitCenter" />
 
         <TextView
             android:id="@+id/view_shared_tabbar_discover_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="3dp"
             android:background="@null"
             android:clickable="false"
             android:ellipsize="end"
             android:gravity="center"
             android:includeFontPadding="false"
             android:singleLine="true"
-            android:layout_marginBottom="3dp"
             android:text="Class"
-            android:textSize="12sp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"  />
+            android:textSize="11dp" />
     </RelativeLayout>
-
-    <View
-        android:layout_width="1px"
-        android:layout_height="match_parent"
-        android:background="@color/view_shared_tab_bar_bg_color" />
 
     <RelativeLayout
         android:id="@+id/view_shared_tabbar_activity"
@@ -176,35 +157,35 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@null"
-        android:gravity="center"
-        android:clickable="true" >
+        android:clickable="true"
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/view_shared_tabbar_activity_icon"
-            android:layout_width="46dp"
-            android:layout_height="46dp"
-            android:background="@null"
-            android:clickable="false"
-            android:scaleType="fitCenter"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="-1dp" />
+            android:layout_marginTop="-1dp"
+            android:background="@null"
+            android:clickable="false"
+            android:scaleType="fitCenter" />
 
         <TextView
             android:id="@+id/view_shared_tabbar_activity_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="3dp"
             android:background="@null"
             android:clickable="false"
             android:ellipsize="end"
             android:gravity="center"
             android:includeFontPadding="false"
             android:singleLine="true"
-            android:layout_marginBottom="3dp"
             android:text="Me"
-            android:textSize="12sp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"  />
+            android:textSize="11dp" />
     </RelativeLayout>
 
 </LinearLayout>

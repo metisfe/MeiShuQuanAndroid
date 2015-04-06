@@ -210,7 +210,7 @@ public class TopLineOperator {
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                                if (result.getInfo().equals(String.valueOf(0))) {
+                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
                                     Utils.alertMessageDialog("提示", "点赞成功");
                                 }
                             }

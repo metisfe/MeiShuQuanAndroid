@@ -62,8 +62,8 @@
     <!--start-ChannelManageActivity-->
     <style name="title_bar_style">
         <item name="android:background">@drawable/bg_titlebar</item>
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">44.0dip</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">44dp</item>
     </style>
 
     <style name="back_view" parent="@style/title_bar_button">

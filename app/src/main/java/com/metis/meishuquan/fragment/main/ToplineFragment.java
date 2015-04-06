@@ -240,7 +240,6 @@ public class ToplineFragment extends Fragment {
         @Override
         public int getCount() {
             return userItems.size();
-            //return OTHER_CHANNEL.length;
         }
     }
 }

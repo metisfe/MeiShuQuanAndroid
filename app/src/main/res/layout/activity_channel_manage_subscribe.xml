@@ -3,7 +3,7 @@
     android:id="@+id/root_view"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/subscribe_activity_bg" >
+    android:background="@color/subscribe_activity_bg">
 
     <include
         android:id="@+id/title_bar"
@@ -12,42 +12,16 @@
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/title_bar" >
+        android:layout_below="@id/title_bar"
+        android:background="#cccccc">
 
         <LinearLayout
             android:id="@+id/subscribe_main_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/subscribe_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#cccccc"
             android:orientation="vertical"
-            android:paddingBottom="14.0dip" >
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10.0dip"
-                android:layout_marginTop="14.0dip"
-                android:gravity="bottom"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:id="@+id/my_category_text"
-                    style="@style/subscribe_my_tip_text"
-                    android:text="@string/subscribe_my_category" />
-
-                <TextView
-                    android:id="@+id/my_category_tip_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="12.0dip"
-                    android:text="@string/subscribe_manager_category_info_2"
-                    android:textColor="@color/subscribe_tip_text"
-                    android:textSize="11.0sp" />
-            </LinearLayout>
-
-            <View
-                android:id="@+id/seperate_line"
-                style="@style/subscribe_seperate_line" />
+            android:paddingBottom="14.0dip">
 
             <com.metis.meishuquan.view.topline.DragGrid
                 android:id="@+id/userGridView"
@@ -55,6 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="14dip"
                 android:layout_marginRight="14dip"
+                android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:horizontalSpacing="14dip"
                 android:listSelector="@android:color/transparent"
@@ -67,12 +42,32 @@
                 android:id="@+id/seperate_line2"
                 style="@style/subscribe_seperate_line" />
 
-            <TextView
-                android:id="@+id/more_category_text"
-                style="@style/subscribe_more_tip_text"
-                android:layout_marginBottom="14.0dip"
-                android:layout_marginLeft="10.0dip"
-                android:text="@string/subscribe_more_category" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    style="@style/subscribe_more_tip_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="14.0dip"
+                    android:layout_marginLeft="10.0dip"
+                    android:text="更多频道"
+                    android:textColor="#333333"
+                    android:textSize="20sp" />
+
+                <TextView
+                    style="@style/subscribe_more_tip_text"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="14.0dip"
+                    android:layout_marginLeft="10.0dip"
+                    android:text="请拖动更改频道顺序"
+                    android:textColor="#fb6d6d"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
 
             <com.metis.meishuquan.view.topline.OtherGridView
                 android:id="@+id/otherGridView"
@@ -80,6 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="14dip"
                 android:layout_marginRight="14dip"
+                android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:horizontalSpacing="14dip"
                 android:listSelector="@android:color/transparent"
@@ -87,6 +83,17 @@
                 android:scrollbars="vertical"
                 android:stretchMode="columnWidth"
                 android:verticalSpacing="14.0px" />
+
+            <Button
+                android:id="@+id/activity_channel_btn_back"
+                android:layout_width="300dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/confirm_button_selected"
+                android:text="确定"
+                android:textColor="@color/tv_title_bar"
+                android:textSize="16sp" />
         </LinearLayout>
     </ScrollView>
 

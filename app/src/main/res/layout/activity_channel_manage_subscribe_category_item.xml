@@ -15,7 +15,7 @@
         android:gravity="center"
         android:minHeight="38.0dip"
         android:minWidth="72.0dip"
-        android:textColor="@color/subscribe_item_text_color"
+        android:textColor="@color/tv_channel_item"
         android:textSize="14.0sp" />
     <!-- android:layout_margin="5dip" -->
 

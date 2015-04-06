@@ -15,16 +15,14 @@ import com.metis.meishuquan.ui.SelectedTabType;
 /**
  * Created by wudi on 3/15/2015.
  */
-public class TabBar extends LinearLayout implements View.OnClickListener
-{
+public class TabBar extends LinearLayout implements View.OnClickListener {
     private static final int TABBAR_TYPE_FOLLOWEES = 0x00;
     private static final int TABBAR_TYPE_TOPSTORY = 0x01;
     private static final int TABBAR_TYPE_TAG = 0x02;
     private static final int TABBAR_TYPE_ACTIVITY = 0x03;
     private static final int TABBAR_TYPE_CIRCLE = 0x04;
 
-    public interface TabSelectedListener
-    {
+    public interface TabSelectedListener {
         public void onTabSelected(SelectedTabType type);
     }
 
@@ -56,42 +54,34 @@ public class TabBar extends LinearLayout implements View.OnClickListener
 
     private TabSelectedListener tabSelectedListener;
 
-    public TabBar(Context context)
-    {
+    public TabBar(Context context) {
         super(context);
     }
 
-    public TabBar(Context context, AttributeSet attrs)
-    {
+    public TabBar(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
 
-    public TabSelectedListener getTabSelectedListener()
-    {
+    public TabSelectedListener getTabSelectedListener() {
         return this.tabSelectedListener;
     }
 
-    public void setTabSelectedListener(TabSelectedListener tabSelectedListener)
-    {
+    public void setTabSelectedListener(TabSelectedListener tabSelectedListener) {
         this.tabSelectedListener = tabSelectedListener;
     }
 
-    public void reset()
-    {
+    public void reset() {
         clearSelected();
 
         selectedFolloweesTab(true);
     }
 
     @Override
-    public void onClick(View v)
-    {
-        if (this.tabSelectedListener != null)
-        {
+    public void onClick(View v) {
+        if (this.tabSelectedListener != null) {
             SelectedTabType type = null;
-            switch (v.getId())
-            {
+            switch (v.getId()) {
                 case R.id.view_shared_tabbar_followees:
                     type = SelectedTabType.TopLine;
                     break;
@@ -113,8 +103,7 @@ public class TabBar extends LinearLayout implements View.OnClickListener
         }
     }
 
-    private void init(Context context, AttributeSet attrs)
-    {
+    private void init(Context context, AttributeSet attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TabBar);
         this.tabbarType = a.getInt(R.styleable.TabBar_tabbarType, TABBAR_TYPE_FOLLOWEES);
         a.recycle();
@@ -144,8 +133,7 @@ public class TabBar extends LinearLayout implements View.OnClickListener
         this.circleTab.setOnClickListener(this);
 
         clearSelected();
-        switch (this.tabbarType)
-        {
+        switch (this.tabbarType) {
             case TABBAR_TYPE_TOPSTORY:
                 selectedTopStoryTab(true);
                 break;
@@ -166,8 +154,7 @@ public class TabBar extends LinearLayout implements View.OnClickListener
     }
 
     //清除选中状态
-    private void clearSelected()
-    {
+    private void clearSelected() {
         selectedFolloweesTab(false);
         selectedTopStoryTab(false);
         selectedDiscoverTab(false);
@@ -177,95 +164,82 @@ public class TabBar extends LinearLayout implements View.OnClickListener
 
     /**
      * 底部Tab_头条
+     *
      * @param isSelected 是否选中
      */
-    private void selectedFolloweesTab(boolean isSelected)
-    {
+    private void selectedFolloweesTab(boolean isSelected) {
         this.followeesTitle.setText(R.string.tab_topLine);
         if (isSelected)//选中
         {
-            this.followeesIcon.setImageResource(R.drawable.icon_moments_following_selected);
+            this.followeesIcon.setImageResource(R.drawable.icon_tabbar_top_selected);
             this.followeesTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_selected_title_color));
-        }
-        else//未选中
+        } else//未选中
         {
-            this.followeesIcon.setImageResource(R.drawable.icon_moments_following_unselected);
+            this.followeesIcon.setImageResource(R.drawable.icon_tabbar_top_unselected);
             this.followeesTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_unselected_title_color));
         }
     }
 
     /**
      * 底部Tab_点评
+     *
      * @param isSelected 选中状态
      */
-    private void selectedTopStoryTab(boolean isSelected)
-    {
+    private void selectedTopStoryTab(boolean isSelected) {
         this.topStoryTitle.setText(R.string.tab_comment);
-        if (isSelected)
-        {
-            this.topStoryIcon.setImageResource(R.drawable.icon_moments_all_selected);
+        if (isSelected) {
+            this.topStoryIcon.setImageResource(R.drawable.icon_tabbar_assess_selected);
             this.topStoryTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_selected_title_color));
-        }
-        else
-        {
-            this.topStoryIcon.setImageResource(R.drawable.icon_moments_all_unselected);
+        } else {
+            this.topStoryIcon.setImageResource(R.drawable.icon_tabbar_assess_unselected);
             this.topStoryTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_unselected_title_color));
         }
     }
 
     /**
      * 底部Tab_课程
+     *
      * @param isSelected 选中状态
      */
-    private void selectedDiscoverTab(boolean isSelected)
-    {
+    private void selectedDiscoverTab(boolean isSelected) {
         this.discoverTitle.setText(R.string.tab_course);
-        if (isSelected)
-        {
-            this.discoverIcon.setImageResource(R.drawable.icon_discover_selected);
+        if (isSelected) {
+            this.discoverIcon.setImageResource(R.drawable.icon_tabbar_assess_selected);
             this.discoverTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_selected_title_color));
-        }
-        else
-        {
-            this.discoverIcon.setImageResource(R.drawable.icon_discover_unselected);
+        } else {
+            this.discoverIcon.setImageResource(R.drawable.icon_tabbar_assess_unselected);
             this.discoverTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_unselected_title_color));
         }
     }
 
     /**
      * 底部Tab_我
+     *
      * @param isSelected 选中状态
      */
-    private void selectedActivityTab(boolean isSelected)
-    {
+    private void selectedActivityTab(boolean isSelected) {
         this.activityTitle.setText(R.string.tab_me);
-        if (isSelected)
-        {
-            this.activityIcon.setImageResource(R.drawable.icon_activity_selected);
+        if (isSelected) {
+            this.activityIcon.setImageResource(R.drawable.icon_tabbar_me_selected);
             this.activityTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_selected_title_color));
-        }
-        else
-        {
-            this.activityIcon.setImageResource(R.drawable.icon_activity_unselected);
+        } else {
+            this.activityIcon.setImageResource(R.drawable.icon_tabbar_me_unselected);
             this.activityTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_unselected_title_color));
         }
     }
 
     /**
      * 底部Tab_circle
+     *
      * @param isSelected 选中状态
      */
-    private void selectedCircleTab(boolean isSelected)
-    {
+    private void selectedCircleTab(boolean isSelected) {
         this.circleTitle.setText(R.string.tab_circle);
-        if (isSelected)
-        {
-            this.circleIcon.setImageResource(R.drawable.icon_activity_selected);
+        if (isSelected) {
+            this.circleIcon.setImageResource(R.drawable.icon_tabbar_circle_selected);
             this.circleTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_selected_title_color));
-        }
-        else
-        {
-            this.circleIcon.setImageResource(R.drawable.icon_activity_unselected);
+        } else {
+            this.circleIcon.setImageResource(R.drawable.icon_tabbar_circle_unselected);
             this.circleTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_unselected_title_color));
         }
     }

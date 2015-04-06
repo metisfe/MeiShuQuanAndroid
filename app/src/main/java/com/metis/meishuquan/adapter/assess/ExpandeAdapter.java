@@ -26,8 +26,8 @@ import java.util.List;
  */
 public class ExpandeAdapter extends BaseExpandableListAdapter {
 
-    private static final String HOT="热门";
-    private static final String PROVINCE="省份";
+    private static final String HOT = "热门";
+    private static final String PROVINCE = "省份";
     private Context context;
     private LayoutInflater mInflater = null;
     private AllCity mData = null;
@@ -40,31 +40,31 @@ public class ExpandeAdapter extends BaseExpandableListAdapter {
         changeData();
     }
 
-    public void setData(AllCity allCity){
-        this.mData=allCity;
+    public void setData(AllCity allCity) {
+        this.mData = allCity;
         changeData();
     }
 
-    private void changeData(){
-        if (mData.getData().size()>0){
-            List<Province> all=new ArrayList<>();
-            List<Province> lstHotCity=new ArrayList<>();
-            List<Province> lstProvince=new ArrayList<>();
-            List<Province> temp=mData.getData();
+    private void changeData() {
+        if (mData != null && mData.getData().size() > 0) {
+            List<Province> all = new ArrayList<>();
+            List<Province> lstHotCity = new ArrayList<>();
+            List<Province> lstProvince = new ArrayList<>();
+            List<Province> temp = mData.getData();
 
-            Province p=new Province();
+            Province p = new Province();
             p.setGroupName(HOT);
             lstHotCity.add(p);
             for (int i = 0; i < temp.size(); i++) {
-                if (temp.get(i).isHotCity()){
+                if (temp.get(i).isHotCity()) {
                     lstHotCity.add(temp.get(i));
                 }
             }
-            Province p2=new Province();
+            Province p2 = new Province();
             p2.setGroupName(PROVINCE);
             lstProvince.add(p2);
             for (int i = 0; i < temp.size(); i++) {
-                if (!temp.get(i).isHotCity()){
+                if (!temp.get(i).isHotCity()) {
                     lstProvince.add(temp.get(i));
                 }
             }
@@ -87,7 +87,7 @@ public class ExpandeAdapter extends BaseExpandableListAdapter {
     @Override
     public int getChildrenCount(int groupPosition) {
         if (mData.getData() != null && mData.getData().size() > 0) {
-            int count=mData.getData().get(groupPosition).getCityList().size();
+            int count = mData.getData().get(groupPosition).getCityList().size();
             return count;
         }
         return 0;
@@ -111,13 +111,13 @@ public class ExpandeAdapter extends BaseExpandableListAdapter {
 
     @Override
     public long getGroupId(int groupPosition) {
-        long id=mData.getData().get(groupPosition).getProvinceId();
+        long id = mData.getData().get(groupPosition).getProvinceId();
         return id;
     }
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
-        long id=mData.getData().get(groupPosition).getCityList().get(childPosition).getCodeid();
+        long id = mData.getData().get(groupPosition).getCityList().get(childPosition).getCodeid();
         return id;
     }
 
@@ -129,16 +129,16 @@ public class ExpandeAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int i, boolean b, View convertView, ViewGroup viewGroup) {
         GroupViewHolder holder = new GroupViewHolder();
-        if (mData.getData().get(i).getGroupName().equals(HOT)||mData.getData().get(i).getGroupName().equals(PROVINCE)){
+        if (mData.getData().get(i).getGroupName().equals(HOT) || mData.getData().get(i).getGroupName().equals(PROVINCE)) {
             convertView = mInflater.inflate(R.layout.fragment_topline_comment_list_item_tag, null);
-            convertView.setBackgroundColor(Color.rgb(230,232,237));
-            holder.mTag= (TextView) convertView.findViewById(R.id.id_tv_listview_tag);
-            holder.mTag.setTextColor(Color.rgb(255,83,99));
+            convertView.setBackgroundColor(Color.rgb(230, 232, 237));
+            holder.mTag = (TextView) convertView.findViewById(R.id.id_tv_listview_tag);
+            holder.mTag.setTextColor(Color.rgb(255, 83, 99));
             holder.mTag.setText(mData.getData().get(i).getGroupName());
-        }else{
+        } else {
             convertView = mInflater.inflate(R.layout.fragment_assess_city_list_group_item, null);
             holder.mGroupName = (TextView) convertView.findViewById(R.id.id_tv_city_group_name);
-            holder.mGroupName.setTextColor(Color.rgb(127,126,127));
+            holder.mGroupName.setTextColor(Color.rgb(127, 126, 127));
             holder.mIsExpand = (TextView) convertView.findViewById(R.id.id_tv_city_group_tag);
 
             holder.mGroupName.setText(mData.getData().get(i).getName());
@@ -159,7 +159,7 @@ public class ExpandeAdapter extends BaseExpandableListAdapter {
     }
 
     class GroupViewHolder {
-        TextView mGroupName, mIsExpand,mTag;
+        TextView mGroupName, mIsExpand, mTag;
     }
 
     class ChildViewHolder {

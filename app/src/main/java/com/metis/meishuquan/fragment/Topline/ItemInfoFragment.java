@@ -16,6 +16,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -87,7 +88,7 @@ public class ItemInfoFragment extends Fragment {
         btnBack = (Button) rootView.findViewById(R.id.id_btn_back);
         tv_title = (TextView) rootView.findViewById(R.id.id_title);
         tv_createtime = (TextView) rootView.findViewById(R.id.id_createtime);
-        tv_sourse = (TextView) rootView.findViewById(R.id.id_source);
+        tv_sourse = (TextView) rootView.findViewById(R.id.id_tv_source);
         btn_writeCommont = (Button) rootView.findViewById(R.id.id_btn_writecomment);
         btn_commontList = (Button) rootView.findViewById(R.id.id_btn_commentlist);
         btn_private = (Button) rootView.findViewById(R.id.id_btn_private);
@@ -147,6 +148,7 @@ public class ItemInfoFragment extends Fragment {
         }
 
         imageView.setImageUrl(url.trim());
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.topMargin = 10;
@@ -167,8 +169,8 @@ public class ItemInfoFragment extends Fragment {
         lp.topMargin = 10;
         textView.setLayoutParams(lp);
         textView.setText(words);
-        textView.setTextSize(14);
-        textView.setTextColor(Color.BLACK);
+        textView.setTextSize(16);
+        textView.setTextColor(getResources().getColor(R.color.tv_channel_item));
 
         ll_content.addView(textView);
     }
@@ -235,8 +237,6 @@ public class ItemInfoFragment extends Fragment {
                     ft.add(R.id.content_container, loginFragment);
                     ft.commit();
                 }
-
-
             }
         });
 
