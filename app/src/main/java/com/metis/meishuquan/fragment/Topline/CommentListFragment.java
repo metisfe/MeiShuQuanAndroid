@@ -10,6 +10,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,11 +21,15 @@ import com.google.gson.reflect.TypeToken;
 import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.fragment.login.LoginFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.topline.AllComments;
 import com.metis.meishuquan.model.topline.Comment;
+import com.metis.meishuquan.util.SharedPreferencesUtil;
+import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.view.shared.DragListView;
+import com.metis.meishuquan.view.topline.CommentInputView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
@@ -39,11 +45,14 @@ public class CommentListFragment extends Fragment {
 
     private ViewGroup rootView;
     private DragListView listView;
-    private Button btnBack;
+    private Button btnBack, btnWriteComment, btnCommentlist, btnShare, btnPrivate;
+    private CommentInputView commentInputView;
+
 
     private int newsId = 0;
     private List<Comment> lstAllComments = new ArrayList<>();
     private CommentsAdapter adapter;
+    private FragmentManager fm;
 
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
@@ -86,6 +95,15 @@ public class CommentListFragment extends Fragment {
     private void initView(ViewGroup rootView) {
         listView = (DragListView) rootView.findViewById(R.id.id_topline_comment_list);
         btnBack = (Button) rootView.findViewById(R.id.id_btn_back);
+        btnCommentlist = (Button) rootView.findViewById(R.id.id_btn_commentlist);
+        btnWriteComment = (Button) rootView.findViewById(R.id.id_btn_writecomment);
+        btnShare = (Button) rootView.findViewById(R.id.id_btn_share);
+        btnPrivate = (Button) rootView.findViewById(R.id.id_btn_private);
+        btnCommentlist.setVisibility(View.GONE);
+//        btnPrivate.setVisibility(View.GONE);
+//        btnShare.setVisibility(View.GONE);
+        commentInputView = new CommentInputView(getActivity(), null, 0);
+        fm = getActivity().getSupportFragmentManager();
 
         adapter = new CommentsAdapter(lstAllComments);
         listView.setAdapter(adapter);
@@ -115,6 +133,47 @@ public class CommentListFragment extends Fragment {
                 ft.commit();
             }
         });
+
+        btnWriteComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
+                String loginState = spu.getStringByKey(SharedPreferencesUtil.LOGIN_STATE);
+                if (loginState != null && loginState.equals("已登录")) {
+                    showOrHideCommentInputView(true);
+                    Utils.showInputMethod(getActivity(), commentInputView.editText);
+                } else {
+                    LoginFragment loginFragment = new LoginFragment();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.add(R.id.content_container, loginFragment);
+                    ft.commit();
+                }
+            }
+        });
+    }
+
+    //显示或隐藏评论视图
+    private void showOrHideCommentInputView(boolean isShow) {
+        ViewGroup parent = (ViewGroup) getActivity().findViewById(R.id.ll_parent);
+        TranslateAnimation translateAnimation = null;
+        int yStart = -getActivity().getResources().getDisplayMetrics().heightPixels;
+        int yEnd = 0;
+        if (isShow) {
+            if (commentInputView != null) {
+                parent.addView(commentInputView);
+            }
+            translateAnimation = new TranslateAnimation(0, 0, yStart, yEnd);
+        } else {
+            if (commentInputView != null) {
+                parent.removeView(commentInputView);
+            }
+            translateAnimation = new TranslateAnimation(0, 0, yEnd, yStart);
+        }
+        translateAnimation.setFillBefore(true);
+        translateAnimation.setFillEnabled(true);
+        translateAnimation.setDuration(0);
+        translateAnimation.setInterpolator(new DecelerateInterpolator());
+        commentInputView.startAnimation(translateAnimation);
     }
 
     //加载评论列表数据
@@ -223,7 +282,8 @@ public class CommentListFragment extends Fragment {
 
                     holder.userName.setText(this.lstAllComments.get(i).getUser().getName());
                     //holder.source.setText(this.lstAllComments.get(i).getCommentDateTime());
-                    holder.notifyTime.setText(this.lstAllComments.get(i).getCommentDateTime());
+                    String notifyTimeStr = this.lstAllComments.get(i).getCommentDateTime();
+                    holder.notifyTime.setText(notifyTimeStr);
                     holder.content.setText(this.lstAllComments.get(i).getContent());
                 }
                 holder = (ViewHolder) view.getTag();

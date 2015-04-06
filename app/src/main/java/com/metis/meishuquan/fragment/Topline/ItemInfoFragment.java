@@ -222,10 +222,6 @@ public class ItemInfoFragment extends Fragment {
         this.btn_writeCommont.setOnClickListener(new View.OnClickListener() {//写评论
             @Override
             public void onClick(View view) {//写评论
-                if (addCommentPoped) {
-                    return;
-                }
-                addCommentPoped = true;
                 SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
                 String loginState = spu.getStringByKey(SharedPreferencesUtil.LOGIN_STATE);
                 if (loginState != null && loginState.equals("已登录")) {

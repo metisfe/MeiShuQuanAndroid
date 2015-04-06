@@ -5,30 +5,46 @@
     android:background="#cccccc">
 
     <RelativeLayout
-        android:id="@+id/id_topbar"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/id_btn_back"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
+        <RelativeLayout
+            android:id="@+id/id_topbar"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
             android:layout_alignParentTop="true"
-            android:text="返回" />
+            android:background="@color/bg_topline_topbar">
 
-        <TextView
-            android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/id_btn_back"
+                android:layout_width="60dp"
+                android:layout_height="50dp"
+                android:layout_alignParentTop="true"
+                android:background="#2D2A40"
+                android:text="返回" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="评论"
+                android:textColor="@color/tv_title_bar"
+                android:textSize="20sp" />
+        </RelativeLayout>
+
+
+        <com.metis.meishuquan.view.shared.DragListView
+            android:id="@+id/id_topline_comment_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/id_footer"
+            android:layout_below="@+id/id_topbar" />
+
+        <include
+            android:id="@+id/id_footer"
+            layout="@layout/fragment_topline_topbar_list_item_info_footbar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="评论"
-            android:textSize="20sp" />
+            android:layout_alignParentBottom="true" />
     </RelativeLayout>
-
-
-    <com.metis.meishuquan.view.shared.DragListView
-        android:id="@+id/id_topline_comment_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/id_topbar" />
-
 </RelativeLayout>

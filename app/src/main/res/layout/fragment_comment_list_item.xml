@@ -2,14 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FFFFFF"
-    android:padding="20dp">
+    android:background="#F1F1F1"
+    android:padding="10dp">
 
     <com.loopj.android.image.SmartImageView
         android:id="@+id/id_img_portrait"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@drawable/icon" />
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:background="@drawable/icon"
+        android:scaleType="fitCenter" />
 
     <TextView
         android:id="@+id/id_username"
@@ -33,7 +34,8 @@
         android:layout_toRightOf="@+id/id_username"
         android:singleLine="true"
         android:text="北京"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#7e7e7e" />
 
     <TextView
         android:id="@+id/id_notifytime"
@@ -44,7 +46,8 @@
         android:layout_alignParentRight="true"
         android:singleLine="true"
         android:text="45分钟前"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#7e7e7e" />
 
     <TextView
         android:id="@+id/id_textview_comment_content"
@@ -55,7 +58,8 @@
         android:layout_below="@+id/id_username"
         android:layout_marginTop="10dp"
         android:maxLines="10"
-        android:text="本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情" />
+        android:text="本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情"
+        android:textSize="14sp" />
 
     <Button
         android:id="@+id/id_btn_comment"
