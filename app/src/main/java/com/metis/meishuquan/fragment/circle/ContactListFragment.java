@@ -1,5 +1,6 @@
 package com.metis.meishuquan.fragment.circle;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,18 @@ public class ContactListFragment extends CircleBaseFragment {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_circle_contactlistfragment, container, false);
 
         return rootView;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        //TODO: add listener
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        //TODO: add listener
     }
 
     @Override

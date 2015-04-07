@@ -1,8 +1,10 @@
 package com.metis.meishuquan.fragment.circle;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +31,26 @@ public class ChatListFragment extends CircleBaseFragment {
     private ChatListAdapter adapter;
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        //TODO: add listener
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        //TODO: add listener
+    }
+
+    @Override
     public void timeToSetTitleBar() {
         getTitleBar().setText("this is the chat list page");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("circle","chat list onresume");
     }
 
     @Override

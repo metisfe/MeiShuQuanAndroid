@@ -6,11 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.util.ContactManager;
+import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.view.circle.CircleGridIcon;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
 import com.metis.meishuquan.view.shared.SwitchButton;
@@ -56,18 +55,20 @@ public class ChatConfigActivity extends Activity {
         if ("private".equals(type)) {
             this.leaveGroup.setVisibility(View.GONE);
             this.nameGroup.setVisibility(View.GONE);
-            this.titleBar.setText(ContactManager.getUserNameFromCache(targetId));
             this.adapter.setPrivateData(targetId);
+            this.titleBar.setText(adapter.getName());
         } else {
             this.leaveGroup.setVisibility(View.VISIBLE);
             this.nameGroup.setVisibility(View.VISIBLE);
-            this.titleBar.setText("Chat Info(" + ContactManager.getDiscussionUserCountFromCache(targetId) + ")");
-            this.adapter.setPrivateData(targetId);
+            this.adapter.setDiscussionData(targetId);
+            this.titleBar.setText("Chat Info(" + adapter.getMemberCount() + ")");
         }
+
+        this.gridView.setAdapter(adapter);
     }
 
     class FriendGridViewAdapter extends BaseAdapter {
-        public RongIMClient.Conversation conversation;
+        public RongIMClient.Discussion discussion;
         public RongIMClient.UserInfo userInfo;
         public boolean isPrivate;
 
@@ -76,8 +77,11 @@ public class ChatConfigActivity extends Activity {
             if (isPrivate) {
                 return 2;
             } else {
-                int extra = ContactManager.getDiscussionIsMineFromCache(targetId) ? 2 : 1;
-                return ContactManager.getDiscussionUserCountFromCache(targetId) + extra;
+                int extra = ChatManager.isDiscussionMine(discussion) ? 2 : 1;
+                if (discussion != null && discussion.getMemberIdList() != null) {
+                    return discussion.getMemberIdList().size() + extra;
+                }
+                return 2;
             }
         }
 
@@ -98,8 +102,14 @@ public class ChatConfigActivity extends Activity {
 
             CircleGridIcon icon = (CircleGridIcon) convertView;
             if (isPrivate) {
+                //if this is a private page
                 if (position == 0) {
-                    //icon.setData();
+                    icon.setData(userInfo.getPortraitUri(), userInfo.getName(), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
                 } else {
                     icon.setPlusMinus(true, new View.OnClickListener() {
                         @Override
@@ -109,18 +119,63 @@ public class ChatConfigActivity extends Activity {
                     });
                 }
             } else {
+                //if this is a group chat page
+                if (position < discussion.getMemberIdList().size()) {
+                    RongIMClient.UserInfo info = ChatManager.getUserInfo(discussion.getMemberIdList().get(position));
+                    icon.setData(info.getPortraitUri(), info.getName(), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
+                        }
+                    });
+                } else if (position == discussion.getMemberIdList().size()) {
+                    icon.setPlusMinus(true, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
+                } else {
+                    icon.setPlusMinus(false, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
+                }
             }
 
-            return null;
+            return convertView;
         }
 
         private void setPrivateData(String targetId) {
             isPrivate = true;
+            this.userInfo = ChatManager.getUserInfo(targetId);
         }
 
         private void setDiscussionData(String targetId) {
             isPrivate = false;
+            this.discussion = ChatManager.getDiscussion(targetId);
+        }
+
+        private String getName() {
+            if (isPrivate) {
+                if (userInfo != null) {
+                    return userInfo.getName();
+                }
+            } else {
+                if (discussion != null) {
+                    return discussion.getName();
+                }
+            }
+            return "";
+        }
+
+        private int getMemberCount() {
+            if (isPrivate) return 1;
+            if (discussion != null && discussion.getMemberIdList() != null)
+                return discussion.getMemberIdList().size();
+            return 1;
         }
     }
 }

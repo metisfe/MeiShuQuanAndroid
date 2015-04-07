@@ -14,10 +14,9 @@ import com.metis.meishuquan.view.circle.CircleTitleBar;
  */
 public class ChatActivity extends FragmentActivity {
     private CircleTitleBar titleBar;
-    private String type,title,targetId;
+    private String type, title, targetId;
 
-    private void getParams()
-    {
+    private void getParams() {
         this.type = this.getIntent().getStringExtra("type");
         this.targetId = this.getIntent().getStringExtra("targetId");
         this.title = this.getIntent().getStringExtra("title");
@@ -28,19 +27,21 @@ public class ChatActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         getParams();
         getIntent().setData(Uri.parse("rong://io.rong.imkit.demo").buildUpon().appendPath("conversation").appendPath(type)
-                .appendQueryParameter("targetId",targetId).appendQueryParameter("title", title).build());
+                .appendQueryParameter("targetId", targetId).appendQueryParameter("title", title).build());
         setContentView(R.layout.activity_circle_chatactivity);
         this.titleBar = (CircleTitleBar) this.findViewById(R.id.activity_circle_chatactivity_titlebar);
         titleBar.setText(title);
-        titleBar.setRightButton("config",0,new View.OnClickListener() {
+        titleBar.setRightButton("config", 0, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ChatActivity.this, ChatConfigActivity.class);
+                intent.putExtra("type", type);
+                intent.putExtra("targetId", targetId);
                 startActivity(intent);
             }
         });
 
-        titleBar.setLeftButton("back",0,new View.OnClickListener() {
+        titleBar.setLeftButton("back", 0, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
