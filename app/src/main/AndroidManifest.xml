@@ -45,6 +45,12 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <activity
+            android:name=".activity.ChatConfigActivity"
+            android:configChanges="locale|layoutDirection|fontScale"
+            android:screenOrientation="portrait">
+        </activity>
+
         <!-- Begin Rong Cloud -->
 
         <meta-data

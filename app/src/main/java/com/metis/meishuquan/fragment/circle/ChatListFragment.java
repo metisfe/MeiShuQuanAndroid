@@ -46,7 +46,9 @@ public class ChatListFragment extends CircleBaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), ChatActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("title","diwulechao2");
+                intent.putExtra("targetId","diwulechao2");
+                intent.putExtra("type","private");
                 getActivity().startActivity(intent);
             }
         });
