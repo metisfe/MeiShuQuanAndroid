@@ -12,11 +12,12 @@ import android.widget.ListView;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.ChatActivity;
-import com.metis.meishuquan.model.circle.Contact;
 import com.metis.meishuquan.view.circle.CircleChatListItemView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.rong.imlib.RongIMClient;
 
 /**
  * Created by wudi on 4/4/2015.
@@ -37,9 +38,9 @@ public class ChatListFragment extends CircleBaseFragment {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_circle_chatlistfragment, container, false);
         listView = (ListView) rootView.findViewById(R.id.fragment_circle_chatlistfragment_listview);
         adapter = new ChatListAdapter();
-        adapter.data.add(new Contact());
-        adapter.data.add(new Contact());
-        adapter.data.add(new Contact());
+        adapter.data.add(new RongIMClient.Conversation());
+        adapter.data.add(new RongIMClient.Conversation());
+        adapter.data.add(new RongIMClient.Conversation());
 
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -57,7 +58,7 @@ public class ChatListFragment extends CircleBaseFragment {
     }
 
     class ChatListAdapter extends BaseAdapter {
-        public List<Contact> data = new ArrayList<Contact>();
+        public List<RongIMClient.Conversation> data = new ArrayList<RongIMClient.Conversation>();
 
         @Override
         public int getCount() {

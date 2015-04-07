@@ -22,7 +22,7 @@ import com.metis.meishuquan.R;
 public class SwitchButton extends View implements android.view.View.OnClickListener {
     private Bitmap mSwitchBottom, mSwitchThumb, mSwitchFrame, mSwitchMask;
     private float mCurrentX = 0;
-    private boolean mSwitchOn = true;//开关默认是开着的
+    private boolean mSwitchOn = false;//开关默认是开着的
     private int mMoveLength;//最大移动距离
     private float mLastX = 0;//第一次按下的有效区域
 

@@ -4,9 +4,15 @@
     android:layout_height="match_parent"
     android:background="#AAAAAA">
 
-    <ScrollView
+    <com.metis.meishuquan.view.circle.CircleTitleBar
+        android:id="@+id/activity_circle_chatconfigactivity_titlebar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"/>
+
+    <ScrollView
+        android:layout_below="@id/activity_circle_chatconfigactivity_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -64,12 +70,12 @@
                     android:layout_centerVertical="true"
                     android:text="No disturb" />
 
-                <!--<com.metis.meishuquan.view.shared.SwitchButton-->
-                    <!--android:id="@+id/activity_circle_chatconfigactivity_nodisturbswitch"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:gravity="center_vertical"-->
-                    <!--android:layout_alignParentRight="true" />-->
+                <com.metis.meishuquan.view.shared.SwitchButton
+                    android:id="@+id/activity_circle_chatconfigactivity_nodisturbswitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_alignParentRight="true" />
 
             </RelativeLayout>
 
@@ -91,6 +97,7 @@
             </RelativeLayout>
 
             <TextView
+                android:id="@+id/activity_circle_chatconfigactivity_leavegroup"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#BB0000"

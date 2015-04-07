@@ -9,9 +9,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.model.circle.Contact;
 
 import java.util.Calendar;
+
+import io.rong.imlib.RongIMClient;
 
 /**
  * Created by wudi on 4/6/2015.
@@ -20,17 +21,17 @@ public class CircleChatListItemView extends LinearLayout {
     private ImageView picView;
     private TextView titleView, contentView, timeView;
 
-    public CircleChatListItemView(Context context, Contact contact) {
+    public CircleChatListItemView(Context context, RongIMClient.Conversation conversation) {
         super(context);
         LayoutInflater.from(getContext()).inflate(R.layout.views_circle_circlechatlistitemview, this);
         this.picView = (ImageView) this.findViewById(R.id.views_circle_circlechatlistitemview_image);
         this.titleView = (TextView) this.findViewById(R.id.views_circle_circlechatlistitemview_title);
         this.contentView = (TextView) this.findViewById(R.id.views_circle_circlechatlistitemview_content);
         this.timeView = (TextView) this.findViewById(R.id.views_circle_circlechatlistitemview_time);
-        setData(contact);
+        setData(conversation);
     }
 
-    public void setData(Contact contact) {
+    public void setData(RongIMClient.Conversation conversation) {
         this.titleView.setText("Hello");
         this.contentView.setText("Hello World");
         Time time = new Time();
