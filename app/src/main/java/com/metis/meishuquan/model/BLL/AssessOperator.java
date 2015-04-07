@@ -149,7 +149,7 @@ public class AssessOperator {
      * @param channelId
      * @param friendUserId
      * @param type
-     * @param define       图片描述"图片大小+图片数量+图片字节长度"
+     * @param define       图片描述"图片大小，图片数量，图片字节长度"
      * @param imgByte      图片字节数组
      * @param callback
      */

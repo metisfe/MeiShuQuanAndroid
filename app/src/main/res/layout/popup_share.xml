@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#b0000000">
+
+    <GridLayout
+        android:id="@+id/gl_share"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/rl_cancel"
+        android:layout_centerHorizontal="true"
+        android:background="#f0f0f0"
+        android:columnCount="4"
+        android:paddingLeft="20dp"
+        android:paddingTop="20dp"
+        android:rowCount="2">
+
+        <RelativeLayout
+            android:id="@+id/rl_share_meishuquan"
+            android:layout_width="70dp"
+            android:layout_height="80dp">
+
+            <Button
+                android:id="@+id/id_btn_share_meishuquan"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/icon_share_meishuquan" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/id_btn_share_meishuquan"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:text="美术圈"
+                android:textColor="#424242"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_share_friends"
+            android:layout_width="70dp"
+            android:layout_height="80dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="12.5dp"
+            android:layout_toRightOf="@+id/rl_share_meishuquan">
+
+            <Button
+                android:id="@+id/id_btn_share_weixin_friends"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/icon_share_weixin_friends" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/id_btn_share_weixin_friends"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:text="微信朋友圈"
+                android:textColor="#424242"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_share_weixin"
+            android:layout_width="70dp"
+            android:layout_height="80dp"
+            android:layout_marginLeft="12.5dp"
+            android:layout_toRightOf="@+id/rl_share_friends">
+
+            <Button
+                android:id="@+id/id_btn_share_weixin"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="12.5dp"
+                android:background="@drawable/icon_share_weixin" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/id_btn_share_weixin"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:text="微信"
+                android:textColor="#424242"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_share_qq_zone"
+            android:layout_width="70dp"
+            android:layout_height="80dp"
+            android:layout_marginLeft="12.5dp"
+            android:layout_toRightOf="@+id/rl_share_weixin">
+
+            <Button
+                android:id="@+id/id_btn_share_qq_zone"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/icon_share_qq_zone" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/id_btn_share_qq_zone"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:text="QQ空间"
+                android:textColor="#424242"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/rl_share_sina_weibo"
+            android:layout_width="70dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="20dp"
+            android:layout_toRightOf="@+id/rl_share_qq_zone">
+
+            <Button
+                android:id="@+id/id_btn_share_sina_weibo"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/icon_share_sina_weibo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/id_btn_share_sina_weibo"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:text="QQ空间"
+                android:textColor="#424242"
+                android:textSize="12sp" />
+        </RelativeLayout>
+    </GridLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:background="#f0f0f0"
+        android:paddingBottom="10dp">
+
+        <Button
+            android:id="@+id/id_btn_cancel"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/confirm_button_selected"
+            android:text="取消"
+            android:textColor="#424242"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+
+</RelativeLayout>

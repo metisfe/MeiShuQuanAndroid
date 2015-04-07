@@ -2,6 +2,7 @@ package com.metis.meishuquan.fragment.Topline;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,12 +13,14 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +36,7 @@ import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.Utils;
+import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.metis.meishuquan.view.topline.CommentInputView;
 import com.metis.meishuquan.view.topline.NewsShareView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -282,51 +286,58 @@ public class ItemInfoFragment extends Fragment {
             }
         });
 
-        this.btn_share.setOnClickListener(new View.OnClickListener() {//分享
+        this.btn_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (addSharePoped) {
-                    return;
-                }
-                addSharePoped = true;
-                showOrHideNewsShareView(true);
+                new SharePopupWindow(MainApplication.UIContext, rootView);
             }
         });
 
-        this.newsShareView.btnFriends.setOnClickListener(new View.OnClickListener() {//分享至朋友圈
-            @Override
-            public void onClick(View view) {
-                if (!addSharePoped) {
-                    return;
-                }
-                addSharePoped = false;
-                Toast.makeText(getActivity(), "分享至微信朋友圈", Toast.LENGTH_SHORT).show();
-                showOrHideNewsShareView(false);
-            }
-        });
-
-        this.newsShareView.btnWeixin.setOnClickListener(new View.OnClickListener() {//分享至好友
-            @Override
-            public void onClick(View view) {
-                if (!addSharePoped) {
-                    return;
-                }
-                addSharePoped = false;
-                Toast.makeText(getActivity(), "分享至微信", Toast.LENGTH_SHORT).show();
-                showOrHideNewsShareView(false);
-            }
-        });
-
-        this.newsShareView.btnCancel.setOnClickListener(new View.OnClickListener() {//分享-取消
-            @Override
-            public void onClick(View view) {
-                if (!addSharePoped) {
-                    return;
-                }
-                addSharePoped = false;
-                showOrHideNewsShareView(false);
-            }
-        });
+//        this.btn_share.setOnClickListener(new View.OnClickListener() {//分享
+//            @Override
+//            public void onClick(View view) {
+//                if (addSharePoped) {
+//                    return;
+//                }
+//                addSharePoped = true;
+//                showOrHideNewsShareView(true);
+//            }
+//        });
+//
+//        this.newsShareView.btnFriends.setOnClickListener(new View.OnClickListener() {//分享至朋友圈
+//            @Override
+//            public void onClick(View view) {
+//                if (!addSharePoped) {
+//                    return;
+//                }
+//                addSharePoped = false;
+//                Toast.makeText(getActivity(), "分享至微信朋友圈", Toast.LENGTH_SHORT).show();
+//                showOrHideNewsShareView(false);
+//            }
+//        });
+//
+//        this.newsShareView.btnWeixin.setOnClickListener(new View.OnClickListener() {//分享至好友
+//            @Override
+//            public void onClick(View view) {
+//                if (!addSharePoped) {
+//                    return;
+//                }
+//                addSharePoped = false;
+//                Toast.makeText(getActivity(), "分享至微信", Toast.LENGTH_SHORT).show();
+//                showOrHideNewsShareView(false);
+//            }
+//        });
+//
+//        this.newsShareView.btnCancel.setOnClickListener(new View.OnClickListener() {//分享-取消
+//            @Override
+//            public void onClick(View view) {
+//                if (!addSharePoped) {
+//                    return;
+//                }
+//                addSharePoped = false;
+//                showOrHideNewsShareView(false);
+//            }
+//        });
     }
 
     //显示或隐藏评论视图
@@ -409,5 +420,48 @@ public class ItemInfoFragment extends Fragment {
                 }
             }
         });
+    }
+
+    /**
+     * 分享界面
+     */
+    public class PopupWindows extends PopupWindow {
+
+        public PopupWindows(Context mContext, View parent) {
+
+            View view = View.inflate(mContext, R.layout.choose_img_source_popupwindows, null);
+            view.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_ins));
+            LinearLayout ll_popup = (LinearLayout) view.findViewById(R.id.ll_popup);
+            ll_popup.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.push_bottom_in_2));
+
+            setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+            setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+            setBackgroundDrawable(new BitmapDrawable());
+            setFocusable(true);
+            setOutsideTouchable(true);
+            setContentView(view);
+            showAtLocation(parent, Gravity.BOTTOM, 0, 0);
+            super.update();
+
+            Button btnCamera = (Button) view.findViewById(R.id.item_popupwindows_camera);
+            Button btnPhoto = (Button) view.findViewById(R.id.item_popupwindows_Photo);
+            Button btnCancel = (Button) view.findViewById(R.id.item_popupwindows_cancel);
+
+            btnCamera.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    dismiss();
+                }
+            });
+            btnPhoto.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    dismiss();
+                }
+            });
+            btnCancel.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    dismiss();
+                }
+            });
+        }
     }
 }

@@ -45,14 +45,14 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:padding="10dp">
 
                 <TextView
                     style="@style/subscribe_more_tip_text"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginBottom="14.0dip"
-                    android:layout_marginLeft="10.0dip"
                     android:text="更多频道"
                     android:textColor="#333333"
                     android:textSize="20sp" />
