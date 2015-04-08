@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.AdvanceActivity;
 import com.metis.meishuquan.activity.InfoActivity;
 import com.metis.meishuquan.activity.SettingActivity;
+import com.metis.meishuquan.fragment.login.LoginFragment;
 import com.metis.meishuquan.view.shared.TabBar;
 
 /**
@@ -21,7 +24,7 @@ import com.metis.meishuquan.view.shared.TabBar;
 public class MyInfoFragment extends Fragment implements View.OnClickListener {
 
     private TabBar tabBar;
-    private View mInfoContainer = null;
+    private View mInfoContainer = null, mLoginView;
     private View mCollectionView, mAskView, mCommentView, mClassesView, mNameCardView, mAdvanceView, mSettingView;
 
     @Override
@@ -37,6 +40,8 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mInfoContainer = view.findViewById(R.id.my_info_profile_container);
+        mLoginView = view.findViewById(R.id.my_info_login);
+
         mCollectionView = view.findViewById(R.id.my_info_collections);
         mAskView = view.findViewById(R.id.my_info_asks);
         mCommentView = view.findViewById(R.id.my_info_comments);
@@ -46,6 +51,8 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         mSettingView = view.findViewById(R.id.my_info_setting);
 
         mInfoContainer.setOnClickListener(this);
+        //mLoginView.setOnClickListener(this);
+
         mCollectionView.setOnClickListener(this);
         mAskView.setOnClickListener(this);
         mCommentView.setOnClickListener(this);
@@ -60,6 +67,9 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.my_info_profile_container:
                 startActivity(new Intent(getActivity(), InfoActivity.class));
+                break;
+            case R.id.my_info_login:
+                showLoginFragment();
                 break;
             case R.id.my_info_collections:
                 break;
@@ -78,5 +88,26 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 startActivity(new Intent(getActivity(), SettingActivity.class));
                 break;
         }
+    }
+
+    private LoginFragment mLoginFm = null;
+    private void showLoginFragment () {
+        if (mLoginFm == null) {
+            mLoginFm = new LoginFragment();
+        }
+
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction ft = manager.beginTransaction();
+        ft.add(R.id.my_info_extra_layout, mLoginFm);
+        ft.addToBackStack(null);
+        ft.commit();
+    }
+
+    private void hideLoginFragment () {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction ft = manager.beginTransaction();
+        ft.remove(mLoginFm);
+        manager.popBackStack();
+        ft.commit();
     }
 }

@@ -71,4 +71,8 @@ public class MyInfoBtn extends RelativeLayout {
         mSecondaryText = txt;
         mSecondaryTv.setText(txt);
     }
+
+    public CharSequence getSecondaryText () {
+        return mSecondaryTv.getText();
+    }
 }

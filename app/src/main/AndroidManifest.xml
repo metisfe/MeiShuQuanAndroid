@@ -66,11 +66,10 @@
             android:theme="@style/Theme.UMDialog"
             android:windowSoftInputMode="stateVisible|adjustResize" android:screenOrientation="portrait" >
         </activity>
-
         <activity
             android:name=".activity.ChatConfigActivity"
             android:configChanges="locale|layoutDirection|fontScale"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
 
         <!-- Begin Rong Cloud -->
@@ -272,6 +271,10 @@
         <activity
             android:name=".activity.InfoActivity"
             android:label="@string/title_activity_info" >
+        </activity>
+        <activity
+            android:name=".activity.InputActivity"
+            android:label="@string/title_activity_input" >
         </activity>
     </application>
 

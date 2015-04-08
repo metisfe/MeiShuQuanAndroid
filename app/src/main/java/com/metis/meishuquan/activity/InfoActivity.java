@@ -1,41 +1,56 @@
 package com.metis.meishuquan.activity;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.view.shared.MyInfoBtn;
 
-public class InfoActivity extends FragmentActivity {
+public class InfoActivity extends FragmentActivity implements View.OnClickListener {
+
+    private MyInfoBtn mNickView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
+
+        this.findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        mNickView = (MyInfoBtn)findViewById(R.id.info_nick);
+        mNickView.setOnClickListener(this);
     }
 
-
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_info, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.info_nick:
+                Intent it = new Intent(this, InputActivity.class);
+                it.putExtra(InputActivity.KEY_DEFAULT_STR, mNickView.getSecondaryText());
+                it.putExtra(InputActivity.KEY_SINGLE_LINE, true);
+                startActivityForResult(it, 200);
+                break;
         }
+    }
 
-        return super.onOptionsItemSelected(item);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Toast.makeText(this, "onActivityResult", Toast.LENGTH_SHORT).show();
+        if (resultCode == 200) {
+            mNickView.setSecondaryText(data.getStringExtra(InputActivity.KEY_DEFAULT_STR));
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+
     }
 }

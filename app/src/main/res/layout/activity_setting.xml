@@ -13,11 +13,13 @@
         android:background="@color/bg_topline_topbar"
         >
         <ImageView
-            android:id="@+id/advance_back"
+            android:id="@+id/back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/btn_back"
             android:layout_centerVertical="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -27,16 +29,6 @@
             android:gravity="center"
             android:textColor="@color/tv_title_bar"
             android:textSize="20sp"
-            />
-        <TextView
-            android:id="@+id/advance_commit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/advance_send"
-            android:textSize="20sp"
-            android:textColor="@android:color/white"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             />
     </RelativeLayout>
     <com.metis.meishuquan.view.shared.MyInfoBtn

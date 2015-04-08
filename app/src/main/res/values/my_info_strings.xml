@@ -18,6 +18,7 @@
     <string name="setting_clear_cache">清理缓存</string>
     <string name="setting_about_us">关于我们</string>
 
+    <string name="info_title">个人信息</string>
     <string name="info_profile">头像</string>
     <string name="info_nick">昵称</string>
     <string name="info_recents">个性签名</string>
@@ -32,4 +33,11 @@
     <string name="info_department_address">机构地址</string>
     <string name="info_good_at">擅长科目</string>
     <string name="info_cv">个人简历</string>
+    
+    <string name="about_to_score">我要评分</string>
+    <string name="about_current_version">当前版本</string>
+    <string name="about_meishuquan">关于美术圈</string>
+    <string name="about_statement">免责声明</string>
+
+    <string name="input_tip">好名字可以让朋友更快记住你</string>
 </resources>

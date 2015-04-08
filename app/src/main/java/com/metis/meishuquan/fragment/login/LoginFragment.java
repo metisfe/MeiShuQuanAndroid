@@ -55,6 +55,7 @@ public class LoginFragment extends Fragment {
             public void onClick(View view) {
                 FragmentTransaction ft = fragmentManager.beginTransaction();
                 ft.remove(LoginFragment.this);
+                fragmentManager.popBackStack();
                 ft.commit();
             }
         });
@@ -64,6 +65,7 @@ public class LoginFragment extends Fragment {
                 //TODO:
                 FragmentTransaction ft = fragmentManager.beginTransaction();
                 ft.remove(LoginFragment.this);
+                fragmentManager.popBackStack();
                 ft.commit();
             }
         });
