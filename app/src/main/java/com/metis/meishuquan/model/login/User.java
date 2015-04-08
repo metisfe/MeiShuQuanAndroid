@@ -1,4 +1,4 @@
-package com.metis.meishuquan.model.topline;
+package com.metis.meishuquan.model.login;
 
 /**
  * Created by wj on 15/3/29.

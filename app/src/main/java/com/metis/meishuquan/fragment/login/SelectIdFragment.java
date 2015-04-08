@@ -15,9 +15,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.enums.IdType;
+import com.metis.meishuquan.model.login.UserRole;
+import com.metis.meishuquan.util.SharedPreferencesUtil;
 
 /**
  * Fragment:选择身份
@@ -30,14 +34,28 @@ public class SelectIdFragment extends Fragment {
     private GridView gvData;
 
     private FragmentManager fm;
-    private IdType idType=null;
+    private IdType idType = null;
+    private UserRole userRole;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        //从缓存中读取身份信息
+        getData();
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_user_select_id, null, false);
         initView(rootView);
         initEvent();
         return rootView;
+    }
+
+    private void getData() {
+        SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
+        String json = spu.getStringByKey(SharedPreferencesUtil.USER_ROLE);
+        Gson gson = new Gson();
+        UserRole userRole = gson.fromJson(json, new TypeToken<UserRole>() {
+        }.getType());
+        if (userRole != null) {
+            this.userRole = userRole;
+        }
     }
 
     private void initView(ViewGroup rootView) {

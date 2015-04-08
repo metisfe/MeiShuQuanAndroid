@@ -1,5 +1,7 @@
 package com.metis.meishuquan.model.topline;
 
+import com.metis.meishuquan.model.login.User;
+
 import java.util.List;
 
 /**

@@ -9,12 +9,13 @@ import java.util.Map;
  * Created by WJ on 2015/3/24.
  */
 public class SharedPreferencesUtil {
-    public static final String CHANNELS="channels";
-    public static final String CHANNELID_NEWS="news";
-    public static final String ASSESS_CHANNEL_LIST="assess_channel_list";
-    public static final String REGION="region";
-    public static final String ALLASSESSLIST="all_assess_list";
-    public static final String LOGIN_STATE="login_state";
+    public static final String CHANNELS = "channels";
+    public static final String CHANNELID_NEWS = "news";
+    public static final String ASSESS_CHANNEL_LIST = "assess_channel_list";
+    public static final String REGION = "region";
+    public static final String ALLASSESSLIST = "all_assess_list";
+    public static final String LOGIN_STATE = "login_state";
+    public static final String USER_ROLE = "user_role";
 
     private static SharedPreferencesUtil spu = null;
     private Context context;

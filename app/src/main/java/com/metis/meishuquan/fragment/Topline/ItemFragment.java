@@ -197,6 +197,4 @@ public class ItemFragment extends Fragment implements AdapterView.OnItemClickLis
             }
         }, channelId, lastNewsId);
     }
-
-
 }

@@ -1,6 +1,6 @@
 package com.metis.meishuquan.model.assess;
 
-import com.metis.meishuquan.model.topline.User;
+import com.metis.meishuquan.model.login.User;
 
 import java.util.ArrayList;
 import java.util.List;

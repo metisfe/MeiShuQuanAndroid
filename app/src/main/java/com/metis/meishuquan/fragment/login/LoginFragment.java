@@ -13,6 +13,7 @@ import android.widget.EditText;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.model.BLL.UserOperator;
 
 /**
  * Fragment:登录
@@ -23,9 +24,14 @@ public class LoginFragment extends Fragment {
     private EditText etUserName, etPwd;
 
     private FragmentManager fragmentManager;
+    private UserOperator userOperator;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        //缓存注册所需的身份数据
+        userOperator = UserOperator.getInstance();
+        userOperator.addUserRoleToCache();
+
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_user_login, null, false);
         initView(rootView);
         initEvent();

@@ -30,13 +30,10 @@
         android:layout_below="@id/fragment_shared_circlefragment_topbar_indicator"
         android:layout_above="@id/fragment_shared_circlefragment_tab_bar" />
 
-<<<<<<< HEAD
-    <com.metis.meishuquan.view.shared.TabBar
-        android:id="@+id/fragment_shared_circlefragment_tab_bar"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_alignParentBottom="true"
-        bs:tabbarType="circle" />
-=======
->>>>>>> origin/master
+    <!--<com.metis.meishuquan.view.shared.TabBar-->
+        <!--android:id="@+id/fragment_shared_circlefragment_tab_bar1"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="44dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--bs:tabbarType="circle" />-->
 </RelativeLayout>
