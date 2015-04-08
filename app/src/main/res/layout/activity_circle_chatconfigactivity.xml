@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#AAAAAA">
+
+    <com.metis.meishuquan.view.circle.CircleTitleBar
+        android:id="@+id/activity_circle_chatconfigactivity_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <ScrollView
+        android:layout_below="@id/activity_circle_chatconfigactivity_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <GridView
+                android:id="@+id/activity_circle_chatconfigactivity_gridview"
+                android:numColumns="4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <RelativeLayout
+                android:id="@+id/activity_circle_chatconfigactivity_namegroup"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="#FFFFFF">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_centerVertical="true"
+                    android:text="Group Name" />
+
+                <ImageView
+                    android:id="@+id/activity_circle_chatconfigactivity_nexticon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/activity_setting_icon_more"
+                    android:layout_alignParentRight="true" />
+
+                <TextView
+                    android:id="@+id/activity_circle_chatconfigactivity_nametext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_toLeftOf="@id/activity_circle_chatconfigactivity_nexticon" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/activity_circle_chatconfigactivity_nodisturbgroup"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="#FFFFFF">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_centerVertical="true"
+                    android:text="No disturb" />
+
+                <com.metis.meishuquan.view.shared.SwitchButton
+                    android:id="@+id/activity_circle_chatconfigactivity_nodisturbswitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_alignParentRight="true" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/activity_circle_chatconfigactivity_clearhistorygroup"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="#FFFFFF">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_centerVertical="true"
+                    android:text="Clear Chat History" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/activity_circle_chatconfigactivity_leavegroup"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="#BB0000"
+                android:textColor="#FFFFFF"
+                android:text="Leave and Quite the group"
+                android:gravity="center"
+                android:layout_margin="10dp"/>
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

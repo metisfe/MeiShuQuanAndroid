@@ -6,9 +6,11 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.model.provider.DataProvider;
+import com.metis.meishuquan.util.ChatManager;
 
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
@@ -26,10 +28,10 @@ public class MainApplication extends Application {
     public static Thread UIThread;
     public static Handler Handler;
     public static Context UIContext;
+    public static RongIMClient rongClient;
 
     @Override
-    public void onCreate()
-    {
+    public void onCreate() {
         super.onCreate();
 
         Resources = this.getResources();
@@ -46,28 +48,35 @@ public class MainApplication extends Application {
 
         // 连接融云服务器。
         try {
-            RongIM.connect(token, new RongIMClient.ConnectCallback() {
+            rongClient = RongIM.connect(token, new RongIMClient.ConnectCallback() {
 
                 @Override
                 public void onSuccess(String s) {
+                    if (rongClient != null) {
+                        rongClient.setOnReceiveMessageListener(new RongIMClient.OnReceiveMessageListener() {
+                            @Override
+                            public void onReceived(RongIMClient.Message message, int i) {
+                                ChatManager.onReceive(message);
+                            }
+                        });
+                    }
                 }
 
                 @Override
                 public void onError(ErrorCode errorCode) {
                 }
-            });
+            }).getRongIMClient();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void setDisplayMetrics(DisplayMetrics dm)
-    {
+    public static void setDisplayMetrics(DisplayMetrics dm) {
         displayMetrics = dm;
     }
 
-    public static DisplayMetrics getDisplayMetrics()
-    {
+    public static DisplayMetrics getDisplayMetrics() {
         return displayMetrics;
     }
 }

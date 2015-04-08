@@ -1,8 +1,10 @@
 package com.metis.meishuquan.fragment.circle;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +14,12 @@ import android.widget.ListView;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.ChatActivity;
-import com.metis.meishuquan.model.circle.Contact;
 import com.metis.meishuquan.view.circle.CircleChatListItemView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.rong.imlib.RongIMClient;
 
 /**
  * Created by wudi on 4/4/2015.
@@ -28,8 +31,26 @@ public class ChatListFragment extends CircleBaseFragment {
     private ChatListAdapter adapter;
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        //TODO: add listener
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        //TODO: add listener
+    }
+
+    @Override
     public void timeToSetTitleBar() {
         getTitleBar().setText("this is the chat list page");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("circle","chat list onresume");
     }
 
     @Override
@@ -37,16 +58,18 @@ public class ChatListFragment extends CircleBaseFragment {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_circle_chatlistfragment, container, false);
         listView = (ListView) rootView.findViewById(R.id.fragment_circle_chatlistfragment_listview);
         adapter = new ChatListAdapter();
-        adapter.data.add(new Contact());
-        adapter.data.add(new Contact());
-        adapter.data.add(new Contact());
+        adapter.data.add(new RongIMClient.Conversation());
+        adapter.data.add(new RongIMClient.Conversation());
+        adapter.data.add(new RongIMClient.Conversation());
 
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), ChatActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("title","diwulechao2");
+                intent.putExtra("targetId","diwulechao2");
+                intent.putExtra("type","private");
                 getActivity().startActivity(intent);
             }
         });
@@ -55,7 +78,7 @@ public class ChatListFragment extends CircleBaseFragment {
     }
 
     class ChatListAdapter extends BaseAdapter {
-        public List<Contact> data = new ArrayList<Contact>();
+        public List<RongIMClient.Conversation> data = new ArrayList<RongIMClient.Conversation>();
 
         @Override
         public int getCount() {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.metis.meishuquan">
+    package="com.metis.meishuquan" >
 
     <!-- App Required -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -33,26 +33,25 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="com.metis.meishuquan.MainApplication"
+        android:name=".MainApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/StyledIndicators">
-
+        android:theme="@style/StyledIndicators" >
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activity.ChatActivity"
             android:configChanges="locale|layoutDirection|fontScale"
+<<<<<<< HEAD
             android:screenOrientation="portrait"></activity>
 
         <!-- ###################注册SDK使用的Activity###################### -->
@@ -67,76 +66,92 @@
             android:noHistory="true"
             android:theme="@style/Theme.UMDialog"
             android:windowSoftInputMode="stateVisible|adjustResize" >
+=======
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <activity
+            android:name=".activity.ChatConfigActivity"
+            android:configChanges="locale|layoutDirection|fontScale"
+            android:screenOrientation="portrait">
+>>>>>>> origin/master
         </activity>
 
         <!-- Begin Rong Cloud -->
         <meta-data
             android:name="RONG_CLOUD_APP_KEY"
-            android:value="8luwapkvuf53l"></meta-data>
+            android:value="8luwapkvuf53l" />
+
         <service android:name="io.rong.imlib.RongService" />
 
         <activity
             android:name="io.rong.imkit.RongActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:host="com.metis.meishuquan"
                     android:pathPrefix="/conversationsetting/"
                     android:scheme="rong" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:host="com.metis.meishuquan"
                     android:path="/grouplist"
                     android:scheme="rong" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:host="com.metis.meishuquan"
                     android:path="/conversationgrouplist"
                     android:scheme="rong" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:host="com.metis.meishuquan"
                     android:pathPrefix="/friend/"
                     android:scheme="rong" />
             </intent-filter>
-
         </activity>
-
         <activity
             android:name="io.rong.imkit.RongSingleActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:host="com.metis.meishuquan"
                     android:path="/conversationlist"
                     android:scheme="rong" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="io.rong.imkit.RongSecActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:host="com.metis.meishuquan"
                     android:pathPrefix="/conversation/private"
@@ -144,7 +159,9 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:host="com.metis.meishuquan"
                     android:pathPrefix="/conversation/chatroom"
@@ -152,7 +169,9 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:host="com.metis.meishuquan"
                     android:pathPrefix="/conversation/group"
@@ -160,7 +179,9 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:host="com.metis.meishuquan"
                     android:pathPrefix="/conversation/discussion"
@@ -168,25 +189,27 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:host="com.metis.meishuquan"
                     android:pathPrefix="/conversation/system"
                     android:scheme="rong" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="io.rong.voipkit.activity.CallSideActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name="io.rong.voipkit.activity.CalledSideActivity"
             android:excludeFromRecents="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="io.rong.voipkit.calledSideActivity.action" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:host="com.metis.meishuquan"
                     android:path="/calledsideactivity"
@@ -198,29 +221,29 @@
             android:name="io.rong.imkit.service.RongIMService"
             android:enabled="true"
             android:exported="false"
-            android:priority="1000"></service>
-
+            android:priority="1000" />
         <service
             android:name="io.rong.imlib.push.PushService"
-            android:process="io.rong.push">
+            android:process="io.rong.push" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <action android:name="io.rong.push" />
             </intent-filter>
         </service>
-
         <service
             android:name="io.rong.imlib.push.CommandService"
-            android:process="io.rong.push">
+            android:process="io.rong.push" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <action android:name="io.rong.command" />
             </intent-filter>
         </service>
 
         <receiver
             android:name="io.rong.imlib.push.PushReceiver"
-            android:process="io.rong.push">
+            android:process="io.rong.push" >
             <intent-filter>
                 <action android:name="io.rong.imlib.action.push.heartbeat" />
             </intent-filter>
@@ -231,17 +254,29 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
-
-        <receiver android:name="io.rong.imlib.push.PushMessageReceiver">
-
+        <receiver android:name="io.rong.imlib.push.PushMessageReceiver" >
             <intent-filter>
                 <action android:name="io.rong.push.message" />
             </intent-filter>
         </receiver>
 
-
         <!-- End Rong Cloud -->
+        <activity
+            android:name=".activity.AdvanceActivity"
+            android:label="@string/title_activity_advance" >
+        </activity>
+        <activity
+            android:name=".activity.SettingActivity"
+            android:label="@string/title_activity_setting" >
+        </activity>
+        <activity
+            android:name=".activity.AboutActivity"
+            android:label="@string/title_activity_about" >
+        </activity>
+        <activity
+            android:name=".activity.InfoActivity"
+            android:label="@string/title_activity_info" >
+        </activity>
     </application>
 
 </manifest>
