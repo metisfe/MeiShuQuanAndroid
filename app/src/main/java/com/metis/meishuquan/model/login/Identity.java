@@ -1,10 +1,12 @@
 package com.metis.meishuquan.model.login;
 
+import java.io.Serializable;
+
 /**
  * 身份
  * Created by wj on 15/4/8.
  */
-public class Identity {
+public class Identity implements Serializable {
     private int id;//身份Id
 
     private String name;//身份名称

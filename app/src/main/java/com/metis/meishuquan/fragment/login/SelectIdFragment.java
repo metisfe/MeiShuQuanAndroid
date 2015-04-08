@@ -1,5 +1,8 @@
 package com.metis.meishuquan.fragment.login;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +12,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -17,12 +22,20 @@ import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.model.assess.Channel;
 import com.metis.meishuquan.model.enums.IdType;
+import com.metis.meishuquan.model.login.Identity;
 import com.metis.meishuquan.model.login.IdentityType;
 import com.metis.meishuquan.model.login.UserRole;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.smssdk.SMSSDK;
 
 /**
  * Fragment:选择身份
@@ -33,10 +46,13 @@ public class SelectIdFragment extends Fragment {
     private ImageView imgStudent, imgTeacher, imgHuashi, imgParent, imgOther;
     private TextView tvStudent, tvTeacher, tvHuashi, tvParent, tvOther;
     private GridView gvData;
+    private MyGridAdapter adapter;
 
     private FragmentManager fm;
     private IdType idType = null;
     private UserRole userRole;
+    private Identity identity;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -75,6 +91,18 @@ public class SelectIdFragment extends Fragment {
         gvData = (GridView) rootView.findViewById(R.id.id_select_id_gridview);
 
         fm = getActivity().getSupportFragmentManager();
+        idType = IdType.Student;
+        if (this.userRole != null) {
+            for (IdentityType type : userRole.getData()) {
+                if (type.getName().equals("学生")) {
+                    adapter = new MyGridAdapter(type.getChildLists());
+                }
+            }
+        }
+        this.gvData.setAdapter(adapter);
+        setSelectedColorForTextView(tvStudent);
+        setSelectedDrawable(imgStudent);
+        setUnSelectedDrawable(IdType.Student);
 
     }
 
@@ -98,7 +126,7 @@ public class SelectIdFragment extends Fragment {
                 }
                 RegisterFragment registerFragment = new RegisterFragment();
                 Bundle bundle = new Bundle();
-                bundle.putInt("idType", idType.getVal());
+                bundle.putSerializable("identity", identity);
                 registerFragment.setArguments(bundle);
 
                 FragmentTransaction ft = fm.beginTransaction();
@@ -114,6 +142,14 @@ public class SelectIdFragment extends Fragment {
                 idType = IdType.Student;
                 setSelectedColorForTextView(tvStudent);
                 setUnselectedColorForTextView(new TextView[]{tvTeacher, tvHuashi, tvParent, tvOther});
+                setSelectedDrawable(imgStudent);
+                setUnSelectedDrawable(IdType.Student);
+                for (IdentityType type : userRole.getData()) {
+                    if (type.getName().equals("学生")) {
+                        adapter = new MyGridAdapter(type.getChildLists());
+                        gvData.setAdapter(adapter);
+                    }
+                }
             }
         });
 
@@ -123,6 +159,14 @@ public class SelectIdFragment extends Fragment {
                 idType = IdType.Teacher;
                 setSelectedColorForTextView(tvTeacher);
                 setUnselectedColorForTextView(new TextView[]{tvStudent, tvHuashi, tvParent, tvOther});
+                setSelectedDrawable(imgTeacher);
+                setUnSelectedDrawable(IdType.Teacher);
+                for (IdentityType type : userRole.getData()) {
+                    if (type.getName().equals("老师")) {
+                        adapter = new MyGridAdapter(type.getChildLists());
+                        gvData.setAdapter(adapter);
+                    }
+                }
             }
         });
 
@@ -132,6 +176,14 @@ public class SelectIdFragment extends Fragment {
                 idType = IdType.HuaShi;
                 setSelectedColorForTextView(tvHuashi);
                 setUnselectedColorForTextView(new TextView[]{tvTeacher, tvStudent, tvParent, tvOther});
+                setSelectedDrawable(imgHuashi);
+                setUnSelectedDrawable(IdType.HuaShi);
+                for (IdentityType type : userRole.getData()) {
+                    if (type.getName().equals("画室/机构")) {
+                        adapter = new MyGridAdapter(type.getChildLists());
+                        gvData.setAdapter(adapter);
+                    }
+                }
             }
         });
 
@@ -141,6 +193,14 @@ public class SelectIdFragment extends Fragment {
                 idType = IdType.Parent;
                 setSelectedColorForTextView(tvParent);
                 setUnselectedColorForTextView(new TextView[]{tvTeacher, tvHuashi, tvStudent, tvOther});
+                setSelectedDrawable(imgParent);
+                setUnSelectedDrawable(IdType.Parent);
+                for (IdentityType type : userRole.getData()) {
+                    if (type.getName().equals("家长")) {
+                        adapter = new MyGridAdapter(type.getChildLists());
+                        gvData.setAdapter(adapter);
+                    }
+                }
             }
         });
 
@@ -150,6 +210,30 @@ public class SelectIdFragment extends Fragment {
                 idType = IdType.Other;
                 setSelectedColorForTextView(tvOther);
                 setUnselectedColorForTextView(new TextView[]{tvTeacher, tvHuashi, tvParent, tvStudent});
+                setSelectedDrawable(imgOther);
+                setUnSelectedDrawable(IdType.Other);
+                for (IdentityType type : userRole.getData()) {
+                    if (type.getName().equals("爱好者")) {
+                        adapter = new MyGridAdapter(type.getChildLists());
+                        gvData.setAdapter(adapter);
+                    }
+                }
+            }
+        });
+
+        gvData.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
+                for (int i = 0; i < parent.getCount(); i++) {
+                    View v = parent.getChildAt(i);
+                    MyGridAdapter.ViewHolder holder = (MyGridAdapter.ViewHolder) v.getTag();
+                    if (position == i) {//当前选中的Item改变背景颜色
+                        setSelectedColorForTextView(holder.textView);
+                        identity = adapter.getItem(i);
+                    } else {
+                        setUnselectedColorForTextView(new TextView[]{holder.textView});
+                    }
+                }
             }
         });
     }
@@ -161,6 +245,113 @@ public class SelectIdFragment extends Fragment {
     private void setUnselectedColorForTextView(TextView[] tvs) {
         for (TextView textView : tvs) {
             textView.setTextColor(Color.rgb(160, 160, 160));
+        }
+    }
+
+    private void setSelectedDrawable(ImageView img) {
+        switch (idType) {
+            case Student:
+                img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_select_id_1));
+                break;
+            case Teacher:
+                img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_select_id_2));
+                break;
+            case HuaShi:
+                img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_select_id_3));
+                break;
+            case Parent:
+                img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_select_id_4));
+                break;
+            case Other:
+                img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_select_id_5));
+                break;
+        }
+    }
+
+    private void setUnSelectedDrawable(IdType selectType) {
+        switch (selectType) {
+            case Student:
+                imgTeacher.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_2));
+                imgHuashi.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_3));
+                imgParent.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_4));
+                imgOther.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_5));
+                break;
+            case Teacher:
+                imgStudent.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_1));
+                imgHuashi.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_3));
+                imgParent.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_4));
+                imgOther.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_5));
+                break;
+            case HuaShi:
+                imgStudent.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_1));
+                imgTeacher.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_2));
+                imgParent.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_4));
+                imgOther.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_5));
+                break;
+            case Parent:
+                imgStudent.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_1));
+                imgTeacher.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_2));
+                imgHuashi.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_3));
+                imgOther.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_5));
+                break;
+            case Other:
+                imgStudent.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_1));
+                imgTeacher.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_2));
+                imgHuashi.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_3));
+                imgParent.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_4));
+                break;
+        }
+
+    }
+
+    class MyGridAdapter extends BaseAdapter {
+        private List<Identity> identity;
+        private ViewHolder holder;
+
+        public void setIdentity(List<Identity> identity) {
+            this.identity = identity;
+        }
+
+        MyGridAdapter(List<Identity> identity) {
+            if (identity == null) {
+                identity = new ArrayList<Identity>();
+            }
+            this.identity = identity;
+        }
+
+        class ViewHolder {
+            TextView textView;
+        }
+
+        @Override
+        public int getCount() {
+            return identity.size();
+        }
+
+        @Override
+        public Identity getItem(int i) {
+
+            return identity.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return identity.get(i).getId();
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            if (view == null) {
+                view = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.assess_user_role_gridview_item, null, false);
+                holder = new ViewHolder();
+                holder.textView = (TextView) view.findViewById(R.id.id_user_role_textview);
+                view.setTag(holder);
+            } else {
+                holder = (ViewHolder) view.getTag();
+            }
+            Identity id = identity.get(i);
+            holder.textView.setText(id.getName());
+            return view;
         }
     }
 

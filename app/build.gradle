@@ -42,5 +42,6 @@ dependencies {
     compile files('libs/android-smart-image-view-1.0.0.jar')
     compile files('libs/Rong_IMKit_v1_4_2.jar')
     compile project(':social_sdk_library_project')
+    compile files('libs/SMSSDK-1.1.9.jar')
     compile project(':SMSSDK')
 }

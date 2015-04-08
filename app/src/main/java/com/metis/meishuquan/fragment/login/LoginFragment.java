@@ -10,10 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.BLL.UserOperator;
+import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 /**
  * Fragment:登录
@@ -62,11 +66,28 @@ public class LoginFragment extends Fragment {
         btnLogin.setOnClickListener(new View.OnClickListener() {//登录
             @Override
             public void onClick(View view) {
-                //TODO:
-                FragmentTransaction ft = fragmentManager.beginTransaction();
-                ft.remove(LoginFragment.this);
-                fragmentManager.popBackStack();
-                ft.commit();
+                String accout = etUserName.getText().toString().trim();
+                String pwd = etPwd.getText().toString().trim();
+                if (accout.isEmpty()) {
+                    Toast.makeText(MainApplication.UIContext, "请输入登录账号", Toast.LENGTH_SHORT).show();
+                }
+                if (pwd.isEmpty()) {
+                    Toast.makeText(MainApplication.UIContext, "请输入密码", Toast.LENGTH_SHORT).show();
+                }
+                userOperator.login(accout, pwd, new ApiOperationCallback<ReturnInfo<String>>() {
+                    @Override
+                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                            Toast.makeText(MainApplication.UIContext, "登录成功", Toast.LENGTH_SHORT).show();
+                            FragmentTransaction ft = fragmentManager.beginTransaction();
+                            ft.remove(LoginFragment.this);
+                            fragmentManager.popBackStack();
+                            ft.commit();
+                        } else {
+                            Toast.makeText(MainApplication.UIContext, "账号与密码不匹配，请重新输入", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
         btnRegister.setOnClickListener(new View.OnClickListener() {//注册

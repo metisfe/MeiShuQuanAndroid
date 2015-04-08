@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="#F1F1F1"
-            android:hint="请输入手机号码/邮箱号码"
+            android:hint="请输入手机号码"
             android:padding="5dp" />
 
         <LinearLayout
