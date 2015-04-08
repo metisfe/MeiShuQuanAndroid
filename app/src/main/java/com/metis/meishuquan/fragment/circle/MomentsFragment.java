@@ -42,7 +42,7 @@ public class MomentsFragment extends CircleBaseFragment {
     }
 
     private DragListView listView;
-    private List<CircleMoment> list = new ArrayList<>();
+    private List<CircleMoment> list = new ArrayList<CircleMoment>();
     private int channelId = 6;
     private TopLineOperator operator;
 
@@ -110,7 +110,7 @@ public class MomentsFragment extends CircleBaseFragment {
         this.listView.setOnLoadListener(new DragListView.OnLoadListener() {
             @Override
             public void onLoad() {
-                    //TODO
+                //TODO
             }
         });
     }
@@ -169,7 +169,7 @@ public class MomentsFragment extends CircleBaseFragment {
                     }.getType());
                     msg.obj = data.getData();
                     handler.sendMessage(msg);
-                }else{
+                } else {
                     getData(lastNewsId);
                 }
                 //TODO:添加至缓存

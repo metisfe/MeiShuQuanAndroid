@@ -12,7 +12,7 @@ public class ChannelAndGrade {
 
     public List<Grade> getGradeList() {
         if (gradeList == null) {
-            gradeList = new ArrayList<>();
+            gradeList = new ArrayList<Grade>();
         }
         return gradeList;
     }
@@ -23,7 +23,7 @@ public class ChannelAndGrade {
 
     public List<Channel> getChannelList() {
         if (channelList == null) {
-            channelList = new ArrayList<>();
+            channelList = new ArrayList<Channel>();
         }
         return channelList;
     }

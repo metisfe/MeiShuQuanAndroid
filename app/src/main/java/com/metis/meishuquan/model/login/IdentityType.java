@@ -10,7 +10,7 @@ public class IdentityType {
 
     private String name;
 
-    private List<Identity> childLists;
+    private List<Identity> childList;
 
     public int getId() {
         return id;
@@ -29,10 +29,10 @@ public class IdentityType {
     }
 
     public List<Identity> getChildLists() {
-        return childLists;
+        return childList;
     }
 
     public void setChildLists(List<Identity> childLists) {
-        this.childLists = childLists;
+        this.childList = childLists;
     }
 }

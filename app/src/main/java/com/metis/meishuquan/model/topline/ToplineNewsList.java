@@ -11,7 +11,7 @@ public class ToplineNewsList {
 
     public List<News> getData() {
         if (data==null){
-            data= new ArrayList<>();
+            data= new ArrayList<News>();
         }
         return data;
     }

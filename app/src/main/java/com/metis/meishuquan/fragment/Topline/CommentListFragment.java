@@ -53,7 +53,7 @@ public class CommentListFragment extends Fragment {
 
     private int newsId = 0;
     private int totalCommentCount = 0;
-    private List<Comment> lstAllComments = new ArrayList<>();
+    private List<Comment> lstAllComments = new ArrayList<Comment>();
     private CommentsAdapter adapter;
     private FragmentManager fm;
 
@@ -250,7 +250,7 @@ public class CommentListFragment extends Fragment {
 
 
     private class CommentsAdapter extends BaseAdapter {
-        private List<Comment> lstAllComments = new ArrayList<>();
+        private List<Comment> lstAllComments = new ArrayList<Comment>();
         private ViewHolder holder;
 
         public CommentsAdapter(List<Comment> lstAllComments) {

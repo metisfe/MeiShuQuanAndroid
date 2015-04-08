@@ -30,17 +30,17 @@ import java.util.List;
 
 /**
  * Fragment:点评列表过滤条件
- *
+ * <p/>
  * Created by wj on 15/4/1.
  */
 public class FilterConditionForAssessListFragment extends Fragment {
     private FragmentManager fm;
-    private Button btnConfirm, btnAssessStateTrue, btnAssessStateFalse, btnAssessStateAll,btnGradeAll,btnChannelAll;
+    private Button btnConfirm, btnAssessStateTrue, btnAssessStateFalse, btnAssessStateAll, btnGradeAll, btnChannelAll;
     private GridView gvGrade, gvChannel;
     private ChannelGridViewAdapter channelAdapter;
     private GradeGridViewAdapter gradeAdapter;
-    private List<Grade> lstGrade = new ArrayList<>();
-    private List<Channel> lstChannel = new ArrayList<>();
+    private List<Grade> lstGrade = new ArrayList<Grade>();
+    private List<Channel> lstChannel = new ArrayList<Channel>();
 
     //条件
     private int type;//1最新 2已评价 3未评价
@@ -66,8 +66,8 @@ public class FilterConditionForAssessListFragment extends Fragment {
         this.gvGrade = (GridView) rootView.findViewById(R.id.id_gridview_grade);
         this.gvChannel = (GridView) rootView.findViewById(R.id.id_gridview_channels);
         this.btnAssessStateAll = (Button) rootView.findViewById(R.id.id_btn_state_all);
-        this.btnGradeAll= (Button) rootView.findViewById(R.id.id_btn_grade_all);
-        this.btnChannelAll= (Button) rootView.findViewById(R.id.id_btn_channel_all);
+        this.btnGradeAll = (Button) rootView.findViewById(R.id.id_btn_grade_all);
+        this.btnChannelAll = (Button) rootView.findViewById(R.id.id_btn_channel_all);
 
         this.gradeAdapter = new GradeGridViewAdapter(MainApplication.UIContext, lstGrade);
         this.channelAdapter = new ChannelGridViewAdapter(MainApplication.UIContext, lstChannel);
@@ -135,9 +135,9 @@ public class FilterConditionForAssessListFragment extends Fragment {
         this.gvGrade.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                TextView textView= (TextView) view;
+                TextView textView = (TextView) view;
                 textView.setTextColor(Color.rgb(55, 83, 99));
-                selsectedGrade=lstGrade.get(position);
+                selsectedGrade = lstGrade.get(position);
             }
         });
 

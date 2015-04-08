@@ -57,7 +57,7 @@ public class Assess {
 
     public List<User> getReplyUsers() {
         if (replyUsers == null) {
-            replyUsers = new ArrayList<>();
+            replyUsers = new ArrayList<User>();
         }
         return replyUsers;
     }

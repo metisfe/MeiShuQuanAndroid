@@ -13,7 +13,7 @@ public class CommentsData {
 
     public List<Comment> getHostComments() {
         if (hostComments ==null){
-            hostComments = new ArrayList<>();
+            hostComments = new ArrayList<Comment>();
         }
         return hostComments;
     }
@@ -24,7 +24,7 @@ public class CommentsData {
 
     public List<Comment> getNewComments() {
         if (newComments ==null){
-            newComments = new ArrayList<>();
+            newComments = new ArrayList<Comment>();
         }
         return newComments;
     }

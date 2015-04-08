@@ -48,8 +48,8 @@ public class ChannelManageView extends RelativeLayout implements OnItemClickList
     private Button btnBack;
     private SharedPreferencesUtil spu;
 
-    private List<ChannelItem> otherChannelList = new ArrayList<>();
-    private List<ChannelItem> userChannelList = new ArrayList<>();
+    private List<ChannelItem> otherChannelList = new ArrayList<ChannelItem>();
+    private List<ChannelItem> userChannelList = new ArrayList<ChannelItem>();
     boolean isMove = false;
 
     private Context context;

@@ -11,7 +11,7 @@ public class AllFileData {
 
     public List<FileData> getData() {
         if (data == null) {
-            data = new ArrayList<>();
+            data = new ArrayList<FileData>();
         }
         return data;
     }

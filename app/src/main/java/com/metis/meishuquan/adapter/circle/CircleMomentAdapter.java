@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 public class CircleMomentAdapter extends BaseAdapter {
-    private List<CircleMoment> momentList = new ArrayList<>();
+    private List<CircleMoment> momentList = new ArrayList<CircleMoment>();
     private ViewHolder holder;
 
     public CircleMomentAdapter(List<CircleMoment> momentList) {

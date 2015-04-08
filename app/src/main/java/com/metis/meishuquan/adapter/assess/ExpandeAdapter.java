@@ -47,9 +47,9 @@ public class ExpandeAdapter extends BaseExpandableListAdapter {
 
     private void changeData() {
         if (mData != null && mData.getData().size() > 0) {
-            List<Province> all = new ArrayList<>();
-            List<Province> lstHotCity = new ArrayList<>();
-            List<Province> lstProvince = new ArrayList<>();
+            List<Province> all = new ArrayList<Province>();
+            List<Province> lstHotCity = new ArrayList<Province>();
+            List<Province> lstProvince = new ArrayList<Province>();
             List<Province> temp = mData.getData();
 
             Province p = new Province();

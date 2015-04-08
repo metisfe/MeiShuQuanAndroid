@@ -55,7 +55,7 @@ public class AssessFragment extends Fragment {
 
     private DragListView listView;
     private Button btnRegion, btnFilter, btnPublishComment;
-    private List<Assess> lstAllAssess = new ArrayList<>();
+    private List<Assess> lstAllAssess = new ArrayList<Assess>();
     private AssessAdapter adapter;
 
     private Handler handler = new Handler() {
@@ -177,7 +177,7 @@ public class AssessFragment extends Fragment {
                     String json = gson.toJson(result);
                     allAssess = gson.fromJson(json, new TypeToken<AllAssess>() {
                     }.getType());
-                    List<Assess> data = new ArrayList<>();
+                    List<Assess> data = new ArrayList<Assess>();
                     if (allAssess != null && allAssess.getData() != null) {
                         List<Assess> lastAssessLists = allAssess.getData().getLastAssessLists();//最新点评
                         List<Assess> hotAssessLists = allAssess.getData().getHotAssessLists();//热门点评
@@ -207,7 +207,7 @@ public class AssessFragment extends Fragment {
      * 点评列表适配器
      */
     private class AssessAdapter extends BaseAdapter {
-        private List<Assess> lstAssess = new ArrayList<>();
+        private List<Assess> lstAssess = new ArrayList<Assess>();
         private ViewHolder holder;
 
         public AssessAdapter(List<Assess> lstAllComments) {

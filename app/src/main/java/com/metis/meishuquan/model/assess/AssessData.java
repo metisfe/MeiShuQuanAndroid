@@ -15,7 +15,7 @@ public class AssessData {
 
     public List<Assess> getLastAssessLists() {
         if (lastAssessList == null) {
-            lastAssessList = new ArrayList<>();
+            lastAssessList = new ArrayList<Assess>();
         }
         return lastAssessList;
     }
@@ -26,7 +26,7 @@ public class AssessData {
 
     public List<Assess> getHotAssessLists() {
         if (hotAssessList == null) {
-            hotAssessList = new ArrayList<>();
+            hotAssessList = new ArrayList<Assess>();
         }
         return hotAssessList;
     }

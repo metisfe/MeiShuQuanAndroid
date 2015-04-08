@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.enums.IdType;
+import com.metis.meishuquan.model.login.IdentityType;
 import com.metis.meishuquan.model.login.UserRole;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 

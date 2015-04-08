@@ -44,7 +44,7 @@ public class ToplineFragment extends Fragment {
     private SharedPreferencesUtil spu;
     private String channelJsonStr;
 
-    private List<News> lstNews = new ArrayList<>();
+    private List<News> lstNews = new ArrayList<News>();
     private boolean addChannelPoped;
     private int lastNewsId = 0;
 

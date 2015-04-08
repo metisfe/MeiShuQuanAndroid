@@ -28,7 +28,7 @@ public class Province {
 
     public List<City> getCityList() {
         if (cityList==null){
-            cityList=new ArrayList<>();
+            cityList=new ArrayList<City>();
         }
         return cityList;
     }

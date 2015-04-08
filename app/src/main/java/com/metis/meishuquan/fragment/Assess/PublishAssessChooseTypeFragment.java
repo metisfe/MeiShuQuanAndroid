@@ -37,7 +37,7 @@ public class PublishAssessChooseTypeFragment extends Fragment {
     private Button btnBack;
     private GridView gridView;
     private AssessOperator assessOperator;
-    private List<Channel> lstChannel = new ArrayList<>();
+    private List<Channel> lstChannel = new ArrayList<Channel>();
     private MyGridAdapter gridAdapter;
     private Channel selectedChannel;
     private OnSeletedChannelListener onSeletedChannelListener;
@@ -103,7 +103,7 @@ public class PublishAssessChooseTypeFragment extends Fragment {
 
         MyGridAdapter(List<Channel> channels) {
             if (channels == null) {
-                channels = new ArrayList<>();
+                channels = new ArrayList<Channel>();
             }
             this.channels = channels;
         }

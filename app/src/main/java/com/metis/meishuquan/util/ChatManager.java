@@ -17,8 +17,8 @@ public class ChatManager {
     public static String userId = "diwulechao";
 
     public static List<RongIMClient.Conversation> conversations;
-    public static HashMap<String, RongIMClient.UserInfo> contactCache = new HashMap<>();
-    public static HashMap<String, RongIMClient.Discussion> discussionCache = new HashMap<>();
+    public static HashMap<String, RongIMClient.UserInfo> contactCache = new HashMap<String, RongIMClient.UserInfo>();
+    public static HashMap<String, RongIMClient.Discussion> discussionCache = new HashMap<String, RongIMClient.Discussion>();
 
     public static boolean isDiscussionMine(RongIMClient.Discussion discussion) {
         if (discussion != null && !TextUtils.isEmpty(userId) && discussion != null && !TextUtils.isEmpty(discussion.getCreatorId())) {

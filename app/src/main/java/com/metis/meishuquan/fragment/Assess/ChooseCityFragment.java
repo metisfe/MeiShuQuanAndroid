@@ -106,9 +106,9 @@ public class ChooseCityFragment extends Fragment {
 
     public AllCity searchItem(String val) {
         AllCity allCity = new AllCity();
-        List<Province> provinces = new ArrayList<>();
+        List<Province> provinces = new ArrayList<Province>();
         for (int i = 0; i < mAllCity.getData().size(); i++) {
-            List<City> citys = new ArrayList<>();
+            List<City> citys = new ArrayList<City>();
             Province province = mAllCity.getData().get(i);
             List<City> citysTemp = province.getCityList();
             for (int j = 0; j < citysTemp.size(); j++) {

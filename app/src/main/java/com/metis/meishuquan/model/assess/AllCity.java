@@ -12,7 +12,7 @@ public class AllCity {
 
     public List<Province> getData() {
         if (data == null) {
-            data = new ArrayList<>();
+            data = new ArrayList<Province>();
         }
         return data;
     }

@@ -40,7 +40,7 @@ public class DataHelper {
      * @return 用户已订阅频道
      */
     public List<ChannelItem> getUserChannels() {
-        List<ChannelItem> lstUserItems = new ArrayList<>();
+        List<ChannelItem> lstUserItems = new ArrayList<ChannelItem>();
         try {
             Gson gson= new Gson();
             AllChannel allChannel=gson.fromJson(jsonStr,new TypeToken<AllChannel>(){}.getType());
@@ -58,7 +58,7 @@ public class DataHelper {
      * @return 可订阅频道集合
      */
     public List<ChannelItem> getOtherChannels() {
-        List<ChannelItem> lstOtherItems = new ArrayList<>();
+        List<ChannelItem> lstOtherItems = new ArrayList<ChannelItem>();
         try {
             Gson gson= new Gson();
             AllChannel allChannel=gson.fromJson(jsonStr,new TypeToken<AllChannel>(){}.getType());
@@ -71,7 +71,7 @@ public class DataHelper {
     }
 
     public List<ChannelItem> getLocalUserChannel() {
-        List<ChannelItem> lstItems = new ArrayList<>();
+        List<ChannelItem> lstItems = new ArrayList<ChannelItem>();
         ChannelItem item1 = new ChannelItem(6, USER_CHANNEL[0], 1, true);
         ChannelItem item2 = new ChannelItem(17, USER_CHANNEL[1], 1, true);
         ChannelItem item3 = new ChannelItem(18, USER_CHANNEL[2], 1, true);
@@ -94,7 +94,7 @@ public class DataHelper {
     }
 
     public List<ChannelItem> getLocalOtherChannel() {
-        List<ChannelItem> lstItems = new ArrayList<>();
+        List<ChannelItem> lstItems = new ArrayList<ChannelItem>();
         ChannelItem item1 = new ChannelItem(25, OTHER_CHANNEL[0], 1, true);
         ChannelItem item2 = new ChannelItem(26, OTHER_CHANNEL[1], 1, true);
         ChannelItem item3 = new ChannelItem(27, OTHER_CHANNEL[2], 1, true);

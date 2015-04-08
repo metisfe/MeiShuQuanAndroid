@@ -37,7 +37,7 @@ import java.util.List;
 public class ItemFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private DragListView listView;
-    private List<News> list = new ArrayList<>();
+    private List<News> list = new ArrayList<News>();
     private int channelId = -1;
     private TopLineOperator operator;
 
