@@ -25,6 +25,9 @@
     <string name="no_data">暂无数据</string>
     <string name="more">加载中</string>
     <string name="title_activity_advance">AdvanceActivity</string>
+    <string name="title_activity_setting">SettingActivity</string>
+    <string name="title_activity_about">AboutActivity</string>
+    <string name="title_activity_info">InfoActivity</string>
 
 
 </resources>

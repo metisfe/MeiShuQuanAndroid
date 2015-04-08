@@ -30,7 +30,7 @@
                 android:id="@+id/my_info_profile_container"
                 android:layout_width="fill_parent"
                 android:layout_height="115dp"
-                android:layout_marginTop="@dimen/px_to_dip_5"
+                android:layout_marginTop="@dimen/px_to_dip_10"
                 >
                 <ImageView
                     android:id="@+id/my_info_profile"
@@ -98,7 +98,8 @@
                 android:layout_height="wrap_content"
                 bs:src="@drawable/ic_launcher"
                 bs:text="@string/my_info_collections"
-                android:layout_marginTop="@dimen/px_to_dip_5"
+                bs:secondaryTextVisible="false"
+                android:layout_marginTop="@dimen/px_to_dip_10"
                 >
                 <include
                     layout="@layout/divider_horizontail"
@@ -110,6 +111,7 @@
                 android:layout_height="wrap_content"
                 bs:src="@drawable/ic_launcher"
                 bs:text="@string/my_info_asks"
+                bs:secondaryTextVisible="false"
                 >
                 <include
                     layout="@layout/divider_horizontail"
@@ -124,6 +126,7 @@
                 android:layout_height="wrap_content"
                 bs:src="@drawable/ic_launcher"
                 bs:text="@string/my_info_comments"
+                bs:secondaryTextVisible="false"
                 >
                 <include
                     layout="@layout/divider_horizontail"
@@ -144,7 +147,8 @@
                 android:layout_height="wrap_content"
                 bs:src="@drawable/ic_launcher"
                 bs:text="@string/my_info_classes"
-                android:layout_marginTop="@dimen/px_to_dip_5"
+                bs:secondaryTextVisible="false"
+                android:layout_marginTop="@dimen/px_to_dip_10"
                 >
                 <include
                     layout="@layout/divider_horizontail"
@@ -165,7 +169,8 @@
                 android:layout_height="wrap_content"
                 bs:src="@drawable/ic_launcher"
                 bs:text="@string/my_info_name_card"
-                android:layout_marginTop="@dimen/px_to_dip_5"
+                bs:secondaryTextVisible="false"
+                android:layout_marginTop="@dimen/px_to_dip_10"
                 >
                 <include
                     layout="@layout/divider_horizontail"
@@ -186,7 +191,8 @@
                 android:layout_height="wrap_content"
                 bs:src="@drawable/ic_launcher"
                 bs:text="@string/my_info_advaces"
-                android:layout_marginTop="@dimen/px_to_dip_5"
+                bs:secondaryTextVisible="false"
+                android:layout_marginTop="@dimen/px_to_dip_10"
                 />
             <com.metis.meishuquan.view.shared.MyInfoBtn
                 android:id="@+id/my_info_setting"
@@ -194,7 +200,8 @@
                 android:layout_height="wrap_content"
                 bs:src="@drawable/ic_launcher"
                 bs:text="@string/my_info_settings"
-                android:layout_marginTop="@dimen/px_to_dip_5"
+                bs:secondaryTextVisible="false"
+                android:layout_marginTop="@dimen/px_to_dip_10"
                 >
                 <include
                     layout="@layout/divider_horizontail"

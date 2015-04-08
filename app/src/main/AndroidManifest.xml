@@ -238,6 +238,18 @@
             android:name=".activity.AdvanceActivity"
             android:label="@string/title_activity_advance" >
         </activity>
+        <activity
+            android:name=".activity.SettingActivity"
+            android:label="@string/title_activity_setting" >
+        </activity>
+        <activity
+            android:name=".activity.AboutActivity"
+            android:label="@string/title_activity_about" >
+        </activity>
+        <activity
+            android:name=".activity.InfoActivity"
+            android:label="@string/title_activity_info" >
+        </activity>
     </application>
 
 </manifest>

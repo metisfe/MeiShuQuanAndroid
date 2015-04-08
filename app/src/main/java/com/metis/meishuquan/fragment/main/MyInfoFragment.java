@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.AdvanceActivity;
+import com.metis.meishuquan.activity.InfoActivity;
+import com.metis.meishuquan.activity.SettingActivity;
 import com.metis.meishuquan.view.shared.TabBar;
 
 /**
@@ -19,7 +21,7 @@ import com.metis.meishuquan.view.shared.TabBar;
 public class MyInfoFragment extends Fragment implements View.OnClickListener {
 
     private TabBar tabBar;
-
+    private View mInfoContainer = null;
     private View mCollectionView, mAskView, mCommentView, mClassesView, mNameCardView, mAdvanceView, mSettingView;
 
     @Override
@@ -34,6 +36,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mInfoContainer = view.findViewById(R.id.my_info_profile_container);
         mCollectionView = view.findViewById(R.id.my_info_collections);
         mAskView = view.findViewById(R.id.my_info_asks);
         mCommentView = view.findViewById(R.id.my_info_comments);
@@ -42,6 +45,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         mAdvanceView = view.findViewById(R.id.my_info_advances);
         mSettingView = view.findViewById(R.id.my_info_setting);
 
+        mInfoContainer.setOnClickListener(this);
         mCollectionView.setOnClickListener(this);
         mAskView.setOnClickListener(this);
         mCommentView.setOnClickListener(this);
@@ -54,6 +58,9 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.my_info_profile_container:
+                startActivity(new Intent(getActivity(), InfoActivity.class));
+                break;
             case R.id.my_info_collections:
                 break;
             case R.id.my_info_asks:
@@ -68,6 +75,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 startActivity(new Intent(getActivity(), AdvanceActivity.class));
                 break;
             case R.id.my_info_setting:
+                startActivity(new Intent(getActivity(), SettingActivity.class));
                 break;
         }
     }
