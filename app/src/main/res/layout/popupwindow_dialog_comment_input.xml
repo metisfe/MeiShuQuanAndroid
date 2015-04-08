@@ -3,43 +3,66 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/rl_writecomment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/white"
-        android:padding="10dp"
+        android:orientation="horizontal"
+        android:padding="5dp"
         android:visibility="visible">
-
-        <Button
-            android:id="@+id/id_btn_comment_send"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:onClick="discussSubmit"
-            android:text="发表"
-            android:textSize="20sp" />
 
         <EditText
             android:id="@+id/id_comment_edittext"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="40dp"
-            android:layout_centerVertical="true"
-
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@id/id_btn_comment_send"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="5"
+            android:background="@drawable/bg_edittext_input"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:hint="评论"
+            android:hint="我来说两句"
             android:singleLine="true"
             android:textSize="18sp">
 
             <requestFocus />
         </EditText>
-    </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/id_btn_topline_emotion"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/bg_btn_emotion" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/id_btn_comment_send"
+                android:layout_width="70dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/bg_btn_topline_comment_send"
+                android:onClick="discussSubmit" />
+        </RelativeLayout>
+
+
+    </LinearLayout>
 
 </RelativeLayout>

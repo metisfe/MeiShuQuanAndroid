@@ -28,6 +28,7 @@ import com.metis.meishuquan.model.topline.AllComments;
 import com.metis.meishuquan.model.topline.Comment;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.Utils;
+import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.metis.meishuquan.view.shared.DragListView;
 import com.metis.meishuquan.view.topline.CommentInputView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -45,11 +46,13 @@ public class CommentListFragment extends Fragment {
 
     private ViewGroup rootView;
     private DragListView listView;
+    private TextView tvCommentCount;
     private Button btnBack, btnWriteComment, btnCommentlist, btnShare, btnPrivate;
     private CommentInputView commentInputView;
 
 
     private int newsId = 0;
+    private int totalCommentCount = 0;
     private List<Comment> lstAllComments = new ArrayList<>();
     private CommentsAdapter adapter;
     private FragmentManager fm;
@@ -81,6 +84,7 @@ public class CommentListFragment extends Fragment {
         Bundle args = this.getArguments();
         if (args != null) {
             newsId = args.getInt("newsId");
+            totalCommentCount = args.getInt("totalCommentCount");
             //加载评论列表数据
             getData(newsId, DragListView.REFRESH);
         }
@@ -99,9 +103,8 @@ public class CommentListFragment extends Fragment {
         btnWriteComment = (Button) rootView.findViewById(R.id.id_btn_writecomment);
         btnShare = (Button) rootView.findViewById(R.id.id_btn_share);
         btnPrivate = (Button) rootView.findViewById(R.id.id_btn_private);
-        btnCommentlist.setVisibility(View.GONE);
-//        btnPrivate.setVisibility(View.GONE);
-//        btnShare.setVisibility(View.GONE);
+        tvCommentCount = (TextView) rootView.findViewById(R.id.id_tv_topline_info_comment_count);
+        tvCommentCount.setText(String.valueOf(this.totalCommentCount));
         commentInputView = new CommentInputView(getActivity(), null, 0);
         fm = getActivity().getSupportFragmentManager();
 
@@ -148,6 +151,36 @@ public class CommentListFragment extends Fragment {
                     ft.add(R.id.content_container, loginFragment);
                     ft.commit();
                 }
+            }
+        });
+
+        this.btnCommentlist.setOnClickListener(new View.OnClickListener() {//评论列表
+            @Override
+            public void onClick(View view) {//查看评论列表
+
+            }
+        });
+
+        this.btnPrivate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {//收藏
+                TopLineOperator topLineOperator = TopLineOperator.getInstance();
+                topLineOperator.newsPrivate(0, newsId, 0, new ApiOperationCallback<ReturnInfo<String>>() {
+                    @Override
+                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                            Utils.alertMessageDialog("提示", "收藏成功！");
+                        }
+                    }
+                });
+
+            }
+        });
+
+        this.btnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new SharePopupWindow(MainApplication.UIContext, rootView);
             }
         });
     }

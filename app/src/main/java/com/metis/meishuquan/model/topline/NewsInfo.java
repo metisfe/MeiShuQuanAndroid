@@ -3,7 +3,7 @@ package com.metis.meishuquan.model.topline;
 import java.util.List;
 
 /**
- * Created by xiaoxiao on 15/3/26.
+ * Created by wj on 15/3/26.
  */
 public class NewsInfo {
 
@@ -23,11 +23,13 @@ public class NewsInfo {
 
     private String content;
 
-    private List<Urls> urls ;
+    private List<Urls> urls;
 
     private String commentDefaultText;
 
-    private List<RelatedNewsList> relatedNewsLists ;
+    private List<RelatedNewsList> relatedNewsLists;
+
+    private int commentCount;
 
     public String getNewsId() {
         return newsId;
@@ -115,5 +117,13 @@ public class NewsInfo {
 
     public void setRelatedNewsLists(List<RelatedNewsList> relatedNewsLists) {
         this.relatedNewsLists = relatedNewsLists;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
     }
 }

@@ -7,19 +7,16 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="44dp"
         android:background="@drawable/bg_title_bar">
 
         <Button
             android:id="@+id/id_btn_user_resetpwd_back"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:background="@color/transparent"
-            android:text="返回"
-            android:textColor="@color/white"
-            android:textSize="17sp" />
+            android:background="@drawable/bg_btn_arrow_left" />
 
         <TextView
             android:layout_width="wrap_content"

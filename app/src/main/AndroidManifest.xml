@@ -21,6 +21,17 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <!-- 检测网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 获取mac地址作为用户的备用唯一标识 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 获取用户手机的IMEI，用来唯一的标识用户 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 缓存资源优先存入SDcard -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 允许应用程序联网，以便向我们的服务器端发送数据 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name="com.metis.meishuquan.MainApplication"
         android:allowBackup="true"
@@ -42,11 +53,23 @@
         <activity
             android:name=".activity.ChatActivity"
             android:configChanges="locale|layoutDirection|fontScale"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"></activity>
+
+        <!-- ###################注册SDK使用的Activity###################### -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="xxxxxxxxxxxxxxxxxxxxxx"></meta-data>
+
+        <activity
+            android:name="com.umeng.socialize.view.ShareActivity"
+            android:configChanges="orientation|keyboard"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:theme="@style/Theme.UMDialog"
+            android:windowSoftInputMode="stateVisible|adjustResize" >
         </activity>
 
         <!-- Begin Rong Cloud -->
-
         <meta-data
             android:name="RONG_CLOUD_APP_KEY"
             android:value="8luwapkvuf53l"></meta-data>

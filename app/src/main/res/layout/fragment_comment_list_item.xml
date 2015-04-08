@@ -9,7 +9,7 @@
         android:id="@+id/id_img_portrait"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:background="@drawable/icon"
+        android:background="@drawable/default_user_dynamic"
         android:scaleType="fitCenter" />
 
     <TextView
@@ -64,24 +64,24 @@
     <Button
         android:id="@+id/id_btn_comment"
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:layout_alignEnd="@+id/id_notifytime"
         android:layout_alignRight="@+id/id_notifytime"
         android:layout_below="@+id/id_textview_comment_content"
         android:layout_marginTop="10dp"
-        android:text="评论" />
+        android:background="@drawable/icon_comment_blue_normal" />
 
     <Button
         android:id="@+id/id_btn_support"
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:layout_alignBottom="@+id/id_btn_comment"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="20dp"
         android:layout_toLeftOf="@+id/id_btn_comment"
         android:layout_toStartOf="@+id/id_btn_comment"
-        android:text="赞" />
+        android:background="@drawable/icon_comment_details_normal" />
 
 
 </RelativeLayout>

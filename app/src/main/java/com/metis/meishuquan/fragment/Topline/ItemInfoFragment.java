@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -31,6 +32,7 @@ import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.fragment.login.LoginFragment;
+import com.metis.meishuquan.fragment.main.ToplineFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
@@ -55,7 +57,7 @@ public class ItemInfoFragment extends Fragment {
     private ViewGroup rootView;
     private LinearLayout ll_content;
     private TopLineNewsInfo newsInfo;
-    private TextView tv_title, tv_createtime, tv_sourse;
+    private TextView tv_title, tv_createtime, tv_sourse, tv_comment_count;
     private Button btn_writeCommont, btn_commontList, btn_private, btn_share;
     private ScrollView contentScrollView;
 
@@ -93,6 +95,7 @@ public class ItemInfoFragment extends Fragment {
         tv_title = (TextView) rootView.findViewById(R.id.id_title);
         tv_createtime = (TextView) rootView.findViewById(R.id.id_createtime);
         tv_sourse = (TextView) rootView.findViewById(R.id.id_tv_source);
+        tv_comment_count = (TextView) rootView.findViewById(R.id.id_tv_topline_info_comment_count);//评论数
         btn_writeCommont = (Button) rootView.findViewById(R.id.id_btn_writecomment);
         btn_commontList = (Button) rootView.findViewById(R.id.id_btn_commentlist);
         btn_private = (Button) rootView.findViewById(R.id.id_btn_private);
@@ -122,8 +125,8 @@ public class ItemInfoFragment extends Fragment {
 
             for (int j = 0; j < str.length; j++) {
                 if (str[j].contains("<p>") || str[j].contains("</p>")) {
-                    String wordTemp = str[j].replace("<p>", "  ");
-                    String word = wordTemp.replace("</p>", "");
+                    String wordTemp = str[j].replace("<p>", "");
+                    String word = wordTemp.replace("</p>", "\n");
                     addTextView(word);
                 }
                 if (str[j].contains("<!--img")) {
@@ -152,7 +155,7 @@ public class ItemInfoFragment extends Fragment {
         }
 
         imageView.setImageUrl(url.trim());
-        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        imageView.setScaleType(ImageView.ScaleType.MATRIX);
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.topMargin = 10;
@@ -184,8 +187,9 @@ public class ItemInfoFragment extends Fragment {
         this.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//返回
+                ToplineFragment toplineFragment = new ToplineFragment();
                 FragmentTransaction ft = fm.beginTransaction();
-                ft.remove(ItemInfoFragment.this);
+                ft.replace(R.id.content_container, toplineFragment);
                 ft.commit();
             }
         });
@@ -268,6 +272,7 @@ public class ItemInfoFragment extends Fragment {
                 Bundle args = new Bundle();
                 if (newsId != 0) {
                     args.putInt("newsId", newsId);
+                    args.putInt("totalCommentCount", newsInfo.getData().getCommentCount());
                 }
                 //跳转至评论列表
                 CommentListFragment commentListFragment = new CommentListFragment();
@@ -394,6 +399,7 @@ public class ItemInfoFragment extends Fragment {
             this.tv_title.setText(newsInfo.getData().getTitle());
             this.tv_createtime.setText(newsInfo.getData().getModifyTime());
             this.tv_sourse.setText(newsInfo.getData().getSource().getTitle());
+            this.tv_comment_count.setText(String.valueOf(newsInfo.getData().getCommentCount()));
         }
     }
 
@@ -407,6 +413,7 @@ public class ItemInfoFragment extends Fragment {
                     if (result.getInfo().equals(String.valueOf(0))) {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
+                        Log.i("newsInfo", json);
                         if (!json.equals("")) {
                             newsInfo = gson.fromJson(json, new TypeToken<TopLineNewsInfo>() {
                             }.getType());

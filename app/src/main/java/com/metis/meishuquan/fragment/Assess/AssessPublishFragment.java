@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -105,6 +106,8 @@ public class AssessPublishFragment extends Fragment {
                             FragmentTransaction ft = fm.beginTransaction();
                             ft.remove(AssessPublishFragment.this);
                             ft.commit();
+                        } else {
+                            Log.e("图片上传", "图片上传失败");
                         }
                     }
                 });

@@ -63,7 +63,7 @@
     <com.metis.meishuquan.view.shared.TabBar
         android:id="@+id/fragment_shared_commentfragment_tab_bar"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="44dp"
         android:layout_alignParentBottom="true"
         bs:tabbarType="topstory" />
 </RelativeLayout>

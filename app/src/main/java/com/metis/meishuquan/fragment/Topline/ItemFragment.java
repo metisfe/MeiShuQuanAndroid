@@ -122,7 +122,7 @@ public class ItemFragment extends Fragment implements AdapterView.OnItemClickLis
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        int newsId = list.get(i-1).getNewsId();//获取新闻Id
+        int newsId = list.get(i - 1).getNewsId();//获取新闻Id
         ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
         Bundle args = new Bundle();
         args.putInt("newsId", newsId);
@@ -132,7 +132,7 @@ public class ItemFragment extends Fragment implements AdapterView.OnItemClickLis
         FragmentTransaction ft = fm.beginTransaction();
         ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
         ft.add(R.id.content_container, itemInfoFragment);
-        ft.addToBackStack(null);
+        //ft.addToBackStack(null);
         ft.commit();
     }
 
@@ -190,7 +190,7 @@ public class ItemFragment extends Fragment implements AdapterView.OnItemClickLis
                     }.getType());
                     msg.obj = data.getData();
                     handler.sendMessage(msg);
-                }else{
+                } else {
                     getData(lastNewsId);
                 }
                 //TODO:添加至缓存
