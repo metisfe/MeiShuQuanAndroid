@@ -66,4 +66,8 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="MyInfoBtn">
+        <attr name="src" format="reference" />
+        <attr name="text" format="string|reference"/>
+    </declare-styleable>
 </resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="my_info_login">立即登录</string>
+    <string name="my_info_artist_circle_id">艺术圈号:%1$s</string>
+    <string name="my_info_attention_and_followers">关注:(%1$d)    粉丝:(%1$d)</string>
+
+    <string name="my_info_collections">我的收藏</string>
+    <string name="my_info_asks">我的提问</string>
+    <string name="my_info_comments">我的点评</string>
+    
+    <string name="my_info_classes">我的课程</string>
+    <string name="my_info_name_card">我的名片(二维码图标)</string>
+    <string name="my_info_advaces">意见反馈</string>
+    <string name="my_info_settings">设置</string>
+</resources>
