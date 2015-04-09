@@ -77,8 +77,8 @@ public class ChannelManageView extends RelativeLayout implements OnItemClickList
                 userChannelList = helper.getLocalUserChannel();
             }
             otherChannelList = helper.getOtherChannels();
-            Log.e("sources", String.valueOf(otherChannelList.size()));
-            Log.e("sources", " data from SharedPreferences");
+            Log.e("ChannelList", String.valueOf(otherChannelList.size()));
+            Log.e("ChannelList", " data from SharedPreferences");
         } else {
             helper = new DataHelper();
             userChannelList = helper.getLocalUserChannel();

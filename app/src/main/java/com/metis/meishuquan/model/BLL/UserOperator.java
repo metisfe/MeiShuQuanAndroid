@@ -65,20 +65,18 @@ public class UserOperator {
     }
 
 
-    public void getRequestCode(String phone) {
-
+    public void getRequestCode(String phone, ApiOperationCallback<ReturnInfo<String>> callback) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuilder sb = new StringBuilder(REQUESTCODE);
+                sb.append("phone=" + phone);
+                ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+            }
+        }
     }
 
     public void resetCode() {
-//        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
-//            if (flag) {
-//                StringBuilder sb = new StringBuilder(LOGIN);
-//                sb.append("phone=" + phone);
-//                sb.append("code=" + code);
-//                sb.append("pwd=" + pwd);
-//                ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
-//            }
-//        }
+
     }
 
     public void addUserRoleToCache() {

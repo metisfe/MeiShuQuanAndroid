@@ -76,7 +76,7 @@ public class TopLineOperator {
                                         e.printStackTrace();
                                     }
                                 } else {
-                                    Log.e("addChannelItemsToLoacal", "网络状态码不为0");
+                                    Log.e("addChannelItemsToLoacal", "网络状态码不为0,头条频道缓存失败");
                                 }
                             }
                         });
