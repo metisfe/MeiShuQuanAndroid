@@ -16,6 +16,7 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.AdvanceActivity;
 import com.metis.meishuquan.activity.info.InfoActivity;
 import com.metis.meishuquan.activity.info.DataListActivity;
+import com.metis.meishuquan.activity.info.MyCourseActivity;
 import com.metis.meishuquan.activity.info.MyFavoritesActivity;
 import com.metis.meishuquan.activity.info.SettingActivity;
 import com.metis.meishuquan.fragment.login.LoginFragment;
@@ -114,6 +115,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
             case R.id.my_info_comments:
                 break;
             case R.id.my_info_classes:
+                startActivity(new Intent(getActivity(), MyCourseActivity.class));
                 break;
             case R.id.my_info_name_card:
                 break;
