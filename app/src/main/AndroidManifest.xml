@@ -271,16 +271,16 @@
 
         <!-- End Rong Cloud -->
         <activity
-            android:name=".activity.AdvanceActivity"
+            android:name=".activity.info.AdvanceActivity"
             android:label="@string/title_activity_advance"></activity>
         <activity
-            android:name=".activity.SettingActivity"
+            android:name=".activity.info.SettingActivity"
             android:label="@string/title_activity_setting"></activity>
         <activity
-            android:name=".activity.AboutActivity"
+            android:name=".activity.info.AboutActivity"
             android:label="@string/title_activity_about"></activity>
         <activity
-            android:name=".activity.InfoActivity"
+            android:name=".activity.info.InfoActivity"
             android:label="@string/title_activity_info"></activity>
         <activity
             android:name=".activity.InputActivity"

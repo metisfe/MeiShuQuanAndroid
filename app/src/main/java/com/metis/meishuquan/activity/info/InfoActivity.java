@@ -1,4 +1,4 @@
-package com.metis.meishuquan.activity;
+package com.metis.meishuquan.activity.info;
 
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
@@ -9,8 +9,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.InputActivity;
 import com.metis.meishuquan.framework.WebAccessManager;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
+import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.view.shared.MyInfoBtn;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -18,7 +20,7 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 public class InfoActivity extends FragmentActivity implements View.OnClickListener {
 
-    private MyInfoBtn mNickView = null;
+    private MyInfoBtn mNickView, mGenderView, mGradeView;
 
     private View mRecentsContainer = null;
     private TextView mRecentsContentTv = null;
@@ -44,11 +46,27 @@ public class InfoActivity extends FragmentActivity implements View.OnClickListen
         });
 
         mNickView = (MyInfoBtn)findViewById(R.id.info_nick);
+        mGenderView = (MyInfoBtn)findViewById(R.id.info_gender);
+        mGradeView = (MyInfoBtn)findViewById(R.id.info_level);
+
         mRecentsContainer = findViewById(R.id.info_recents_container);
         mRecentsContentTv = (TextView)findViewById(R.id.info_recents_content);
 
         mNickView.setOnClickListener(this);
         mRecentsContainer.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        UserInfoOperator.getInstance().getUserInfo("100001", new UserInfoOperator.OnGetListener<User>() {
+            @Override
+            public void onGet(boolean succeed, User user) {
+                if (succeed) {
+                    fillUserInfo(user);
+                }
+            }
+        });
     }
 
     @Override
@@ -92,5 +110,11 @@ public class InfoActivity extends FragmentActivity implements View.OnClickListen
         }
         super.onActivityResult(requestCode, resultCode, data);
 
+    }
+
+    private void fillUserInfo (User user) {
+        mNickView.setSecondaryText(user.getName());
+        mGenderView.setSecondaryText(user.getGender());
+        mGradeView.setSecondaryText(user.getGrade());
     }
 }
