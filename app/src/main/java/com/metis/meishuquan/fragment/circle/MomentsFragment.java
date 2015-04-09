@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -155,7 +154,7 @@ public class MomentsFragment extends CircleBaseFragment {
         return result.getData();
     }
 
-    //加载数据（加载更多）
+    //加载更多
     public void getData(final int lastNewsId) {
         operator = TopLineOperator.getInstance();
         operator.getNewsListByChannelId(new ApiOperationCallback<ReturnInfo<String>>() {
@@ -171,8 +170,7 @@ public class MomentsFragment extends CircleBaseFragment {
                     msg.obj = data.getData();
                     handler.sendMessage(msg);
                 } else {
-                    //getData(lastNewsId);
-                    Log.e("头条列表", "头条列表数据获取失败");
+                    getData(lastNewsId);
                 }
                 //TODO:添加至缓存
             }
