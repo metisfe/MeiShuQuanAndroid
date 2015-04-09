@@ -76,7 +76,8 @@ public class ToplineCustomAdapter extends ToplineAdapter {
 
             holder.img_thumbnail = (SmartImageView) convertView.findViewById(R.id.img_thumbnail);
             holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
-            holder.tv_source_and_readcount = (TextView) convertView.findViewById(R.id.tv_source_and_readcount);
+            holder.tv_source = (TextView) convertView.findViewById(R.id.tv_source);
+            holder.tv_readCount = (TextView) convertView.findViewById(R.id.tv_readcount);
             holder.tv_comment_count = (TextView) convertView.findViewById(R.id.tv_comment_count);
             convertView.setTag(holder);
         } else {
@@ -86,7 +87,9 @@ public class ToplineCustomAdapter extends ToplineAdapter {
         News news = lstData.get(position);
         holder.img_thumbnail.setImageUrl(news.getImgUrl().trim());
         holder.tv_title.setText(news.getTitle());
-        holder.tv_source_and_readcount.setText(news.getSource().getTitle() + " | " + "阅读(" + news.getPageViewCount() + ")");
+        String source = news.getSource().getTitle().trim();
+        holder.tv_source.setText(source);
+        holder.tv_readCount.setText(source.isEmpty() ? "阅读(" + news.getPageViewCount() + ")" : " | " + "阅读(" + news.getPageViewCount() + ")");
         holder.tv_comment_count.setText("评论(" + news.getCommentCount() + ")");
 
         return convertView;
@@ -94,6 +97,6 @@ public class ToplineCustomAdapter extends ToplineAdapter {
 
     private static class ViewHolder {
         SmartImageView img_thumbnail;
-        TextView tv_title, tv_source_and_readcount, tv_comment_count;
+        TextView tv_title, tv_source, tv_readCount, tv_comment_count;
     }
 }

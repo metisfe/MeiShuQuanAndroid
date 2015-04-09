@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/bg_listview"
-    android:padding="10dp">
+    android:padding="7.5dp">
 
     <com.loopj.android.image.SmartImageView
         android:id="@+id/img_thumbnail"
@@ -33,12 +33,22 @@
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/tv_source_and_readcount"
+            android:id="@+id/tv_source"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:text="消息来源 | 阅读(100)"
-            android:textColor="#cccccc"
+            android:text="消息来源"
+            android:textColor="#fb6d6d"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/tv_readcount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/tv_source"
+            android:text=" | 阅读(100)"
+            android:textColor="#7e7e7e"
             android:textSize="11sp" />
 
         <TextView
@@ -47,10 +57,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_toRightOf="@id/tv_source_and_readcount"
+            android:layout_toRightOf="@id/tv_readcount"
             android:gravity="right"
             android:text="评论(10)"
-            android:textColor="#cccccc"
+            android:textColor="#7e7e7e"
             android:textSize="11sp" />
     </RelativeLayout>
 </RelativeLayout>

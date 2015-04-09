@@ -204,10 +204,10 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
     private void selectedDiscoverTab(boolean isSelected) {
         this.discoverTitle.setText(R.string.tab_course);
         if (isSelected) {
-            this.discoverIcon.setImageResource(R.drawable.icon_tabbar_assess_selected);
+            this.discoverIcon.setImageResource(R.drawable.icon_tabbar_course_selected);
             this.discoverTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_selected_title_color));
         } else {
-            this.discoverIcon.setImageResource(R.drawable.icon_tabbar_assess_unselected);
+            this.discoverIcon.setImageResource(R.drawable.icon_tabbar_course_unselected);
             this.discoverTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_unselected_title_color));
         }
     }

@@ -1,7 +1,6 @@
 package com.metis.meishuquan.fragment.Topline;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,7 +58,7 @@ public class ItemInfoFragment extends Fragment {
     private LinearLayout ll_content;
     private TopLineNewsInfo newsInfo;
     private TextView tv_title, tv_createtime, tv_sourse, tv_comment_count;
-    private Button btn_writeCommont, btn_commontList, btn_private, btn_share;
+    private RelativeLayout rl_writeCommont, rl_commontList, rl_private, btn_share;
     private ScrollView contentScrollView;
 
     private CommentInputView commentInputView;
@@ -96,10 +96,10 @@ public class ItemInfoFragment extends Fragment {
         tv_createtime = (TextView) rootView.findViewById(R.id.id_createtime);
         tv_sourse = (TextView) rootView.findViewById(R.id.id_tv_source);
         tv_comment_count = (TextView) rootView.findViewById(R.id.id_tv_topline_info_comment_count);//评论数
-        btn_writeCommont = (Button) rootView.findViewById(R.id.id_btn_writecomment);
-        btn_commontList = (Button) rootView.findViewById(R.id.id_btn_commentlist);
-        btn_private = (Button) rootView.findViewById(R.id.id_btn_private);
-        btn_share = (Button) rootView.findViewById(R.id.id_btn_share);
+        rl_writeCommont = (RelativeLayout) rootView.findViewById(R.id.id_rl_writecomment);
+        rl_commontList = (RelativeLayout) rootView.findViewById(R.id.id_rl_commentlist);
+        rl_private = (RelativeLayout) rootView.findViewById(R.id.id_rl_private);
+        btn_share = (RelativeLayout) rootView.findViewById(R.id.id_rl_share);
         contentScrollView = (ScrollView) rootView.findViewById(R.id.id_scrollview_info_content);
 
         commentInputView = new CommentInputView(getActivity(), null, 0);
@@ -227,7 +227,7 @@ public class ItemInfoFragment extends Fragment {
             }
         });
 
-        this.btn_writeCommont.setOnClickListener(new View.OnClickListener() {//写评论
+        this.rl_writeCommont.setOnClickListener(new View.OnClickListener() {//写评论
             @Override
             public void onClick(View view) {//写评论
                 SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
@@ -266,7 +266,7 @@ public class ItemInfoFragment extends Fragment {
             }
         });
 
-        this.btn_commontList.setOnClickListener(new View.OnClickListener() {//评论列表
+        this.rl_commontList.setOnClickListener(new View.OnClickListener() {//评论列表
             @Override
             public void onClick(View view) {//查看评论列表
                 Bundle args = new Bundle();
@@ -284,7 +284,7 @@ public class ItemInfoFragment extends Fragment {
             }
         });
 
-        this.btn_private.setOnClickListener(new View.OnClickListener() {
+        this.rl_private.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//收藏
                 Utils.alertMessageDialog("提示", "收藏成功！");//TODO:
@@ -298,51 +298,6 @@ public class ItemInfoFragment extends Fragment {
             }
         });
 
-//        this.btn_share.setOnClickListener(new View.OnClickListener() {//分享
-//            @Override
-//            public void onClick(View view) {
-//                if (addSharePoped) {
-//                    return;
-//                }
-//                addSharePoped = true;
-//                showOrHideNewsShareView(true);
-//            }
-//        });
-//
-//        this.newsShareView.btnFriends.setOnClickListener(new View.OnClickListener() {//分享至朋友圈
-//            @Override
-//            public void onClick(View view) {
-//                if (!addSharePoped) {
-//                    return;
-//                }
-//                addSharePoped = false;
-//                Toast.makeText(getActivity(), "分享至微信朋友圈", Toast.LENGTH_SHORT).show();
-//                showOrHideNewsShareView(false);
-//            }
-//        });
-//
-//        this.newsShareView.btnWeixin.setOnClickListener(new View.OnClickListener() {//分享至好友
-//            @Override
-//            public void onClick(View view) {
-//                if (!addSharePoped) {
-//                    return;
-//                }
-//                addSharePoped = false;
-//                Toast.makeText(getActivity(), "分享至微信", Toast.LENGTH_SHORT).show();
-//                showOrHideNewsShareView(false);
-//            }
-//        });
-//
-//        this.newsShareView.btnCancel.setOnClickListener(new View.OnClickListener() {//分享-取消
-//            @Override
-//            public void onClick(View view) {
-//                if (!addSharePoped) {
-//                    return;
-//                }
-//                addSharePoped = false;
-//                showOrHideNewsShareView(false);
-//            }
-//        });
     }
 
     //显示或隐藏评论视图
@@ -398,8 +353,16 @@ public class ItemInfoFragment extends Fragment {
         if (newsInfo != null) {
             this.tv_title.setText(newsInfo.getData().getTitle());
             this.tv_createtime.setText(newsInfo.getData().getModifyTime());
-            this.tv_sourse.setText(newsInfo.getData().getSource().getTitle());
-            this.tv_comment_count.setText(String.valueOf(newsInfo.getData().getCommentCount()));
+            String sourse = newsInfo.getData().getSource().getTitle().trim();
+            this.tv_sourse.setText(sourse);
+
+            //评论数
+            int commentCount = newsInfo.getData().getCommentCount();
+            if (commentCount > 0) {
+                this.tv_comment_count.setText(String.valueOf(commentCount));
+            } else {
+                this.tv_comment_count.setVisibility(View.GONE);
+            }
         }
     }
 

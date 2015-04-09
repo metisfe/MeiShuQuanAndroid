@@ -14,6 +14,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -47,7 +48,8 @@ public class CommentListFragment extends Fragment {
     private ViewGroup rootView;
     private DragListView listView;
     private TextView tvCommentCount;
-    private Button btnBack, btnWriteComment, btnCommentlist, btnShare, btnPrivate;
+    private Button btnBack;
+    private RelativeLayout rl_WriteComment, rl_Commentlist, rl_Share, rl_Private;
     private CommentInputView commentInputView;
 
 
@@ -99,10 +101,10 @@ public class CommentListFragment extends Fragment {
     private void initView(ViewGroup rootView) {
         listView = (DragListView) rootView.findViewById(R.id.id_topline_comment_list);
         btnBack = (Button) rootView.findViewById(R.id.id_btn_back);
-        btnCommentlist = (Button) rootView.findViewById(R.id.id_btn_commentlist);
-        btnWriteComment = (Button) rootView.findViewById(R.id.id_btn_writecomment);
-        btnShare = (Button) rootView.findViewById(R.id.id_btn_share);
-        btnPrivate = (Button) rootView.findViewById(R.id.id_btn_private);
+        rl_Commentlist = (RelativeLayout) rootView.findViewById(R.id.id_rl_commentlist);//评论列表
+        rl_WriteComment = (RelativeLayout) rootView.findViewById(R.id.id_rl_writecomment);//写评论
+        rl_Share = (RelativeLayout) rootView.findViewById(R.id.id_rl_share);//分享
+        rl_Private = (RelativeLayout) rootView.findViewById(R.id.id_rl_private);//收藏
         tvCommentCount = (TextView) rootView.findViewById(R.id.id_tv_topline_info_comment_count);
         tvCommentCount.setText(String.valueOf(this.totalCommentCount));
         commentInputView = new CommentInputView(getActivity(), null, 0);
@@ -137,7 +139,7 @@ public class CommentListFragment extends Fragment {
             }
         });
 
-        btnWriteComment.setOnClickListener(new View.OnClickListener() {
+        rl_WriteComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
@@ -154,14 +156,14 @@ public class CommentListFragment extends Fragment {
             }
         });
 
-        this.btnCommentlist.setOnClickListener(new View.OnClickListener() {//评论列表
+        this.rl_Commentlist.setOnClickListener(new View.OnClickListener() {//评论列表
             @Override
             public void onClick(View view) {//查看评论列表
 
             }
         });
 
-        this.btnPrivate.setOnClickListener(new View.OnClickListener() {
+        this.rl_Private.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//收藏
                 TopLineOperator topLineOperator = TopLineOperator.getInstance();
@@ -177,7 +179,7 @@ public class CommentListFragment extends Fragment {
             }
         });
 
-        this.btnShare.setOnClickListener(new View.OnClickListener() {
+        this.rl_Share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new SharePopupWindow(MainApplication.UIContext, rootView);

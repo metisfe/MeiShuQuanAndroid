@@ -32,14 +32,6 @@
     <!-- 允许应用程序联网，以便向我们的服务器端发送数据 -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!--SMS-->
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
@@ -60,13 +52,6 @@
             android:name=".activity.ChatActivity"
             android:configChanges="locale|layoutDirection|fontScale"
             android:screenOrientation="portrait"></activity>
-
-        <!--SMS activity-->
-        <activity
-            android:name="cn.smssdk.SMSSDKUIShell"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <!-- ###################注册SDK使用的Activity###################### -->
         <meta-data

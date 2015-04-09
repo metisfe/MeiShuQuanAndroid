@@ -1,7 +1,5 @@
 package com.metis.meishuquan.fragment.login;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -22,10 +20,8 @@ import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.model.assess.Channel;
 import com.metis.meishuquan.model.enums.IdType;
 import com.metis.meishuquan.model.login.Identity;
 import com.metis.meishuquan.model.login.IdentityType;
@@ -34,8 +30,6 @@ import com.metis.meishuquan.util.SharedPreferencesUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.smssdk.SMSSDK;
 
 /**
  * Fragment:选择身份
