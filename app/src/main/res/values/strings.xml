@@ -29,6 +29,7 @@
     <string name="title_activity_about">AboutActivity</string>
     <string name="title_activity_info">InfoActivity</string>
     <string name="title_activity_input">InputActivity</string>
+    <string name="title_activity_my_favorites">MyFavoritesActivity</string>
 
 
 </resources>

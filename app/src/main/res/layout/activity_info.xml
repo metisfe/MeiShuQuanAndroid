@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#cccccc"
-    tools:context="com.metis.meishuquan.activity.InfoActivity">
+    tools:context="com.metis.meishuquan.activity.info.InfoActivity">
     <RelativeLayout
         android:id="@+id/info_title"
         android:layout_width="fill_parent"

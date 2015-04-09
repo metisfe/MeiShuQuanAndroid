@@ -73,4 +73,8 @@
         <attr name="secondaryText" format="string|reference"/>
         <attr name="secondaryTextVisible" format="boolean"/>
     </declare-styleable>
+
+    <declare-styleable name="TitleView">
+        <attr name="titleText" format="reference|string"/>
+    </declare-styleable>
 </resources>

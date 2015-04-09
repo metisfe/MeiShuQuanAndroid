@@ -6,25 +6,25 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.activity.AdvanceActivity;
-import com.metis.meishuquan.activity.InfoActivity;
-import com.metis.meishuquan.activity.SettingActivity;
+import com.metis.meishuquan.activity.info.AdvanceActivity;
+import com.metis.meishuquan.activity.info.InfoActivity;
+import com.metis.meishuquan.activity.info.DataListActivity;
+import com.metis.meishuquan.activity.info.MyFavoritesActivity;
+import com.metis.meishuquan.activity.info.SettingActivity;
 import com.metis.meishuquan.fragment.login.LoginFragment;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
-import com.metis.meishuquan.model.contract.ReturnInfo;
-import com.metis.meishuquan.model.login.User;
+import com.metis.meishuquan.model.commons.Item;
+import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.view.shared.TabBar;
-import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
-import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+
+import java.util.List;
 
 /**
  * Created by wudi on 3/15/2015.
@@ -35,6 +35,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
 
     private TabBar tabBar;
     private View mInfoContainer = null, mLoginView;
+    private TextView mInfoName = null;
     private View mCollectionView, mAskView, mCommentView, mClassesView, mNameCardView, mAdvanceView, mSettingView;
 
     @Override
@@ -51,6 +52,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
         mInfoContainer = view.findViewById(R.id.my_info_profile_container);
         mLoginView = view.findViewById(R.id.my_info_login);
+        mInfoName = (TextView)view.findViewById(R.id.my_info_name);
 
         mCollectionView = view.findViewById(R.id.my_info_collections);
         mAskView = view.findViewById(R.id.my_info_asks);
@@ -75,14 +77,22 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        UserInfoOperator.getInstance().getUserInfo("0", new UserInfoOperator.OnGetListener<User>() {
+        UserInfoOperator.getInstance().getUserInfo("100001", new UserInfoOperator.OnGetListener<User>() {
             @Override
             public void onGet(boolean succeed, User user) {
                 if (succeed) {
                     mLoginView.setVisibility(View.GONE);
+                    mInfoName.setText(user.getName());
                 } else {
                     mLoginView.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+
+        UserInfoOperator.getInstance().getFavoriteList("100001", new UserInfoOperator.OnGetListener<List<Item>>() {
+            @Override
+            public void onGet(boolean succeed, List<Item> items) {
+
             }
         });
     }
@@ -97,6 +107,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 showLoginFragment();
                 break;
             case R.id.my_info_collections:
+                startActivity(new Intent(getActivity(), MyFavoritesActivity.class));
                 break;
             case R.id.my_info_asks:
                 break;

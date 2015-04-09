@@ -1,4 +1,4 @@
-package com.metis.meishuquan.activity;
+package com.metis.meishuquan.activity.info;
 
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
