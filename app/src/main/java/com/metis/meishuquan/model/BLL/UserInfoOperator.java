@@ -5,6 +5,8 @@ import android.util.Log;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
+import com.metis.meishuquan.model.commons.Item;
+import com.metis.meishuquan.model.commons.Result;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
@@ -17,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,7 +31,8 @@ public class UserInfoOperator {
 
     private static UserInfoOperator sOperator = new UserInfoOperator();
 
-    private static String URL_ = "v1.1/UserCenter/GetUser?userId=";
+    private static String URL_ = "v1.1/UserCenter/GetUser?userId=",
+                            URL_FAVORITE = "v1.1/UserCenter/MyFavorites?userid=100001&index=1";
 
     public static UserInfoOperator getInstance () {
         return sOperator;
@@ -59,25 +63,27 @@ public class UserInfoOperator {
                     if (result != null) {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
-                        try {
-                            JSONObject jsonObject = new JSONObject(json);
-                            String data = jsonObject.getString("data");
-                            User user = gson.fromJson(data, User.class);
+                        Log.v(TAG, "getUserInfo json=" + json);
+                        Result<User> resultData = gson.fromJson(json, new TypeToken<Result<User>>(){}.getType());
+                        if (resultData != null) {
+                            User user = resultData.getData();
+                            mUserCache.put(uid, user);
 
-                            Log.v(TAG, "getUserInfo user=" + user.getName());
-                            if (user != null) {
-                                mUserCache.put(uid, user);
+                            if (userListener != null) {
                                 userListener.onGet(true, user);
-                            } else {
+                            }
+                        } else {
+                            if (userListener != null) {
                                 userListener.onGet(false, null);
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+
                         }
 
-
                     } else {
-                        userListener.onGet(false, null);
+                        if (userListener != null) {
+                            userListener.onGet(false, null);
+                        }
+
                     }
 
                 }
@@ -88,6 +94,42 @@ public class UserInfoOperator {
                 sb.append("&pwd=" + pwd);
                 ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }*/
+        }
+    }
+
+    public void getFavoriteList (String uid, final OnGetListener<List<Item>> listener) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            /*StringBuilder sb = new StringBuilder();
+            sb.append()*/
+            ApiDataProvider.getmClient().invokeApi(URL_FAVORITE, null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String json = gson.toJson(result);
+                        Log.v(TAG, "getFavoriteList json=" + json);
+                        Result<List<Item>> resultData = gson.fromJson(json, new TypeToken<Result<List<Item>>>(){}.getType());
+                        if (resultData != null) {
+                            List<Item> list = resultData.getData();
+                            if (listener != null) {
+                                listener.onGet(true, list);
+                            }
+
+                        } else {
+                            if (listener != null) {
+                                listener.onGet(false, null);
+                            }
+
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onGet(false, null);
+                        }
+
+                    }
+                }
+            });
         }
     }
 

@@ -15,11 +15,16 @@ import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.AdvanceActivity;
 import com.metis.meishuquan.activity.info.InfoActivity;
+import com.metis.meishuquan.activity.info.DataListActivity;
+import com.metis.meishuquan.activity.info.MyFavoritesActivity;
 import com.metis.meishuquan.activity.info.SettingActivity;
 import com.metis.meishuquan.fragment.login.LoginFragment;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
+import com.metis.meishuquan.model.commons.Item;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.view.shared.TabBar;
+
+import java.util.List;
 
 /**
  * Created by wudi on 3/15/2015.
@@ -83,6 +88,13 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 }
             }
         });
+
+        UserInfoOperator.getInstance().getFavoriteList("100001", new UserInfoOperator.OnGetListener<List<Item>>() {
+            @Override
+            public void onGet(boolean succeed, List<Item> items) {
+
+            }
+        });
     }
 
     @Override
@@ -95,6 +107,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 showLoginFragment();
                 break;
             case R.id.my_info_collections:
+                startActivity(new Intent(getActivity(), MyFavoritesActivity.class));
                 break;
             case R.id.my_info_asks:
                 break;
