@@ -37,6 +37,9 @@
         android:layout_toLeftOf="@+id/my_info_btn_arrow"
         android:layout_centerVertical="true"
         android:gravity="center_vertical|right"
+        android:textColor="#7e7e7e"
+        android:textSize="13sp"
+        android:layout_marginRight="10dp"
         />
     <ImageView
         android:id="@+id/my_info_btn_arrow"

@@ -90,7 +90,23 @@
                     android:layout_marginRight="10dp"
                     />
             </com.metis.meishuquan.view.shared.MyInfoBtn>
+            <com.metis.meishuquan.view.shared.MyInfoBtn
+                android:id="@+id/info_meishuquan_id"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                bs:text="@string/info_meishuquan_id"
+                bs:imageVisible="false"
+                >
+                <include
+                    layout="@layout/divider_horizontail"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    />
+            </com.metis.meishuquan.view.shared.MyInfoBtn>
             <RelativeLayout
+                android:id="@+id/info_recents_container"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:minHeight="45dp"
@@ -114,6 +130,13 @@
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/info_btn_arrow"
                     android:layout_toRightOf="@+id/info_recents"
+                    android:textColor="#7e7e7e"
+                    android:textSize="13sp"
+                    android:layout_marginRight="10dp"
+                    android:gravity="right|center_vertical"
+                    android:maxLines="2"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
                     />
                 <ImageView
                     android:id="@+id/info_btn_arrow"
@@ -236,6 +259,21 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 bs:text="@string/info_cv"
+                bs:imageVisible="false"
+                >
+                <include
+                    layout="@layout/divider_horizontail"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    />
+            </com.metis.meishuquan.view.shared.MyInfoBtn>
+            <com.metis.meishuquan.view.shared.MyInfoBtn
+                android:id="@+id/info_achievement"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                bs:text="@string/info_achievement"
                 bs:imageVisible="false"
                 >
                 <include

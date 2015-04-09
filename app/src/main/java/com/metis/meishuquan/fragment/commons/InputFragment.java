@@ -25,6 +25,7 @@ public class InputFragment extends Fragment {
     private boolean isSingleLine = false;
     private int mMaxCount = 500;
     private CharSequence mHint = null;
+    private CharSequence mText = null;
 
     private TextWatcher watcher = new TextWatcher() {
         @Override
@@ -61,6 +62,7 @@ public class InputFragment extends Fragment {
         setSingleLine(isSingleLine);
         setMaxCount(mMaxCount);
         setHint(mHint);
+        setText(mText);
 
         mInputEt.addTextChangedListener(watcher);
 
@@ -92,6 +94,14 @@ public class InputFragment extends Fragment {
 
         }
 
+    }
+
+    public void setText (CharSequence cs) {
+        mText = cs;
+        if (mInputEt != null) {
+            mInputEt.setText(mText);
+            mInputEt.selectAll();
+        }
     }
 
     public void setHint (CharSequence cs) {

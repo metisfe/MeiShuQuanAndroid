@@ -6,22 +6,32 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.AdvanceActivity;
 import com.metis.meishuquan.activity.InfoActivity;
 import com.metis.meishuquan.activity.SettingActivity;
 import com.metis.meishuquan.fragment.login.LoginFragment;
+import com.metis.meishuquan.model.BLL.UserInfoOperator;
+import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.login.User;
 import com.metis.meishuquan.view.shared.TabBar;
+import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 /**
  * Created by wudi on 3/15/2015.
  */
 public class MyInfoFragment extends Fragment implements View.OnClickListener {
+
+    private static final String TAG = MyInfoFragment.class.getSimpleName();
 
     private TabBar tabBar;
     private View mInfoContainer = null, mLoginView;
@@ -60,6 +70,21 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         mNameCardView.setOnClickListener(this);
         mAdvanceView.setOnClickListener(this);
         mSettingView.setOnClickListener(this);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        UserInfoOperator.getInstance().getUserInfo("0", new UserInfoOperator.OnGetListener<User>() {
+            @Override
+            public void onGet(boolean succeed, User user) {
+                if (succeed) {
+                    mLoginView.setVisibility(View.GONE);
+                } else {
+                    mLoginView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     @Override

@@ -21,6 +21,7 @@
     <string name="info_title">个人信息</string>
     <string name="info_profile">头像</string>
     <string name="info_nick">昵称</string>
+    <string name="info_meishuquan_id">美术圈号</string>
     <string name="info_recents">个性签名</string>
     <string name="info_gender">性别</string>
     <string name="info_ages">年龄</string>
@@ -33,6 +34,7 @@
     <string name="info_department_address">机构地址</string>
     <string name="info_good_at">擅长科目</string>
     <string name="info_cv">个人简历</string>
+    <string name="info_achievement">教学成果</string>
     
     <string name="about_to_score">我要评分</string>
     <string name="about_current_version">当前版本</string>

@@ -17,9 +17,13 @@ public class InputActivity extends FragmentActivity {
             KEY_DEFAULT_STR = "default_str",
             KEY_SINGLE_LINE = "single_line";
 
+    public static final int
+            REQUEST_CODE_NICK = 100,
+            REQUEST_CODE_RECENTS = 102;
+
     private InputFragment mInputFragment = null;
 
-    private String mDefaultStr = null;
+    private CharSequence mDefaultStr = null;
     private boolean isSingleLine = false;
 
     @Override
@@ -32,17 +36,18 @@ public class InputActivity extends FragmentActivity {
             public void onClick(View v) {
                 Intent it = new Intent();
                 it.putExtra(KEY_DEFAULT_STR, mInputFragment.getText());
-                setResult(200, it);
+                setResult(RESULT_OK, it);
                 finish();
             }
         });
 
         Intent it = getIntent();
-        mDefaultStr = it.getStringExtra(KEY_DEFAULT_STR);
+        mDefaultStr = it.getCharSequenceExtra(KEY_DEFAULT_STR);
         isSingleLine = it.getBooleanExtra(KEY_SINGLE_LINE, isSingleLine);
 
         mInputFragment = (InputFragment)getSupportFragmentManager().findFragmentById(R.id.input_fragment);
         mInputFragment.setSingleLine(isSingleLine);
+        mInputFragment.setText(mDefaultStr);
     }
 
     @Override

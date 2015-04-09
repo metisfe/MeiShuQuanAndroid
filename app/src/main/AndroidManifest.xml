@@ -284,6 +284,7 @@
             android:label="@string/title_activity_info"></activity>
         <activity
             android:name=".activity.InputActivity"
+            android:windowSoftInputMode="stateAlwaysVisible"
             android:label="@string/title_activity_input"></activity>
     </application>
 

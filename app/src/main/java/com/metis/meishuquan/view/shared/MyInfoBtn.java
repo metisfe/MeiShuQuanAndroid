@@ -23,7 +23,7 @@ public class MyInfoBtn extends RelativeLayout {
 
     private Drawable mSrcDrawable = null;
     private String mText = null;
-    private String mSecondaryText = null;
+    private CharSequence mSecondaryText = null;
 
     private boolean mImageVisible = true;
     private boolean mSecondaryTextVisible = true;
@@ -67,7 +67,7 @@ public class MyInfoBtn extends RelativeLayout {
         mSecondaryTv.setVisibility(mSecondaryTextVisible ? View.VISIBLE : View.GONE);
     }
 
-    public void setSecondaryText (String txt) {
+    public void setSecondaryText (CharSequence txt) {
         mSecondaryText = txt;
         mSecondaryTv.setText(txt);
     }
