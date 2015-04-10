@@ -10,7 +10,9 @@
         android:layout_width="100dp"
         android:layout_height="75dp"
         android:layout_centerVertical="true"
-        android:src="@drawable/img_topline_default" />
+        android:src="@drawable/img_topline_default"
+        android:scaleType="centerCrop"
+        />
 
     <RelativeLayout
         android:id="@+id/rl_title"

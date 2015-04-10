@@ -7,11 +7,11 @@ import android.view.MenuItem;
 
 import com.metis.meishuquan.R;
 
-public class MyCourseActivity extends DataListActivity {
+public class MyCommentsActivity extends DataListActivity {
 
     @Override
     public String getTitleText() {
-        return getString(R.string.my_info_classes);
+        return getString(R.string.my_info_comments);
     }
 
     @Override

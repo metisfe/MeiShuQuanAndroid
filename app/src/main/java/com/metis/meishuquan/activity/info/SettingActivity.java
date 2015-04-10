@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.metis.meishuquan.R;
 
-public class SettingActivity extends FragmentActivity implements View.OnClickListener {
+public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
     private View mModifyPwdView, mClearCacheView, mAboutUsView;
 

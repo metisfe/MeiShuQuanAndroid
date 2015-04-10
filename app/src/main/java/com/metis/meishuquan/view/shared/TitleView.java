@@ -16,9 +16,9 @@ import com.metis.meishuquan.R;
 public class TitleView extends RelativeLayout {
 
     private ImageView mBackIv = null;
-    private TextView mTitleTv = null;
+    private TextView mTitleTv = null, mTitleRightTv = null;
 
-    private String mTitle = null;
+    private String mTitle = null, mTitleRight = null;
 
     public TitleView(Context context) {
         this(context, null);
@@ -34,6 +34,7 @@ public class TitleView extends RelativeLayout {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.TitleView);
         try {
             mTitle = typedArray.getString(R.styleable.TitleView_titleText);
+            mTitleRight = typedArray.getString(R.styleable.TitleView_titleTextRight);
         } finally {
             typedArray.recycle();
         }
@@ -44,12 +45,22 @@ public class TitleView extends RelativeLayout {
     public void initView (Context context) {
         LayoutInflater.from(context).inflate(R.layout.layout_title, this);
         mTitleTv = (TextView)findViewById(R.id.title_tv);
+        mTitleRightTv = (TextView)findViewById(R.id.title_right);
         mBackIv = (ImageView)findViewById(R.id.back);
 
         mTitleTv.setText(mTitle);
+        mTitleRightTv.setText(mTitleRight);
     }
 
     public void setBackListener (OnClickListener listener) {
         mBackIv.setOnClickListener(listener);
+    }
+
+    public void setRightListener (OnClickListener listener) {
+        mTitleRightTv.setOnClickListener(listener);
+    }
+
+    public void setTitleText (String title) {
+        mTitleTv.setText(title);
     }
 }

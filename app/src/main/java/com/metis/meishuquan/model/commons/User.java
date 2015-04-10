@@ -151,4 +151,13 @@ public class User implements Serializable {
     public void setRelationType(int relationType) {
         this.relationType = relationType;
     }
+
+    public int getAttCount () {
+        //TODO
+        return 0;
+    }
+    public int getFollowsCount () {
+        //TODO
+        return 0;
+    }
 }

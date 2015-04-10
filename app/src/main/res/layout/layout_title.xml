@@ -22,4 +22,15 @@
         android:textColor="@color/tv_title_bar"
         android:textSize="20sp"
         />
+    <TextView
+        android:id="@+id/title_right"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:gravity="center_vertical"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        />
 </RelativeLayout>

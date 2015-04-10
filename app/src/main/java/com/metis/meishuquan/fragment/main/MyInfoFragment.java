@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.AdvanceActivity;
 import com.metis.meishuquan.activity.info.InfoActivity;
 import com.metis.meishuquan.activity.info.DataListActivity;
+import com.metis.meishuquan.activity.info.MyAskActivity;
+import com.metis.meishuquan.activity.info.MyCommentsActivity;
 import com.metis.meishuquan.activity.info.MyCourseActivity;
 import com.metis.meishuquan.activity.info.MyFavoritesActivity;
 import com.metis.meishuquan.activity.info.SettingActivity;
@@ -36,7 +39,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
 
     private TabBar tabBar;
     private View mInfoContainer = null, mLoginView;
-    private TextView mInfoName = null;
+    private TextView mInfoName = null, mAttentionCountTv = null, mFollowersCountTv = null;
     private View mCollectionView, mAskView, mCommentView, mClassesView, mNameCardView, mAdvanceView, mSettingView;
 
     @Override
@@ -54,6 +57,8 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         mInfoContainer = view.findViewById(R.id.my_info_profile_container);
         mLoginView = view.findViewById(R.id.my_info_login);
         mInfoName = (TextView)view.findViewById(R.id.my_info_name);
+        mAttentionCountTv = (TextView)view.findViewById(R.id.my_info_attention);
+        mFollowersCountTv = (TextView)view.findViewById(R.id.my_info_followers);
 
         mCollectionView = view.findViewById(R.id.my_info_collections);
         mAskView = view.findViewById(R.id.my_info_asks);
@@ -83,19 +88,25 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
             public void onGet(boolean succeed, User user) {
                 if (succeed) {
                     mLoginView.setVisibility(View.GONE);
-                    mInfoName.setText(user.getName());
+                    fillUserInfo(user);
                 } else {
                     mLoginView.setVisibility(View.VISIBLE);
                 }
             }
         });
 
-        UserInfoOperator.getInstance().getFavoriteList("100001", new UserInfoOperator.OnGetListener<List<Item>>() {
+        /*UserInfoOperator.getInstance().getFavoriteList("100001", new UserInfoOperator.OnGetListener<List<Item>>() {
             @Override
             public void onGet(boolean succeed, List<Item> items) {
 
             }
-        });
+        });*/
+    }
+
+    private void fillUserInfo (User user) {
+        mInfoName.setText(user.getName());
+        mAttentionCountTv.setText(getString(R.string.my_info_count, user.getAttCount()));
+        mFollowersCountTv.setText(getString(R.string.my_info_count, user.getFollowsCount()));
     }
 
     @Override
@@ -111,8 +122,10 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 startActivity(new Intent(getActivity(), MyFavoritesActivity.class));
                 break;
             case R.id.my_info_asks:
+                startActivity(new Intent(getActivity(), MyAskActivity.class));
                 break;
             case R.id.my_info_comments:
+                startActivity(new Intent(getActivity(), MyCommentsActivity.class));
                 break;
             case R.id.my_info_classes:
                 startActivity(new Intent(getActivity(), MyCourseActivity.class));

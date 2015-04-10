@@ -66,13 +66,47 @@
                         android:textSize="13sp"
                         android:textColor="#424242"
                         />
-                    <TextView
+                    <LinearLayout
                         android:id="@+id/my_info_attention_and_followers"
-                        android:layout_width="fill_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:textSize="13sp"
-                        />
+                        android:orientation="horizontal"
+                        >
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:textSize="13sp"
+                            android:textColor="#424242"
+                            android:text="@string/my_info_attention"
+                            />
+                        <TextView
+                            android:id="@+id/my_info_attention"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:textSize="13sp"
+                            android:textColor="#7e7e7e"
+                            />
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:textSize="13sp"
+                            android:textColor="#424242"
+                            android:text="@string/my_info_followers"
+                            android:layout_marginLeft="20dp"
+                            />
+                        <TextView
+                            android:id="@+id/my_info_followers"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:textSize="13sp"
+                            android:textColor="#7e7e7e"
+                            />
+                    </LinearLayout>
+
                 </LinearLayout>
                 <TextView
                     android:id="@+id/my_info_login"
@@ -101,7 +135,7 @@
                 android:id="@+id/my_info_collections"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                bs:src="@drawable/ic_launcher"
+                bs:src="@drawable/my_info_collection"
                 bs:text="@string/my_info_collections"
                 bs:secondaryTextVisible="false"
                 android:layout_marginTop="@dimen/px_to_dip_10"
@@ -114,7 +148,7 @@
                 android:id="@+id/my_info_asks"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                bs:src="@drawable/ic_launcher"
+                bs:src="@drawable/my_info_ask"
                 bs:text="@string/my_info_asks"
                 bs:secondaryTextVisible="false"
                 >
@@ -129,7 +163,7 @@
                 android:id="@+id/my_info_comments"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                bs:src="@drawable/ic_launcher"
+                bs:src="@drawable/my_info_comment"
                 bs:text="@string/my_info_comments"
                 bs:secondaryTextVisible="false"
                 >
@@ -150,7 +184,7 @@
                 android:id="@+id/my_info_classes"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                bs:src="@drawable/ic_launcher"
+                bs:src="@drawable/my_info_course"
                 bs:text="@string/my_info_classes"
                 bs:secondaryTextVisible="false"
                 android:layout_marginTop="@dimen/px_to_dip_10"
@@ -172,7 +206,7 @@
                 android:id="@+id/my_info_name_card"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                bs:src="@drawable/ic_launcher"
+                bs:src="@drawable/my_info_name_card"
                 bs:text="@string/my_info_name_card"
                 bs:secondaryTextVisible="false"
                 android:layout_marginTop="@dimen/px_to_dip_10"
@@ -194,7 +228,7 @@
                 android:id="@+id/my_info_advances"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                bs:src="@drawable/ic_launcher"
+                bs:src="@drawable/my_info_advance"
                 bs:text="@string/my_info_advaces"
                 bs:secondaryTextVisible="false"
                 android:layout_marginTop="@dimen/px_to_dip_10"
@@ -203,7 +237,7 @@
                 android:id="@+id/my_info_setting"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                bs:src="@drawable/ic_launcher"
+                bs:src="@drawable/my_info_setting"
                 bs:text="@string/my_info_settings"
                 bs:secondaryTextVisible="false"
                 android:layout_marginTop="@dimen/px_to_dip_10"

@@ -3,12 +3,13 @@ package com.metis.meishuquan.activity.info;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.BaseAdapter;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.fragment.commons.DataListFragment;
 import com.metis.meishuquan.view.shared.TitleView;
 
-public abstract class DataListActivity extends FragmentActivity {
+public abstract class DataListActivity extends BaseActivity implements DataListFragment.OnDragListViewListener{
 
     private TitleView mTitleView = null;
 
@@ -26,15 +27,37 @@ public abstract class DataListActivity extends FragmentActivity {
                 finish();
             }
         });
+        mTitleView.setTitleText(getTitleText());
 
         mDataListFragment = (DataListFragment)getSupportFragmentManager().findFragmentById(R.id.my_favorites_fragment);
+        mDataListFragment.setOnDragListener(this);
+    }
+
+    public String getTitleText () {
+        return getString(R.string.app_name).toString();
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        loadData(0);
+        loadData(1);
     }
 
     public abstract void loadData (int index);
+
+    public void setAdapter (BaseAdapter adapter) {
+        mDataListFragment.setAdapter(adapter);
+    }
+
+    public void notifyDataSetChanged () {
+        mDataListFragment.notifyDataSetChanged();
+    }
+
+    public void onLoadMoreComplete () {
+        mDataListFragment.onLoadMoreComplete();
+    }
+
+    public void onRefreshComplete () {
+        mDataListFragment.onRefreshComplete();
+    }
 }

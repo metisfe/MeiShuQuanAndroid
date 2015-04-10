@@ -289,6 +289,18 @@
             android:name=".activity.login.LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
+        <activity
+            android:name=".activity.info.MyAskActivity"
+            android:label="@string/title_activity_my_ask" >
+        </activity>
+        <activity
+            android:name=".activity.info.MyCommentsActivity"
+            android:label="@string/title_activity_my_comments" >
+        </activity>
+        <activity
+            android:name=".activity.info.DepartmentActivity"
+            android:label="@string/title_activity_department" >
+        </activity>
     </application>
 
 </manifest>
