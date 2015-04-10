@@ -16,6 +16,8 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.AdvanceActivity;
 import com.metis.meishuquan.activity.info.InfoActivity;
 import com.metis.meishuquan.activity.info.DataListActivity;
+import com.metis.meishuquan.activity.info.MyAskActivity;
+import com.metis.meishuquan.activity.info.MyCommentsActivity;
 import com.metis.meishuquan.activity.info.MyCourseActivity;
 import com.metis.meishuquan.activity.info.MyFavoritesActivity;
 import com.metis.meishuquan.activity.info.SettingActivity;
@@ -90,12 +92,12 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        UserInfoOperator.getInstance().getFavoriteList("100001", new UserInfoOperator.OnGetListener<List<Item>>() {
+        /*UserInfoOperator.getInstance().getFavoriteList("100001", new UserInfoOperator.OnGetListener<List<Item>>() {
             @Override
             public void onGet(boolean succeed, List<Item> items) {
 
             }
-        });
+        });*/
     }
 
     @Override
@@ -111,8 +113,10 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 startActivity(new Intent(getActivity(), MyFavoritesActivity.class));
                 break;
             case R.id.my_info_asks:
+                startActivity(new Intent(getActivity(), MyAskActivity.class));
                 break;
             case R.id.my_info_comments:
+                startActivity(new Intent(getActivity(), MyCommentsActivity.class));
                 break;
             case R.id.my_info_classes:
                 startActivity(new Intent(getActivity(), MyCourseActivity.class));

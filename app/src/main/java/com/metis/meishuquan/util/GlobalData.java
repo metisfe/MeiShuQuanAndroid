@@ -36,11 +36,21 @@ public class GlobalData {
 
     public int getTitleBarTypeSelected()
     {
-        return titleBarTypeSelected[tabTypeSelected.ordinal()];
+
+        return titleBarTypeSelected[getIndexCompat ()];
     }
 
     public void setTitleBarTypeSelected(int titleBarTypeSelected)
     {
-        this.titleBarTypeSelected[tabTypeSelected.ordinal()] = titleBarTypeSelected;
+        //this.titleBarTypeSelected[tabTypeSelected.ordinal()] = titleBarTypeSelected;
+        this.titleBarTypeSelected[getIndexCompat ()] = titleBarTypeSelected;
+    }
+
+    private int getIndexCompat () {
+        int index = tabTypeSelected.ordinal();
+        if (index >= titleBarTypeSelected.length) {
+            index = titleBarTypeSelected.length - 1;
+        }
+        return index;
     }
 }

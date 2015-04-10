@@ -15,8 +15,6 @@ import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import org.apache.http.client.methods.HttpGet;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,8 +29,11 @@ public class UserInfoOperator {
 
     private static UserInfoOperator sOperator = new UserInfoOperator();
 
-    private static String URL_ = "v1.1/UserCenter/GetUser?userId=",
-                            URL_FAVORITE = "v1.1/UserCenter/MyFavorites?userid=100001&index=1";
+    private static String URL_CENTER = "v1.1/UserCenter/GetUser?",
+                            URL_FAVORITE = "v1.1/UserCenter/MyFavorites?";
+
+    private static String KEY_USER_ID = "userId",
+                        KEY_INDEX = "index";
 
     public static UserInfoOperator getInstance () {
         return sOperator;
@@ -56,7 +57,9 @@ public class UserInfoOperator {
             }
         }
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
-            ApiDataProvider.getmClient().invokeApi(URL_ + uid, null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+            StringBuilder sb = new StringBuilder(URL_CENTER);
+            sb.append(KEY_USER_ID + "=" + uid);
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
@@ -97,19 +100,22 @@ public class UserInfoOperator {
         }
     }
 
-    public void getFavoriteList (String uid, final OnGetListener<List<Item>> listener) {
+    public void getFavoriteList (String uid, final int index, final OnGetListener<List<Item>> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
-            /*StringBuilder sb = new StringBuilder();
-            sb.append()*/
-            ApiDataProvider.getmClient().invokeApi(URL_FAVORITE, null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+            StringBuilder sb = new StringBuilder(URL_FAVORITE);
+            sb.append(KEY_USER_ID + "=" + uid);
+            sb.append("&" + KEY_INDEX + "=" + index);
+            Log.v(TAG, "before request " + sb);
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                     if (result != null) {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
-                        Log.v(TAG, "getFavoriteList json=" + json);
-                        Result<List<Item>> resultData = gson.fromJson(json, new TypeToken<Result<List<Item>>>(){}.getType());
+                        Log.v(TAG, index + " getFavoriteList json=" + json);
+                        Result<List<Item>> resultData = gson.fromJson(json, new TypeToken<Result<List<Item>>>() {
+                        }.getType());
                         if (resultData != null) {
                             List<Item> list = resultData.getData();
                             if (listener != null) {
@@ -132,6 +138,10 @@ public class UserInfoOperator {
             });
         }
     }
+
+    /*public void getCourseList (String uid, int index, int type, OnGetListener<>) {
+
+    }*/
 
     public interface OnGetListener<T> {
         public void onGet (boolean succeed, T t);

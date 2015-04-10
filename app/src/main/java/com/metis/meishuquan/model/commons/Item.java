@@ -52,4 +52,18 @@ public class Item implements Serializable {
     public void setType(int type) {
         this.type = type;
     }
+
+    public int getReadCount () {
+        //TODO
+        return 0;
+    }
+
+    public int getCommentCount () {
+        //TODO
+        return 0;
+    }
+
+    public String getSource () {
+        return "unknown";
+    }
 }

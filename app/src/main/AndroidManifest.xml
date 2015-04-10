@@ -294,6 +294,14 @@
             android:name=".activity.info.MyCourseActivity"
             android:label="@string/title_activity_my_course" >
         </activity>
+        <activity
+            android:name=".activity.info.MyAskActivity"
+            android:label="@string/title_activity_my_ask" >
+        </activity>
+        <activity
+            android:name=".activity.info.MyCommentsActivity"
+            android:label="@string/title_activity_my_comments" >
+        </activity>
     </application>
 
 </manifest>
