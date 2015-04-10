@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
+import android.text.method.TransformationMethod;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +28,7 @@ public class InputFragment extends Fragment {
     private int mMaxCount = 500;
     private CharSequence mHint = null;
     private CharSequence mText = null;
+    private int mInputType = InputType.TYPE_NULL;
 
     private TextWatcher watcher = new TextWatcher() {
         @Override
@@ -63,6 +66,8 @@ public class InputFragment extends Fragment {
         setMaxCount(mMaxCount);
         setHint(mHint);
         setText(mText);
+        mInputEt.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        //setInputType(mInputType);
 
         mInputEt.addTextChangedListener(watcher);
 
@@ -124,5 +129,12 @@ public class InputFragment extends Fragment {
 
     public CharSequence getText () {
         return mInputEt.getText();
+    }
+
+    public void setInputType(int type) {
+        mInputType = type;
+        if (mInputEt != null) {
+            mInputEt.setInputType(type);
+        }
     }
 }
