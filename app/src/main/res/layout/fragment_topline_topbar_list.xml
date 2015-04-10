@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <com.metis.meishuquan.view.shared.DragListView
         android:id="@+id/listview_topbar_fragment"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@color/bg_listview"
-        android:layout_height="match_parent">
-    </com.metis.meishuquan.view.shared.DragListView>
+        android:listSelector="@color/transparent"></com.metis.meishuquan.view.shared.DragListView>
 
 </LinearLayout>

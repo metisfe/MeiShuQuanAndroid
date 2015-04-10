@@ -18,7 +18,7 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.util.Utils;
 
 /**
- * Created by xiaoxiao on 15/3/25.
+ * Created by wj on 15/3/25.
  */
 public class DragListView extends ListView implements AbsListView.OnScrollListener{
     // 区分当前操作是刷新还是加载
