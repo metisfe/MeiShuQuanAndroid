@@ -33,6 +33,7 @@
     <string name="title_activity_my_course">MyCourseActivity</string>
     <string name="title_activity_my_ask">MyAskActivity</string>
     <string name="title_activity_my_comments">MyCommentsActivity</string>
+    <string name="title_activity_department">DepartmentActivity</string>
 
 
 </resources>

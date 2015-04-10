@@ -66,13 +66,47 @@
                         android:textSize="13sp"
                         android:textColor="#424242"
                         />
-                    <TextView
+                    <LinearLayout
                         android:id="@+id/my_info_attention_and_followers"
-                        android:layout_width="fill_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:textSize="13sp"
-                        />
+                        android:orientation="horizontal"
+                        >
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:textSize="13sp"
+                            android:textColor="#424242"
+                            android:text="@string/my_info_attention"
+                            />
+                        <TextView
+                            android:id="@+id/my_info_attention"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:textSize="13sp"
+                            android:textColor="#7e7e7e"
+                            />
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:textSize="13sp"
+                            android:textColor="#424242"
+                            android:text="@string/my_info_followers"
+                            android:layout_marginLeft="20dp"
+                            />
+                        <TextView
+                            android:id="@+id/my_info_followers"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:textSize="13sp"
+                            android:textColor="#7e7e7e"
+                            />
+                    </LinearLayout>
+
                 </LinearLayout>
                 <TextView
                     android:id="@+id/my_info_login"

@@ -9,7 +9,7 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.fragment.commons.DataListFragment;
 import com.metis.meishuquan.view.shared.TitleView;
 
-public abstract class DataListActivity extends FragmentActivity implements DataListFragment.OnDragListViewListener{
+public abstract class DataListActivity extends BaseActivity implements DataListFragment.OnDragListViewListener{
 
     private TitleView mTitleView = null;
 

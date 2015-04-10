@@ -76,5 +76,6 @@
 
     <declare-styleable name="TitleView">
         <attr name="titleText" format="reference|string"/>
+        <attr name="titleTextRight" format="reference|string"/>
     </declare-styleable>
 </resources>

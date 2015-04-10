@@ -9,7 +9,7 @@ import android.view.View;
 
 import com.metis.meishuquan.R;
 
-public class AboutActivity extends FragmentActivity {
+public class AboutActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -8,20 +8,25 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.view.shared.TitleView;
 
-public class AdvanceActivity extends FragmentActivity {
+public class AdvanceActivity extends BaseActivity {
+
+    private TitleView mTitleView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_advance);
 
-        this.findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
+        mTitleView = (TitleView)findViewById(R.id.title);
+        mTitleView.setBackListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+
     }
 
 }

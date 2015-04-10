@@ -3,6 +3,7 @@ package com.metis.meishuquan.activity.info;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -18,9 +19,9 @@ import com.metis.meishuquan.view.shared.MyInfoBtn;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
-public class InfoActivity extends FragmentActivity implements View.OnClickListener {
+public class InfoActivity extends BaseActivity implements View.OnClickListener {
 
-    private MyInfoBtn mNickView, mGenderView, mGradeView;
+    private MyInfoBtn mNickView, mGenderView, mGradeView, mAgeView, mCvView, mDepartmentView;
 
     private View mRecentsContainer = null;
     private TextView mRecentsContentTv = null;
@@ -48,12 +49,18 @@ public class InfoActivity extends FragmentActivity implements View.OnClickListen
         mNickView = (MyInfoBtn)findViewById(R.id.info_nick);
         mGenderView = (MyInfoBtn)findViewById(R.id.info_gender);
         mGradeView = (MyInfoBtn)findViewById(R.id.info_level);
+        mAgeView = (MyInfoBtn)findViewById(R.id.info_age);
+        mDepartmentView = (MyInfoBtn)findViewById(R.id.info_department);
+        mCvView = (MyInfoBtn)findViewById(R.id.info_cv);
 
         mRecentsContainer = findViewById(R.id.info_recents_container);
         mRecentsContentTv = (TextView)findViewById(R.id.info_recents_content);
 
         mNickView.setOnClickListener(this);
         mRecentsContainer.setOnClickListener(this);
+        mAgeView.setOnClickListener(this);
+        mDepartmentView.setOnClickListener(this);
+        mCvView.setOnClickListener(this);
     }
 
     @Override
@@ -74,16 +81,19 @@ public class InfoActivity extends FragmentActivity implements View.OnClickListen
         Intent it = null;
         switch (v.getId()) {
             case R.id.info_nick:
-                it = new Intent(this, InputActivity.class);
-                it.putExtra(InputActivity.KEY_DEFAULT_STR, mNickView.getSecondaryText());
-                it.putExtra(InputActivity.KEY_SINGLE_LINE, true);
-                startActivityForResult(it, InputActivity.REQUEST_CODE_NICK);
+                startInputActivityForResult(getString(R.string.info_modify_nick), mNickView.getSecondaryText(), true, InputActivity.REQUEST_CODE_NICK);
                 break;
             case R.id.info_recents_container:
-                it = new Intent(this, InputActivity.class);
-                it.putExtra(InputActivity.KEY_DEFAULT_STR, mRecentsContentTv.getText());
-                it.putExtra(InputActivity.KEY_SINGLE_LINE, false);
-                startActivityForResult(it, InputActivity.REQUEST_CODE_RECENTS);
+                startInputActivityForResult(getString(R.string.info_recents), mRecentsContentTv.getText(), false, InputActivity.REQUEST_CODE_RECENTS);
+                break;
+            case R.id.info_age:
+                startInputActivityForResult(getString(R.string.info_ages), mAgeView.getSecondaryText(), true, InputActivity.REQUEST_CODE_AGE, InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                break;
+            case R.id.info_department:
+                startActivity(new Intent (this, DepartmentActivity.class));
+                break;
+            case R.id.info_cv:
+                startInputActivityForResult(mCvView.getText().toString(), mCvView.getSecondaryText(), false, InputActivity.REQUEST_CODE_CV);
                 break;
         }
     }
@@ -94,7 +104,6 @@ public class InfoActivity extends FragmentActivity implements View.OnClickListen
             case InputActivity.REQUEST_CODE_NICK:
                 if (resultCode == RESULT_OK) {
                     CharSequence nick = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR);
-                    Toast.makeText(this, "onActivityResult " + requestCode + " " + resultCode + " " + nick, Toast.LENGTH_SHORT).show();
                     mNickView.setSecondaryText(nick);
                 }
 
@@ -102,10 +111,20 @@ public class InfoActivity extends FragmentActivity implements View.OnClickListen
             case InputActivity.REQUEST_CODE_RECENTS:
                 if (resultCode == RESULT_OK) {
                     CharSequence recents = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR);
-                    Toast.makeText(this, "onActivityResult " + requestCode + " " + resultCode + " " + recents, Toast.LENGTH_SHORT).show();
                     mRecentsContentTv.setText(recents);
                 }
-
+                break;
+            case InputActivity.REQUEST_CODE_AGE:
+                if (resultCode == RESULT_OK) {
+                    CharSequence content = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR);
+                    mAgeView.setSecondaryText(content);
+                }
+                break;
+            case InputActivity.REQUEST_CODE_CV:
+                if (resultCode == RESULT_OK) {
+                    CharSequence content = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR);
+                    mCvView.setSecondaryText(content);
+                }
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);

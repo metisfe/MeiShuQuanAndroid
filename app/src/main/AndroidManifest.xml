@@ -302,6 +302,10 @@
             android:name=".activity.info.MyCommentsActivity"
             android:label="@string/title_activity_my_comments" >
         </activity>
+        <activity
+            android:name=".activity.info.DepartmentActivity"
+            android:label="@string/title_activity_department" >
+        </activity>
     </application>
 
 </manifest>
