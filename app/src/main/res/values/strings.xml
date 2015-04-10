@@ -31,13 +31,9 @@
     <string name="title_activity_input">InputActivity</string>
     <string name="title_activity_my_favorites">MyFavoritesActivity</string>
     <string name="title_activity_my_course">MyCourseActivity</string>
-<<<<<<< HEAD
     <string name="title_activity_login">LoginActivity</string>
-=======
     <string name="title_activity_my_ask">MyAskActivity</string>
     <string name="title_activity_my_comments">MyCommentsActivity</string>
     <string name="title_activity_department">DepartmentActivity</string>
->>>>>>> origin/master
-
 
 </resources>
