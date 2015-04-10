@@ -67,18 +67,4 @@ public class SharedPreferencesUtil {
         }
         return val;
     }
-
-//    private void loadSMS() {
-//        SharedPreferences p = context.getSharedPreferences("SMSSDK", Context.MODE_PRIVATE);
-//        APPKEY = p.getString("APPKEY", APPKEY);
-//        APPSECRET = p.getString("APPSECRET", APPSECRET);
-//    }
-//
-//    private void setSMS() {
-//        SharedPreferences p = context.getSharedPreferences("SMSSDK", Context.MODE_PRIVATE);
-//        SharedPreferences.Editor edit = p.edit();
-//        edit.putString("APPKEY", APPKEY);
-//        edit.putString("APPSECRET", APPSECRET);
-//        edit.commit();
-//    }
 }

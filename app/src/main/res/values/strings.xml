@@ -31,6 +31,7 @@
     <string name="title_activity_input">InputActivity</string>
     <string name="title_activity_my_favorites">MyFavoritesActivity</string>
     <string name="title_activity_my_course">MyCourseActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
 
 
 </resources>

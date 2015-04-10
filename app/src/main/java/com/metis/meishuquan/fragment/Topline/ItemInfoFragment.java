@@ -1,6 +1,7 @@
 package com.metis.meishuquan.fragment.Topline;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -31,6 +32,7 @@ import com.google.gson.Gson;
 import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.login.LoginFragment;
 import com.metis.meishuquan.fragment.main.ToplineFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
@@ -236,10 +238,8 @@ public class ItemInfoFragment extends Fragment {
                     showOrHideCommentInputView(true);
                     Utils.showInputMethod(getActivity(), commentInputView.editText);
                 } else {
-                    LoginFragment loginFragment = new LoginFragment();
-                    FragmentTransaction ft = fm.beginTransaction();
-                    ft.add(R.id.content_container, loginFragment);
-                    ft.commit();
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    getActivity().startActivity(intent);
                 }
             }
         });
@@ -324,30 +324,6 @@ public class ItemInfoFragment extends Fragment {
         commentInputView.startAnimation(translateAnimation);
     }
 
-    //显示或隐藏分享视图
-    private void showOrHideNewsShareView(boolean isShow) {
-        ViewGroup parent = (ViewGroup) getActivity().findViewById(R.id.ll_parent);
-        TranslateAnimation translateAnimation = null;
-        int yStart = -getActivity().getResources().getDisplayMetrics().heightPixels;
-        int yEnd = 0;
-        if (isShow) {
-            if (newsShareView != null) {
-                parent.addView(newsShareView);
-            }
-            translateAnimation = new TranslateAnimation(0, 0, yStart, yEnd);
-        } else {
-            if (newsShareView != null) {
-                parent.removeView(newsShareView);
-            }
-            translateAnimation = new TranslateAnimation(0, 0, yEnd, yStart);
-        }
-        translateAnimation.setFillAfter(true);
-        translateAnimation.setFillEnabled(true);
-        translateAnimation.setDuration(100);
-        translateAnimation.setInterpolator(new DecelerateInterpolator());
-        newsShareView.startAnimation(translateAnimation);
-    }
-
     //为控件绑定数据
     private void bindData() {
         if (newsInfo != null) {
@@ -384,7 +360,6 @@ public class ItemInfoFragment extends Fragment {
                     }
                     bindData();
                     addViewByContent();
-
                 } else {
                     getInfoData(newsId);
                 }

@@ -79,7 +79,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/img_select_id_2"
+                android:background="@drawable/img_unselect_id_2"
                 android:scaleType="fitCenter" />
 
             <ImageView
@@ -88,7 +88,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/img_select_id_3"
+                android:background="@drawable/img_unselect_id_3"
                 android:scaleType="fitCenter" />
 
             <ImageView
@@ -97,7 +97,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/img_select_id_4"
+                android:background="@drawable/img_unselect_id_4"
                 android:scaleType="fitCenter" />
 
             <ImageView
@@ -106,7 +106,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/img_select_id_5"
+                android:background="@drawable/img_unselect_id_5"
                 android:scaleType="fitCenter" />
         </LinearLayout>
 
@@ -173,16 +173,16 @@
         </LinearLayout>
     </LinearLayout>
     <!--数据列表-->
+
     <GridView
         android:id="@+id/id_select_id_gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
+        android:scrollbars="none"
+        android:layout_margin="20dp"
         android:horizontalSpacing="10dp"
+        android:background="#cdcdcd"
         android:listSelector="@color/transparent"
         android:numColumns="3"
         android:verticalSpacing="10dp" />
-
 </LinearLayout>

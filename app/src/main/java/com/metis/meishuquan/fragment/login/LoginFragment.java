@@ -1,5 +1,8 @@
 package com.metis.meishuquan.fragment.login;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -57,12 +60,11 @@ public class LoginFragment extends Fragment {
         btnBack.setOnClickListener(new View.OnClickListener() {//返回
             @Override
             public void onClick(View view) {
-                FragmentTransaction ft = fragmentManager.beginTransaction();
-                ft.remove(LoginFragment.this);
-                fragmentManager.popBackStack();
-                ft.commit();
+                //finish();
+                getActivity().finish();
             }
         });
+        //登录
         btnLogin.setOnClickListener(new View.OnClickListener() {//登录
             @Override
             public void onClick(View view) {
@@ -90,24 +92,27 @@ public class LoginFragment extends Fragment {
                 });
             }
         });
+        //注册
         btnRegister.setOnClickListener(new View.OnClickListener() {//注册
             @Override
             public void onClick(View view) {
                 SelectIdFragment selectIdFragment = new SelectIdFragment();
                 FragmentTransaction ft = fragmentManager.beginTransaction();
-                ft.add(R.id.content_container, selectIdFragment);
+                ft.add(R.id.id_rl_login_main, selectIdFragment);
+                ft.addToBackStack(null);
                 ft.commit();
             }
         });
+        //重置密码
         btnResetPwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ResetPwdFragment resetPwdFragment = new ResetPwdFragment();
                 FragmentTransaction ft = fragmentManager.beginTransaction();
-                ft.add(R.id.content_container, resetPwdFragment);
+                ft.replace(R.id.id_rl_login_main, resetPwdFragment);
+                ft.addToBackStack(null);
                 ft.commit();
             }
         });
-
     }
 }

@@ -30,7 +30,7 @@ import java.util.Properties;
 
 public class MainActivity extends FragmentActivity implements TabBar.TabSelectedListener {
     private static FragmentManager fm;
-    private static final String PressBackAgainToQuiteApplicationMessage = "Back again to quit";
+    private static final String PressBackAgainToQuiteApplicationMessage = "再按一次退出";
     private boolean doWantToQuite;
 
     public static MainActivity self;
@@ -173,7 +173,6 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
             fm.popBackStack();
             ft.commitAllowingStateLoss();
         }
-
         this.navigateTo(fragment);
     }
 

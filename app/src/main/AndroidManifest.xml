@@ -39,7 +39,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
->>>>>>> origin/master
+
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
@@ -61,14 +61,7 @@
             android:configChanges="locale|layoutDirection|fontScale"
             android:screenOrientation="portrait" />
 
-        <!-- SMS activity -->
-        <activity
-            android:name="cn.smssdk.SMSSDKUIShell"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
->>>>>>> origin/master
-        <!-- ###################注册SDK使用的Activity###################### -->
+        <!-- ###################注册友盟SDK使用的Activity###################### -->
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="xxxxxxxxxxxxxxxxxxxxxx" />
@@ -288,11 +281,13 @@
             android:windowSoftInputMode="stateAlwaysVisible" />
         <activity
             android:name=".activity.info.MyFavoritesActivity"
-            android:label="@string/title_activity_my_favorites" >
-        </activity>
+            android:label="@string/title_activity_my_favorites" />
         <activity
             android:name=".activity.info.MyCourseActivity"
-            android:label="@string/title_activity_my_course" >
+            android:label="@string/title_activity_my_course" />
+        <activity
+            android:name=".activity.login.LoginActivity"
+            android:label="@string/title_activity_login" >
         </activity>
     </application>
 

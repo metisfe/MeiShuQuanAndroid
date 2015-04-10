@@ -124,7 +124,8 @@ public class SelectIdFragment extends Fragment {
                 registerFragment.setArguments(bundle);
 
                 FragmentTransaction ft = fm.beginTransaction();
-                ft.add(R.id.content_container, registerFragment);
+                ft.add(R.id.id_rl_login_main, registerFragment);
+                ft.addToBackStack(null);
                 //TODO:动画
                 ft.commit();
             }

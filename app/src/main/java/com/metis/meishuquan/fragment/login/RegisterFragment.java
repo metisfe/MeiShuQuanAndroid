@@ -1,5 +1,6 @@
 package com.metis.meishuquan.fragment.login;
 
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.BLL.UserOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.login.RegisterCode;
+import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
@@ -38,13 +40,7 @@ public class RegisterFragment extends Fragment {
     private FragmentManager fm;
     private TimeCount time;
     private UserOperator userOperator;
-    private Fragment parentFragment;
-
     private String requestCode = "";
-
-    public void setParentFragment(Fragment parentFragment) {
-        this.parentFragment = parentFragment;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -81,54 +77,57 @@ public class RegisterFragment extends Fragment {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 String phone = etUserName.getText().toString().trim();
                 String verCode = etVerificationCode.getText().toString().trim();
                 String pwd = etPwd.getText().toString().trim();
                 if (phone.isEmpty()) {
-                    Toast.makeText(MainApplication.UIContext, "请输入手机号", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "请输入手机号", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
                 if (!p.matcher(phone).matches()) {
-                    Toast.makeText(MainApplication.UIContext, "请输入正确的手机号", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "请输入正确的手机号", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (verCode.isEmpty()) {
-                    Toast.makeText(MainApplication.UIContext, "请输入验证码", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "请输入验证码", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (pwd.isEmpty()) {
-                    Toast.makeText(MainApplication.UIContext, "请输入密码", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "请输入密码", Toast.LENGTH_SHORT).show();
                     etPwd.requestFocus();
                     return;
                 }
                 String regEx = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
                 Pattern pwdReg = Pattern.compile(regEx);
-                if (!pwdReg.matcher(etPwd.getText().toString().trim()).matches()) {
-                    Toast.makeText(MainApplication.UIContext, "密码中不能包含有特殊字符", Toast.LENGTH_SHORT).show();
+                if (pwdReg.matcher(etPwd.getText().toString().trim()).matches()) {
+                    Toast.makeText(getActivity(), "密码中不能包含有特殊字符", Toast.LENGTH_SHORT).show();
                     etPwd.requestFocus();
                     return;
                 }
                 if (pwd.length() < 6 || pwd.length() > 12) {
-                    Toast.makeText(MainApplication.UIContext, "密码长度应在6-14位之间", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "密码长度应在6-14位之间", Toast.LENGTH_SHORT).show();
                     etPwd.requestFocus();
                     return;
                 }
                 if (!verCode.equals("")) {
                     int i = verCode.compareTo(requestCode);
-                    if (i == 0 && parentFragment != null) {
+                    if (i == 0) {
                         userOperator.register(phone, requestCode, pwd, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                                    FragmentTransaction ft = fm.beginTransaction();
-                                    ft.replace(R.id.content_container, parentFragment);
-                                    ft.commit();
+                                    //修改本地登录状态
+                                    SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(getActivity());
+                                    spu.update(SharedPreferencesUtil.LOGIN_STATE, String.valueOf(true));
+                                    Toast.makeText(getActivity(), "注册成功", Toast.LENGTH_SHORT).show();
+                                    getActivity().finish();
                                 }
                             }
                         });
                     } else {
-                        Toast.makeText(MainApplication.UIContext, "验证码验证超时，请重新验证", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "验证码验证超时，请重新验证", Toast.LENGTH_SHORT).show();
                         etVerificationCode.setText("");
                         etVerificationCode.requestFocus();
                         return;
@@ -140,17 +139,17 @@ public class RegisterFragment extends Fragment {
         btnGetVerificationCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                time.start();//开始计时
                 String phone = etUserName.getText().toString().trim();
                 if (phone.isEmpty()) {
-                    Toast.makeText(MainApplication.UIContext, "请输入手机号", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "请输入手机号", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
                 if (!p.matcher(phone).matches()) {
-                    Toast.makeText(MainApplication.UIContext, "您输入的手机格式有误", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "您输入的手机格式有误", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                time.start();//开始计时
                 userOperator.getRequestCode(phone, new ApiOperationCallback<ReturnInfo<String>>() {
                     @Override
                     public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
@@ -176,7 +175,6 @@ public class RegisterFragment extends Fragment {
         public void onFinish() {//计时完毕时触发
             btnGetVerificationCode.setText("重新验证");
             btnGetVerificationCode.setClickable(true);
-            requestCode = "null";
         }
 
         @Override
