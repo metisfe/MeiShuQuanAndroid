@@ -276,7 +276,7 @@
             android:name=".activity.info.InfoActivity"
             android:label="@string/title_activity_info" />
         <activity
-            android:name=".activity.circle.InputActivity"
+            android:name=".activity.InputActivity"
             android:label="@string/title_activity_input"
             android:windowSoftInputMode="stateAlwaysVisible" />
         <activity

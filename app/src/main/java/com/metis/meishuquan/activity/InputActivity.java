@@ -1,4 +1,4 @@
-package com.metis.meishuquan.activity.circle;
+package com.metis.meishuquan.activity;
 
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;

@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.text.InputType;
 
-import com.metis.meishuquan.activity.circle.InputActivity;
+import com.metis.meishuquan.activity.InputActivity;
 
 /**
  * Created by WJ on 2015/4/10.

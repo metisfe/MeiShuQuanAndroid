@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.activity.circle.InputActivity;
+import com.metis.meishuquan.activity.InputActivity;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.view.shared.MyInfoBtn;
