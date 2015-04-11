@@ -50,4 +50,8 @@
     <string name="collections_comment_count">评论(%1$d)</string>
 
     <string name="department_add">添加</string>
+
+    <string name="gender_famale">女</string>
+    <string name="gender_male">男</string>
+    <string name="gender_ok">确定</string>
 </resources>
