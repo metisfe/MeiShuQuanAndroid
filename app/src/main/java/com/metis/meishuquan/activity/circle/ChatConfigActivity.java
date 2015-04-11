@@ -20,6 +20,7 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.view.circle.CircleGridIcon;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
+import com.metis.meishuquan.view.shared.ExpandableHeightGridView;
 import com.metis.meishuquan.view.shared.SwitchButton;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ import io.rong.imlib.RongIMClient;
 public class ChatConfigActivity extends Activity {
     private CircleTitleBar titleBar;
     private ViewGroup nameGroup, clearGroup;
-    private GridView gridView;
+    private ExpandableHeightGridView gridView;
     private SwitchButton switchButton;
     private TextView leaveGroup;
     private FriendGridViewAdapter adapter;
@@ -48,7 +49,7 @@ public class ChatConfigActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_circle_chatconfigactivity);
-        this.gridView = (GridView) this.findViewById(R.id.activity_circle_chatconfigactivity_gridview);
+        this.gridView = (ExpandableHeightGridView) this.findViewById(R.id.activity_circle_chatconfigactivity_gridview);
         this.nameGroup = (ViewGroup) this.findViewById(R.id.activity_circle_chatconfigactivity_namegroup);
         this.switchButton = (SwitchButton) this.findViewById(R.id.activity_circle_chatconfigactivity_nodisturbswitch);
         this.clearGroup = (ViewGroup) this.findViewById(R.id.activity_circle_chatconfigactivity_clearhistorygroup);
@@ -74,6 +75,31 @@ public class ChatConfigActivity extends Activity {
         this.targetId = getIntent().getStringExtra("targetId");
 
         setData();
+        refreshDataFromRong();
+    }
+
+    private void refreshDataFromRong()
+    {
+        if (type == RongIMClient.ConversationType.DISCUSSION)
+        {
+            MainApplication.rongClient.getDiscussion(targetId,new RongIMClient.GetDiscussionCallback() {
+                @Override
+                public void onSuccess(RongIMClient.Discussion discussion) {
+                    ChatManager.discussionCache.put(discussion.getId(),discussion);
+                    if (adapter!=null)
+                    {
+                        adapter.discussion = discussion;
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+
+                @Override
+                public void onError(ErrorCode errorCode) {
+
+                }
+            });
+        }
+
     }
 
     @Override
@@ -181,6 +207,7 @@ public class ChatConfigActivity extends Activity {
                         if (adapter.isPrivate) {
                             excludeList.add(adapter.userInfo.getUserId());
                             intent.putExtra("fromtype","privateconfig");
+                            intent.putExtra("targetid", targetId);
                         } else {
                             excludeList.addAll(adapter.discussion.getMemberIdList());
                             intent.putExtra("fromtype","discussionconfig");

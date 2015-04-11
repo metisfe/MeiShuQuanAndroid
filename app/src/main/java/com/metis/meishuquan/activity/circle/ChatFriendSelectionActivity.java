@@ -105,6 +105,8 @@ public class ChatFriendSelectionActivity extends Activity {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 String uid = ((UserAdvanceInfo) adapter.getChild(groupPosition, childPosition)).getUserId();
+                if (excludeSet!=null && excludeSet.contains(uid))
+                    return true;
                 if (selectedSet.contains(uid)) selectedSet.remove(uid);
                 else selectedSet.add(uid);
                 adapter.notifyDataSetChanged();
@@ -151,6 +153,11 @@ public class ChatFriendSelectionActivity extends Activity {
         if (!selectedSet.contains(ChatManager.userId)) {
             ulist.add(ChatManager.userId);
         }
+
+        if (!selectedSet.contains(targetId)) {
+            ulist.add(targetId);
+        }
+
         final ProgressDialog progressDialog = new ProgressDialog(ChatFriendSelectionActivity.this);
         progressDialog.show();
         MainApplication.rongClient.createDiscussion("Not Set", ulist, new RongIMClient.CreateDiscussionCallback() {
@@ -165,7 +172,7 @@ public class ChatFriendSelectionActivity extends Activity {
                 intent.putExtra("type", RongIMClient.ConversationType.DISCUSSION.toString());
                 startActivity(intent);
 
-                ChatManager.discussionCache.put(s, new RongIMClient.Discussion(targetId, "Not Set", ChatManager.userId, true, ulist));
+                ChatManager.discussionCache.put(s, new RongIMClient.Discussion(s, "Not Set", ChatManager.userId, true, ulist));
                 //TODO: should also save to DB
                 finish();
             }
@@ -197,6 +204,16 @@ public class ChatFriendSelectionActivity extends Activity {
                     MainApplication.rongClient.addMemberToDiscussion(targetId, ulist, new RongIMClient.OperationCallback() {
                         @Override
                         public void onSuccess() {
+                            List<String> mlist = new ArrayList<String>(discussion.getMemberIdList());
+                            for (String id:ulist)
+                            {
+                                mlist.add(id);
+                            }
+
+                            discussion.setMemberIdList(mlist);
+                            ChatManager.discussionCache.put(targetId, discussion);
+                            //TODO: should also save to DB
+
                             progressDialog.cancel();
                             Intent intent = new Intent(ChatFriendSelectionActivity.this, ChatActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -205,12 +222,6 @@ public class ChatFriendSelectionActivity extends Activity {
                             intent.putExtra("targetId", targetId);
                             intent.putExtra("type", RongIMClient.ConversationType.DISCUSSION.toString());
                             startActivity(intent);
-
-                            discussion.getMemberIdList().addAll(ulist);
-                            ChatManager.discussionCache.put(targetId, discussion);
-                            //TODO: should also save to DB
-
-                            finish();
                         }
 
                         @Override

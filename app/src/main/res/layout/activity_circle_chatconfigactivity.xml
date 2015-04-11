@@ -30,9 +30,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <GridView
+            <com.metis.meishuquan.view.shared.ExpandableHeightGridView
                 android:id="@+id/activity_circle_chatconfigactivity_gridview"
                 android:numColumns="4"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="20dp"
+                android:gravity="center"
+                android:horizontalSpacing="2dp"
+                android:isScrollContainer="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

@@ -70,7 +70,7 @@ public class ChatListFragment extends CircleBaseFragment {
         adapter.data.add(conversation);
 
         conversation = new RongIMClient.Conversation();
-        conversation.setTargetId("06eff743-5b49-492b-8128-edec65dfe9cb");
+        conversation.setTargetId("44783e15-29d9-4bd4-8dd9-07d506e1fedf");
         conversation.setConversationTitle("diwugroup");
         conversation.setReceivedTime(System.currentTimeMillis());
         conversation.setConversationType(RongIMClient.ConversationType.DISCUSSION);
