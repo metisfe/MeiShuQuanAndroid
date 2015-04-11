@@ -57,7 +57,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.ChatActivity"
+            android:name=".activity.circle.ChatActivity"
             android:configChanges="locale|layoutDirection|fontScale"
             android:screenOrientation="portrait" />
 
@@ -75,7 +75,7 @@
             android:theme="@style/Theme.UMDialog"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".activity.ChatConfigActivity"
+            android:name=".activity.circle.ChatConfigActivity"
             android:configChanges="locale|layoutDirection|fontScale"
             android:screenOrientation="portrait" />
 
@@ -276,7 +276,7 @@
             android:name=".activity.info.InfoActivity"
             android:label="@string/title_activity_info" />
         <activity
-            android:name=".activity.InputActivity"
+            android:name=".activity.circle.InputActivity"
             android:label="@string/title_activity_input"
             android:windowSoftInputMode="stateAlwaysVisible" />
         <activity

@@ -1,23 +1,16 @@
 package com.metis.meishuquan.activity.info;
 
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.activity.InputActivity;
-import com.metis.meishuquan.framework.WebAccessManager;
+import com.metis.meishuquan.activity.circle.InputActivity;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.User;
-import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.view.shared.MyInfoBtn;
-import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
-import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 public class InfoActivity extends BaseActivity implements View.OnClickListener {
 

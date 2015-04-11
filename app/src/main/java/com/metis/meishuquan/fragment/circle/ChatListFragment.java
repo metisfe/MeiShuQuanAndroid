@@ -13,7 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.activity.ChatActivity;
+import com.metis.meishuquan.activity.circle.ChatActivity;
 import com.metis.meishuquan.view.circle.CircleChatListItemView;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.metis.meishuquan.activity;
+package com.metis.meishuquan.activity.circle;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,7 +14,6 @@ import android.widget.GridView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.util.ChatManager;

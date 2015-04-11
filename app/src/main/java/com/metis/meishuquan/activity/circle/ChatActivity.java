@@ -1,4 +1,4 @@
-package com.metis.meishuquan.activity;
+package com.metis.meishuquan.activity.circle;
 
 import android.content.Intent;
 import android.net.Uri;

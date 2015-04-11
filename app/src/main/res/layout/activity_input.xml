@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.metis.meishuquan.activity.InputActivity">
+    tools:context="com.metis.meishuquan.activity.circle.InputActivity">
     <com.metis.meishuquan.view.shared.TitleView
         android:id="@+id/title"
         android:layout_width="fill_parent"
