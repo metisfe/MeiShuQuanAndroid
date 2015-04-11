@@ -35,7 +35,7 @@ public class ChatActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ChatActivity.this, ChatConfigActivity.class);
-                intent.putExtra("type", type);
+                intent.putExtra("type", "discussion");
                 intent.putExtra("targetId", targetId);
                 startActivity(intent);
             }

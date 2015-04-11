@@ -1,11 +1,16 @@
 package com.metis.meishuquan.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.metis.meishuquan.R;
@@ -26,6 +31,9 @@ public class ChatConfigActivity extends Activity {
     private SwitchButton switchButton;
     private TextView leaveGroup;
     private FriendGridViewAdapter adapter;
+    private ScrollView scrollView;
+    private EditText editText;
+    private boolean onEditTextMode;
 
     private String type, targetId;
 
@@ -39,6 +47,8 @@ public class ChatConfigActivity extends Activity {
         this.clearGroup = (ViewGroup) this.findViewById(R.id.activity_circle_chatconfigactivity_clearhistorygroup);
         this.leaveGroup = (TextView) this.findViewById(R.id.activity_circle_chatconfigactivity_leavegroup);
         this.titleBar = (CircleTitleBar) this.findViewById(R.id.activity_circle_chatconfigactivity_titlebar);
+        this.scrollView = (ScrollView) this.findViewById(R.id.activity_circle_chatconfigactivity_scrollview);
+        this.editText = (EditText) this.findViewById(R.id.activity_circle_chatconfigactivity_edittext);
         this.adapter = new FriendGridViewAdapter();
     }
 
@@ -51,7 +61,22 @@ public class ChatConfigActivity extends Activity {
         setData();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (onEditTextMode)
+        {
+            setData();
+            return;
+        }
+
+        super.onBackPressed();
+    }
+
     private void setData() {
+        onEditTextMode = false;
+        this.scrollView.setVisibility(View.VISIBLE);
+        this.editText.setVisibility(View.GONE);
+
         if ("private".equals(type)) {
             this.leaveGroup.setVisibility(View.GONE);
             this.nameGroup.setVisibility(View.GONE);
@@ -60,6 +85,57 @@ public class ChatConfigActivity extends Activity {
         } else {
             this.leaveGroup.setVisibility(View.VISIBLE);
             this.nameGroup.setVisibility(View.VISIBLE);
+            this.nameGroup.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onEditTextMode = true;
+                    scrollView.setVisibility(View.GONE);
+                    editText.setVisibility(View.VISIBLE);
+                    String name=adapter.getName();
+                    if (!TextUtils.isEmpty(name))
+                    {
+                        editText.setText(name);
+                        editText.setSelection(0,name.length());
+                    }
+
+                    editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View v, final boolean hasFocus) {
+                            editText.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    InputMethodManager imm = (InputMethodManager) ChatConfigActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                                    if (hasFocus)
+                                    {
+                                        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+                                    }
+                                    else
+                                    {
+                                        imm.hideSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+                                    }
+
+                                }
+                            });
+                        }
+                    });
+                    editText.requestFocus();
+                    titleBar.setText("edit group name");
+                    titleBar.setLeftButton("back",0,new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            setData();
+                        }
+                    });
+
+                    titleBar.setRightButton("confirm",0,new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //TODO: save name changed
+                            setData();
+                        }
+                    });
+                }
+            });
             this.adapter.setDiscussionData(targetId);
             this.titleBar.setText("Chat Info(" + adapter.getMemberCount() + ")");
         }
