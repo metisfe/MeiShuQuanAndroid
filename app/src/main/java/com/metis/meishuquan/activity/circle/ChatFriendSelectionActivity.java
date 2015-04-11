@@ -7,18 +7,23 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.model.circle.UserAdvanceInfo;
 import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.Inflater;
 
 import io.rong.imlib.RongIMClient;
 
@@ -45,11 +50,10 @@ public class ChatFriendSelectionActivity extends Activity {
         initView();
     }
 
-    private void initView()
-    {
+    private void initView() {
         this.titleBar = (CircleTitleBar) this.findViewById(R.id.activity_circle_chatfriendselectionactivity_titlebar);
         titleBar.setText("message");
-        onClickListener = new View.OnClickListener(){
+        onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO: save changes
@@ -68,7 +72,13 @@ public class ChatFriendSelectionActivity extends Activity {
         this.listView = (ExpandableListView) this.findViewById(R.id.activity_circle_chatfriendselectionactivity_list);
         this.listView.setGroupIndicator(null);
         this.listView.setBackgroundColor(Color.rgb(255, 255, 255));
-        this.listView.setTextFilterEnabled(true);
+        this.listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                return true;
+            }
+        });
+
         this.searchView = (SearchView) this.findViewById(R.id.activity_circle_chatfriendselectionactivity_search);
         this.searchView.setSubmitButtonEnabled(false);
         this.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -85,14 +95,16 @@ public class ChatFriendSelectionActivity extends Activity {
         });
 
         this.adapter = new CircleFriendListAdapter();
-        prepareFriendData();
+        this.adapter.friendList = ChatManager.getGroupedFriendList();
         this.listView.setAdapter(adapter);
+        expandAll();
     }
 
-    private void prepareFriendData()
+    public void expandAll()
     {
-
-
+        for ( int i = 0; i < adapter.getGroupCount(); i++ ) {
+            listView.expandGroup(i);
+        }
     }
 
     @Override
@@ -101,36 +113,38 @@ public class ChatFriendSelectionActivity extends Activity {
         getParams(intent);
     }
 
-    class CircleFriendListAdapter extends BaseExpandableListAdapter{
+    class CircleFriendListAdapter extends BaseExpandableListAdapter {
+        public List<List<UserAdvanceInfo>> friendList;
+        public List<UserAdvanceInfo> queryResult = new ArrayList<>();
 
         @Override
         public int getGroupCount() {
-            return 0;
+            return friendList.size();
         }
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            return 0;
+            return friendList.get(groupPosition).size();
         }
 
         @Override
         public Object getGroup(int groupPosition) {
-            return null;
+            return friendList.get(groupPosition);
         }
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            return null;
+            return friendList.get(groupPosition).get(childPosition);
         }
 
         @Override
         public long getGroupId(int groupPosition) {
-            return 0;
+            return groupPosition;
         }
 
         @Override
         public long getChildId(int groupPosition, int childPosition) {
-            return 0;
+            return childPosition;
         }
 
         @Override
@@ -140,17 +154,31 @@ public class ChatFriendSelectionActivity extends Activity {
 
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-            return null;
+            String name = "";
+            name += friendList.get(groupPosition).get(0).getPinYin().charAt(0);
+            if (name.equals("~")) name = "#";
+
+            if (convertView == null) {
+                convertView = LayoutInflater.from(ChatFriendSelectionActivity.this).inflate(R.layout.fragment_topline_comment_list_item_tag, null);
+            }
+
+            convertView.setBackgroundColor(Color.rgb(230, 232, 237));
+            TextView mTag = (TextView) convertView.findViewById(R.id.id_tv_listview_tag);
+            mTag.setTextColor(Color.rgb(255, 83, 99));
+            mTag.setText(name.toUpperCase());
+            return convertView;
         }
 
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-            return null;
+            TextView tv = new TextView(ChatFriendSelectionActivity.this);
+            tv.setText(friendList.get(groupPosition).get(childPosition).getName());
+            return tv;
         }
 
         @Override
         public boolean isChildSelectable(int groupPosition, int childPosition) {
-            return false;
+            return true;
         }
     }
 }

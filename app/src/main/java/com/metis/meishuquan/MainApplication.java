@@ -74,12 +74,14 @@ public class MainApplication extends Application {
         ChatManager.friendIdList.add("diwulechao");
         ChatManager.friendIdList.add("diwulechao1");
         ChatManager.friendIdList.add("diwulechao2");
+        ChatManager.friendIdList.add("diwulechao4");
         ChatManager.friendIdList.add("diwulechao3");
 
         ChatManager.contactCache.put("diwulechao",new RongIMClient.UserInfo("diwulechao","张三",""));
-        ChatManager.contactCache.put("diwulechao",new RongIMClient.UserInfo("diwulechao1","李四",""));
-        ChatManager.contactCache.put("diwulechao",new RongIMClient.UserInfo("diwulechao2","王二",""));
-        ChatManager.contactCache.put("diwulechao",new RongIMClient.UserInfo("diwulechao3","麻子",""));
+        ChatManager.contactCache.put("diwulechao1",new RongIMClient.UserInfo("diwulechao1","李四",""));
+        ChatManager.contactCache.put("diwulechao2",new RongIMClient.UserInfo("diwulechao2","王二",""));
+        ChatManager.contactCache.put("diwulechao4",new RongIMClient.UserInfo("diwulechao4","321（）",""));
+        ChatManager.contactCache.put("diwulechao3",new RongIMClient.UserInfo("diwulechao3","麻子",""));
     }
 
     public static void setDisplayMetrics(DisplayMetrics dm) {

@@ -1,7 +1,6 @@
 package com.metis.meishuquan.model.circle;
 
 import android.os.Parcel;
-import android.util.Log;
 
 import com.metis.meishuquan.util.Utils;
 
@@ -19,20 +18,12 @@ public class UserAdvanceInfo extends RongIMClient.UserInfo {
 
     public UserAdvanceInfo(String userId, String name, String portraitUri) {
         super(userId, name, portraitUri);
-        try {
-            pinYin = Utils.toPinYinString(name);
-        } catch (Exception e) {
-            pinYin = "";
-        }
+        pinYin = Utils.toPinYinStringWithPrefix(name);
     }
 
     public UserAdvanceInfo(RongIMClient.UserInfo info) {
         super(info.getUserId(), info.getName(), info.getPortraitUri());
-        try {
-            pinYin = Utils.toPinYinString(info.getName());
-        } catch (Exception e) {
-            pinYin = "";
-        }
+        pinYin = Utils.toPinYinStringWithPrefix(info.getName());
     }
 
     public String getPinYin() {

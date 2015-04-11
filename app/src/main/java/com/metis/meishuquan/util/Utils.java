@@ -362,12 +362,12 @@ public class Utils
         imm.hideSoftInputFromWindow(view.getApplicationWindowToken() , 0);
     }
 
-    public static String toPinYinString(String word) {
-        String ret = "";
+    public static String toPinYinStringWithPrefix(String word) {
         if (TextUtils.isEmpty(word)) {
-            return ret;
+            return "~";
         }
 
+        String ret = "";
         HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
         format.setCaseType(HanyuPinyinCaseType.LOWERCASE);
         format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
@@ -379,15 +379,51 @@ public class Utils
             try {
                 if (c >= 0x4e00 && c <= 0x9fa5) {
                     pinyinArray = PinyinHelper.toHanyuPinyinStringArray(c, format);
+                    if (pinyinArray != null && pinyinArray.length > 0) {
+                        ret += pinyinArray[0];
+                    }
+                } else if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9') {
+                    ret += c;
                 }
-
-                if (pinyinArray != null && pinyinArray.length > 0) {
-                    ret += pinyinArray[0];
-                }
-            } catch (BadHanyuPinyinOutputFormatCombination e) {
+            } catch (Exception e) {
             }
         }
 
-        return ret;
+        ret=ret.toLowerCase();
+        if (ret.length() == 0)
+            return "~";
+        if (ret.charAt(0) >= 'a' && ret.charAt(0) <= 'z')
+            return ret;
+        return "~" + ret;
+    }
+
+    public static String toPinYinString(String word) {
+        if (TextUtils.isEmpty(word)) {
+            return "";
+        }
+
+        String ret = "";
+        HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
+        format.setCaseType(HanyuPinyinCaseType.LOWERCASE);
+        format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+        format.setVCharType(HanyuPinyinVCharType.WITH_U_UNICODE);
+        String[] pinyinArray = null;
+
+        for (int i = 0; i < word.length(); i++) {
+            char c = word.charAt(i);
+            try {
+                if (c >= 0x4e00 && c <= 0x9fa5) {
+                    pinyinArray = PinyinHelper.toHanyuPinyinStringArray(c, format);
+                    if (pinyinArray != null && pinyinArray.length > 0) {
+                        ret += pinyinArray[0];
+                    }
+                } else if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9') {
+                    ret += c;
+                }
+            } catch (Exception e) {
+            }
+        }
+
+        return ret.toLowerCase();
     }
 }
