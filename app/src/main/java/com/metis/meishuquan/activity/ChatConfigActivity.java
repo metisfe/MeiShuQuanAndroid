@@ -7,12 +7,15 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.metis.meishuquan.MainActivity;
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.view.circle.CircleGridIcon;
@@ -45,6 +48,17 @@ public class ChatConfigActivity extends Activity {
         this.nameGroup = (ViewGroup) this.findViewById(R.id.activity_circle_chatconfigactivity_namegroup);
         this.switchButton = (SwitchButton) this.findViewById(R.id.activity_circle_chatconfigactivity_nodisturbswitch);
         this.clearGroup = (ViewGroup) this.findViewById(R.id.activity_circle_chatconfigactivity_clearhistorygroup);
+        clearGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RongIMClient.ConversationType ctype = RongIMClient.ConversationType.PRIVATE;
+                if (!"private".equals(type)) {
+                    ctype = RongIMClient.ConversationType.DISCUSSION;
+                }
+                MainApplication.rongIM.clearMessages(ChatConfigActivity.this, ctype, targetId);
+            }
+        });
+
         this.leaveGroup = (TextView) this.findViewById(R.id.activity_circle_chatconfigactivity_leavegroup);
         this.titleBar = (CircleTitleBar) this.findViewById(R.id.activity_circle_chatconfigactivity_titlebar);
         this.scrollView = (ScrollView) this.findViewById(R.id.activity_circle_chatconfigactivity_scrollview);
@@ -63,8 +77,7 @@ public class ChatConfigActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        if (onEditTextMode)
-        {
+        if (onEditTextMode) {
             setData();
             return;
         }
@@ -76,6 +89,14 @@ public class ChatConfigActivity extends Activity {
         onEditTextMode = false;
         this.scrollView.setVisibility(View.VISIBLE);
         this.editText.setVisibility(View.GONE);
+        this.titleBar.setLeftButton("back", 0, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        this.titleBar.setRightButton("", 0, null);
 
         if ("private".equals(type)) {
             this.leaveGroup.setVisibility(View.GONE);
@@ -91,11 +112,10 @@ public class ChatConfigActivity extends Activity {
                     onEditTextMode = true;
                     scrollView.setVisibility(View.GONE);
                     editText.setVisibility(View.VISIBLE);
-                    String name=adapter.getName();
-                    if (!TextUtils.isEmpty(name))
-                    {
+                    String name = adapter.getName();
+                    if (!TextUtils.isEmpty(name)) {
                         editText.setText(name);
-                        editText.setSelection(0,name.length());
+                        editText.setSelection(0, name.length());
                     }
 
                     editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -105,29 +125,26 @@ public class ChatConfigActivity extends Activity {
                                 @Override
                                 public void run() {
                                     InputMethodManager imm = (InputMethodManager) ChatConfigActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
-                                    if (hasFocus)
-                                    {
+                                    if (hasFocus) {
                                         imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         imm.hideSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
                                     }
-
                                 }
                             });
                         }
                     });
                     editText.requestFocus();
+
                     titleBar.setText("edit group name");
-                    titleBar.setLeftButton("back",0,new View.OnClickListener() {
+                    titleBar.setLeftButton("back", 0, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             setData();
                         }
                     });
 
-                    titleBar.setRightButton("confirm",0,new View.OnClickListener() {
+                    titleBar.setRightButton("confirm", 0, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             //TODO: save name changed
@@ -141,12 +158,54 @@ public class ChatConfigActivity extends Activity {
         }
 
         this.gridView.setAdapter(adapter);
+        this.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CircleGridIcon icon = (CircleGridIcon) view;
+                switch (icon.type) {
+                    case 0:
+                        if (adapter.isEditMode && position > 0) {
+                            //TODO: send api to remote server to remove a member should block UI
+                            adapter.discussion.getMemberIdList().remove(position);
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            //TODO: this should open person's detail page
+                        }
+
+                        break;
+                    case 1:
+                        //TODO: add another people to become discussion
+                        break;
+                    case 2:
+                        if (ChatManager.isDiscussionMine(adapter.discussion)) {
+                            adapter.isEditMode = true;
+                        }
+
+                        adapter.notifyDataSetChanged();
+                        break;
+                }
+            }
+        });
+
+        this.gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (ChatManager.isDiscussionMine(adapter.discussion)) {
+                    adapter.isEditMode = true;
+                    adapter.notifyDataSetChanged();
+                    return true;
+                }
+
+                return false;
+            }
+        });
     }
 
     class FriendGridViewAdapter extends BaseAdapter {
         public RongIMClient.Discussion discussion;
         public RongIMClient.UserInfo userInfo;
         public boolean isPrivate;
+        public boolean isEditMode;
 
         @Override
         public int getCount() {
@@ -155,9 +214,10 @@ public class ChatConfigActivity extends Activity {
             } else {
                 int extra = ChatManager.isDiscussionMine(discussion) ? 2 : 1;
                 if (discussion != null && discussion.getMemberIdList() != null) {
-                    return discussion.getMemberIdList().size() + extra;
+                    return discussion.getMemberIdList().size() + (isEditMode ? 0 : extra);
                 }
-                return 2;
+
+                return 0;
             }
         }
 
@@ -173,6 +233,7 @@ public class ChatConfigActivity extends Activity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            //TODO: do not use wrap content will cause unnecessary get view
             if (convertView == null)
                 convertView = new CircleGridIcon(ChatConfigActivity.this);
 
@@ -180,44 +241,24 @@ public class ChatConfigActivity extends Activity {
             if (isPrivate) {
                 //if this is a private page
                 if (position == 0) {
-                    icon.setData(userInfo.getPortraitUri(), userInfo.getName(), new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
-                    });
+                    icon.setData(userInfo.getPortraitUri(), userInfo.getName());
+                    icon.setEditMode(false);
                 } else {
-                    icon.setPlusMinus(true, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
-                    });
+                    icon.setPlusMinus(true);
+                    icon.setEditMode(false);
                 }
             } else {
                 //if this is a group chat page
                 if (position < discussion.getMemberIdList().size()) {
                     RongIMClient.UserInfo info = ChatManager.getUserInfo(discussion.getMemberIdList().get(position));
-                    icon.setData(info.getPortraitUri(), info.getName(), new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
-                    });
+                    icon.setData(info.getPortraitUri(), info.getName());
+                    icon.setEditMode(isEditMode && position > 0);
                 } else if (position == discussion.getMemberIdList().size()) {
-                    icon.setPlusMinus(true, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
-                    });
+                    icon.setPlusMinus(true);
+                    icon.setEditMode(false);
                 } else {
-                    icon.setPlusMinus(false, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
-                    });
+                    icon.setPlusMinus(false);
+                    icon.setEditMode(false);
                 }
             }
 

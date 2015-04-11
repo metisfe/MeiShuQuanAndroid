@@ -29,6 +29,7 @@ public class MainApplication extends Application {
     public static Handler Handler;
     public static Context UIContext;
     public static RongIMClient rongClient;
+    public static RongIM rongIM;
 
     @Override
     public void onCreate() {
@@ -44,16 +45,16 @@ public class MainApplication extends Application {
         DataProvider.setDefaultUIThreadHandler(Handler);
         ApiDataProvider.initProvider();
         RongIM.init(this);
-        String token = "RSorSOtm5wg2/54VUeDTdIGn6Ui0bBlr+zHn5QT+0f+TueCwMF65klKIr/oHR2+OU+SxbJgwLt/epq+dCRo5w8z59djPCUVA";
+        String token = "qHluhCF1dAj8xOPUjg0JZCvfK7JNZxM37vO0IUSktXEbZvgMV3hl8xVzOvjzPOe636oIalCHGnIJYO9VPv6SGQ==";
 
         // 连接融云服务器。
         try {
-            rongClient = RongIM.connect(token, new RongIMClient.ConnectCallback() {
+            rongIM = RongIM.connect(token, new RongIMClient.ConnectCallback() {
 
                 @Override
                 public void onSuccess(String s) {
-                    if (rongClient != null) {
-                        rongClient.setOnReceiveMessageListener(new RongIMClient.OnReceiveMessageListener() {
+                    if (rongIM != null) {
+                        rongIM.setReceiveMessageListener(new RongIM.OnReceiveMessageListener() {
                             @Override
                             public void onReceived(RongIMClient.Message message, int i) {
                                 ChatManager.onReceive(message);
@@ -65,8 +66,8 @@ public class MainApplication extends Application {
                 @Override
                 public void onError(ErrorCode errorCode) {
                 }
-            }).getRongIMClient();
-
+            });
+            rongClient = rongIM.getRongIMClient();
         } catch (Exception e) {
             e.printStackTrace();
         }

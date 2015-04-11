@@ -3,6 +3,8 @@ package com.metis.meishuquan.util;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.metis.meishuquan.MainApplication;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,7 +16,7 @@ import io.rong.imlib.RongIMClient;
  * Created by wudi on 4/7/2015.
  */
 public class ChatManager {
-    public static String userId = "diwulechao";
+    public static String userId = "diwu";
 
     public static List<RongIMClient.Conversation> conversations;
     public static HashMap<String, RongIMClient.UserInfo> contactCache = new HashMap<String, RongIMClient.UserInfo>();
@@ -43,15 +45,20 @@ public class ChatManager {
             return discussionCache.get(targetId);
         }
 
-        RongIMClient.Discussion discussion = new RongIMClient.Discussion(targetId, targetId, "0", true, new ArrayList<String>());
+        //TODO: this is fake data in real data remember to put myself to the front
+        List<String> mlist = new ArrayList<>();
+        mlist.add(userId);
+        mlist.add("diwulechao2");
+        RongIMClient.Discussion discussion = new RongIMClient.Discussion(targetId, targetId, userId, true, mlist);
         discussionCache.put(targetId, discussion);
         return discussion;
     }
 
     public static void onReceive(RongIMClient.Message message) {
         Log.d("im", "onReceive: targetId:" + message.getTargetId() + "sender Id:" + message.getSenderUserId() + "type:" + message.getConversationType().toString());
-        if (message.getConversationType() == RongIMClient.ConversationType.PRIVATE) {
-
-        }
+//        if (message.getConversationType() == RongIMClient.ConversationType.PRIVATE) {
+//
+//        }
     }
+
 }
