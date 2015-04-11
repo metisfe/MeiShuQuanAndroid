@@ -26,7 +26,7 @@ public class ChatActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getParams(getIntent());
-        getIntent().setData(Uri.parse("rong://io.rong.imkit.demo").buildUpon().appendPath("conversation").appendPath(type)
+        getIntent().setData(Uri.parse("rong://io.rong.imkit.demo").buildUpon().appendPath("conversation").appendPath(type.toLowerCase())
                 .appendQueryParameter("targetId", targetId).appendQueryParameter("title", title).build());
         setContentView(R.layout.activity_circle_chatactivity);
         this.titleBar = (CircleTitleBar) this.findViewById(R.id.activity_circle_chatactivity_titlebar);

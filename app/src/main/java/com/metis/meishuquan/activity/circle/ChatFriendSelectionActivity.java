@@ -1,6 +1,7 @@
 package com.metis.meishuquan.activity.circle;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -14,14 +15,18 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.circle.UserAdvanceInfo;
 import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
+import com.metis.meishuquan.view.circle.ContactListItemView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.zip.Inflater;
 
@@ -36,10 +41,20 @@ public class ChatFriendSelectionActivity extends Activity {
     private ExpandableListView listView;
     private SearchView searchView;
     private CircleFriendListAdapter adapter;
-    private String[] excludeList;
+    private ArrayList<String> excludeList;
+    private HashSet<String> excludeSet = new HashSet<>();
+    private HashSet<String> selectedSet = new HashSet<>();
+    private String fromType, targetId;
 
     private void getParams(Intent intent) {
-        excludeList = intent.getStringArrayExtra("excludelist");
+        excludeList = intent.getStringArrayListExtra("excludelist");
+        fromType = intent.getStringExtra("fromtype");
+        targetId = intent.getStringExtra("targetid");
+        if (excludeList != null) {
+            for (String id : excludeList) {
+                excludeSet.add(id);
+            }
+        }
     }
 
     @Override
@@ -57,7 +72,14 @@ public class ChatFriendSelectionActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //TODO: save changes
-                finish();
+                if ("privateconfig".equals(fromType)) {
+                    createDiscussion();
+                } else if ("discussionconfig".equals(fromType)) {
+                    addMemberToDiscussion();
+                } else {
+                    finish();
+                }
+
             }
         };
 
@@ -75,6 +97,24 @@ public class ChatFriendSelectionActivity extends Activity {
         this.listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                return true;
+            }
+        });
+
+        this.listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                String uid = ((UserAdvanceInfo) adapter.getChild(groupPosition, childPosition)).getUserId();
+                if (selectedSet.contains(uid)) selectedSet.remove(uid);
+                else selectedSet.add(uid);
+                adapter.notifyDataSetChanged();
+
+                if (selectedSet.size() == 0) {
+                    titleBar.setRightButton("", 0, null);
+                } else {
+                    titleBar.setRightButton("确认（" + selectedSet.size() + "）", 0, onClickListener);
+                }
+
                 return true;
             }
         });
@@ -100,11 +140,101 @@ public class ChatFriendSelectionActivity extends Activity {
         expandAll();
     }
 
-    public void expandAll()
-    {
-        for ( int i = 0; i < adapter.getGroupCount(); i++ ) {
+    public void expandAll() {
+        for (int i = 0; i < adapter.getGroupCount(); i++) {
             listView.expandGroup(i);
         }
+    }
+
+    private void createDiscussion() {
+        final List<String> ulist = new ArrayList<String>(selectedSet);
+        if (!selectedSet.contains(ChatManager.userId)) {
+            ulist.add(ChatManager.userId);
+        }
+        final ProgressDialog progressDialog = new ProgressDialog(ChatFriendSelectionActivity.this);
+        progressDialog.show();
+        MainApplication.rongClient.createDiscussion("Not Set", ulist, new RongIMClient.CreateDiscussionCallback() {
+            @Override
+            public void onSuccess(String s) {
+                Log.d("circle", "discussion created, id: " + s);
+                progressDialog.cancel();
+                Intent intent = new Intent(ChatFriendSelectionActivity.this, ChatActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("title", "Group Chat (" + (selectedSet.size() + 1) + ")");
+                intent.putExtra("targetId", s);
+                intent.putExtra("type", RongIMClient.ConversationType.DISCUSSION.toString());
+                startActivity(intent);
+
+                ChatManager.discussionCache.put(s, new RongIMClient.Discussion(targetId, "Not Set", ChatManager.userId, true, ulist));
+                //TODO: should also save to DB
+                finish();
+            }
+
+            @Override
+            public void onError(ErrorCode errorCode) {
+                progressDialog.cancel();
+                Toast.makeText(ChatFriendSelectionActivity.this, "error: " + errorCode.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void addMemberToDiscussion() {
+        final ProgressDialog progressDialog = new ProgressDialog(ChatFriendSelectionActivity.this);
+        progressDialog.show();
+        //first we need to check the existing member list to prevent crash
+        MainApplication.rongClient.getDiscussion(targetId, new RongIMClient.GetDiscussionCallback() {
+            @Override
+            public void onSuccess(final RongIMClient.Discussion discussion) {
+                //now we can add
+                final List<String> ulist = new ArrayList<String>();
+                for (String id : selectedSet) {
+                    if (!discussion.getMemberIdList().contains(id)) ulist.add(id);
+                }
+
+                final int totalCount = discussion.getMemberIdList().size() + ulist.size();
+
+                if (ulist.size() > 0) {
+                    MainApplication.rongClient.addMemberToDiscussion(targetId, ulist, new RongIMClient.OperationCallback() {
+                        @Override
+                        public void onSuccess() {
+                            progressDialog.cancel();
+                            Intent intent = new Intent(ChatFriendSelectionActivity.this, ChatActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                            intent.putExtra("title", "Group Chat (" + totalCount + ")");
+                            intent.putExtra("targetId", targetId);
+                            intent.putExtra("type", RongIMClient.ConversationType.DISCUSSION.toString());
+                            startActivity(intent);
+
+                            discussion.getMemberIdList().addAll(ulist);
+                            ChatManager.discussionCache.put(targetId, discussion);
+                            //TODO: should also save to DB
+
+                            finish();
+                        }
+
+                        @Override
+                        public void onError(ErrorCode errorCode) {
+                            progressDialog.cancel();
+                            Toast.makeText(ChatFriendSelectionActivity.this, "error: " + errorCode.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
+                    progressDialog.cancel();
+                    Toast.makeText(ChatFriendSelectionActivity.this, "no new member", Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+            @Override
+            public void onError(ErrorCode errorCode) {
+                progressDialog.cancel();
+                Toast.makeText(ChatFriendSelectionActivity.this, "discussion not exist", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
+
+
     }
 
     @Override
@@ -171,9 +301,13 @@ public class ChatFriendSelectionActivity extends Activity {
 
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-            TextView tv = new TextView(ChatFriendSelectionActivity.this);
-            tv.setText(friendList.get(groupPosition).get(childPosition).getName());
-            return tv;
+            if (convertView == null || !(convertView instanceof ContactListItemView)) {
+                convertView = new ContactListItemView(ChatFriendSelectionActivity.this);
+            }
+
+            UserAdvanceInfo info = friendList.get(groupPosition).get(childPosition);
+            ((ContactListItemView) convertView).setCheckMode(info.getName(), info.getPortraitUri(), excludeSet.contains(info.getUserId()) ? -1 : (selectedSet.contains(info.getUserId()) ? 1 : 0));
+            return convertView;
         }
 
         @Override

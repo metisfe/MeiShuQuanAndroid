@@ -22,6 +22,9 @@ import com.metis.meishuquan.view.circle.CircleGridIcon;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
 import com.metis.meishuquan.view.shared.SwitchButton;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.rong.imlib.RongIMClient;
 
 /**
@@ -172,9 +175,19 @@ public class ChatConfigActivity extends Activity {
 
                         break;
                     case 1:
-                        //add another people to become discussion
+                        //add another people to become discussion or add more people into the discussion
                         Intent intent = new Intent(ChatConfigActivity.this, ChatFriendSelectionActivity.class);
-                        intent.putStringArrayListExtra("excludelist", null);
+                        ArrayList<String> excludeList = new ArrayList<String>();
+                        if (adapter.isPrivate) {
+                            excludeList.add(adapter.userInfo.getUserId());
+                            intent.putExtra("fromtype","privateconfig");
+                        } else {
+                            excludeList.addAll(adapter.discussion.getMemberIdList());
+                            intent.putExtra("fromtype","discussionconfig");
+                            intent.putExtra("targetid", targetId);
+                        }
+
+                        intent.putStringArrayListExtra("excludelist", excludeList);
                         startActivity(intent);
                         break;
                     case 2:

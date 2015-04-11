@@ -44,13 +44,15 @@ public class ChatListFragment extends CircleBaseFragment {
 
     @Override
     public void timeToSetTitleBar() {
-        getTitleBar().setText("this is the chat list page");
+        if (getTitleBar() != null) {
+            getTitleBar().setText("this is the chat list page");
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("circle","chat list onresume");
+        Log.d("circle", "chat list onresume");
     }
 
     @Override
@@ -68,7 +70,7 @@ public class ChatListFragment extends CircleBaseFragment {
         adapter.data.add(conversation);
 
         conversation = new RongIMClient.Conversation();
-        conversation.setTargetId("diwugroup");
+        conversation.setTargetId("06eff743-5b49-492b-8128-edec65dfe9cb");
         conversation.setConversationTitle("diwugroup");
         conversation.setReceivedTime(System.currentTimeMillis());
         conversation.setConversationType(RongIMClient.ConversationType.DISCUSSION);
@@ -78,11 +80,11 @@ public class ChatListFragment extends CircleBaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                RongIMClient.Conversation conversation= adapter.data.get(position);
+                RongIMClient.Conversation conversation = adapter.data.get(position);
                 Intent intent = new Intent(getActivity(), ChatActivity.class);
-                intent.putExtra("title",conversation.getConversationTitle());
-                intent.putExtra("targetId",conversation.getTargetId());
-                intent.putExtra("type",conversation.getConversationType().toString());
+                intent.putExtra("title", conversation.getConversationTitle());
+                intent.putExtra("targetId", conversation.getTargetId());
+                intent.putExtra("type", conversation.getConversationType().toString());
                 getActivity().startActivity(intent);
             }
         });
@@ -113,7 +115,7 @@ public class ChatListFragment extends CircleBaseFragment {
             if (convertView == null) {
                 convertView = new CircleChatListItemView(getActivity(), data.get(position));
             } else {
-                ((CircleChatListItemView)convertView).setData(data.get(position));
+                ((CircleChatListItemView) convertView).setData(data.get(position));
             }
             return convertView;
         }
