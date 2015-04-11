@@ -58,18 +58,31 @@ public class ChatListFragment extends CircleBaseFragment {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_circle_chatlistfragment, container, false);
         listView = (ListView) rootView.findViewById(R.id.fragment_circle_chatlistfragment_listview);
         adapter = new ChatListAdapter();
-        adapter.data.add(new RongIMClient.Conversation());
-        adapter.data.add(new RongIMClient.Conversation());
-        adapter.data.add(new RongIMClient.Conversation());
+
+        //TODO: fake data
+        RongIMClient.Conversation conversation = new RongIMClient.Conversation();
+        conversation.setTargetId("diwulechao2");
+        conversation.setConversationTitle("diwulechao2");
+        conversation.setSentTime(System.currentTimeMillis());
+        conversation.setConversationType(RongIMClient.ConversationType.PRIVATE);
+        adapter.data.add(conversation);
+
+        conversation = new RongIMClient.Conversation();
+        conversation.setTargetId("diwugroup");
+        conversation.setConversationTitle("diwugroup");
+        conversation.setReceivedTime(System.currentTimeMillis());
+        conversation.setConversationType(RongIMClient.ConversationType.DISCUSSION);
+        adapter.data.add(conversation);
 
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                RongIMClient.Conversation conversation= adapter.data.get(position);
                 Intent intent = new Intent(getActivity(), ChatActivity.class);
-                intent.putExtra("title","diwulechao2");
-                intent.putExtra("targetId","diwulechao2");
-                intent.putExtra("type","private");
+                intent.putExtra("title",conversation.getConversationTitle());
+                intent.putExtra("targetId",conversation.getTargetId());
+                intent.putExtra("type",conversation.getConversationType().toString());
                 getActivity().startActivity(intent);
             }
         });

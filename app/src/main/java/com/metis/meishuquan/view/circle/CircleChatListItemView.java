@@ -32,12 +32,16 @@ public class CircleChatListItemView extends LinearLayout {
     }
 
     public void setData(RongIMClient.Conversation conversation) {
-        this.titleView.setText("Hello");
-        this.contentView.setText("Hello World");
+        this.titleView.setText(conversation.getConversationTitle());
+        if (conversation.getLatestMessage() != null) {
+            this.contentView.setText(conversation.getLatestMessage().getPushContent());
+        }
+
         Time time = new Time();
-        //time.set(contact.time);
-        time.setToNow();
+        time.set(conversation.getReceivedTime() > conversation.getSentTime() ? conversation.getReceivedTime() : conversation.getSentTime());
         String s = time.hour >= 12 ? "下午" : "上午";
-        this.timeView.setText(s + ' ' + time.hour + ':' + time.minute);
+        String s2 = ":";
+        if (time.minute < 10) s2 = ":0";
+        this.timeView.setText(s + ' ' + time.hour + s2 + time.minute);
     }
 }

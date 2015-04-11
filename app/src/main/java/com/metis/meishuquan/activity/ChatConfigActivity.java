@@ -38,7 +38,8 @@ public class ChatConfigActivity extends Activity {
     private EditText editText;
     private boolean onEditTextMode;
 
-    private String type, targetId;
+    private String targetId;
+    private RongIMClient.ConversationType type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +52,8 @@ public class ChatConfigActivity extends Activity {
         clearGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RongIMClient.ConversationType ctype = RongIMClient.ConversationType.PRIVATE;
-                if (!"private".equals(type)) {
-                    ctype = RongIMClient.ConversationType.DISCUSSION;
-                }
-                MainApplication.rongIM.clearMessages(ChatConfigActivity.this, ctype, targetId);
+                //TODO: looks like rong's bug
+                MainApplication.rongIM.clearMessages(ChatConfigActivity.this, type, targetId);
             }
         });
 
@@ -69,7 +67,7 @@ public class ChatConfigActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        this.type = getIntent().getStringExtra("type");
+        this.type = RongIMClient.ConversationType.valueOf(getIntent().getStringExtra("type"));
         this.targetId = getIntent().getStringExtra("targetId");
 
         setData();
@@ -98,7 +96,7 @@ public class ChatConfigActivity extends Activity {
 
         this.titleBar.setRightButton("", 0, null);
 
-        if ("private".equals(type)) {
+        if (type == RongIMClient.ConversationType.PRIVATE) {
             this.leaveGroup.setVisibility(View.GONE);
             this.nameGroup.setVisibility(View.GONE);
             this.adapter.setPrivateData(targetId);
