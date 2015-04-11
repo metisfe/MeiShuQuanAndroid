@@ -16,16 +16,16 @@ public class ChatActivity extends FragmentActivity {
     private CircleTitleBar titleBar;
     private String type, title, targetId;
 
-    private void getParams() {
-        this.type = this.getIntent().getStringExtra("type");
-        this.targetId = this.getIntent().getStringExtra("targetId");
-        this.title = this.getIntent().getStringExtra("title");
+    private void getParams(Intent intent) {
+        this.type = intent.getStringExtra("type");
+        this.targetId = intent.getStringExtra("targetId");
+        this.title = intent.getStringExtra("title");
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getParams();
+        getParams(getIntent());
         getIntent().setData(Uri.parse("rong://io.rong.imkit.demo").buildUpon().appendPath("conversation").appendPath(type)
                 .appendQueryParameter("targetId", targetId).appendQueryParameter("title", title).build());
         setContentView(R.layout.activity_circle_chatactivity);
@@ -52,6 +52,6 @@ public class ChatActivity extends FragmentActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        getParams();
+        getParams(intent);
     }
 }

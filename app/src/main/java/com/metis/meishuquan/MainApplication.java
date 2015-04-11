@@ -2,12 +2,10 @@ package com.metis.meishuquan;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
 import android.os.Handler;
 import android.util.DisplayMetrics;
-import android.util.Log;
 
+import com.metis.meishuquan.model.circle.UserAdvanceInfo;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.model.provider.DataProvider;
 import com.metis.meishuquan.util.ChatManager;
@@ -71,6 +69,17 @@ public class MainApplication extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        //TODO: this is fake data
+        ChatManager.friendIdList.add("diwulechao");
+        ChatManager.friendIdList.add("diwulechao1");
+        ChatManager.friendIdList.add("diwulechao2");
+        ChatManager.friendIdList.add("diwulechao3");
+
+        ChatManager.contactCache.put("diwulechao",new RongIMClient.UserInfo("diwulechao","张三",""));
+        ChatManager.contactCache.put("diwulechao",new RongIMClient.UserInfo("diwulechao1","李四",""));
+        ChatManager.contactCache.put("diwulechao",new RongIMClient.UserInfo("diwulechao2","王二",""));
+        ChatManager.contactCache.put("diwulechao",new RongIMClient.UserInfo("diwulechao3","麻子",""));
     }
 
     public static void setDisplayMetrics(DisplayMetrics dm) {

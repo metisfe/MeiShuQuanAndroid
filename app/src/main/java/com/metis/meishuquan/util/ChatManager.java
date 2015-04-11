@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.metis.meishuquan.MainApplication;
+import com.metis.meishuquan.model.circle.UserAdvanceInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +22,7 @@ public class ChatManager {
     public static List<RongIMClient.Conversation> conversations;
     public static HashMap<String, RongIMClient.UserInfo> contactCache = new HashMap<String, RongIMClient.UserInfo>();
     public static HashMap<String, RongIMClient.Discussion> discussionCache = new HashMap<String, RongIMClient.Discussion>();
+    public static List<String> friendIdList = new ArrayList<>();
 
     public static boolean isDiscussionMine(RongIMClient.Discussion discussion) {
         if (discussion != null && !TextUtils.isEmpty(userId) && discussion != null && !TextUtils.isEmpty(discussion.getCreatorId())) {
@@ -59,6 +61,17 @@ public class ChatManager {
 //        if (message.getConversationType() == RongIMClient.ConversationType.PRIVATE) {
 //
 //        }
+    }
+
+    public static void getGroupedFriendList()
+    {
+        List<RongIMClient.UserInfo> fList = new ArrayList<>();
+        for (String id : friendIdList) {
+            fList.add(new UserAdvanceInfo(getUserInfo(id)));
+        }
+
+        
+
     }
 
 }

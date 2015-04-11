@@ -2,6 +2,7 @@ package com.metis.meishuquan.activity.circle;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -171,7 +172,10 @@ public class ChatConfigActivity extends Activity {
 
                         break;
                     case 1:
-                        //TODO: add another people to become discussion
+                        //add another people to become discussion
+                        Intent intent = new Intent(ChatConfigActivity.this, ChatFriendSelectionActivity.class);
+                        intent.putStringArrayListExtra("excludelist", null);
+                        startActivity(intent);
                         break;
                     case 2:
                         if (ChatManager.isDiscussionMine(adapter.discussion)) {
