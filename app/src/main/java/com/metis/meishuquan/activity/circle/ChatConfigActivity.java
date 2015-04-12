@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.util.ChatManager;
+import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.util.ViewUtils;
 import com.metis.meishuquan.view.circle.CircleGridIcon;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
@@ -37,7 +39,7 @@ import io.rong.imlib.RongIMClient;
 public class ChatConfigActivity extends Activity {
     private CircleTitleBar titleBar;
     private ViewGroup nameGroup, clearGroup;
-    private ExpandableHeightGridView gridView;
+    private GridView gridView;
     private SwitchButton switchButton;
     private TextView leaveGroup;
     private FriendGridViewAdapter adapter;
@@ -52,7 +54,7 @@ public class ChatConfigActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_circle_chatconfigactivity);
-        this.gridView = (ExpandableHeightGridView) this.findViewById(R.id.activity_circle_chatconfigactivity_gridview);
+        this.gridView = (GridView) this.findViewById(R.id.activity_circle_chatconfigactivity_gridview);
         this.nameGroup = (ViewGroup) this.findViewById(R.id.activity_circle_chatconfigactivity_namegroup);
         this.switchButton = (SwitchButton) this.findViewById(R.id.activity_circle_chatconfigactivity_nodisturbswitch);
         this.clearGroup = (ViewGroup) this.findViewById(R.id.activity_circle_chatconfigactivity_clearhistorygroup);
@@ -81,17 +83,16 @@ public class ChatConfigActivity extends Activity {
         refreshDataFromRong();
     }
 
-    private void refreshDataFromRong()
-    {
-        if (type == RongIMClient.ConversationType.DISCUSSION)
-        {
-            MainApplication.rongClient.getDiscussion(targetId,new RongIMClient.GetDiscussionCallback() {
+    private void refreshDataFromRong() {
+        if (type == RongIMClient.ConversationType.DISCUSSION) {
+            MainApplication.rongClient.getDiscussion(targetId, new RongIMClient.GetDiscussionCallback() {
                 @Override
                 public void onSuccess(RongIMClient.Discussion discussion) {
-                    ChatManager.discussionCache.put(discussion.getId(),discussion);
-                    if (adapter!=null)
-                    {
+                    ChatManager.normalizeDiscussion(discussion);
+                    ChatManager.discussionCache.put(discussion.getId(), discussion);
+                    if (adapter != null) {
                         adapter.discussion = discussion;
+                        setGridViewHeight(adapter.getCount());
                         adapter.notifyDataSetChanged();
                     }
                 }
@@ -113,6 +114,12 @@ public class ChatConfigActivity extends Activity {
         }
 
         super.onBackPressed();
+    }
+
+    private void setGridViewHeight(int itemNumber) {
+        ViewGroup.LayoutParams params = this.gridView.getLayoutParams();
+        params.height = ((itemNumber - 1) / 4 + 1) * Utils.dip2px(this, 90) - Utils.dip2px(this, 20);
+        gridView.setLayoutParams(params);
     }
 
     private void setData() {
@@ -195,6 +202,7 @@ public class ChatConfigActivity extends Activity {
                 switch (icon.type) {
                     case 0:
                         if (adapter.isEditMode && position > 0) {
+                            //remove item
                             final ProgressDialog progressDialog = new ProgressDialog(ChatConfigActivity.this);
                             progressDialog.show();
                             final int pos = position;
@@ -208,9 +216,10 @@ public class ChatConfigActivity extends Activity {
                                         @Override
                                         public void run() {
                                             adapter.discussion.setMemberIdList(ulist);
+                                            setGridViewHeight(adapter.getCount());
                                             adapter.notifyDataSetChanged();
                                         }
-                                    },50);
+                                    }, 50);
                                 }
 
                                 @Override
@@ -230,11 +239,11 @@ public class ChatConfigActivity extends Activity {
                         ArrayList<String> excludeList = new ArrayList<String>();
                         if (adapter.isPrivate) {
                             excludeList.add(adapter.userInfo.getUserId());
-                            intent.putExtra("fromtype","privateconfig");
+                            intent.putExtra("fromtype", "privateconfig");
                             intent.putExtra("targetid", targetId);
                         } else {
                             excludeList.addAll(adapter.discussion.getMemberIdList());
-                            intent.putExtra("fromtype","discussionconfig");
+                            intent.putExtra("fromtype", "discussionconfig");
                             intent.putExtra("targetid", targetId);
                         }
 
@@ -242,6 +251,7 @@ public class ChatConfigActivity extends Activity {
                         startActivity(intent);
                         break;
                     case 2:
+                        //click the minus icon
                         if (ChatManager.isDiscussionMine(adapter.discussion)) {
                             adapter.isEditMode = true;
                         }
@@ -299,6 +309,7 @@ public class ChatConfigActivity extends Activity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             //TODO: do not use wrap content will cause unnecessary get view
+            Log.d("circle", "get view: " + position);
             if (convertView == null)
                 convertView = new CircleGridIcon(ChatConfigActivity.this);
 
@@ -306,7 +317,7 @@ public class ChatConfigActivity extends Activity {
             if (isPrivate) {
                 //if this is a private page
                 if (position == 0) {
-                    icon.setData(userInfo.getPortraitUri(), userInfo.getName());
+                    icon.setData(userInfo.getPortraitUri(), userInfo.getName(), userInfo.getUserId());
                     icon.setEditMode(false);
                 } else {
                     icon.setPlusMinus(true);
@@ -316,7 +327,7 @@ public class ChatConfigActivity extends Activity {
                 //if this is a group chat page
                 if (position < discussion.getMemberIdList().size()) {
                     RongIMClient.UserInfo info = ChatManager.getUserInfo(discussion.getMemberIdList().get(position));
-                    icon.setData(info.getPortraitUri(), info.getName());
+                    icon.setData(info.getPortraitUri(), info.getName(), info.getUserId());
                     icon.setEditMode(isEditMode && position > 0);
                 } else if (position == discussion.getMemberIdList().size()) {
                     icon.setPlusMinus(true);

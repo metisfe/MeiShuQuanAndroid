@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.circle.UserAdvanceInfo;
@@ -48,15 +49,28 @@ public class ContactListFragment extends CircleBaseFragment {
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 if (groupPosition == 0) {
                     if (childPosition == 0) {
-                        //TODO: friend request page
+                        FriendConfirmFragment friendConfirmFragment = new FriendConfirmFragment();
+                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        FragmentTransaction ft = fm.beginTransaction();
+                        ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                        ft.add(R.id.content_container, friendConfirmFragment);
+                        ft.addToBackStack(null);
+                        ft.commit();
                     } else {
-                        //TODO: group list page
+                        GroupListFragment groupListFragment = new GroupListFragment();
+                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        FragmentTransaction ft = fm.beginTransaction();
+                        ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                        ft.add(R.id.content_container, groupListFragment);
+                        ft.addToBackStack(null);
+                        ft.commit();
                     }
                     return true;
                 }
 
                 String uid = ((UserAdvanceInfo) adapter.getChild(groupPosition - 1, childPosition)).getUserId();
                 //TODO: personal page
+                Toast.makeText(getActivity(), "Enter personal page id: " + uid, Toast.LENGTH_LONG).show();
                 return true;
             }
         });
@@ -145,14 +159,16 @@ public class ContactListFragment extends CircleBaseFragment {
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             if (groupPosition == 0) {
-                return null;
+                View v = new View(getActivity());
+                v.setTag(1);
+                return v;
             }
 
             String name = "";
             name += friendList.get(groupPosition - 1).get(0).getPinYin().charAt(0);
             if (name.equals("~")) name = "#";
 
-            if (convertView == null ) {
+            if (convertView == null || convertView.getTag() == null || ((Integer) convertView.getTag()) == 1) {
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_topline_comment_list_item_tag, null);
             }
 
@@ -175,7 +191,7 @@ public class ContactListFragment extends CircleBaseFragment {
                 ((ContactListItemView) convertView).setNormalMode(info.getName(), "", "", info.getResourceId(), true);
             } else {
                 info = friendList.get(groupPosition - 1).get(childPosition);
-                ((ContactListItemView) convertView).setNormalMode(info.getName(), info.getPortraitUri(), "", 0, false);
+                ((ContactListItemView) convertView).setNormalMode(info.getName(), "", info.getPortraitUri(), 0, false);
             }
 
             return convertView;

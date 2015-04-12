@@ -98,4 +98,20 @@ public class ChatManager {
 
         return ret;
     }
+
+    public static void normalizeDiscussion(RongIMClient.Discussion discussion) {
+        if (discussion == null) return;
+        List<String> mlist = discussion.getMemberIdList();
+        if (mlist == null) return;
+        int pos = 0;
+        String firstString = "";
+        for (String id : mlist) {
+            if (pos == 0) firstString = id;
+            if (id.equals(ChatManager.userId) && pos > 0) {
+                mlist.set(pos, firstString);
+                mlist.set(0, id);
+            }
+            pos++;
+        }
+    }
 }

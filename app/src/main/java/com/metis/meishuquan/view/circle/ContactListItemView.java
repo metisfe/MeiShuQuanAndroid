@@ -70,7 +70,7 @@ public class ContactListItemView extends LinearLayout {
     public void setNormalMode(String title, String subtitle, String url, int resourceId, boolean next) {
         this.nameView.setText(title);
         if (resourceId > 0) {
-            this.smartImageView.setBackgroundResource(resourceId);
+            this.smartImageView.setImageResource(resourceId);
         } else {
             this.smartImageView.setImageUrl(url);
         }
