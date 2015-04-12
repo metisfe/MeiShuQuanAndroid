@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +14,11 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.activity.ChatActivity;
+import com.metis.meishuquan.activity.circle.ChatActivity;
 import com.metis.meishuquan.view.circle.CircleChatListItemView;
+import com.metis.meishuquan.view.circle.PopupAddWindow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,13 +48,65 @@ public class ChatListFragment extends CircleBaseFragment {
 
     @Override
     public void timeToSetTitleBar() {
-        getTitleBar().setText("this is the chat list page");
+        getTitleBar().setText("消息");
+        getTitleBar().setRightButton("Add", 0, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupAddWindow addWindow = new PopupAddWindow(getActivity(), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((MainActivity) getActivity()).removeAllAttachedView();
+                    }
+                }, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //select friend
+                        StartFriendPickFragment startFriendPickFragment = new StartFriendPickFragment();
+                        Bundle args = new Bundle();
+                        args.putString("fromtype", "privateconfig");
+                        args.putString("title","消息");
+                        startFriendPickFragment.setArguments(args);
+
+                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        FragmentTransaction ft = fm.beginTransaction();
+                        ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                        ft.add(R.id.content_container, startFriendPickFragment);
+                        ft.addToBackStack(null);
+                        ft.commit();
+                    }
+                }, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AddFriendFragment addFriendFragment = new AddFriendFragment();
+                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        FragmentTransaction ft = fm.beginTransaction();
+                        ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                        ft.add(R.id.content_container, addFriendFragment);
+                        ft.addToBackStack(null);
+                        ft.commit();
+                    }
+                }, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ScanQRCodeFragment scanQRCodeFragment = new ScanQRCodeFragment();
+                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        FragmentTransaction ft = fm.beginTransaction();
+                        ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                        ft.add(R.id.content_container, scanQRCodeFragment);
+                        ft.addToBackStack(null);
+                        ft.commit();
+                    }
+                });
+
+                ((MainActivity) getActivity()).addAttachView(addWindow);
+            }
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("circle","chat list onresume");
+        Log.d("circle", "chat list onresume");
     }
 
     @Override
@@ -58,18 +114,31 @@ public class ChatListFragment extends CircleBaseFragment {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_circle_chatlistfragment, container, false);
         listView = (ListView) rootView.findViewById(R.id.fragment_circle_chatlistfragment_listview);
         adapter = new ChatListAdapter();
-        adapter.data.add(new RongIMClient.Conversation());
-        adapter.data.add(new RongIMClient.Conversation());
-        adapter.data.add(new RongIMClient.Conversation());
+
+        //TODO: fake data
+        RongIMClient.Conversation conversation = new RongIMClient.Conversation();
+        conversation.setTargetId("diwulechao2");
+        conversation.setConversationTitle("diwulechao2");
+        conversation.setSentTime(System.currentTimeMillis());
+        conversation.setConversationType(RongIMClient.ConversationType.PRIVATE);
+        adapter.data.add(conversation);
+
+        conversation = new RongIMClient.Conversation();
+        conversation.setTargetId("44783e15-29d9-4bd4-8dd9-07d506e1fedf");
+        conversation.setConversationTitle("diwugroup");
+        conversation.setReceivedTime(System.currentTimeMillis());
+        conversation.setConversationType(RongIMClient.ConversationType.DISCUSSION);
+        adapter.data.add(conversation);
 
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                RongIMClient.Conversation conversation = adapter.data.get(position);
                 Intent intent = new Intent(getActivity(), ChatActivity.class);
-                intent.putExtra("title","diwulechao2");
-                intent.putExtra("targetId","diwulechao2");
-                intent.putExtra("type","private");
+                intent.putExtra("title", conversation.getConversationTitle());
+                intent.putExtra("targetId", conversation.getTargetId());
+                intent.putExtra("type", conversation.getConversationType().toString());
                 getActivity().startActivity(intent);
             }
         });
@@ -100,7 +169,7 @@ public class ChatListFragment extends CircleBaseFragment {
             if (convertView == null) {
                 convertView = new CircleChatListItemView(getActivity(), data.get(position));
             } else {
-                ((CircleChatListItemView)convertView).setData(data.get(position));
+                ((CircleChatListItemView) convertView).setData(data.get(position));
             }
             return convertView;
         }

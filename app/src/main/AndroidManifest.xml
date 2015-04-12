@@ -52,16 +52,62 @@
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".activity.ChatActivity"
+            android:name=".activity.circle.ChatActivity"
             android:configChanges="locale|layoutDirection|fontScale"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.circle.ChatFriendSelectionActivity"
+            android:configChanges="locale|layoutDirection|fontScale"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.circle.ChatConfigActivity"
+            android:configChanges="locale|layoutDirection|fontScale"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.info.AdvanceActivity"
+            android:label="@string/title_activity_advance" />
+        <activity
+            android:name=".activity.info.SettingActivity"
+            android:label="@string/title_activity_setting" />
+        <activity
+            android:name=".activity.info.AboutActivity"
+            android:label="@string/title_activity_about" />
+        <activity
+            android:name=".activity.info.InfoActivity"
+            android:label="@string/title_activity_info" />
+        <activity
+            android:name=".activity.InputActivity"
+            android:label="@string/title_activity_input"
+            android:windowSoftInputMode="stateAlwaysVisible" />
+        <activity
+            android:name=".activity.info.MyFavoritesActivity"
+            android:label="@string/title_activity_my_favorites" />
+        <activity
+            android:name=".activity.info.MyCourseActivity"
+            android:label="@string/title_activity_my_course" />
+        <activity
+            android:name=".activity.login.LoginActivity"
+            android:label="@string/title_activity_login" >
+        </activity>
+        <activity
+            android:name=".activity.info.MyAskActivity"
+            android:label="@string/title_activity_my_ask" >
+        </activity>
+        <activity
+            android:name=".activity.info.MyCommentsActivity"
+            android:label="@string/title_activity_my_comments" >
+        </activity>
+        <activity
+            android:name=".activity.info.DepartmentActivity"
+            android:label="@string/title_activity_department" >
+        </activity>
 
-        <!-- ###################注册友盟SDK使用的Activity###################### -->
+        <!-- Begin UMeng -->
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="xxxxxxxxxxxxxxxxxxxxxx" />
@@ -74,10 +120,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.UMDialog"
             android:windowSoftInputMode="stateVisible|adjustResize" />
-        <activity
-            android:name=".activity.ChatConfigActivity"
-            android:configChanges="locale|layoutDirection|fontScale"
-            android:screenOrientation="portrait" />
+
+        <!-- End UMeng -->
 
         <!-- Begin Rong Cloud -->
         <meta-data
@@ -263,44 +307,7 @@
         </receiver>
 
         <!-- End Rong Cloud -->
-        <activity
-            android:name=".activity.info.AdvanceActivity"
-            android:label="@string/title_activity_advance" />
-        <activity
-            android:name=".activity.info.SettingActivity"
-            android:label="@string/title_activity_setting" />
-        <activity
-            android:name=".activity.info.AboutActivity"
-            android:label="@string/title_activity_about" />
-        <activity
-            android:name=".activity.info.InfoActivity"
-            android:label="@string/title_activity_info" />
-        <activity
-            android:name=".activity.InputActivity"
-            android:label="@string/title_activity_input"
-            android:windowSoftInputMode="stateAlwaysVisible" />
-        <activity
-            android:name=".activity.info.MyFavoritesActivity"
-            android:label="@string/title_activity_my_favorites" />
-        <activity
-            android:name=".activity.info.MyCourseActivity"
-            android:label="@string/title_activity_my_course" />
-        <activity
-            android:name=".activity.login.LoginActivity"
-            android:label="@string/title_activity_login" >
-        </activity>
-        <activity
-            android:name=".activity.info.MyAskActivity"
-            android:label="@string/title_activity_my_ask" >
-        </activity>
-        <activity
-            android:name=".activity.info.MyCommentsActivity"
-            android:label="@string/title_activity_my_comments" >
-        </activity>
-        <activity
-            android:name=".activity.info.DepartmentActivity"
-            android:label="@string/title_activity_department" >
-        </activity>
+
     </application>
 
 </manifest>

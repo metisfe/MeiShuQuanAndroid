@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:clickable="true"
+    android:orientation="vertical"
+    android:background="#BBBBBB">
+
+    <com.metis.meishuquan.view.circle.CircleTitleBar
+        android:id="@+id/fragment_circle_addfriendfragment_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#EEEEEE">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp">
+
+            <SearchView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:iconifiedByDefault="false"
+                android:queryHint="搜索美术圈号/手机号"
+                android:inputType="textFilter"
+                android:hint="搜索美术圈号/手机号" />
+
+            <View
+                android:id="@+id/fragment_circle_addfriendfragment_search"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#BBBBBB" />
+
+        <com.metis.meishuquan.view.circle.ContactListItemView
+            android:id="@+id/fragment_circle_addfriendfragment_scan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="#BBBBBB" />
+
+        <com.metis.meishuquan.view.circle.ContactListItemView
+            android:id="@+id/fragment_circle_addfriendfragment_contactbook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</LinearLayout>

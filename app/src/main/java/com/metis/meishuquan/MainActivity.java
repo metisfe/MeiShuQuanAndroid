@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.metis.meishuquan.fragment.main.CircleFragment;
@@ -29,9 +31,10 @@ import com.metis.meishuquan.view.shared.TabBar;
 import java.util.Properties;
 
 public class MainActivity extends FragmentActivity implements TabBar.TabSelectedListener {
-    private static FragmentManager fm;
     private static final String PressBackAgainToQuiteApplicationMessage = "再按一次退出";
+    private ViewGroup popupRoot;
     private boolean doWantToQuite;
+    private int attachViewCount = 0;
 
     public static MainActivity self;
 
@@ -44,9 +47,9 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
 
         doWantToQuite = false;
         setContentView(R.layout.activity_mainactivity);
+        popupRoot = (ViewGroup) this.findViewById(R.id.popup_attach);
 
         MainApplication.MainActivity = this;
-        MainActivity.fm = this.getSupportFragmentManager();
         DisplayMetrics dm = new DisplayMetrics();
         this.getWindowManager().getDefaultDisplay().getMetrics(dm);
         MainApplication.setDisplayMetrics(dm);
@@ -149,7 +152,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
     }
 
     public void navigateTo(Class<? extends Fragment> fragment) {
-        FragmentTransaction ft = fm.beginTransaction();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment baseFragment = null;
         try {
             baseFragment = fragment.newInstance();
@@ -166,19 +169,14 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
         ft.commit();
     }
 
-    public void clearBackStackAndThenNavigateTo(Class<? extends Fragment> fragment) {
-        int bsCount = fm.getBackStackEntryCount();
-        for (int i = 0; i < bsCount; i++) {
-            FragmentTransaction ft = fm.beginTransaction();
-            fm.popBackStack();
-            ft.commitAllowingStateLoss();
-        }
-        this.navigateTo(fragment);
-    }
-
     @Override
     public void onBackPressed() {
-        int size = fm.getBackStackEntryCount();
+        if (attachViewCount > 0) {
+            removeAllAttachedView();
+            return;
+        }
+
+        int size = getSupportFragmentManager().getBackStackEntryCount();
         if (size == 0) {
             if (doWantToQuite) {
                 this.finish();
@@ -213,5 +211,32 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
                 || name.equals(AssessFragment.class.getSimpleName())
                 || name.equals(CircleFragment.class.getSimpleName())
                 || name.equals(ClassFragment.class.getSimpleName());
+    }
+
+    public void removeAllAttachedView()
+    {
+        if (popupRoot!=null)
+        {
+            popupRoot.removeAllViews();
+            attachViewCount = 0;
+        }
+    }
+
+    public void removeAttachedView(View view)
+    {
+        if (popupRoot!=null && view!=null)
+        {
+            popupRoot.removeView(view);
+            attachViewCount --;
+        }
+    }
+
+    public void addAttachView(View view)
+    {
+        if (popupRoot!=null && view!=null)
+        {
+            popupRoot.addView(view);
+            attachViewCount ++;
+        }
     }
 }

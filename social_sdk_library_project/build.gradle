@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 17
-    buildToolsVersion "19.1.0"
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
 
     defaultConfig {
         minSdkVersion 8
-        targetSdkVersion 10
+        targetSdkVersion 21
     }
 
     buildTypes {
@@ -18,7 +18,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:18.+'
+    compile 'com.android.support:support-v4:21.0.3'
     compile files('libs/SocialSDK_AtFriends.jar')
     compile files('libs/SocialSDK_QQZone_1.jar')
     compile files('libs/SocialSDK_QQZone_2.jar')

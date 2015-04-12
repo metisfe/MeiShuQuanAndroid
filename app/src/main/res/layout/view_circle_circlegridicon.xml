@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="50dp"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="50dp"
     android:layout_height="70dp">
 
     <com.loopj.android.image.SmartImageView
@@ -9,11 +9,21 @@
         android:layout_height="50dp"
         android:adjustViewBounds="true"/>
 
+    <View
+        android:id="@+id/view_circle_circlegridicon_deleteicon"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:background="@color/red"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:visibility="gone"/>
+
     <TextView
         android:id="@+id/view_circle_circlegridicon_text"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:text="tesdsdsadawdad"
         android:singleLine="true"
-        android:gravity="center"/>
-</LinearLayout>
+        android:gravity="center"
+        android:layout_below="@id/view_circle_circlegridicon_image"/>
+</RelativeLayout>

@@ -78,7 +78,9 @@ public class CircleFragment extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
-                fragmentPagerAdapter.fragments[position].timeToSetTitleBar();
+                if (fragmentPagerAdapter != null && fragmentPagerAdapter.fragments != null && fragmentPagerAdapter.fragments.length > position && fragmentPagerAdapter.fragments[position] != null) {
+                    fragmentPagerAdapter.fragments[position].timeToSetTitleBar();
+                }
             }
 
             @Override
@@ -93,7 +95,8 @@ public class CircleFragment extends Fragment {
     }
 
     class TabPageIndicatorAdapter extends FragmentStatePagerAdapter {
-        boolean firstTimeLoad=true;
+        boolean firstTimeLoad = true;
+
         public TabPageIndicatorAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -122,8 +125,7 @@ public class CircleFragment extends Fragment {
             }
 
             fragment.setTitleBar(titleBar);
-            if (firstTimeLoad)
-            {
+            if (firstTimeLoad) {
                 firstTimeLoad = false;
                 fragment.timeToSetTitleBar();
             }

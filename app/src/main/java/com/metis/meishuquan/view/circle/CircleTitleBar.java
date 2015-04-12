@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,7 +30,8 @@ public class CircleTitleBar extends RelativeLayout {
     }
 
     private void init() {
-        LayoutInflater.from(getContext()).inflate(R.layout.views_circle_titlebar, this);
+        LayoutInflater.from(getContext()).inflate(R.layout.view_circle_titlebar, this);
+
         leftButton = (ViewGroup) this.findViewById(R.id.views_circle_titlebar_leftbutton);
         rightButton = (ViewGroup) this.findViewById(R.id.views_circle_titlebar_rightbutton);
         textView = (TextView) this.findViewById(R.id.views_circle_titlebar_text);
@@ -66,9 +66,17 @@ public class CircleTitleBar extends RelativeLayout {
             this.rightTextView.setVisibility(VISIBLE);
             this.rightTextView.setText(rightText);
         }
+        else
+        {
+            this.rightTextView.setVisibility(GONE);
+        }
 
         if (resourceId > 0) {
             this.rightImageView.setImageResource(resourceId);
+        }
+        else
+        {
+            this.rightImageView.setVisibility(GONE);
         }
 
         this.rightButton.setOnClickListener(leftClick);

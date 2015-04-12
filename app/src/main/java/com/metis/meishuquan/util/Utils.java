@@ -21,6 +21,13 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.framework.util.TextureRender;
 import com.metis.meishuquan.view.shared.BaseDialog;
 
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
@@ -353,5 +360,70 @@ public class Utils
     public static void hideInputMethod(Context context,View view){
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getApplicationWindowToken() , 0);
+    }
+
+    public static String toPinYinStringWithPrefix(String word) {
+        if (TextUtils.isEmpty(word)) {
+            return "~";
+        }
+
+        String ret = "";
+        HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
+        format.setCaseType(HanyuPinyinCaseType.LOWERCASE);
+        format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+        format.setVCharType(HanyuPinyinVCharType.WITH_U_UNICODE);
+        String[] pinyinArray = null;
+
+        for (int i = 0; i < word.length(); i++) {
+            char c = word.charAt(i);
+            try {
+                if (c >= 0x4e00 && c <= 0x9fa5) {
+                    pinyinArray = PinyinHelper.toHanyuPinyinStringArray(c, format);
+                    if (pinyinArray != null && pinyinArray.length > 0) {
+                        ret += pinyinArray[0];
+                    }
+                } else if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9') {
+                    ret += c;
+                }
+            } catch (Exception e) {
+            }
+        }
+
+        ret=ret.toLowerCase();
+        if (ret.length() == 0)
+            return "~";
+        if (ret.charAt(0) >= 'a' && ret.charAt(0) <= 'z')
+            return ret;
+        return "~" + ret;
+    }
+
+    public static String toPinYinString(String word) {
+        if (TextUtils.isEmpty(word)) {
+            return "";
+        }
+
+        String ret = "";
+        HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
+        format.setCaseType(HanyuPinyinCaseType.LOWERCASE);
+        format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+        format.setVCharType(HanyuPinyinVCharType.WITH_U_UNICODE);
+        String[] pinyinArray = null;
+
+        for (int i = 0; i < word.length(); i++) {
+            char c = word.charAt(i);
+            try {
+                if (c >= 0x4e00 && c <= 0x9fa5) {
+                    pinyinArray = PinyinHelper.toHanyuPinyinStringArray(c, format);
+                    if (pinyinArray != null && pinyinArray.length > 0) {
+                        ret += pinyinArray[0];
+                    }
+                } else if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9') {
+                    ret += c;
+                }
+            } catch (Exception e) {
+            }
+        }
+
+        return ret.toLowerCase();
     }
 }

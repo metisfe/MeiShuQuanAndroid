@@ -1,23 +1,23 @@
 package com.metis.meishuquan.activity.info;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.InputActivity;
-import com.metis.meishuquan.framework.WebAccessManager;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.User;
-import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.view.shared.BaseDialog;
 import com.metis.meishuquan.view.shared.MyInfoBtn;
-import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
-import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 public class InfoActivity extends BaseActivity implements View.OnClickListener {
 
@@ -58,6 +58,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
 
         mNickView.setOnClickListener(this);
         mRecentsContainer.setOnClickListener(this);
+        mGenderView.setOnClickListener(this);
         mAgeView.setOnClickListener(this);
         mDepartmentView.setOnClickListener(this);
         mCvView.setOnClickListener(this);
@@ -85,6 +86,9 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.info_recents_container:
                 startInputActivityForResult(getString(R.string.info_recents), mRecentsContentTv.getText(), false, InputActivity.REQUEST_CODE_RECENTS);
+                break;
+            case R.id.info_gender:
+                showDialog();
                 break;
             case R.id.info_age:
                 startInputActivityForResult(getString(R.string.info_ages), mAgeView.getSecondaryText(), true, InputActivity.REQUEST_CODE_AGE, InputType.TYPE_NUMBER_FLAG_DECIMAL);
@@ -135,5 +139,41 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
         mNickView.setSecondaryText(user.getName());
         mGenderView.setSecondaryText(user.getGender());
         mGradeView.setSecondaryText(user.getGrade());
+    }
+
+    private Dialog mDialog = null;
+    public void showDialog () {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.info_gender);
+        View contentView = LayoutInflater.from(this).inflate(R.layout.dialog_gender_chooser, null);
+        builder.setView(contentView);
+        builder.setPositiveButton(R.string.gender_ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mDialog.dismiss();
+            }
+        });
+        RadioGroup group = (RadioGroup)contentView.findViewById(R.id.gender_group);
+        RadioButton female = (RadioButton)contentView.findViewById(R.id.gender_famale);
+        RadioButton male = (RadioButton)contentView.findViewById(R.id.gender_male);
+        final String femaleStr = getString(R.string.gender_famale);
+        final String maleStr = getString(R.string.gender_male);
+        if (mGenderView.getSecondaryText().toString().equals(femaleStr)) {
+            female.setChecked(true);
+        } else {
+            male.setChecked(true);
+        }
+        group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.gender_famale) {
+                    mGenderView.setSecondaryText(femaleStr);
+                } else {
+                    mGenderView.setSecondaryText(maleStr);
+                }
+            }
+        });
+        mDialog = builder.create();
+        mDialog.show();
     }
 }

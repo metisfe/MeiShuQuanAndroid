@@ -1,4 +1,4 @@
-package com.metis.meishuquan.activity;
+package com.metis.meishuquan.activity.circle;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -16,17 +16,17 @@ public class ChatActivity extends FragmentActivity {
     private CircleTitleBar titleBar;
     private String type, title, targetId;
 
-    private void getParams() {
-        this.type = this.getIntent().getStringExtra("type");
-        this.targetId = this.getIntent().getStringExtra("targetId");
-        this.title = this.getIntent().getStringExtra("title");
+    private void getParams(Intent intent) {
+        this.type = intent.getStringExtra("type");
+        this.targetId = intent.getStringExtra("targetId");
+        this.title = intent.getStringExtra("title");
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getParams();
-        getIntent().setData(Uri.parse("rong://io.rong.imkit.demo").buildUpon().appendPath("conversation").appendPath(type)
+        getParams(getIntent());
+        getIntent().setData(Uri.parse("rong://io.rong.imkit.demo").buildUpon().appendPath("conversation").appendPath(type.toLowerCase())
                 .appendQueryParameter("targetId", targetId).appendQueryParameter("title", title).build());
         setContentView(R.layout.activity_circle_chatactivity);
         this.titleBar = (CircleTitleBar) this.findViewById(R.id.activity_circle_chatactivity_titlebar);
@@ -52,6 +52,6 @@ public class ChatActivity extends FragmentActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        getParams();
+        getParams(intent);
     }
 }
