@@ -1,5 +1,12 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/id_rl_login_main"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#cdcdcd"></RelativeLayout>
+    android:background="#cdcdcd"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/id_rl_login_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" />
+</LinearLayout>

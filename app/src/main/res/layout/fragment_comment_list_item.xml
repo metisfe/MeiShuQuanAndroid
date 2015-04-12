@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#F1F1F1"
-    android:padding="10dp">
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp">
 
     <com.loopj.android.image.SmartImageView
         android:id="@+id/id_img_portrait"
@@ -29,13 +31,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/id_username"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="5dp"
         android:layout_toEndOf="@+id/id_username"
         android:layout_toRightOf="@+id/id_username"
         android:singleLine="true"
         android:text="北京"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#7e7e7e" />
+        android:textColor="#7e7e7e"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/id_notifytime"
@@ -57,31 +59,71 @@
         android:layout_alignStart="@+id/id_username"
         android:layout_below="@+id/id_username"
         android:layout_marginTop="10dp"
-        android:maxLines="10"
+        android:maxLines="5"
         android:text="本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情"
-        android:textSize="14sp" />
+        android:textColor="#7e7e7e"
+        android:textSize="15sp" />
 
-    <Button
-        android:id="@+id/id_btn_comment"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
+    <RelativeLayout
+        android:id="@+id/id_rl_reply"
+        android:layout_width="40dp"
+        android:layout_height="25dp"
         android:layout_alignEnd="@+id/id_notifytime"
         android:layout_alignRight="@+id/id_notifytime"
         android:layout_below="@+id/id_textview_comment_content"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/icon_comment_blue_normal" />
+        android:layout_marginTop="10dp">
 
-    <Button
-        android:id="@+id/id_btn_support"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_alignBottom="@+id/id_btn_comment"
-        android:layout_marginRight="20dp"
-        android:layout_toLeftOf="@+id/id_btn_comment"
-        android:layout_toStartOf="@+id/id_btn_comment"
-        android:background="@drawable/icon_comment_details_normal" />
+        <Button
+            android:id="@+id/id_btn_comment"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="1.5dp"
+            android:background="@drawable/ic_action_topline_comment_count"
+            android:clickable="false" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/id_rl_support"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_below="@+id/id_textview_comment_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@+id/id_rl_reply">
+
+        <Button
+            android:id="@+id/id_btn_support"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/icon_unsupport"
+            android:clickable="false" />
+
+        <TextView
+            android:id="@+id/id_tv_support_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/id_btn_support"
+            android:clickable="false"
+            android:singleLine="true"
+            android:text="(123)"
+            android:textColor="#7e7e7e"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/id_tv_add_one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text=" + 1"
+            android:textColor="@color/red"
+            android:visibility="gone" />
+    </RelativeLayout>
 
 
 </RelativeLayout>

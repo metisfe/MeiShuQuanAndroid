@@ -1,8 +1,5 @@
 package com.metis.meishuquan.fragment.login;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,6 +16,7 @@ import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.BLL.UserOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
@@ -60,7 +58,6 @@ public class LoginFragment extends Fragment {
         btnBack.setOnClickListener(new View.OnClickListener() {//返回
             @Override
             public void onClick(View view) {
-                //finish();
                 getActivity().finish();
             }
         });
@@ -80,11 +77,10 @@ public class LoginFragment extends Fragment {
                     @Override
                     public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                         if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                            SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
+                            spu.update(SharedPreferencesUtil.LOGIN_STATE, "已登录");
                             Toast.makeText(MainApplication.UIContext, "登录成功", Toast.LENGTH_SHORT).show();
-                            FragmentTransaction ft = fragmentManager.beginTransaction();
-                            ft.remove(LoginFragment.this);
-                            fragmentManager.popBackStack();
-                            ft.commit();
+                            getActivity().finish();
                         } else {
                             Toast.makeText(MainApplication.UIContext, "账号与密码不匹配，请重新输入", Toast.LENGTH_SHORT).show();
                         }
@@ -109,7 +105,7 @@ public class LoginFragment extends Fragment {
             public void onClick(View view) {
                 ResetPwdFragment resetPwdFragment = new ResetPwdFragment();
                 FragmentTransaction ft = fragmentManager.beginTransaction();
-                ft.replace(R.id.id_rl_login_main, resetPwdFragment);
+                ft.add(R.id.id_rl_login_main, resetPwdFragment);
                 ft.addToBackStack(null);
                 ft.commit();
             }

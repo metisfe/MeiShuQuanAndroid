@@ -8,20 +8,16 @@
     <RelativeLayout
         android:id="@+id/id_rl_topbar"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="44dp"
         android:background="#2d2a40">
 
         <Button
             android:id="@+id/id_btn_assess_info_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
-            android:background="#2d2a40"
-            android:text="返回"
-            android:textColor="@color/white"
-            android:textSize="17sp" />
+            android:background="@drawable/bg_btn_arrow_left" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -116,9 +112,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/id_tv_comment_count"
+            android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/id_tv_comment_count"
             android:layout_toStartOf="@+id/id_tv_comment_count"
-            android:layout_marginRight="10dp"
             android:background="#F1F1F1"
             android:text="赞(123)"
             android:textColor="#909090" />
@@ -138,9 +134,9 @@
             android:id="@+id/id_tv_comment_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/id_createtime"
             android:layout_alignEnd="@+id/id_tv_content"
             android:layout_alignRight="@+id/id_tv_content"
-            android:layout_alignBottom="@+id/id_createtime"
             android:text="已点评"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/red" />

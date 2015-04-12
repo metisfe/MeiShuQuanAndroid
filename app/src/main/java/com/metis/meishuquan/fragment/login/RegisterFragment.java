@@ -1,6 +1,7 @@
 package com.metis.meishuquan.fragment.login;
 
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -65,6 +67,7 @@ public class RegisterFragment extends Fragment {
     }
 
     private void initEvent() {
+        //返回
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,7 +76,7 @@ public class RegisterFragment extends Fragment {
                 ft.commit();
             }
         });
-
+        //注册
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,6 +126,9 @@ public class RegisterFragment extends Fragment {
                                     spu.update(SharedPreferencesUtil.LOGIN_STATE, String.valueOf(true));
                                     Toast.makeText(getActivity(), "注册成功", Toast.LENGTH_SHORT).show();
                                     getActivity().finish();
+                                } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
+                                    //TODO:根据返回的errorcode判断注册状态
+                                    Toast.makeText(getActivity(), "注册失败", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -162,6 +168,19 @@ public class RegisterFragment extends Fragment {
                         }
                     }
                 });
+            }
+        });
+
+        chLicense.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (!chLicense.isChecked()) {
+                    btnSubmit.setClickable(false);
+                    btnSubmit.setBackgroundColor(Color.GRAY);
+                } else {
+                    btnSubmit.setClickable(true);
+                    btnSubmit.setBackgroundColor(Color.RED);
+                }
             }
         });
     }

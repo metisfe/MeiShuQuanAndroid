@@ -16,14 +16,12 @@ public class LoginActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        fm = this.getSupportFragmentManager();
-        navigateTo(new LoginFragment());
-    }
 
-    private void navigateTo(Fragment fragment) {
+        fm = this.getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out, R.anim.fragment_popin, R.anim.fragment_popout);
-        ft.add(R.id.id_rl_login_main, fragment);
+        ft.add(R.id.id_rl_login_main, new LoginFragment());
+        //ft.addToBackStack(null);
         ft.commit();
     }
 

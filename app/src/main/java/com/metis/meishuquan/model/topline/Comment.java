@@ -12,7 +12,7 @@ public class Comment {
 
     private User user;
 
-    private String supportCount;
+    private int supportCount = 0;
 
     private String content;
 
@@ -22,9 +22,9 @@ public class Comment {
 
     private User replyUser;
 
-    private List<ImgOrVoiceUrl> imgOrVoiceUrls ;
+    private List<ImgOrVoiceUrl> imgOrVoiceUrls;
 
-    private String group="";
+    private String group = "";
 
     public int getId() {
         return id;
@@ -42,11 +42,11 @@ public class Comment {
         this.user = user;
     }
 
-    public String getSupportCount() {
+    public int getSupportCount() {
         return supportCount;
     }
 
-    public void setSupportCount(String supportCount) {
+    public void setSupportCount(int supportCount) {
         this.supportCount = supportCount;
     }
 

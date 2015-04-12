@@ -1,5 +1,7 @@
 package com.metis.meishuquan.fragment.Topline;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -7,22 +9,27 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.TranslateAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.fragment.login.LoginFragment;
+import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.topline.AllComments;
@@ -31,7 +38,6 @@ import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.metis.meishuquan.view.shared.DragListView;
-import com.metis.meishuquan.view.topline.CommentInputView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
@@ -50,7 +56,8 @@ public class CommentListFragment extends Fragment {
     private TextView tvCommentCount;
     private Button btnBack;
     private RelativeLayout rl_WriteComment, rl_Commentlist, rl_Share, rl_Private;
-    private CommentInputView commentInputView;
+    private EditText editText;//评论或回复输入框
+    private RelativeLayout rlSend, rlInput;//发送
 
 
     private int newsId = 0;
@@ -58,6 +65,8 @@ public class CommentListFragment extends Fragment {
     private List<Comment> lstAllComments = new ArrayList<Comment>();
     private CommentsAdapter adapter;
     private FragmentManager fm;
+    private Animation animation;
+    private int childCommentId = -1;
 
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
@@ -105,11 +114,22 @@ public class CommentListFragment extends Fragment {
         rl_WriteComment = (RelativeLayout) rootView.findViewById(R.id.id_rl_writecomment);//写评论
         rl_Share = (RelativeLayout) rootView.findViewById(R.id.id_rl_share);//分享
         rl_Private = (RelativeLayout) rootView.findViewById(R.id.id_rl_private);//收藏
-        tvCommentCount = (TextView) rootView.findViewById(R.id.id_tv_topline_info_comment_count);
-        tvCommentCount.setText(String.valueOf(this.totalCommentCount));
-        commentInputView = new CommentInputView(getActivity(), null, 0);
-        fm = getActivity().getSupportFragmentManager();
+        tvCommentCount = (TextView) rootView.findViewById(R.id.id_tv_topline_info_comment_count);//评论数
 
+        //设置评论数
+        if (totalCommentCount > 0) {
+            this.tvCommentCount.setVisibility(View.VISIBLE);
+            this.tvCommentCount.setText(String.valueOf(totalCommentCount));
+        } else {
+            this.tvCommentCount.setVisibility(View.GONE);
+        }
+
+        editText = (EditText) rootView.findViewById(R.id.id_comment_edittext);
+        rlSend = (RelativeLayout) rootView.findViewById(R.id.id_rl_send);
+        rlInput = (RelativeLayout) rootView.findViewById(R.id.id_rl_input);
+
+        fm = getActivity().getSupportFragmentManager();
+        animation = AnimationUtils.loadAnimation(getActivity(), R.anim.support_add_one);
         adapter = new CommentsAdapter(lstAllComments);
         listView.setAdapter(adapter);
     }
@@ -132,6 +152,7 @@ public class CommentListFragment extends Fragment {
         btnBack.setOnClickListener(new View.OnClickListener() {//返回
             @Override
             public void onClick(View view) {
+                hideInputView();
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.remove(CommentListFragment.this);
@@ -145,13 +166,10 @@ public class CommentListFragment extends Fragment {
                 SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
                 String loginState = spu.getStringByKey(SharedPreferencesUtil.LOGIN_STATE);
                 if (loginState != null && loginState.equals("已登录")) {
-                    showOrHideCommentInputView(true);
-                    Utils.showInputMethod(getActivity(), commentInputView.editText);
+                    showInputView();
                 } else {
-                    LoginFragment loginFragment = new LoginFragment();
-                    FragmentTransaction ft = fm.beginTransaction();
-                    ft.add(R.id.content_container, loginFragment);
-                    ft.commit();
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    getActivity().startActivity(intent);
                 }
             }
         });
@@ -185,30 +203,50 @@ public class CommentListFragment extends Fragment {
                 new SharePopupWindow(MainApplication.UIContext, rootView);
             }
         });
-    }
 
-    //显示或隐藏评论视图
-    private void showOrHideCommentInputView(boolean isShow) {
-        ViewGroup parent = (ViewGroup) getActivity().findViewById(R.id.ll_parent);
-        TranslateAnimation translateAnimation = null;
-        int yStart = -getActivity().getResources().getDisplayMetrics().heightPixels;
-        int yEnd = 0;
-        if (isShow) {
-            if (commentInputView != null) {
-                parent.addView(commentInputView);
+        this.listView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                    hideInputView();
+
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    hideInputView();
+                }
+                return false;
             }
-            translateAnimation = new TranslateAnimation(0, 0, yStart, yEnd);
-        } else {
-            if (commentInputView != null) {
-                parent.removeView(commentInputView);
+        });
+
+        rlSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (childCommentId == -1) {
+                    String content = editText.getText().toString();
+                    if (!content.isEmpty()) {
+                        TopLineOperator topLineOperator = TopLineOperator.getInstance();
+                        topLineOperator.publishComment(0, newsId, content, 0, 0, new ApiOperationCallback<ReturnInfo<String>>() {
+                            @Override
+                            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                    Toast.makeText(getActivity(), "发送成功", Toast.LENGTH_SHORT).show();
+                                    hideInputView();
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    TopLineOperator operator = TopLineOperator.getInstance();
+                    operator.publishComment(0, newsId, "test", childCommentId, 0, new ApiOperationCallback<ReturnInfo<String>>() {
+                        @Override
+                        public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                            if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                getData(newsId, DragListView.REFRESH);
+                            }
+                        }
+                    });
+                }
             }
-            translateAnimation = new TranslateAnimation(0, 0, yEnd, yStart);
-        }
-        translateAnimation.setFillBefore(true);
-        translateAnimation.setFillEnabled(true);
-        translateAnimation.setDuration(0);
-        translateAnimation.setInterpolator(new DecelerateInterpolator());
-        commentInputView.startAnimation(translateAnimation);
+        });
     }
 
     //加载评论列表数据
@@ -262,7 +300,8 @@ public class CommentListFragment extends Fragment {
         private class ViewHolder {
             SmartImageView portrait;
             TextView userName, source, notifyTime, content, tag;
-            Button btn_support, btn_comment;
+            TextView tvSupportCount, tvAddOne;
+            RelativeLayout rl_support, rl_reply;
 
         }
 
@@ -294,36 +333,97 @@ public class CommentListFragment extends Fragment {
             View view = convertView;
             if (convertView == null) {
                 holder = new ViewHolder();
-                if (lstAllComments.get(i).getGroup().equals("热门评论") || lstAllComments.get(i).getGroup().equals(("最新评论"))) {
+                Comment comment = this.lstAllComments.get(i);
+                if (comment.getGroup().equals("热门评论") || comment.getGroup().equals(("最新评论"))) {
                     view = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_topline_comment_list_item_tag, null);
                     holder.tag = (TextView) view.findViewById(R.id.id_tv_listview_tag);
-                    holder.tag.setText(lstAllComments.get(i).getGroup());
+                    holder.tag.setText(comment.getGroup());
                 } else {
                     view = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_comment_list_item, null);
-                    //holder.portrait= (SmartImageView) view.findViewById(R.id.id_img_portrait);
-                    holder.userName = (TextView) view.findViewById(R.id.id_username);
-                    //holder.source= (TextView) view.findViewById(R.id.id_username);
-                    holder.notifyTime = (TextView) view.findViewById(R.id.id_notifytime);
-                    holder.content = (TextView) view.findViewById(R.id.id_textview_comment_content);
-                    holder.btn_support = (Button) view.findViewById(R.id.id_btn_support);
-                    holder.btn_comment = (Button) view.findViewById(R.id.id_btn_comment);
-                    holder.btn_support.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            TopLineOperator operator = TopLineOperator.getInstance();
-                            operator.commentSurpot(0, newsId, lstAllComments.get(i).getId(), 0, 1);
-                        }
-                    });
-
-                    holder.userName.setText(this.lstAllComments.get(i).getUser().getName());
-                    //holder.source.setText(this.lstAllComments.get(i).getCommentDateTime());
-                    String notifyTimeStr = this.lstAllComments.get(i).getCommentDateTime();
-                    holder.notifyTime.setText(notifyTimeStr);
-                    holder.content.setText(this.lstAllComments.get(i).getContent());
+                    initView(view);
+                    initEvent(comment);
+                    bindData(comment);
                 }
                 holder = (ViewHolder) view.getTag();
             }
             return view;
         }
+
+        private void initView(View view) {
+            //holder.portrait= (SmartImageView) view.findViewById(R.id.id_img_portrait);
+            holder.userName = (TextView) view.findViewById(R.id.id_username);
+            //holder.source= (TextView) view.findViewById(R.id.id_username);
+            holder.notifyTime = (TextView) view.findViewById(R.id.id_notifytime);
+            holder.content = (TextView) view.findViewById(R.id.id_textview_comment_content);
+            holder.rl_support = (RelativeLayout) view.findViewById(R.id.id_rl_support);//顶
+            holder.rl_reply = (RelativeLayout) view.findViewById(R.id.id_rl_reply);//回复
+            holder.tvSupportCount = (TextView) view.findViewById(R.id.id_tv_support_count);
+            holder.tvAddOne = (TextView) view.findViewById(R.id.id_tv_add_one);
+        }
+
+        private void initEvent(final Comment comment) {
+            //赞
+            holder.rl_support.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int count = comment.getSupportCount();
+//                    Object supportCount = holder.tvSupportCount.getTag();
+//                    if (supportCount != null) {
+//                        int temp = (int) supportCount;
+//                        if (temp == count + 1) {
+//                            Toast.makeText(MainApplication.UIContext, "已顶", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+                    holder.tvAddOne.setVisibility(View.VISIBLE);
+                    holder.tvAddOne.startAnimation(animation);
+                    holder.tvSupportCount.setText("(" + count + 1 + ")");
+                    holder.tvSupportCount.setTag(count + 1);
+                    new Handler().postDelayed(new Runnable() {
+                        public void run() {
+                            holder.tvAddOne.setVisibility(View.GONE);
+                        }
+                    }, 1000);
+
+                    //后台提交赞加1
+                    TopLineOperator operator = TopLineOperator.getInstance();
+                    operator.commentSurpot(0, newsId, comment.getId(), 0, 1);
+                }
+            });
+
+            //回复
+            holder.rl_reply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    childCommentId = comment.getId();
+                    showInputView();
+                }
+            });
+        }
+
+        private void bindData(Comment comment) {
+            holder.userName.setText(comment.getUser().getName());
+            //holder.source.setText(comment.getCommentDateTime());
+            String notifyTimeStr = comment.getCommentDateTime();
+            holder.notifyTime.setText(notifyTimeStr);
+            holder.content.setText(comment.getContent());
+            holder.tvSupportCount.setText("(" + comment.getSupportCount() + ")");
+        }
+    }
+
+    private void hideInputView() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+        rlInput.setVisibility(View.GONE);
+    }
+
+    private void showInputView() {
+        //显示输入框
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+
+        rlInput.setVisibility(View.VISIBLE);
+        editText.setText("");
+        editText.setFocusableInTouchMode(true);
+        editText.requestFocus();
     }
 }

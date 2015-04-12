@@ -117,8 +117,13 @@
     <orderEntry type="library" exported="" name="SocialSDK_WeiXin_2" level="project" />
     <orderEntry type="library" exported="" name="SocialSDK_WeiXin_1" level="project" />
     <orderEntry type="library" exported="" name="SocialSDK_whatsapp" level="project" />
+<<<<<<< Updated upstream
     <orderEntry type="library" exported="" name="SocialSDK_Sina" level="project" />
     <orderEntry type="library" exported="" name="SocialSDK_evernote" level="project" />
+=======
+    <orderEntry type="library" exported="" name="SocialSDK_evernote" level="project" />
+    <orderEntry type="library" exported="" name="SocialSDK_Sina" level="project" />
+>>>>>>> Stashed changes
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="SocialSDK_AtFriends" level="project" />
     <orderEntry type="library" exported="" name="SocialSDK_shake" level="project" />

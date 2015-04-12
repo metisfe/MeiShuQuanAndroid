@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#e3e3e3">
+    android:background="#cccccc">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -12,9 +12,9 @@
 
         <com.loopj.android.image.SmartImageView
             android:id="@+id/id_img_portrait"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/icon" />
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/default_user_dynamic" />
 
         <TextView
             android:id="@+id/id_username"
@@ -26,18 +26,20 @@
             android:layout_toRightOf="@+id/id_img_portrait"
             android:singleLine="true"
             android:text="张三"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#424242" />
 
         <TextView
             android:id="@+id/id_tv_grade"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/id_username"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="5dp"
             android:layout_toEndOf="@+id/id_username"
             android:layout_toRightOf="@+id/id_username"
             android:singleLine="true"
-            android:text="高三" />
+            android:text="高三"
+            android:textColor="#7e7e7e" />
 
         <TextView
             android:id="@+id/id_createtime"
@@ -60,56 +62,82 @@
             android:layout_marginTop="10dp"
             android:maxLines="10"
             android:text="本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情"
-            android:textColor="#909090" />
+            android:textColor="#7e7e7e" />
 
         <com.loopj.android.image.SmartImageView
             android:id="@+id/id_img_content"
-            android:layout_width="220dp"
-            android:layout_height="150dp"
+            android:layout_width="110dp"
+            android:layout_height="75dp"
             android:layout_below="@+id/id_tv_content"
             android:layout_marginTop="10dp"
-            android:src="@drawable/icon" />
+            android:src="@drawable/img_topline_default" />
 
-        <TextView
-            android:id="@+id/id_tv_comment_count"
+        <LinearLayout
+            android:id="@+id/id_ll_comment_count"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_alignBottom="@+id/id_img_content"
-            android:layout_alignParentRight="true"
-            android:text="评论(123)"
-            android:textColor="#cccccc" />
+            android:layout_alignParentRight="true">
 
-        <TextView
-            android:id="@+id/id_tv_support_count"
+            <TextView
+                android:id="@+id/id_tv_comment_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="1.5dp"
+                android:text="评论(123)"
+                android:textColor="#7e7e7e"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/id_tv_comment_count"
-            android:layout_toLeftOf="@+id/id_tv_comment_count"
-            android:layout_toStartOf="@+id/id_tv_comment_count"
-            android:text="赞(123)"
-            android:textColor="#cccccc" />
+            android:layout_height="30dp"
+            android:layout_alignTop="@+id/id_ll_comment_count"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/id_ll_comment_count"
+            android:layout_toStartOf="@+id/id_ll_comment_count">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="bottom"
+                android:src="@drawable/icon_unsupport" />
+
+            <TextView
+                android:id="@+id/id_tv_support_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="1.5dp"
+                android:text="(123)"
+                android:textColor="#7e7e7e"
+                android:textSize="12sp" />
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/id_tv_content_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/id_grade"
             android:layout_alignEnd="@+id/id_tv_content"
             android:layout_alignRight="@+id/id_tv_content"
-            android:layout_alignTop="@+id/id_username"
             android:text="素描"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#909090" />
+            android:textColor="#7e7e7e"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/id_tv_comment_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/id_createtime"
             android:layout_alignEnd="@+id/id_tv_content"
             android:layout_alignRight="@+id/id_tv_content"
-            android:layout_alignTop="@+id/id_createtime"
             android:text="已点评"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/red" />
+            android:textColor="@color/red"
+            android:textSize="13sp" />
     </RelativeLayout>
 
 

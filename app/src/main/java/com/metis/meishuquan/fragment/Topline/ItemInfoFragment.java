@@ -2,7 +2,6 @@ package com.metis.meishuquan.fragment.Topline;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,14 +13,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -33,13 +29,11 @@ import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.login.LoginActivity;
-import com.metis.meishuquan.fragment.login.LoginFragment;
 import com.metis.meishuquan.fragment.main.ToplineFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
-import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.metis.meishuquan.view.topline.CommentInputView;
 import com.metis.meishuquan.view.topline.NewsShareView;
@@ -60,13 +54,13 @@ public class ItemInfoFragment extends Fragment {
     private LinearLayout ll_content;
     private TopLineNewsInfo newsInfo;
     private TextView tv_title, tv_createtime, tv_sourse, tv_comment_count;
-    private RelativeLayout rl_writeCommont, rl_commontList, rl_private, btn_share;
+    private RelativeLayout rl_writeCommont, rl_commontList, rl_private, rl_share, rl_main;
+    private RelativeLayout rl_Input;
+    private ImageView imgFavorite;
     private ScrollView contentScrollView;
+    private EditText editText;
+    private RelativeLayout rlSend;
 
-    private CommentInputView commentInputView;
-    private NewsShareView newsShareView;
-    private boolean addCommentPoped;
-    private boolean addSharePoped;
     private FragmentManager fm;
 
     @Override
@@ -101,11 +95,14 @@ public class ItemInfoFragment extends Fragment {
         rl_writeCommont = (RelativeLayout) rootView.findViewById(R.id.id_rl_writecomment);
         rl_commontList = (RelativeLayout) rootView.findViewById(R.id.id_rl_commentlist);
         rl_private = (RelativeLayout) rootView.findViewById(R.id.id_rl_private);
-        btn_share = (RelativeLayout) rootView.findViewById(R.id.id_rl_share);
+        rl_share = (RelativeLayout) rootView.findViewById(R.id.id_rl_share);
+        rl_Input = (RelativeLayout) rootView.findViewById(R.id.id_rl_input);
+        rl_main = (RelativeLayout) rootView.findViewById(R.id.ll_parent);
+        rlSend = (RelativeLayout) rootView.findViewById(R.id.id_rl_send);
         contentScrollView = (ScrollView) rootView.findViewById(R.id.id_scrollview_info_content);
 
-        commentInputView = new CommentInputView(getActivity(), null, 0);
-        newsShareView = new NewsShareView(getActivity(), null, 0);
+        editText = (EditText) rootView.findViewById(R.id.id_comment_edittext);
+        imgFavorite = (ImageView) rootView.findViewById(R.id.id_img_favorite);
 
         fm = getActivity().getSupportFragmentManager();
     }
@@ -189,6 +186,7 @@ public class ItemInfoFragment extends Fragment {
         this.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//返回
+                hideInputView();
                 ToplineFragment toplineFragment = new ToplineFragment();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.replace(R.id.content_container, toplineFragment);
@@ -196,34 +194,14 @@ public class ItemInfoFragment extends Fragment {
             }
         });
 
-        this.contentScrollView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //隐藏写评论
-                if (!addCommentPoped) {
-                    return;
-                }
-                addCommentPoped = false;
-                showOrHideCommentInputView(false);
-                Utils.hideInputMethod(getActivity(), commentInputView.editText);
-            }
-        });
-
         this.contentScrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                InputMethodManager imm = (InputMethodManager) commentInputView.editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                boolean isOpen = imm.isActive();
                 if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-                    if (isOpen) {
-                        //隐藏写评论
-                        if (!addCommentPoped) {
-                            return false;
-                        }
-                        addCommentPoped = false;
-                        showOrHideCommentInputView(false);
-                        Utils.hideInputMethod(getActivity(), commentInputView.editText);
-                    }
+                    hideInputView();
+
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    hideInputView();
                 }
                 return false;
             }
@@ -235,8 +213,7 @@ public class ItemInfoFragment extends Fragment {
                 SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
                 String loginState = spu.getStringByKey(SharedPreferencesUtil.LOGIN_STATE);
                 if (loginState != null && loginState.equals("已登录")) {
-                    showOrHideCommentInputView(true);
-                    Utils.showInputMethod(getActivity(), commentInputView.editText);
+                    showInputView();
                 } else {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     getActivity().startActivity(intent);
@@ -244,31 +221,12 @@ public class ItemInfoFragment extends Fragment {
             }
         });
 
-        this.commentInputView.btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {//写评论-发送
-                String content = commentInputView.editText.getText().toString().trim();
-                if (content.length() > 0) {
-                    TopLineOperator topLineOperator = TopLineOperator.getInstance();
-                    topLineOperator.publishComment(0, newsId, content, 0, 0, new ApiOperationCallback<ReturnInfo<String>>() {
-                        @Override
-                        public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                            if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                                Toast.makeText(getActivity(), "发送成功", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                    showOrHideCommentInputView(false);
-                    Utils.hideInputMethod(getActivity(), commentInputView.editText);
-                } else {
-                    Toast.makeText(getActivity(), "请输入内容", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
         this.rl_commontList.setOnClickListener(new View.OnClickListener() {//评论列表
             @Override
             public void onClick(View view) {//查看评论列表
+                if (newsInfo == null) {
+                    return;
+                }
                 Bundle args = new Bundle();
                 if (newsId != 0) {
                     args.putInt("newsId", newsId);
@@ -287,41 +245,60 @@ public class ItemInfoFragment extends Fragment {
         this.rl_private.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//收藏
-                Utils.alertMessageDialog("提示", "收藏成功！");//TODO:
+                TopLineOperator topLineOperator = TopLineOperator.getInstance();
+                topLineOperator.newsPrivate(1, newsId, 0, new ApiOperationCallback<ReturnInfo<String>>() {
+                    @Override
+                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                            Toast.makeText(MainApplication.UIContext, "收藏成功", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
 
-        this.btn_share.setOnClickListener(new View.OnClickListener() {
+        this.rl_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new SharePopupWindow(MainApplication.UIContext, rootView);
             }
         });
 
+        rlSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String content = editText.getText().toString();
+                if (!content.isEmpty()) {
+                    TopLineOperator topLineOperator = TopLineOperator.getInstance();
+                    topLineOperator.publishComment(0, newsId, content, 0, 0, new ApiOperationCallback<ReturnInfo<String>>() {
+                        @Override
+                        public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                            if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                Toast.makeText(getActivity(), "发送成功", Toast.LENGTH_SHORT).show();
+                                hideInputView();
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
-    //显示或隐藏评论视图
-    private void showOrHideCommentInputView(boolean isShow) {
-        ViewGroup parent = (ViewGroup) getActivity().findViewById(R.id.ll_parent);
-        TranslateAnimation translateAnimation = null;
-        int yStart = -getActivity().getResources().getDisplayMetrics().heightPixels;
-        int yEnd = 0;
-        if (isShow) {
-            if (commentInputView != null) {
-                parent.addView(commentInputView);
-            }
-            translateAnimation = new TranslateAnimation(0, 0, yStart, yEnd);
-        } else {
-            if (commentInputView != null) {
-                parent.removeView(commentInputView);
-            }
-            translateAnimation = new TranslateAnimation(0, 0, yEnd, yStart);
-        }
-        translateAnimation.setFillBefore(true);
-        translateAnimation.setFillEnabled(true);
-        translateAnimation.setDuration(0);
-        translateAnimation.setInterpolator(new DecelerateInterpolator());
-        commentInputView.startAnimation(translateAnimation);
+    private void hideInputView() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+        rl_Input.setVisibility(View.GONE);
+    }
+
+    private void showInputView() {
+        //显示输入框
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+
+        rl_Input.setVisibility(View.VISIBLE);
+        editText.setText("");
+        editText.setFocusableInTouchMode(true);
+        editText.requestFocus();
     }
 
     //为控件绑定数据
@@ -335,6 +312,7 @@ public class ItemInfoFragment extends Fragment {
             //评论数
             int commentCount = newsInfo.getData().getCommentCount();
             if (commentCount > 0) {
+                this.tv_comment_count.setVisibility(View.VISIBLE);
                 this.tv_comment_count.setText(String.valueOf(commentCount));
             } else {
                 this.tv_comment_count.setVisibility(View.GONE);
@@ -365,48 +343,5 @@ public class ItemInfoFragment extends Fragment {
                 }
             }
         });
-    }
-
-    /**
-     * 分享界面
-     */
-    public class PopupWindows extends PopupWindow {
-
-        public PopupWindows(Context mContext, View parent) {
-
-            View view = View.inflate(mContext, R.layout.choose_img_source_popupwindows, null);
-            view.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_ins));
-            LinearLayout ll_popup = (LinearLayout) view.findViewById(R.id.ll_popup);
-            ll_popup.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.push_bottom_in_2));
-
-            setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-            setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
-            setBackgroundDrawable(new BitmapDrawable());
-            setFocusable(true);
-            setOutsideTouchable(true);
-            setContentView(view);
-            showAtLocation(parent, Gravity.BOTTOM, 0, 0);
-            super.update();
-
-            Button btnCamera = (Button) view.findViewById(R.id.item_popupwindows_camera);
-            Button btnPhoto = (Button) view.findViewById(R.id.item_popupwindows_Photo);
-            Button btnCancel = (Button) view.findViewById(R.id.item_popupwindows_cancel);
-
-            btnCamera.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    dismiss();
-                }
-            });
-            btnPhoto.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    dismiss();
-                }
-            });
-            btnCancel.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    dismiss();
-                }
-            });
-        }
     }
 }

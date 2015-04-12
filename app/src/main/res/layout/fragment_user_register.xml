@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/id_ll_register"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,6 +8,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/id_rl_topbar"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:background="@drawable/bg_title_bar">
@@ -31,8 +32,10 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/id_ll_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/id_rl_topbar"
         android:layout_marginTop="20dp"
         android:orientation="vertical"
         android:paddingLeft="10dp"
@@ -45,7 +48,8 @@
             android:layout_height="50dp"
             android:background="#F1F1F1"
             android:hint="请输入手机号码"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:textSize="14sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -62,7 +66,8 @@
                 android:background="#F1F1F1"
                 android:hint="请输入验证码"
                 android:inputType="textPassword"
-                android:padding="5dp" />
+                android:padding="5dp"
+                android:textSize="14sp" />
 
             <Button
                 android:id="@+id/id_regsiter_btn_verificationCode"
@@ -74,7 +79,8 @@
                 android:layout_weight="1"
                 android:background="#FF5363"
                 android:text="获取验证码"
-                android:textSize="18sp" />
+                android:textColor="#F1F1F1"
+                android:textSize="14sp" />
         </LinearLayout>
 
         <EditText
@@ -85,7 +91,8 @@
             android:background="#F1F1F1"
             android:hint="请输入密码"
             android:inputType="textPassword"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:textSize="14sp" />
 
 
         <CheckBox
@@ -94,13 +101,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:checked="true"
-            android:text="我同意并遵守“美术圈”用户协议" />
+            android:text="我同意并遵守“美术圈”用户协议"
+            android:textSize="14sp" />
 
 
         <Button
             android:id="@+id/id_register_btn_submit"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="44dp"
             android:layout_below="@+id/id_resister_et_pwd"
             android:layout_marginTop="20dp"
             android:background="#FF5363"
@@ -110,4 +118,4 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
