@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#cccccc"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:clickable="true"
+        android:id="@+id/circle_moment_comment_header"
+        android:background="@color/bg_topline_topbar">
+
+        <TextView
+            android:id="@+id/moment_comment_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="取消"
+            android:textColor="#fff"
+            android:layout_marginLeft="10dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/moment_detail_tv_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="写评论"
+            android:textColor="@color/tv_title_bar"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/moment_comment_publish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="发送"
+            android:textColor="#fff"
+            android:layout_marginRight="10dp"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <com.metis.meishuquan.view.circle.moment.comment.EmotionEditText
+        android:id="@+id/comment_edittext"
+        android:layout_below="@id/circle_moment_comment_header"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="top"
+        android:hint="写评论..."/>
+
+    <com.metis.meishuquan.view.circle.moment.comment.EmotionSelectView
+        android:id="@+id/emotion_input"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/emotion_input_height"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/circle_moment_emotion_selection_bg"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/switch_emotion_container"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="right"
+        android:paddingBottom="3dp"
+        android:paddingRight="8dp"
+        android:clickable="false" >
+
+        <ImageButton
+            android:id="@+id/switch_emotion"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="3dp"
+            android:background="@color/transparent"
+            android:scaleType="fitCenter" >
+        </ImageButton>
+    </LinearLayout>
+</RelativeLayout>

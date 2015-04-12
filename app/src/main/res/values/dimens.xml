@@ -6,4 +6,7 @@
 
     <dimen name="view_circle_popupaddwindow_arrow_height">10dp</dimen>
     <dimen name="view_circle_popupaddwindow_arrow_width">10dp</dimen>
+
+    <dimen name="emotion_input_height">274dp</dimen>
+    <dimen name="switch_emotion_container_height">43dp</dimen>
 </resources>

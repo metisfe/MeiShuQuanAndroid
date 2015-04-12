@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:background="#f1f1f1"
+        android:focusable="false" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dip">
+
+        <GridView
+            android:id="@+id/view_comment_emotionselectionview_gridview"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:cacheColorHint="@color/transparent"
+            android:fadingEdge="none"
+            android:gravity="center"
+            android:listSelector="@color/transparent"
+            android:numColumns="7"
+            android:scrollbars="none"
+            android:scrollingCache="false"
+            android:stretchMode="columnWidth"
+            android:layout_alignParentLeft="true" 
+            android:layout_alignParentTop="true"/>
+
+        <ImageView
+            android:id="@+id/view_comment_emotionselectionview_imageview_delete"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/view_comment_emotionselectionview_griditem_bg"
+            android:clickable="true"
+            android:layout_alignParentRight="true" 
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="10dp"
+            android:paddingTop="0dp"
+            android:paddingLeft="4dp"
+            android:paddingBottom="8dp"
+            android:paddingRight="4dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/view_comment_emotionselectionview_delete_bg" />
+    </RelativeLayout>
+
+</LinearLayout>

@@ -153,12 +153,25 @@ public class MomentDetailFragment extends Fragment {
             public void onClick(View view) {//写评论
                 SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
                 String loginState = spu.getStringByKey(SharedPreferencesUtil.LOGIN_STATE);
-                if (loginState != null && loginState.equals("已登录")) {
 
-                } else {
-                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    getActivity().startActivity(intent);
-                }
+                MomentCommentFragment momentCommentFragment = new MomentCommentFragment();
+//                Bundle args = new Bundle();
+//                args.putInt("newsId", newsId);
+//                itemInfoFragment.setArguments(args);
+
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                ft.add(R.id.content_container, momentCommentFragment);
+                ft.addToBackStack(null);
+                ft.commit();
+
+//                if (loginState != null && loginState.equals("已登录")) {
+
+//                } else {
+//                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+//                    getActivity().startActivity(intent);
+//                }
             }
         });
 

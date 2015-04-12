@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="emotion_names">
+        <item>鲜花</item>
+        <item>美腿</item>
+        <item>小熊</item>
+        <item>小强</item>
+        <item>啤酒</item>
+        <item>赞</item>
+        <item>踩</item>
+        
+        <item>爱心</item>
+        <item>心碎</item>
+        <item>大笑</item>
+        <item>开心</item>
+        <item>酷</item>
+        <item>困</item>     
+        <item>生气</item>
+        
+        <item>蛋糕</item>
+        <item>美元</item>
+        <item>哭泣</item>
+        <item>小恶魔</item>
+        <item>饮料</item>
+        <item>无聊</item>
+        <item>握手</item>
+        
+        <item>香吻</item>
+        <item>禁言</item>
+        <item>美眉</item>
+        <item>嘿嘿</item>
+        <item>屁屁</item>
+        <item>肌肉</item>
+        <item>忍者</item>
+        
+        <item>欢乐</item>
+        <item>披萨</item>
+        <item>游泳</item>
+        <item>吐</item>
+        <item>摇滚</item>
+        <item>阳光</item>
+        <item>惊讶</item>
+        
+        <item>汗</item>
+        <item>吐舌头</item>
+        <item>眨眼</item>
+        <item>怀疑</item>
+        <item>脸红</item>
+        <item>撞墙</item>
+    </string-array>
+    
+</resources>
