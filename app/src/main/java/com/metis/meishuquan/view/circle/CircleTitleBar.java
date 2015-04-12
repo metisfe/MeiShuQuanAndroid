@@ -31,7 +31,7 @@ public class CircleTitleBar extends RelativeLayout {
 
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.view_circle_titlebar, this);
-        leftButton = (ViewGroup) this.findViewById(R.id.views_circle_titlebar_leftbutton);
+
         rightButton = (ViewGroup) this.findViewById(R.id.views_circle_titlebar_rightbutton);
         textView = (TextView) this.findViewById(R.id.views_circle_titlebar_text);
 

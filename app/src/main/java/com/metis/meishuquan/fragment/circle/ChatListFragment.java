@@ -12,9 +12,11 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.circle.ChatActivity;
 import com.metis.meishuquan.view.circle.CircleChatListItemView;
+import com.metis.meishuquan.view.circle.PopupAddWindow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,9 +46,35 @@ public class ChatListFragment extends CircleBaseFragment {
 
     @Override
     public void timeToSetTitleBar() {
-        if (getTitleBar() != null) {
-            getTitleBar().setText("this is the chat list page");
-        }
+        getTitleBar().setText("消息");
+        getTitleBar().setRightButton("Add", 0, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupAddWindow addWindow = new PopupAddWindow(getActivity(), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((MainActivity)getActivity()).removeAllAttachedView();
+                    }
+                }, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                }, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                }, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+
+                ((MainActivity)getActivity()).addAttachView(addWindow);
+            }
+        });
     }
 
     @Override

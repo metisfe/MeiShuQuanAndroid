@@ -37,5 +37,6 @@ public class ContactListFragment extends CircleBaseFragment {
     @Override
     public void timeToSetTitleBar() {
         getTitleBar().setText("this is the contact page");
+        getTitleBar().setRightButton("", 0, null);
     }
 }

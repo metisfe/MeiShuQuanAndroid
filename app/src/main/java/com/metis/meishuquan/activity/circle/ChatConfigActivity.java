@@ -1,6 +1,7 @@
 package com.metis.meishuquan.activity.circle;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,10 +15,12 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.util.ChatManager;
+import com.metis.meishuquan.util.ViewUtils;
 import com.metis.meishuquan.view.circle.CircleGridIcon;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
 import com.metis.meishuquan.view.shared.ExpandableHeightGridView;
@@ -192,9 +195,30 @@ public class ChatConfigActivity extends Activity {
                 switch (icon.type) {
                     case 0:
                         if (adapter.isEditMode && position > 0) {
-                            //TODO: send api to remote server to remove a member should block UI
-                            adapter.discussion.getMemberIdList().remove(position);
-                            adapter.notifyDataSetChanged();
+                            final ProgressDialog progressDialog = new ProgressDialog(ChatConfigActivity.this);
+                            progressDialog.show();
+                            final int pos = position;
+                            MainApplication.rongClient.removeMemberFromDiscussion(targetId, adapter.discussion.getMemberIdList().get(pos), new RongIMClient.OperationCallback() {
+                                @Override
+                                public void onSuccess() {
+                                    progressDialog.cancel();
+                                    final List<String> ulist = new ArrayList<String>(adapter.discussion.getMemberIdList());
+                                    ulist.remove(pos);
+                                    ViewUtils.delayExecute(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            adapter.discussion.setMemberIdList(ulist);
+                                            adapter.notifyDataSetChanged();
+                                        }
+                                    },50);
+                                }
+
+                                @Override
+                                public void onError(ErrorCode errorCode) {
+                                    Toast.makeText(ChatConfigActivity.this, "error: " + errorCode.getMessage(), Toast.LENGTH_LONG).show();
+                                    progressDialog.cancel();
+                                }
+                            });
                         } else {
                             //TODO: this should open person's detail page
                         }

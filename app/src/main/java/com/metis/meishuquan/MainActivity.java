@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.metis.meishuquan.fragment.main.CircleFragment;
@@ -31,6 +33,7 @@ import java.util.Properties;
 public class MainActivity extends FragmentActivity implements TabBar.TabSelectedListener {
     private static FragmentManager fm;
     private static final String PressBackAgainToQuiteApplicationMessage = "再按一次退出";
+    private ViewGroup popupRoot;
     private boolean doWantToQuite;
 
     public static MainActivity self;
@@ -44,6 +47,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
 
         doWantToQuite = false;
         setContentView(R.layout.activity_mainactivity);
+        popupRoot = (ViewGroup) this.findViewById(R.id.popup_attach);
 
         MainApplication.MainActivity = this;
         MainActivity.fm = this.getSupportFragmentManager();
@@ -213,5 +217,29 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
                 || name.equals(AssessFragment.class.getSimpleName())
                 || name.equals(CircleFragment.class.getSimpleName())
                 || name.equals(ClassFragment.class.getSimpleName());
+    }
+
+    public void removeAllAttachedView()
+    {
+        if (popupRoot!=null)
+        {
+            popupRoot.removeAllViews();
+        }
+    }
+
+    public void removeAttachedView(View view)
+    {
+        if (popupRoot!=null && view!=null)
+        {
+            popupRoot.removeView(view);
+        }
+    }
+
+    public void addAttachView(View view)
+    {
+        if (popupRoot!=null && view!=null)
+        {
+            popupRoot.addView(view);
+        }
     }
 }

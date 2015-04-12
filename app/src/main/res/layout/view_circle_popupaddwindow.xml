@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="40dp">
+
+        <com.metis.meishuquan.view.shared.ArrowView
+            android:id="@+id/view_circle_popupaddwindow_arrow"
+            android:layout_height="10dp"
+            android:layout_width="10dp"
+            android:alpha="0.7"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#B3000000"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/view_circle_popupaddwindow_tv1"
+                android:layout_width="match_parent"
+                android:layout_height="33dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:layout_marginLeft="10dp"
+                android:text="发起聊天" />
+
+            <View
+                android:layout_height="1px"
+                android:layout_width="match_parent"
+                android:background="@color/white" />
+
+            <TextView
+                android:id="@+id/view_circle_popupaddwindow_tv2"
+                android:layout_width="match_parent"
+                android:layout_height="33dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:layout_marginLeft="10dp"
+                android:text="增加朋友" />
+
+            <View
+                android:layout_height="1px"
+                android:layout_width="match_parent"
+                android:background="@color/white" />
+
+            <TextView
+                android:id="@+id/view_circle_popupaddwindow_tv3"
+                android:layout_width="match_parent"
+                android:layout_height="33dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:layout_marginLeft="10dp"
+                android:text="扫一扫" />
+
+            <View
+                android:layout_height="1px"
+                android:layout_width="match_parent"
+                android:background="@color/white" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

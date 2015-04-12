@@ -39,6 +39,7 @@ public class MomentsFragment extends CircleBaseFragment {
     @Override
     public void timeToSetTitleBar() {
         getTitleBar().setText("this is the moments page");
+        getTitleBar().setRightButton("", 0, null);
     }
 
     private DragListView listView;
