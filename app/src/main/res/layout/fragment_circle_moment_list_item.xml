@@ -2,13 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#e3e3e3"
+    android:background="#F1F1F1"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#F1F1F1"
         android:padding="20dp">
 
         <com.loopj.android.image.SmartImageView
@@ -49,68 +48,42 @@
             android:textColor="#909090" />
 
         <TextView
-            android:id="@+id/id_tv_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/id_img_portrait"
-            android:layout_alignStart="@+id/id_img_portrait"
-            android:layout_below="@+id/id_img_portrait"
-            android:layout_marginTop="10dp"
-            android:maxLines="10"
-            android:text="本人热情、开朗、有责任感、有进取心、团队合作能力强、学习能力强"
-            android:textColor="#909090" />
-
-        <com.loopj.android.image.SmartImageView
-            android:id="@+id/id_img_content"
-            android:layout_width="220dp"
-            android:layout_height="150dp"
-            android:layout_below="@+id/id_tv_content"
-            android:layout_marginTop="10dp"
-            android:background="#ccc" />
-
-        <TextView
             android:id="@+id/id_tv_content_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/id_tv_content"
-            android:layout_alignRight="@+id/id_tv_content"
+            android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/id_username"
             android:text="105\n阅读"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#909090" />
-
     </RelativeLayout>
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/id_tv_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#F1F1F1">
+        android:layout_marginTop="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
 
-        <TextView
-            android:id="@+id/id_tv_repost_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="转发 10"
-            android:gravity="center"
-            android:textColor="#cccccc" />
-        <TextView
-            android:id="@+id/id_tv_comment_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="评论 3"
-            android:gravity="center"
-            android:textColor="#cccccc" />
+        android:maxLines="10"
+        android:text="本人热情、开朗、有责任感、有进取心、团队合作能力强、学习能力强"
+        android:textColor="#909090" />
 
-        <TextView
-            android:id="@+id/id_tv_support_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="赞 567"
-            android:gravity="center"
-            android:textColor="#cccccc" />
-    </LinearLayout>
+    <com.loopj.android.image.SmartImageView
+        android:id="@+id/id_img_content"
+        android:layout_width="220dp"
+        android:layout_height="150dp"
+        android:layout_marginLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_below="@+id/id_tv_content"
+        android:layout_marginTop="10dp"
+        android:background="#ccc" />
+
+    <com.metis.meishuquan.view.circle.moment.MomentActionBar
+        android:id="@+id/moment_action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/circle_moment_detail_header"
+        layout="@layout/fragment_circle_moment_action_bar" />
 </LinearLayout>

@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
+
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.adapter.circle.CircleMomentAdapter;
 import com.metis.meishuquan.adapter.topline.ToplineCustomAdapter;
@@ -83,6 +84,23 @@ public class MomentsFragment extends CircleBaseFragment {
 
         //初始化事件
         initEvent();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MomentDetailFragment momentDetailFragment = new MomentDetailFragment();
+//                Bundle args = new Bundle();
+//                args.putInt("newsId", newsId);
+//                itemInfoFragment.setArguments(args);
+
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                ft.add(R.id.content_container, momentDetailFragment);
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
         return contextView;
     }
 

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#F1F1F1"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <com.loopj.android.image.SmartImageView
+        android:id="@+id/id_img_portrait"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/ic_launcher" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/id_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="张三" />
+
+            <TextView
+                android:id="@+id/id_tv_grade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/id_username"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/id_username"
+                android:singleLine="true"
+                android:text="老师" />
+
+            <TextView
+                android:id="@+id/id_createtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/id_username"
+                android:layout_below="@+id/id_username"
+                android:layout_marginTop="10dp"
+                android:singleLine="true"
+                android:text="45分钟前"
+                android:textColor="#909090" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/circle_moment_detail_like">
+                </ImageView>
+
+                <TextView
+                    android:id="@+id/id_tv_content_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="15"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#909090" />
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/id_tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+
+            android:maxLines="10"
+            android:text="本人热情、开朗、有责任感、有进取心、团队合作能力强、学习能力强"
+            android:textColor="#909090" />
+    </LinearLayout>
+</LinearLayout>
