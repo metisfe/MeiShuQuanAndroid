@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.util.ChatManager;
 
 import io.rong.imlib.RongIMClient;
 
@@ -29,16 +30,14 @@ public class CircleChatListItemView extends LinearLayout {
     }
 
     public void setData(RongIMClient.Conversation conversation) {
-        this.titleView.setText(conversation.getConversationTitle());
-        if (conversation.getLatestMessage() != null) {
-            this.contentView.setText(conversation.getLatestMessage().getPushContent());
-        }
+        this.titleView.setText(ChatManager.getConversationTitle(conversation));
+        this.contentView.setText(ChatManager.getLastString(conversation));
 
         Time time = new Time();
         time.set(conversation.getReceivedTime() > conversation.getSentTime() ? conversation.getReceivedTime() : conversation.getSentTime());
         String s = time.hour >= 12 ? "下午" : "上午";
         String s2 = ":";
         if (time.minute < 10) s2 = ":0";
-        this.timeView.setText(s + ' ' + time.hour + s2 + time.minute);
+        this.timeView.setText(s + ' ' + (time.hour > 12 ? time.hour - 12 : time.hour) + s2 + time.minute);
     }
 }

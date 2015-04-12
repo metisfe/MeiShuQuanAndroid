@@ -43,7 +43,7 @@ public class MainApplication extends Application {
         DataProvider.setDefaultUIThreadHandler(Handler);
         ApiDataProvider.initProvider();
         RongIM.init(this);
-        String token = "zAITdrB5UyHJy529eH1doYGn6Ui0bBlr+zHn5QT+0f+TueCwMF65kvtxnWcvx4FKlMJ89YDFzu5IxKQN2gjd0A==";
+        String token = "vHlcG4hORBuPENRljGB6MoGn6Ui0bBlr+zHn5QT+0f+TueCwMF65klGMwsE+P2SPd8eazBQpOPpagJ1/lOVNMg==";
 
         // 连接融云服务器。
         try {

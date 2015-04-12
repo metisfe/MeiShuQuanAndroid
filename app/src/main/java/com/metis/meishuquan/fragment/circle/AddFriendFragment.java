@@ -53,8 +53,8 @@ public class AddFriendFragment extends Fragment {
         this.item1 = (ContactListItemView) rootView.findViewById(R.id.fragment_circle_addfriendfragment_scan);
         this.item2 = (ContactListItemView) rootView.findViewById(R.id.fragment_circle_addfriendfragment_contactbook);
 
-        this.item1.setNormalMode("扫一扫", "扫描二维码名片", null, R.drawable.fragment_circle_addfriendfragment_scan, true);
-        this.item2.setNormalMode("通讯录好友", "增加或邀请通讯录中的好友", null, R.drawable.fragment_circle_addfriendfragment_book, true);
+        this.item1.setNormalMode("fakeid", "扫一扫", "扫描二维码名片", null, R.drawable.fragment_circle_addfriendfragment_scan, true);
+        this.item2.setNormalMode("fakeid", "通讯录好友", "增加或邀请通讯录中的好友", null, R.drawable.fragment_circle_addfriendfragment_book, true);
 
         this.item1.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -68,7 +68,7 @@ public class ContactListFragment extends CircleBaseFragment {
                     return true;
                 }
 
-                String uid = ((UserAdvanceInfo) adapter.getChild(groupPosition - 1, childPosition)).getUserId();
+                String uid = ((UserAdvanceInfo) adapter.getChild(groupPosition, childPosition)).getUserId();
                 //TODO: personal page
                 Toast.makeText(getActivity(), "Enter personal page id: " + uid, Toast.LENGTH_LONG).show();
                 return true;
@@ -188,10 +188,10 @@ public class ContactListFragment extends CircleBaseFragment {
             UserAdvanceInfo info;
             if (groupPosition == 0) {
                 info = fakeItems.get(childPosition);
-                ((ContactListItemView) convertView).setNormalMode(info.getName(), "", "", info.getResourceId(), true);
+                ((ContactListItemView) convertView).setNormalMode(info.getUserId(), info.getName(), "", "", info.getResourceId(), true);
             } else {
                 info = friendList.get(groupPosition - 1).get(childPosition);
-                ((ContactListItemView) convertView).setNormalMode(info.getName(), "", info.getPortraitUri(), 0, false);
+                ((ContactListItemView) convertView).setNormalMode(info.getUserId(), info.getName(), "", info.getPortraitUri(), 0, false);
             }
 
             return convertView;
