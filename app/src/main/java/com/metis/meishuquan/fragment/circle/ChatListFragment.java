@@ -126,13 +126,6 @@ public class ChatListFragment extends CircleBaseFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        adapter.data = MainApplication.rongClient.getConversationList();
-        listView.setAdapter(adapter);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_circle_chatlistfragment, container, false);
         listView = (ListView) rootView.findViewById(R.id.fragment_circle_chatlistfragment_listview);
@@ -149,6 +142,8 @@ public class ChatListFragment extends CircleBaseFragment {
             }
         });
 
+        adapter.data = MainApplication.rongClient.getConversationList();
+        listView.setAdapter(adapter);
         return rootView;
     }
 
