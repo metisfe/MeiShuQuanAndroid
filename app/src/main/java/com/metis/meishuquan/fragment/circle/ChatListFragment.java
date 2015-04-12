@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,26 +55,50 @@ public class ChatListFragment extends CircleBaseFragment {
                 PopupAddWindow addWindow = new PopupAddWindow(getActivity(), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ((MainActivity)getActivity()).removeAllAttachedView();
+                        ((MainActivity) getActivity()).removeAllAttachedView();
                     }
                 }, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //select friend
+                        StartFriendPickFragment startFriendPickFragment = new StartFriendPickFragment();
+                        Bundle args = new Bundle();
+                        args.putString("fromtype", "privateconfig");
+                        args.putString("title","消息");
+                        startFriendPickFragment.setArguments(args);
 
+                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        FragmentTransaction ft = fm.beginTransaction();
+                        ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                        ft.add(R.id.content_container, startFriendPickFragment);
+                        ft.addToBackStack(null);
+                        ft.commit();
                     }
                 }, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        AddFriendFragment addFriendFragment = new AddFriendFragment();
+                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        FragmentTransaction ft = fm.beginTransaction();
+                        ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                        ft.add(R.id.content_container, addFriendFragment);
+                        ft.addToBackStack(null);
+                        ft.commit();
                     }
                 }, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        ScanQRCodeFragment scanQRCodeFragment = new ScanQRCodeFragment();
+                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        FragmentTransaction ft = fm.beginTransaction();
+                        ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                        ft.add(R.id.content_container, scanQRCodeFragment);
+                        ft.addToBackStack(null);
+                        ft.commit();
                     }
                 });
 
-                ((MainActivity)getActivity()).addAttachView(addWindow);
+                ((MainActivity) getActivity()).addAttachView(addWindow);
             }
         });
     }

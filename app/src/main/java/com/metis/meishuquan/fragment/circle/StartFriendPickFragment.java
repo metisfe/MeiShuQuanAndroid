@@ -1,10 +1,12 @@
-package com.metis.meishuquan.activity.circle;
+package com.metis.meishuquan.fragment.circle;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.circle.ChatActivity;
 import com.metis.meishuquan.model.circle.UserAdvanceInfo;
 import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
@@ -29,10 +32,11 @@ import java.util.List;
 import io.rong.imlib.RongIMClient;
 
 /**
- * Created by wudi on 4/11/2015.
+ * Created by wudi on 4/12/2015.
  */
-public class ChatFriendSelectionActivity extends Activity {
+public class StartFriendPickFragment extends Fragment {
     private CircleTitleBar titleBar;
+    private ViewGroup rootView;
     private View.OnClickListener onClickListener;
     private ExpandableListView listView;
     private SearchView searchView;
@@ -40,12 +44,22 @@ public class ChatFriendSelectionActivity extends Activity {
     private ArrayList<String> excludeList;
     private HashSet<String> excludeSet = new HashSet<>();
     private HashSet<String> selectedSet = new HashSet<>();
-    private String fromType, targetId;
+    private String fromType, targetId, title;
 
-    private void getParams(Intent intent) {
-        excludeList = intent.getStringArrayListExtra("excludelist");
-        fromType = intent.getStringExtra("fromtype");
-        targetId = intent.getStringExtra("targetid");
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        rootView = (ViewGroup) inflater.inflate(R.layout.fragment_circle_startfriendpick, container, false);
+        getParams();
+        initView();
+
+        return rootView;
+    }
+
+    private void getParams() {
+        excludeList = getArguments().getStringArrayList("excludelist");
+        fromType = getArguments().getString("fromtype");
+        targetId = getArguments().getString("targetid");
+        title = getArguments().getString("title");
         if (excludeList != null) {
             for (String id : excludeList) {
                 excludeSet.add(id);
@@ -53,17 +67,9 @@ public class ChatFriendSelectionActivity extends Activity {
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getParams(getIntent());
-        setContentView(R.layout.activity_circle_chatfriendselectionactivity);
-        initView();
-    }
-
     private void initView() {
-        this.titleBar = (CircleTitleBar) this.findViewById(R.id.activity_circle_chatfriendselectionactivity_titlebar);
-        titleBar.setText("message");
+        this.titleBar = (CircleTitleBar) rootView.findViewById(R.id.fragment_circle_startfriendpick_titlebar);
+        titleBar.setText(title);
         onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,7 +81,6 @@ public class ChatFriendSelectionActivity extends Activity {
                 } else {
                     finish();
                 }
-
             }
         };
 
@@ -87,7 +92,7 @@ public class ChatFriendSelectionActivity extends Activity {
         });
 
         //init listview
-        this.listView = (ExpandableListView) this.findViewById(R.id.activity_circle_chatfriendselectionactivity_list);
+        this.listView = (ExpandableListView) rootView.findViewById(R.id.fragment_circle_startfriendpick_list);
         this.listView.setGroupIndicator(null);
         this.listView.setBackgroundColor(Color.rgb(255, 255, 255));
         this.listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
@@ -117,7 +122,7 @@ public class ChatFriendSelectionActivity extends Activity {
             }
         });
 
-        this.searchView = (SearchView) this.findViewById(R.id.activity_circle_chatfriendselectionactivity_search);
+        this.searchView = (SearchView) rootView.findViewById(R.id.fragment_circle_startfriendpick_search);
         this.searchView.setSubmitButtonEnabled(false);
         this.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -150,18 +155,18 @@ public class ChatFriendSelectionActivity extends Activity {
             ulist.add(ChatManager.userId);
         }
 
-        if (!selectedSet.contains(targetId)) {
+        if (!selectedSet.contains(targetId) && !TextUtils.isEmpty(targetId)) {
             ulist.add(targetId);
         }
 
-        final ProgressDialog progressDialog = new ProgressDialog(ChatFriendSelectionActivity.this);
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.show();
         MainApplication.rongClient.createDiscussion("Not Set", ulist, new RongIMClient.CreateDiscussionCallback() {
             @Override
             public void onSuccess(String s) {
                 Log.d("circle", "discussion created, id: " + s);
                 progressDialog.cancel();
-                Intent intent = new Intent(ChatFriendSelectionActivity.this, ChatActivity.class);
+                Intent intent = new Intent(getActivity(), ChatActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("title", "Group Chat (" + (selectedSet.size() + 1) + ")");
                 intent.putExtra("targetId", s);
@@ -176,13 +181,18 @@ public class ChatFriendSelectionActivity extends Activity {
             @Override
             public void onError(ErrorCode errorCode) {
                 progressDialog.cancel();
-                Toast.makeText(ChatFriendSelectionActivity.this, "error: " + errorCode.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "error: " + errorCode.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
 
+    private void finish()
+    {
+        getActivity().getSupportFragmentManager().popBackStack();
+    }
+
     private void addMemberToDiscussion() {
-        final ProgressDialog progressDialog = new ProgressDialog(ChatFriendSelectionActivity.this);
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.show();
         //first we need to check the existing member list to prevent crash
         MainApplication.rongClient.getDiscussion(targetId, new RongIMClient.GetDiscussionCallback() {
@@ -201,8 +211,7 @@ public class ChatFriendSelectionActivity extends Activity {
                         @Override
                         public void onSuccess() {
                             List<String> mlist = new ArrayList<String>(discussion.getMemberIdList());
-                            for (String id:ulist)
-                            {
+                            for (String id : ulist) {
                                 mlist.add(id);
                             }
 
@@ -211,7 +220,7 @@ public class ChatFriendSelectionActivity extends Activity {
                             //TODO: should also save to DB
 
                             progressDialog.cancel();
-                            Intent intent = new Intent(ChatFriendSelectionActivity.this, ChatActivity.class);
+                            Intent intent = new Intent(getActivity(), ChatActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                             intent.putExtra("title", "Group Chat (" + totalCount + ")");
@@ -223,12 +232,12 @@ public class ChatFriendSelectionActivity extends Activity {
                         @Override
                         public void onError(ErrorCode errorCode) {
                             progressDialog.cancel();
-                            Toast.makeText(ChatFriendSelectionActivity.this, "error: " + errorCode.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "error: " + errorCode.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     });
                 } else {
                     progressDialog.cancel();
-                    Toast.makeText(ChatFriendSelectionActivity.this, "no new member", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "no new member", Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -236,18 +245,12 @@ public class ChatFriendSelectionActivity extends Activity {
             @Override
             public void onError(ErrorCode errorCode) {
                 progressDialog.cancel();
-                Toast.makeText(ChatFriendSelectionActivity.this, "discussion not exist", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "discussion not exist", Toast.LENGTH_LONG).show();
                 finish();
             }
         });
 
 
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        getParams(intent);
     }
 
     class CircleFriendListAdapter extends BaseExpandableListAdapter {
@@ -296,7 +299,7 @@ public class ChatFriendSelectionActivity extends Activity {
             if (name.equals("~")) name = "#";
 
             if (convertView == null) {
-                convertView = LayoutInflater.from(ChatFriendSelectionActivity.this).inflate(R.layout.fragment_topline_comment_list_item_tag, null);
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_topline_comment_list_item_tag, null);
             }
 
             convertView.setBackgroundColor(Color.rgb(230, 232, 237));
@@ -309,7 +312,7 @@ public class ChatFriendSelectionActivity extends Activity {
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
             if (convertView == null || !(convertView instanceof ContactListItemView)) {
-                convertView = new ContactListItemView(ChatFriendSelectionActivity.this);
+                convertView = new ContactListItemView(getActivity());
             }
 
             UserAdvanceInfo info = friendList.get(groupPosition).get(childPosition);
