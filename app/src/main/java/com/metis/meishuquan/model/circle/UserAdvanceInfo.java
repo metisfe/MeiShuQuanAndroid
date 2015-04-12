@@ -11,6 +11,7 @@ import io.rong.imlib.RongIMClient;
  */
 public class UserAdvanceInfo extends RongIMClient.UserInfo {
     private String pinYin;
+    private int resourceId;
 
     public UserAdvanceInfo(Parcel in) {
         super(in);
@@ -19,6 +20,11 @@ public class UserAdvanceInfo extends RongIMClient.UserInfo {
     public UserAdvanceInfo(String userId, String name, String portraitUri) {
         super(userId, name, portraitUri);
         pinYin = Utils.toPinYinStringWithPrefix(name);
+    }
+
+    public UserAdvanceInfo(String name, int resourceId) {
+        super("fakeId", name, "");
+        this.resourceId = resourceId;
     }
 
     public UserAdvanceInfo(RongIMClient.UserInfo info) {
@@ -30,4 +36,8 @@ public class UserAdvanceInfo extends RongIMClient.UserInfo {
         return pinYin;
     }
 
+    public int getResourceId()
+    {
+        return resourceId;
+    }
 }

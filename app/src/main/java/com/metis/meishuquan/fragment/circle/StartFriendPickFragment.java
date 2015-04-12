@@ -45,6 +45,12 @@ public class StartFriendPickFragment extends Fragment {
     private HashSet<String> excludeSet = new HashSet<>();
     private HashSet<String> selectedSet = new HashSet<>();
     private String fromType, targetId, title;
+    private boolean fromActivity;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -60,6 +66,7 @@ public class StartFriendPickFragment extends Fragment {
         fromType = getArguments().getString("fromtype");
         targetId = getArguments().getString("targetid");
         title = getArguments().getString("title");
+        fromActivity = getArguments().getBoolean("fromactivity",false);
         if (excludeList != null) {
             for (String id : excludeList) {
                 excludeSet.add(id);
@@ -188,7 +195,14 @@ public class StartFriendPickFragment extends Fragment {
 
     private void finish()
     {
-        getActivity().getSupportFragmentManager().popBackStack();
+        if (fromActivity)
+        {
+            getActivity().finish();
+        }
+        else
+        {
+            getActivity().getSupportFragmentManager().popBackStack();
+        }
     }
 
     private void addMemberToDiscussion() {
