@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.metis.meishuquan.R;
 
@@ -62,16 +63,21 @@ public class InputFragment extends Fragment {
         mInputEt = (EditText)view.findViewById(R.id.input_edit_text);
         mCountTipTv = (TextView)view.findViewById(R.id.input_count_tip);
 
-        setSingleLine(isSingleLine);
-        setMaxCount(mMaxCount);
-        setHint(mHint);
-        setText(mText);
-        mInputEt.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         //setInputType(mInputType);
 
         mInputEt.addTextChangedListener(watcher);
 
         updateCountTip(0);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setSingleLine(isSingleLine);
+        setMaxCount(mMaxCount);
+        setHint(mHint);
+        setText(mText);
+        setInputType(mInputType);
     }
 
     public void setSingleLine (boolean singleLine) {
@@ -134,6 +140,7 @@ public class InputFragment extends Fragment {
     public void setInputType(int type) {
         mInputType = type;
         if (mInputEt != null) {
+            Toast.makeText(getActivity(), "setInputType " + (InputType.TYPE_CLASS_NUMBER == type), Toast.LENGTH_SHORT).show();
             mInputEt.setInputType(type);
         }
     }
