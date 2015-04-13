@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#F1F1F1"
-        android:padding="20dp">
+        android:padding="10dp">
 
         <com.loopj.android.image.SmartImageView
             android:id="@+id/id_img_portrait"
@@ -26,7 +26,6 @@
             android:layout_toRightOf="@+id/id_img_portrait"
             android:singleLine="true"
             android:text="张三"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#424242" />
 
         <TextView

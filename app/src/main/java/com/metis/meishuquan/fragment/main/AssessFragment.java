@@ -135,7 +135,8 @@ public class AssessFragment extends Fragment {
             }
         });
 
-        this.btnRegion.setOnClickListener(new View.OnClickListener() {//全国
+        //全国
+        this.btnRegion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ChooseCityFragment chooseCityFragment = new ChooseCityFragment();
@@ -251,10 +252,8 @@ public class AssessFragment extends Fragment {
                 holder = new ViewHolder();
                 Assess assess = lstAssess.get(i);
                 if (assess.getGroup().equals(HOT) || assess.getGroup().equals((NEW))) {
-                    viewGroup = (ViewGroup) LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_topline_comment_list_item_tag, null);
-                    viewGroup.setBackgroundColor(Color.rgb(227, 227, 227));
+                    viewGroup = (ViewGroup) LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_assess_list_item_group_tag, null);
                     holder.tag = (TextView) viewGroup.findViewById(R.id.id_tv_listview_tag);
-                    holder.tag.setTextColor(Color.rgb(127, 126, 127));
                     holder.tag.setText(assess.getGroup());
                 } else {
                     viewGroup = (ViewGroup) LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_assess_list_item, null);

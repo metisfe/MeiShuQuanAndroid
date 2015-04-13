@@ -202,7 +202,7 @@ public class TopLineOperator {
             if (flag) {
                 StringBuffer path = new StringBuffer(COMMENT_SUPPORT);
                 path.append("?userid=" + userid);
-                path.append("&id=" + newsid);
+                path.append("&newsid=" + newsid);
                 path.append("&commentid=" + commentid);
                 path.append("&type=" + type);
                 path.append("&result=" + result);

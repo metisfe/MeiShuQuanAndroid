@@ -2,6 +2,7 @@ package com.metis.meishuquan.fragment.Topline;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,8 +31,10 @@ import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.login.LoginActivity;
+import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.enums.SupportType;
 import com.metis.meishuquan.model.topline.AllComments;
 import com.metis.meishuquan.model.topline.Comment;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
@@ -60,6 +63,7 @@ public class CommentListFragment extends Fragment {
     private RelativeLayout rlSend, rlInput;//发送
 
 
+    private int userId = 1;
     private int newsId = 0;
     private int totalCommentCount = 0;
     private List<Comment> lstAllComments = new ArrayList<Comment>();
@@ -189,7 +193,7 @@ public class CommentListFragment extends Fragment {
                     @Override
                     public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                         if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                            Utils.alertMessageDialog("提示", "收藏成功！");
+                            Toast.makeText(MainApplication.UIContext, "收藏成功", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -236,11 +240,13 @@ public class CommentListFragment extends Fragment {
                     }
                 } else {
                     TopLineOperator operator = TopLineOperator.getInstance();
-                    operator.publishComment(0, newsId, "test", childCommentId, 0, new ApiOperationCallback<ReturnInfo<String>>() {
+                    String content = editText.getText().toString();
+                    operator.publishComment(0, newsId, content, childCommentId, 0, new ApiOperationCallback<ReturnInfo<String>>() {
                         @Override
                         public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                             if (result != null && result.getInfo().equals(String.valueOf(0))) {
                                 getData(newsId, DragListView.REFRESH);
+                                hideInputView();
                             }
                         }
                     });
@@ -301,6 +307,7 @@ public class CommentListFragment extends Fragment {
             SmartImageView portrait;
             TextView userName, source, notifyTime, content, tag;
             TextView tvSupportCount, tvAddOne;
+            Button btnSupport;
             RelativeLayout rl_support, rl_reply;
 
         }
@@ -340,16 +347,16 @@ public class CommentListFragment extends Fragment {
                     holder.tag.setText(comment.getGroup());
                 } else {
                     view = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_comment_list_item, null);
-                    initView(view);
-                    initEvent(comment);
-                    bindData(comment);
+                    initView(view, holder);
+                    initEvent(comment, holder);
+                    bindData(comment, holder);
                 }
                 holder = (ViewHolder) view.getTag();
             }
             return view;
         }
 
-        private void initView(View view) {
+        private void initView(View view, ViewHolder holder) {
             //holder.portrait= (SmartImageView) view.findViewById(R.id.id_img_portrait);
             holder.userName = (TextView) view.findViewById(R.id.id_username);
             //holder.source= (TextView) view.findViewById(R.id.id_username);
@@ -359,25 +366,30 @@ public class CommentListFragment extends Fragment {
             holder.rl_reply = (RelativeLayout) view.findViewById(R.id.id_rl_reply);//回复
             holder.tvSupportCount = (TextView) view.findViewById(R.id.id_tv_support_count);
             holder.tvAddOne = (TextView) view.findViewById(R.id.id_tv_add_one);
+            holder.btnSupport = (Button) view.findViewById(R.id.id_btn_support);
         }
 
-        private void initEvent(final Comment comment) {
+        private void initEvent(final Comment comment, final ViewHolder holder) {
             //赞
             holder.rl_support.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     int count = comment.getSupportCount();
-//                    Object supportCount = holder.tvSupportCount.getTag();
-//                    if (supportCount != null) {
-//                        int temp = (int) supportCount;
-//                        if (temp == count + 1) {
-//                            Toast.makeText(MainApplication.UIContext, "已顶", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
+                    Object supportCount = holder.tvSupportCount.getTag();
+                    if (supportCount != null) {
+                        int temp = (int) supportCount;
+                        if (temp == count + 1) {
+                            Toast.makeText(MainApplication.UIContext, "已顶", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
                     holder.tvAddOne.setVisibility(View.VISIBLE);
                     holder.tvAddOne.startAnimation(animation);
-                    holder.tvSupportCount.setText("(" + count + 1 + ")");
+                    int addCount = count + 1;
+                    holder.tvSupportCount.setText("(" + addCount + ")");
                     holder.tvSupportCount.setTag(count + 1);
+                    holder.tvSupportCount.setTextColor(Color.RED);
+                    holder.btnSupport.setBackground(getResources().getDrawable(R.drawable.icon_support));
                     new Handler().postDelayed(new Runnable() {
                         public void run() {
                             holder.tvAddOne.setVisibility(View.GONE);
@@ -385,8 +397,18 @@ public class CommentListFragment extends Fragment {
                     }, 1000);
 
                     //后台提交赞加1
-                    TopLineOperator operator = TopLineOperator.getInstance();
-                    operator.commentSurpot(0, newsId, comment.getId(), 0, 1);
+                    if (userId == -1) {
+                        return;
+                    }
+                    CommonOperator operator = CommonOperator.getInstance();
+                    operator.supportOrStep(userId, comment.getId(), SupportType.NewsComment, 1, new ApiOperationCallback<ReturnInfo<String>>() {
+                        @Override
+                        public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                            if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                Log.i("supportOrStep", "赞成功");
+                            }
+                        }
+                    });
                 }
             });
 
@@ -400,7 +422,7 @@ public class CommentListFragment extends Fragment {
             });
         }
 
-        private void bindData(Comment comment) {
+        private void bindData(Comment comment, ViewHolder holder) {
             holder.userName.setText(comment.getUser().getName());
             //holder.source.setText(comment.getCommentDateTime());
             String notifyTimeStr = comment.getCommentDateTime();
