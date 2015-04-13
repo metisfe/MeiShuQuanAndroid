@@ -30,7 +30,8 @@ public class UserInfoOperator {
     private static UserInfoOperator sOperator = new UserInfoOperator();
 
     private static String URL_CENTER = "v1.1/UserCenter/GetUser?",
-                            URL_FAVORITE = "v1.1/UserCenter/MyFavorites?";
+                            URL_FAVORITE = "v1.1/UserCenter/MyFavorites?",
+                            URL_QUESTION = "v1.1/UserCenter/MyQuestion?userId={userId}&index={index}&type={type}";
 
     private static String KEY_USER_ID = "userId",
                         KEY_INDEX = "index";
@@ -138,6 +139,12 @@ public class UserInfoOperator {
             });
         }
     }
+
+    /*public void getQuestionList (String uid, int index, int type, OnGetListener<>) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+
+        }
+    }*/
 
     /*public void getCourseList (String uid, int index, int type, OnGetListener<>) {
 

@@ -6,22 +6,28 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.InputActivity;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.User;
+import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.view.shared.BaseDialog;
 import com.metis.meishuquan.view.shared.MyInfoBtn;
 
 public class InfoActivity extends BaseActivity implements View.OnClickListener {
 
-    private MyInfoBtn mNickView, mGenderView, mGradeView, mAgeView, mCvView, mDepartmentView;
+    private ImageView mProfile = null;
+
+    private MyInfoBtn mNickView, mGenderView, mConstellationView, mGradeView, mAgeView, mCvView, mDepartmentView, mDepartmentAddrView;
 
     private View mRecentsContainer = null;
     private TextView mRecentsContentTv = null;
@@ -46,11 +52,15 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
             }
         });
 
+        mProfile = (ImageView)findViewById(R.id.info_profile);
+
         mNickView = (MyInfoBtn)findViewById(R.id.info_nick);
         mGenderView = (MyInfoBtn)findViewById(R.id.info_gender);
+        mConstellationView = (MyInfoBtn)findViewById(R.id.info_constellation);
         mGradeView = (MyInfoBtn)findViewById(R.id.info_level);
         mAgeView = (MyInfoBtn)findViewById(R.id.info_age);
         mDepartmentView = (MyInfoBtn)findViewById(R.id.info_department);
+        mDepartmentAddrView = (MyInfoBtn)findViewById(R.id.info_department_address);
         mCvView = (MyInfoBtn)findViewById(R.id.info_cv);
 
         mRecentsContainer = findViewById(R.id.info_recents_container);
@@ -59,8 +69,10 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
         mNickView.setOnClickListener(this);
         mRecentsContainer.setOnClickListener(this);
         mGenderView.setOnClickListener(this);
+        mConstellationView.setOnClickListener(this);
         mAgeView.setOnClickListener(this);
         mDepartmentView.setOnClickListener(this);
+        mDepartmentAddrView.setOnClickListener(this);
         mCvView.setOnClickListener(this);
     }
 
@@ -90,11 +102,20 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
             case R.id.info_gender:
                 showDialog();
                 break;
+            case R.id.info_constellation:
+                it = new Intent(this, ConstellationActivity.class);
+                it.putExtra(ConstellationActivity.KEY_CONSTELLATION, mConstellationView.getSecondaryText().toString());
+                Log.v("TESTS", "info_constellation");
+                startActivityForResult(it, ConstellationActivity.REQUEST_CODE_CONSTELLATION);
+                break;
             case R.id.info_age:
-                startInputActivityForResult(getString(R.string.info_ages), mAgeView.getSecondaryText(), true, InputActivity.REQUEST_CODE_AGE, InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                startInputActivityForResult(getString(R.string.info_ages), mAgeView.getSecondaryText(), true, InputActivity.REQUEST_CODE_AGE, InputType.TYPE_CLASS_NUMBER);
                 break;
             case R.id.info_department:
                 startActivity(new Intent (this, DepartmentActivity.class));
+                break;
+            case R.id.info_department_address:
+                startInputActivityForResult(getString(R.string.info_department_address), mDepartmentAddrView.getSecondaryText(), false, InputActivity.REQUEST_CODE_DEPARTMENT_ADDRESS);
                 break;
             case R.id.info_cv:
                 startInputActivityForResult(mCvView.getText().toString(), mCvView.getSecondaryText(), false, InputActivity.REQUEST_CODE_CV);
@@ -130,6 +151,18 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                     mCvView.setSecondaryText(content);
                 }
                 break;
+            case InputActivity.REQUEST_CODE_DEPARTMENT_ADDRESS:
+                if (resultCode == RESULT_OK) {
+                    CharSequence content = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR);
+                    mDepartmentAddrView.setSecondaryText(content);
+                }
+                break;
+            case ConstellationActivity.REQUEST_CODE_CONSTELLATION:
+                if (resultCode == RESULT_OK) {
+                    String constellation = data.getStringExtra(ConstellationActivity.KEY_CONSTELLATION);
+                    mConstellationView.setSecondaryText(constellation);
+                }
+                break;
         }
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -139,6 +172,11 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
         mNickView.setSecondaryText(user.getName());
         mGenderView.setSecondaryText(user.getGender());
         mGradeView.setSecondaryText(user.getGrade());
+        final int profileSize = getResources().getDimensionPixelSize(R.dimen.info_profile_size);
+        ImageLoaderUtils.getImageLoader(this).displayImage(
+                "http://static.228.cn/upload/2015/01/28/AfterTreatment/1422412585979_b3m5-0.jpg",
+                mProfile,
+                ImageLoaderUtils.getRoundDisplayOptions(profileSize));
     }
 
     private Dialog mDialog = null;

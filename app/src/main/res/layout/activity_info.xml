@@ -57,9 +57,9 @@
                     android:layout_centerVertical="true"
                     />
                 <ImageView
+                    android:id="@+id/info_profile"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:background="@android:color/holo_green_light"
                     android:layout_toLeftOf="@+id/my_info_btn_arrow"
                     android:layout_margin="10dp"
                     />

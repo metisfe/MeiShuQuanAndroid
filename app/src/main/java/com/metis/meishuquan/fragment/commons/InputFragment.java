@@ -140,7 +140,6 @@ public class InputFragment extends Fragment {
     public void setInputType(int type) {
         mInputType = type;
         if (mInputEt != null) {
-            Toast.makeText(getActivity(), "setInputType " + (InputType.TYPE_CLASS_NUMBER == type), Toast.LENGTH_SHORT).show();
             mInputEt.setInputType(type);
         }
     }

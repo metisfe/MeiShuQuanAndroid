@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="my_info_profile_size">75dp</dimen>
+
+    <dimen name="info_profile_size">50dp</dimen>
+</resources>

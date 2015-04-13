@@ -59,4 +59,21 @@
     <string name="department_complete">完成</string>
     <string name="department_duration">时间</string>
     <string name="department_to">至</string>
+
+    <string-array name="constellation">
+        <item>摩羯座</item>
+        <item>水瓶座</item>
+        <item>双鱼座</item>
+        <item>牡羊座</item>
+
+        <item>金牛座</item>
+        <item>双子座</item>
+        <item>巨蟹座</item>
+        <item>狮子座</item>
+
+        <item>处女座</item>
+        <item>天秤座</item>
+        <item>天蝎座</item>
+        <item>射手座</item>
+    </string-array>
 </resources>

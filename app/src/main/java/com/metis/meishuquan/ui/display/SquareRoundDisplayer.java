@@ -16,7 +16,11 @@ import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 public class SquareRoundDisplayer implements BitmapDisplayer {
 	
 	private int mSize, mRound = 0;
-	
+
+    public SquareRoundDisplayer (int size) {
+        this (size, size / 2);
+    }
+
 	public SquareRoundDisplayer(int size, int round) {
 		mSize = size;
 		mRound = round;

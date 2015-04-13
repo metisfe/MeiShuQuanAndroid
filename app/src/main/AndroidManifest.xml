@@ -276,6 +276,10 @@
             android:name=".activity.info.DepartmentEditActivity"
             android:label="@string/title_activity_department_edit" >
         </activity>
+        <activity
+            android:name=".activity.info.ConstellationActivity"
+            android:label="@string/title_activity_constellation" >
+        </activity>
     </application>
 
 </manifest>

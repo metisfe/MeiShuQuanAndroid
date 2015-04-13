@@ -6,29 +6,29 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.AdvanceActivity;
 import com.metis.meishuquan.activity.info.InfoActivity;
-import com.metis.meishuquan.activity.info.DataListActivity;
-import com.metis.meishuquan.activity.info.MyAskActivity;
 import com.metis.meishuquan.activity.info.MyCommentsActivity;
 import com.metis.meishuquan.activity.info.MyCourseActivity;
 import com.metis.meishuquan.activity.info.MyFavoritesActivity;
 import com.metis.meishuquan.activity.info.SettingActivity;
 import com.metis.meishuquan.fragment.login.LoginFragment;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
-import com.metis.meishuquan.model.commons.Item;
 import com.metis.meishuquan.model.commons.User;
+import com.metis.meishuquan.ui.display.SquareRoundDisplayer;
+import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.view.shared.TabBar;
-
-import java.util.List;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 /**
  * Created by wudi on 3/15/2015.
@@ -40,7 +40,13 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     private TabBar tabBar;
     private View mInfoContainer = null, mLoginView;
     private TextView mInfoName = null, mAttentionCountTv = null, mFollowersCountTv = null;
-    private View mCollectionView, mAskView, mCommentView, mClassesView, mNameCardView, mAdvanceView, mSettingView;
+    private View mCollectionView, mCommentView, mClassesView, mNameCardView, mAdvanceView, mSettingView;
+    private ImageView mProfileIv = null;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,11 +63,11 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         mInfoContainer = view.findViewById(R.id.my_info_profile_container);
         mLoginView = view.findViewById(R.id.my_info_login);
         mInfoName = (TextView)view.findViewById(R.id.my_info_name);
+        mProfileIv = (ImageView)view.findViewById(R.id.my_info_profile);
         mAttentionCountTv = (TextView)view.findViewById(R.id.my_info_attention);
         mFollowersCountTv = (TextView)view.findViewById(R.id.my_info_followers);
 
         mCollectionView = view.findViewById(R.id.my_info_collections);
-        mAskView = view.findViewById(R.id.my_info_asks);
         mCommentView = view.findViewById(R.id.my_info_comments);
         mClassesView = view.findViewById(R.id.my_info_classes);
         mNameCardView = view.findViewById(R.id.my_info_name_card);
@@ -72,7 +78,6 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         //mLoginView.setOnClickListener(this);
 
         mCollectionView.setOnClickListener(this);
-        mAskView.setOnClickListener(this);
         mCommentView.setOnClickListener(this);
         mClassesView.setOnClickListener(this);
         mNameCardView.setOnClickListener(this);
@@ -104,9 +109,13 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     }
 
     private void fillUserInfo (User user) {
+        final int profilePix = getResources().getDimensionPixelSize(R.dimen.my_info_profile_size);
         mInfoName.setText(user.getName());
         mAttentionCountTv.setText(getString(R.string.my_info_count, user.getAttCount()));
         mFollowersCountTv.setText(getString(R.string.my_info_count, user.getFollowsCount()));
+        ImageLoaderUtils.getImageLoader(getActivity()).displayImage("http://static.228.cn/upload/Image/201501/1422424493077_2582_x.jpg",
+                mProfileIv,
+                ImageLoaderUtils.getRoundDisplayOptions(profilePix));
     }
 
     @Override
@@ -120,9 +129,6 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.my_info_collections:
                 startActivity(new Intent(getActivity(), MyFavoritesActivity.class));
-                break;
-            case R.id.my_info_asks:
-                startActivity(new Intent(getActivity(), MyAskActivity.class));
                 break;
             case R.id.my_info_comments:
                 startActivity(new Intent(getActivity(), MyCommentsActivity.class));

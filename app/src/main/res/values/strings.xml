@@ -36,5 +36,6 @@
     <string name="title_activity_my_comments">MyCommentsActivity</string>
     <string name="title_activity_department">DepartmentActivity</string>
     <string name="title_activity_department_edit">DepartmentEditActivity</string>
+    <string name="title_activity_constellation">ConstellationActivity</string>
 
 </resources>

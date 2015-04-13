@@ -34,11 +34,12 @@
                 >
                 <ImageView
                     android:id="@+id/my_info_profile"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
+                    android:layout_width="@dimen/my_info_profile_size"
+                    android:layout_height="@dimen/my_info_profile_size"
                     android:layout_margin="20dp"
                     android:layout_centerVertical="true"
                     android:src="@drawable/ic_launcher"
+                    android:scaleType="centerCrop"
                     />
                 <LinearLayout
                     android:id="@+id/my_info_container"
@@ -145,6 +146,21 @@
                     />
             </com.metis.meishuquan.view.shared.MyInfoBtn>
             <com.metis.meishuquan.view.shared.MyInfoBtn
+                android:id="@+id/my_info_classes"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                bs:src="@drawable/my_info_course"
+                bs:text="@string/my_info_classes"
+                bs:secondaryTextVisible="false"
+                >
+                <include
+                    layout="@layout/divider_horizontail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1px"
+                    android:layout_alignParentTop="true"
+                    />
+            </com.metis.meishuquan.view.shared.MyInfoBtn>
+            <!--<com.metis.meishuquan.view.shared.MyInfoBtn
                 android:id="@+id/my_info_asks"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -158,7 +174,7 @@
                     android:layout_height="1px"
                     android:layout_marginLeft="10dp"
                     />
-            </com.metis.meishuquan.view.shared.MyInfoBtn>
+            </com.metis.meishuquan.view.shared.MyInfoBtn>-->
             <com.metis.meishuquan.view.shared.MyInfoBtn
                 android:id="@+id/my_info_comments"
                 android:layout_width="fill_parent"
@@ -180,28 +196,7 @@
                     android:layout_alignParentBottom="true"
                     />
             </com.metis.meishuquan.view.shared.MyInfoBtn>
-            <com.metis.meishuquan.view.shared.MyInfoBtn
-                android:id="@+id/my_info_classes"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                bs:src="@drawable/my_info_course"
-                bs:text="@string/my_info_classes"
-                bs:secondaryTextVisible="false"
-                android:layout_marginTop="@dimen/px_to_dip_10"
-                >
-                <include
-                    layout="@layout/divider_horizontail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="1px"
-                    android:layout_alignParentTop="true"
-                    />
-                <include
-                    layout="@layout/divider_horizontail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="1px"
-                    android:layout_alignParentBottom="true"
-                    />
-            </com.metis.meishuquan.view.shared.MyInfoBtn>
+
             <com.metis.meishuquan.view.shared.MyInfoBtn
                 android:id="@+id/my_info_name_card"
                 android:layout_width="fill_parent"
