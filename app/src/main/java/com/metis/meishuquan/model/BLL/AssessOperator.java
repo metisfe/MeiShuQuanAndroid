@@ -1,10 +1,13 @@
 package com.metis.meishuquan.model.BLL;
 
 import android.graphics.Bitmap;
+import android.util.Pair;
 
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.enums.AssessStateEnum;
+import com.metis.meishuquan.model.enums.QueryTypeEnum;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.SystemUtil;
@@ -19,6 +22,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -63,17 +67,17 @@ public class AssessOperator {
      * @param queryType  0为全部，1为热点，2为最新
      * @param callback
      */
-    public void getAssessList(boolean isAll, int type, List<Integer> grades, List<Integer> channelIds, int index, int queryType,
+    public void getAssessList(boolean isAll, AssessStateEnum type, List<Integer> grades, List<Integer> channelIds, int index, QueryTypeEnum queryType,
                               ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuilder PATH = new StringBuilder(AssessList);
                 PATH.append("?isAll=" + isAll);
-                PATH.append("&type=" + type);
+                PATH.append("&type=" + type.getVal());
                 PATH.append("&grades=" + grades);
                 PATH.append("&channelIds=" + channelIds);
                 PATH.append("&index=" + index);
-                PATH.append("&queryType=" + queryType);
+                PATH.append("&queryType=" + queryType.getVal());
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
@@ -153,13 +157,18 @@ public class AssessOperator {
      * @param imgByte      图片字节数组
      * @param callback
      */
-    public void uploadAssess(final int userId, final String desc, final int channelId, final int friendUserId,int type, String define, byte[] imgByte, final ApiOperationCallback<ReturnInfo<String>> callback) {
+    public void uploadAssess(final int userId, final String desc, final int channelId, final int friendUserId, int type, String define, byte[] imgByte, final ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuilder FILEUPLOAD = new StringBuilder(FileUpload);
                 FILEUPLOAD.append("?type=" + type);
                 FILEUPLOAD.append("&define=" + define);
-                ApiDataProvider.getmClient().invokeApi(FILEUPLOAD.toString(), imgByte, HttpPost.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(),
+                List<Pair<String, String>> pram = new ArrayList<>();
+                Pair<String, String> pair1 = new Pair<String, String>("type", String.valueOf(type));
+                Pair<String, String> pair2 = new Pair<String, String>("define", define);
+                pram.add(pair1);
+                pram.add(pair2);
+                ApiDataProvider.getmClient().invokeApi(FILEUPLOAD.toString(), imgByte, HttpPost.METHOD_NAME, pram, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(),
                         new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {

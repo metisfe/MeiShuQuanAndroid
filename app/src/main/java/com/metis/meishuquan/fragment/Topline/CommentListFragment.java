@@ -34,11 +34,10 @@ import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
-import com.metis.meishuquan.model.enums.SupportType;
+import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.model.topline.AllComments;
 import com.metis.meishuquan.model.topline.Comment;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
-import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.metis.meishuquan.view.shared.DragListView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -401,7 +400,7 @@ public class CommentListFragment extends Fragment {
                         return;
                     }
                     CommonOperator operator = CommonOperator.getInstance();
-                    operator.supportOrStep(userId, comment.getId(), SupportType.NewsComment, 1, new ApiOperationCallback<ReturnInfo<String>>() {
+                    operator.supportOrStep(userId, comment.getId(), SupportTypeEnum.NewsComment, 1, new ApiOperationCallback<ReturnInfo<String>>() {
                         @Override
                         public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                             if (result != null && result.getInfo().equals(String.valueOf(0))) {

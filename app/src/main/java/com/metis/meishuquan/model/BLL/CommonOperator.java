@@ -2,12 +2,10 @@ package com.metis.meishuquan.model.BLL;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.contract.ReturnInfo;
-import com.metis.meishuquan.model.enums.SupportType;
+import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.SystemUtil;
-import com.metis.meishuquan.util.Utils;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
-import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import org.apache.http.client.methods.HttpGet;
 
@@ -40,7 +38,7 @@ public class CommonOperator {
      * @param result   1:赞  2:踩
      * @param callback 回调
      */
-    public void supportOrStep(int userid, int id, SupportType type, int result, ApiOperationCallback<ReturnInfo<String>> callback) {
+    public void supportOrStep(int userid, int id, SupportTypeEnum type, int result, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuffer path = new StringBuffer(URL_SUPPORTORSTEP);

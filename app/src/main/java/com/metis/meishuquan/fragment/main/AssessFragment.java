@@ -1,6 +1,5 @@
 package com.metis.meishuquan.fragment.main;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,6 +29,8 @@ import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.assess.AllAssess;
 import com.metis.meishuquan.model.assess.Assess;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.enums.AssessStateEnum;
+import com.metis.meishuquan.model.enums.QueryTypeEnum;
 import com.metis.meishuquan.view.shared.DragListView;
 import com.metis.meishuquan.view.shared.TabBar;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -57,6 +58,8 @@ public class AssessFragment extends Fragment {
     private Button btnRegion, btnFilter, btnPublishComment;
     private List<Assess> lstAllAssess = new ArrayList<Assess>();
     private AssessAdapter adapter;
+    private int index = 1;
+
 
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
@@ -89,7 +92,7 @@ public class AssessFragment extends Fragment {
         assessOperator = AssessOperator.getInstance();
         assessOperator.addAssessChannelListToCache();//将过滤条件（年级、标签）加载至缓存
         //加载列表数据
-        getData(DragListView.REFRESH, true, 1, null, null, 1, 0);
+        getData(DragListView.REFRESH, true, AssessStateEnum.ALL, null, null, index, QueryTypeEnum.ALL);
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_commentfragment, container, false);
         initView(rootView);
@@ -114,14 +117,15 @@ public class AssessFragment extends Fragment {
         this.listView.setOnRefreshListener(new DragListView.OnRefreshListener() {//列表刷新
             @Override
             public void onRefresh() {
-                getData(DragListView.REFRESH, true, 1, null, null, 1, 0);
+                getData(DragListView.REFRESH, true, AssessStateEnum.ALL, null, null, index, QueryTypeEnum.ALL);
             }
         });
 
         this.listView.setOnLoadListener(new DragListView.OnLoadListener() {//列表加载更多
             @Override
             public void onLoad() {
-                getData(DragListView.LOAD, true, 1, null, null, 1, 0);
+                index++;
+                loadNewAssessList(DragListView.LOAD, true, AssessStateEnum.ALL, null, null, index, QueryTypeEnum.NEW);
             }
         });
 
@@ -131,6 +135,7 @@ public class AssessFragment extends Fragment {
                 AssessInfoFragment assessInfoFragment = new AssessInfoFragment();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.add(R.id.content_container, assessInfoFragment);
+                ft.addToBackStack(null);
                 ft.commit();
             }
         });
@@ -142,6 +147,7 @@ public class AssessFragment extends Fragment {
                 ChooseCityFragment chooseCityFragment = new ChooseCityFragment();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.add(R.id.content_container, chooseCityFragment);
+                ft.addToBackStack(null);
                 ft.commit();
             }
         });
@@ -152,6 +158,7 @@ public class AssessFragment extends Fragment {
                 FilterConditionForAssessListFragment filterConditionForAssessListFragment = new FilterConditionForAssessListFragment();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.add(R.id.content_container, filterConditionForAssessListFragment);
+                ft.addToBackStack(null);
                 ft.commit();
             }
         });
@@ -167,9 +174,9 @@ public class AssessFragment extends Fragment {
         });
     }
 
-    private void getData(final int type, boolean isAll, int mType, List<Integer> grades, List<Integer> channelIds, int index, int queryType) {
+    private void getData(final int type, boolean isAll, AssessStateEnum mType, List<Integer> grades, List<Integer> channelIds, int index, QueryTypeEnum queryTypeEnum) {
         AssessOperator assessOperator = AssessOperator.getInstance();
-        assessOperator.getAssessList(isAll, mType, grades, channelIds, index, queryType, new ApiOperationCallback<ReturnInfo<String>>() {
+        assessOperator.getAssessList(isAll, mType, grades, channelIds, index, queryTypeEnum, new ApiOperationCallback<ReturnInfo<String>>() {
             @Override
             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                 AllAssess allAssess = new AllAssess();
@@ -192,6 +199,34 @@ public class AssessFragment extends Fragment {
                             Assess assess = new Assess();
                             assess.setGroup(NEW);
                             data.add(assess);
+                            data.addAll(lastAssessLists);
+                        }
+                    }
+                    Message msg = handler.obtainMessage();
+                    msg.what = type;
+                    msg.obj = data;
+                    handler.sendMessage(msg);
+                }
+            }
+        });
+    }
+
+    //加载最新点评
+    private void loadNewAssessList(final int type, boolean isAll, AssessStateEnum mType, List<Integer> grades, List<Integer> channelIds, int index, QueryTypeEnum queryTypeEnum) {
+        AssessOperator assessOperator = AssessOperator.getInstance();
+        assessOperator.getAssessList(isAll, mType, grades, channelIds, index, queryTypeEnum, new ApiOperationCallback<ReturnInfo<String>>() {
+            @Override
+            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                AllAssess allAssess = new AllAssess();
+                if (result != null) {
+                    Gson gson = new Gson();
+                    String json = gson.toJson(result);
+                    allAssess = gson.fromJson(json, new TypeToken<AllAssess>() {
+                    }.getType());
+                    List<Assess> data = new ArrayList<Assess>();
+                    if (allAssess != null && allAssess.getData() != null) {
+                        List<Assess> lastAssessLists = allAssess.getData().getLastAssessLists();//最新点评
+                        if (lastAssessLists != null && lastAssessLists.size() > 0) {
                             data.addAll(lastAssessLists);
                         }
                     }

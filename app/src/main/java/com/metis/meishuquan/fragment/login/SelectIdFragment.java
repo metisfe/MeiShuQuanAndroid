@@ -22,7 +22,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.model.enums.IdType;
+import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.login.Identity;
 import com.metis.meishuquan.model.login.IdentityType;
 import com.metis.meishuquan.model.login.UserRole;
@@ -43,7 +43,7 @@ public class SelectIdFragment extends Fragment {
     private MyGridAdapter adapter;
 
     private FragmentManager fm;
-    private IdType idType = null;
+    private IdTypeEnum idTypeEnum = null;
     private UserRole userRole;
     private Identity identity;
 
@@ -85,7 +85,7 @@ public class SelectIdFragment extends Fragment {
         gvData = (GridView) rootView.findViewById(R.id.id_select_id_gridview);
 
         fm = getActivity().getSupportFragmentManager();
-        idType = IdType.Student;
+        idTypeEnum = IdTypeEnum.Student;
         if (this.userRole != null) {
             for (IdentityType type : userRole.getData()) {
                 if (type.getName().equals("学生")) {
@@ -96,7 +96,7 @@ public class SelectIdFragment extends Fragment {
         this.gvData.setAdapter(adapter);
         setSelectedColorForTextView(tvStudent);
         setSelectedDrawable(imgStudent);
-        setUnSelectedDrawable(IdType.Student);
+        setUnSelectedDrawable(IdTypeEnum.Student);
 
     }
 
@@ -114,7 +114,7 @@ public class SelectIdFragment extends Fragment {
         btnNext.setOnClickListener(new View.OnClickListener() {//下一步
             @Override
             public void onClick(View view) {
-                if (idType == null) {
+                if (idTypeEnum == null) {
                     Toast.makeText(MainApplication.UIContext, "请选择身份", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -134,11 +134,11 @@ public class SelectIdFragment extends Fragment {
         imgStudent.setOnClickListener(new View.OnClickListener() {//学生
             @Override
             public void onClick(View view) {
-                idType = IdType.Student;
+                idTypeEnum = IdTypeEnum.Student;
                 setSelectedColorForTextView(tvStudent);
                 setUnselectedColorForTextView(new TextView[]{tvTeacher, tvHuashi, tvParent, tvOther});
                 setSelectedDrawable(imgStudent);
-                setUnSelectedDrawable(IdType.Student);
+                setUnSelectedDrawable(IdTypeEnum.Student);
                 for (IdentityType type : userRole.getData()) {
                     if (type.getName().equals("学生")) {
                         adapter = new MyGridAdapter(type.getChildLists());
@@ -151,11 +151,11 @@ public class SelectIdFragment extends Fragment {
         imgTeacher.setOnClickListener(new View.OnClickListener() {//老师
             @Override
             public void onClick(View view) {
-                idType = IdType.Teacher;
+                idTypeEnum = IdTypeEnum.Teacher;
                 setSelectedColorForTextView(tvTeacher);
                 setUnselectedColorForTextView(new TextView[]{tvStudent, tvHuashi, tvParent, tvOther});
                 setSelectedDrawable(imgTeacher);
-                setUnSelectedDrawable(IdType.Teacher);
+                setUnSelectedDrawable(IdTypeEnum.Teacher);
                 for (IdentityType type : userRole.getData()) {
                     if (type.getName().equals("老师")) {
                         adapter = new MyGridAdapter(type.getChildLists());
@@ -168,11 +168,11 @@ public class SelectIdFragment extends Fragment {
         imgHuashi.setOnClickListener(new View.OnClickListener() {//画室机构
             @Override
             public void onClick(View view) {
-                idType = IdType.HuaShi;
+                idTypeEnum = IdTypeEnum.HuaShi;
                 setSelectedColorForTextView(tvHuashi);
                 setUnselectedColorForTextView(new TextView[]{tvTeacher, tvStudent, tvParent, tvOther});
                 setSelectedDrawable(imgHuashi);
-                setUnSelectedDrawable(IdType.HuaShi);
+                setUnSelectedDrawable(IdTypeEnum.HuaShi);
                 for (IdentityType type : userRole.getData()) {
                     if (type.getName().equals("画室/机构")) {
                         adapter = new MyGridAdapter(type.getChildLists());
@@ -185,11 +185,11 @@ public class SelectIdFragment extends Fragment {
         imgParent.setOnClickListener(new View.OnClickListener() {//家长
             @Override
             public void onClick(View view) {
-                idType = IdType.Parent;
+                idTypeEnum = IdTypeEnum.Parent;
                 setSelectedColorForTextView(tvParent);
                 setUnselectedColorForTextView(new TextView[]{tvTeacher, tvHuashi, tvStudent, tvOther});
                 setSelectedDrawable(imgParent);
-                setUnSelectedDrawable(IdType.Parent);
+                setUnSelectedDrawable(IdTypeEnum.Parent);
                 for (IdentityType type : userRole.getData()) {
                     if (type.getName().equals("家长")) {
                         adapter = new MyGridAdapter(type.getChildLists());
@@ -202,11 +202,11 @@ public class SelectIdFragment extends Fragment {
         imgOther.setOnClickListener(new View.OnClickListener() {//其他
             @Override
             public void onClick(View view) {
-                idType = IdType.Other;
+                idTypeEnum = IdTypeEnum.Other;
                 setSelectedColorForTextView(tvOther);
                 setUnselectedColorForTextView(new TextView[]{tvTeacher, tvHuashi, tvParent, tvStudent});
                 setSelectedDrawable(imgOther);
-                setUnSelectedDrawable(IdType.Other);
+                setUnSelectedDrawable(IdTypeEnum.Other);
                 for (IdentityType type : userRole.getData()) {
                     if (type.getName().equals("爱好者")) {
                         adapter = new MyGridAdapter(type.getChildLists());
@@ -244,7 +244,7 @@ public class SelectIdFragment extends Fragment {
     }
 
     private void setSelectedDrawable(ImageView img) {
-        switch (idType) {
+        switch (idTypeEnum) {
             case Student:
                 img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_select_id_1));
                 break;
@@ -263,7 +263,7 @@ public class SelectIdFragment extends Fragment {
         }
     }
 
-    private void setUnSelectedDrawable(IdType selectType) {
+    private void setUnSelectedDrawable(IdTypeEnum selectType) {
         switch (selectType) {
             case Student:
                 imgTeacher.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_2));
