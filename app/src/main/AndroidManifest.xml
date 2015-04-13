@@ -52,10 +52,10 @@
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activity.circle.ChatActivity"
             android:configChanges="locale|layoutDirection|fontScale"
@@ -122,6 +122,7 @@
             android:windowSoftInputMode="stateVisible|adjustResize" />
 
         <!-- End UMeng -->
+
 
         <!-- Begin Rong Cloud -->
         <meta-data
@@ -308,6 +309,10 @@
 
         <!-- End Rong Cloud -->
 
+        <activity
+            android:name=".activity.info.DepartmentEditActivity"
+            android:label="@string/title_activity_department_edit" >
+        </activity>
     </application>
 
 </manifest>
