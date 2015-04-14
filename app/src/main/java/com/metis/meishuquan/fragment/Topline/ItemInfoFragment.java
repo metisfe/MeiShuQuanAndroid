@@ -32,6 +32,8 @@ import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.main.ToplineFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.topline.Content;
+import com.metis.meishuquan.model.topline.ContentInfo;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
@@ -40,6 +42,8 @@ import com.metis.meishuquan.view.topline.NewsShareView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /**
@@ -109,54 +113,47 @@ public class ItemInfoFragment extends Fragment {
 
     private void addViewByContent() {
         if (newsInfo != null) {
-            String content = newsInfo.getData().getContent();
-            //解析内容
-            int i = 0;
-            StringTokenizer tokenizer = new StringTokenizer(content, "|$|");
-
-            String[] str = new String[tokenizer.countTokens()];
-
-            while (tokenizer.hasMoreTokens()) {
-                str[i] = new String();
-                str[i] = tokenizer.nextToken();
-                i++;
+            String json = newsInfo.getData().getContent();
+            Log.i("content", json);
+            Gson gson = new Gson();
+            ContentInfo[] lstContentInfo = gson.fromJson(json, ContentInfo[].class);
+            if (lstContentInfo == null) {
+                return;
             }
+            for (int i = 0; i < lstContentInfo.length; i++) {
+                ContentInfo contentInfo = lstContentInfo[i];
+                if (contentInfo.getType().equals("TXT")) {
+                    if (contentInfo.getData().getContentType().equals("p")) {
+                        addTextView("   " + contentInfo.getData().getContent());
+                    } else if (contentInfo.getData().getContentType().equals("#document")) {
+                        addTextView("   " + contentInfo.getData().getContent());
+                    }
+                }
+                if (contentInfo.getType().equals("IMG")) {
+                    addImageView(contentInfo.getData().getUrl(), contentInfo.getData().getWidth(), contentInfo.getData().getHeight());
+                }
+                if (contentInfo.getType().equals("LINK")) {
+                    //addImageView(contentInfo.getData().getUrl(), contentInfo.getData().getWidth(), contentInfo.getData().getHeight());
+                }
+                if (contentInfo.getType().equals("VOIDE")) {
+                    //addImageView(contentInfo.getData().getUrl(), contentInfo.getData().getWidth(), contentInfo.getData().getHeight());
+                }
 
-            for (int j = 0; j < str.length; j++) {
-                if (str[j].contains("<p>") || str[j].contains("</p>")) {
-                    String wordTemp = str[j].replace("<p>", "");
-                    String word = wordTemp.replace("</p>", "\n");
-                    addTextView(word);
-                }
-                if (str[j].contains("<!--img")) {
-                    String name = str[j];
-                    addImageView(name);
-                }
             }
         }
     }
 
     //添加视图控件
-    private void addImageView(String name) {
-        String url = "";
-        int width = 0;
-        int height = 0;
-
+    private void addImageView(String url, int width, int height) {
         if (ll_content == null) {
             ll_content = (LinearLayout) rootView.findViewById(R.id.id_ll_news_content);//内容父布局
         }
 
         SmartImageView imageView = new SmartImageView(MainApplication.UIContext);
-        for (int i = 0; i < newsInfo.getData().getUrlss().size(); i++) {
-            if (newsInfo.getData().getUrlss().get(i).getNewShowContent().equals(name)) {
-                url = newsInfo.getData().getUrlss().get(i).getDir();
-            }
-        }
-
         imageView.setImageUrl(url.trim());
-        imageView.setScaleType(ImageView.ScaleType.MATRIX);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
         lp.topMargin = 10;
         lp.gravity = Gravity.CENTER_HORIZONTAL;
         imageView.setLayoutParams(lp);
