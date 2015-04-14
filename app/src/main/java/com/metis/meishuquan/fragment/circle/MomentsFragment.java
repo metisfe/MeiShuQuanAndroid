@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +22,20 @@ import com.metis.meishuquan.adapter.circle.CircleMomentAdapter;
 import com.metis.meishuquan.adapter.topline.ToplineCustomAdapter;
 import com.metis.meishuquan.fragment.Topline.ItemInfoFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
+import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CircleMoment;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.model.topline.News;
 import com.metis.meishuquan.model.topline.ToplineNewsList;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.shared.DragListView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+
+import org.apache.http.client.methods.HttpGet;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +85,15 @@ public class MomentsFragment extends CircleBaseFragment {
         initData();
 
         View contextView = inflater.inflate(R.layout.fragment_circle_momentsfragment, container, false);
+
+        ApiDataProvider.getmClient().invokeApi("v1.1/Circle/CircleList?groupId=0&lastId=0", null,
+                HttpGet.METHOD_NAME, null, (Class<ReturnInfo<List<CCircleDetailModel>>>) new ReturnInfo<List<CCircleDetailModel>>().getClass(),
+                new ApiOperationCallback<ReturnInfo<List<CCircleDetailModel>>>() {
+                    @Override
+                    public void onCompleted(ReturnInfo<List<CCircleDetailModel>> result, Exception exception, ServiceFilterResponse response) {
+                        Log.d("circle","");
+                    }
+                });
 
         //初始化
         initView(contextView);
