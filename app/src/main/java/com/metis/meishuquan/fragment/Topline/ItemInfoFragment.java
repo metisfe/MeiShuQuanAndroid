@@ -7,6 +7,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -35,6 +39,7 @@ import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.topline.Content;
 import com.metis.meishuquan.model.topline.ContentInfo;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
+import com.metis.meishuquan.model.topline.Urls;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.metis.meishuquan.view.topline.CommentInputView;
@@ -124,9 +129,7 @@ public class ItemInfoFragment extends Fragment {
                 ContentInfo contentInfo = lstContentInfo[i];
                 if (contentInfo.getType().equals("TXT")) {
                     if (contentInfo.getData().getContentType().equals("p")) {
-                        addTextView("   " + contentInfo.getData().getContent());
-                    } else if (contentInfo.getData().getContentType().equals("#document")) {
-                        addTextView("   " + contentInfo.getData().getContent());
+                        addTextView(contentInfo.getData().getContent());
                     }
                 }
                 if (contentInfo.getType().equals("IMG")) {
@@ -166,14 +169,64 @@ public class ItemInfoFragment extends Fragment {
         if (ll_content == null) {
             ll_content = (LinearLayout) rootView.findViewById(R.id.id_ll_news_content);//内容父布局
         }
-
         TextView textView = new TextView(MainApplication.UIContext);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.topMargin = 10;
         textView.setLayoutParams(lp);
-        textView.setText(words);
         textView.setTextSize(16);
         textView.setTextColor(getResources().getColor(R.color.tv_channel_item));
+
+        int k = 0;
+        StringTokenizer tokenizer = new StringTokenizer(words, "$");
+
+        String[] str = new String[tokenizer.countTokens()];
+
+        while (tokenizer.hasMoreTokens()) {
+            str[k] = new String();
+            str[k] = tokenizer.nextToken();
+            k++;
+        }
+
+        for (int i = 0; i < str.length; i++) {
+            Log.i(String.valueOf(i), str[i]);
+        }
+
+        //将link占位符替换成链接文字
+        for (int j = 0; j < str.length; j++) {
+            for (int i = 0; i < newsInfo.getData().getUrlss().size(); i++) {
+                Urls url = newsInfo.getData().getUrlss().get(i);
+                String newShowContent = url.getNewShowContent().substring(1, url.getNewShowContent().length() - 1);
+                if (str[j].equals(newShowContent)) {
+                    str[j] = url.getDescription();
+                }
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < str.length; i++) {
+            sb.append(str[i]);
+        }
+
+        //得到最终包含有链接文字的字符串
+        String finalWord = sb.toString().trim();
+
+        //创建一个 SpannableString对象
+        SpannableString sp = new SpannableString(finalWord);
+        if (!finalWord.equals("")) {
+            List<Urls> lstUrl = newsInfo.getData().getUrlss();
+            for (int i = 0; i < lstUrl.size(); i++) {
+                String key = lstUrl.get(i).getDescription();
+                if (!key.equals("")) {
+                    if (finalWord.contains(key)) {
+                        //设置超链接
+                        sp.setSpan(new URLSpan(lstUrl.get(i).getDir()), finalWord.indexOf(key), finalWord.indexOf(key) + key.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                }
+            }
+            textView.setText(sp);
+            textView.setMovementMethod(LinkMovementMethod.getInstance());
+        }
+
 
         ll_content.addView(textView);
     }
