@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#f0f0f0">
+
+    <LinearLayout
+        android:id="@+id/id_ll_tab"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_below="@+id/rl_title_bar"
+        android:background="#f0f0f0">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:text="精选推荐"
+            android:textColor="#Fb6d6d"
+            android:textSize="15sp" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:text="最新发布"
+            android:textColor="#7e7e7e"
+            android:textSize="15sp" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:text="最多收藏"
+            android:textColor="#7e7e7e"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/id_horizontal_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/id_ll_tab"
+        android:background="#cccccc" />
+
+    <com.metis.meishuquan.view.shared.DragListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/fragment_shared_classfragment_tab_bar"
+        android:layout_below="@+id/id_horizontal_line"
+        android:background="#f0f0f0" />
+</RelativeLayout>

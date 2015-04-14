@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#f0f0f0">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/id_img_class"
+            android:layout_width="100dp"
+            android:layout_height="65dp"
+            android:layout_marginBottom="7.5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="7.5dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/img_topline_default" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/id_img_class"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="-1dp"
+            android:layout_toRightOf="@+id/id_img_class"
+            android:maxLines="2"
+            android:text="年度最佳摄影奖"
+            android:textColor="#424242"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/id_img_class"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="-1dp"
+            android:layout_toRightOf="@+id/id_img_class"
+            android:text="消息来源"
+            android:textColor="#Fb6d6d"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/id_tv_read_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/id_img_class"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/id_tv_comment_count"
+            android:text="阅读(1234) "
+            android:textColor="#7e7e7e"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/id_tv_comment_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/id_img_class"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:text="评论(1234)"
+            android:textColor="#7e7e7e"
+            android:textSize="11sp" />
+
+    </RelativeLayout>
+</RelativeLayout>
