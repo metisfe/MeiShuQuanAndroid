@@ -1,6 +1,7 @@
 package com.metis.meishuquan.model.commons;
 
 import com.google.gson.annotations.SerializedName;
+import com.metis.meishuquan.model.enums.LoginStateEnum;
 
 import java.io.Serializable;
 
@@ -31,7 +32,7 @@ public class User implements Serializable {
     private String region;
 
     @SerializedName("userId")
-    private String userId;
+    private int userId = -1;
 
     @SerializedName("userAvatar")
     private String userAvatar;
@@ -47,6 +48,9 @@ public class User implements Serializable {
 
     @SerializedName("relationType")
     private int relationType;
+
+    @SerializedName("registrationDate")
+    private String registrationDate;
 
     public void setName(String name) {
         this.name = name;
@@ -112,11 +116,11 @@ public class User implements Serializable {
         this.region = region;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
@@ -152,11 +156,20 @@ public class User implements Serializable {
         this.relationType = relationType;
     }
 
-    public int getAttCount () {
+    public String getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(String registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public int getAttCount() {
         //TODO
         return 0;
     }
-    public int getFollowsCount () {
+
+    public int getFollowsCount() {
         //TODO
         return 0;
     }

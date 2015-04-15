@@ -13,11 +13,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.BLL.UserOperator;
+import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.enums.LoginStateEnum;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
@@ -82,9 +85,9 @@ public class LoginFragment extends Fragment {
                             Gson gson = new Gson();
                             String json = gson.toJson(result);
                             Log.e("userInfo", json);
+                            User user = gson.fromJson(json, new TypeToken<User>() {
+                            }.getType());
 
-                            SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
-                            spu.update(SharedPreferencesUtil.LOGIN_STATE, "已登录");
                             Toast.makeText(MainApplication.UIContext, "登录成功", Toast.LENGTH_SHORT).show();
                             getActivity().finish();
                         } else {
