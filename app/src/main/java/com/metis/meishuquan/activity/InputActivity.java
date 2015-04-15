@@ -25,7 +25,8 @@ public class InputActivity extends FragmentActivity {
             REQUEST_CODE_RECENTS = 102,
             REQUEST_CODE_CV = 104,
             REQUEST_CODE_AGE = 106,
-            REQUEST_CODE_DEPARTMENT_ADDRESS = 108;
+            REQUEST_CODE_DEPARTMENT_ADDRESS = 108,
+            REQUEST_CODE_ACHIEVEMENT = 110;
 
     private TitleView mTitleView = null;
     private InputFragment mInputFragment = null;

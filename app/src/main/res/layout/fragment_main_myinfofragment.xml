@@ -112,14 +112,12 @@
                 <TextView
                     android:id="@+id/my_info_login"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="fill_parent"
                     android:textSize="18sp"
                     android:text="@string/my_info_login"
                     android:gravity="center_vertical"
-                    android:layout_alignTop="@+id/my_info_container"
-                    android:layout_alignBottom="@+id/my_info_container"
-                    android:layout_alignLeft="@+id/my_info_container"
-                    android:layout_alignRight="@+id/my_info_container"
+                    android:layout_toRightOf="@+id/my_info_profile"
+                    android:layout_toLeftOf="@+id/my_info_profile_right_arrow"
                     android:visibility="gone"
                     />
                 <ImageView

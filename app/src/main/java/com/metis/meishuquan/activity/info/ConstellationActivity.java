@@ -3,12 +3,15 @@ package com.metis.meishuquan.activity.info;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Checkable;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.view.shared.TitleView;
@@ -42,7 +45,7 @@ public class ConstellationActivity extends BaseActivity implements RadioGroup.On
         });
 
         mGroup = (RadioGroup)findViewById(R.id.constellation_radio_group);
-        mGroup.setOnCheckedChangeListener(this);
+
         for (int i = 0; i < mConstellationArr.length; i++) {
             String conStr = mConstellationArr[i];
             RadioButton button = new RadioButton(this);
@@ -58,20 +61,17 @@ public class ConstellationActivity extends BaseActivity implements RadioGroup.On
             button.setChecked(conStr.equals(con));
             mGroup.addView(button);
         }
-
+        mGroup.setOnCheckedChangeListener(this);
     }
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        final int length = group.getChildCount();
-        for (int i = 0; i < length; i++) {
-            RadioButton button = (RadioButton)group.getChildAt(i);
-            if (button.isChecked()) {
-                Intent it = new Intent ();
-                it.putExtra(KEY_CONSTELLATION, button.getText());
-                setResult(RESULT_OK, it);
-                finish();
-            }
-        }
+        //Toast.makeText(this, "onCheckedChanged " + checkedId, Toast.LENGTH_SHORT).show();
+        final int id = group.getChildAt(0).getId();
+        Intent it = new Intent ();
+        it.putExtra(KEY_CONSTELLATION, mConstellationArr[checkedId - id]);
+        setResult(RESULT_OK, it);
+        finish();
     }
+
 }

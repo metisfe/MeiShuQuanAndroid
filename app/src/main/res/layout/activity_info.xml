@@ -1,35 +1,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:bs="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/info_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#cccccc"
     tools:context="com.metis.meishuquan.activity.info.InfoActivity">
-    <RelativeLayout
+    <com.metis.meishuquan.view.shared.TitleView
         android:id="@+id/info_title"
         android:layout_width="fill_parent"
-        android:layout_height="44dp"
-        android:background="@color/bg_topline_topbar"
-        >
-        <ImageView
-            android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/btn_back"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_centerInParent="true"
-            android:text="@string/info_title"
-            android:gravity="center"
-            android:textColor="@color/tv_title_bar"
-            android:textSize="20sp"
-            />
-    </RelativeLayout>
+        android:layout_height="wrap_content"
+        bs:titleText="@string/info_title"
+        />
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -41,6 +23,7 @@
             android:orientation="vertical"
             >
             <RelativeLayout
+                android:id="@+id/info_profile_container"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
@@ -206,6 +189,7 @@
                 android:layout_height="wrap_content"
                 bs:text="@string/info_level"
                 bs:imageVisible="false"
+                bs:arrowVisible="false"
                 >
                 <include
                     layout="@layout/divider_horizontail"

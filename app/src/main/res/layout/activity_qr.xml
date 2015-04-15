@@ -1,0 +1,22 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.metis.meishuquan.activity.info.QrActivity">
+    <com.metis.meishuquan.view.shared.TitleView
+        xmlns:bs="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        bs:titleText="@string/my_info_name_card"
+        bs:titleTextRight="扫描"
+        />
+    <fragment
+        android:id="@+id/qr_fragment"
+        android:name="com.metis.meishuquan.fragment.commons.QRFragment"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/title"
+        />
+
+</RelativeLayout>

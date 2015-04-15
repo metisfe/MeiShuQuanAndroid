@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.commons.Item;
 import com.metis.meishuquan.model.commons.Result;
@@ -15,10 +16,12 @@ import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import org.apache.http.client.methods.HttpGet;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by WJ on 2015/4/9.
@@ -31,7 +34,8 @@ public class UserInfoOperator {
 
     private static String URL_CENTER = "v1.1/UserCenter/GetUser?",
                             URL_FAVORITE = "v1.1/UserCenter/MyFavorites?",
-                            URL_QUESTION = "v1.1/UserCenter/MyQuestion?userId={userId}&index={index}&type={type}";
+                            URL_QUESTION = "v1.1/UserCenter/MyQuestion?userId={userId}&index={index}&type={type}",
+                            URL_UPDATE_USER_INFO = "v1.1/UserCenter/UpdateUserInfo?param=";
 
     private static String KEY_USER_ID = "userId",
                         KEY_INDEX = "index";
@@ -44,6 +48,32 @@ public class UserInfoOperator {
 
     private UserInfoOperator () {
 
+    }
+
+    public void updateUserInfo (String uid, Map<String, String> map) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            JsonObject json = new JsonObject();
+            json.addProperty(KEY_USER_ID, uid);
+            Set<String> set = map.keySet();
+            for (String key : set) {
+                json.addProperty(key, map.get(key));
+            }
+            ApiDataProvider.getmClient().invokeApi(URL_UPDATE_USER_INFO + json.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String json = gson.toJson(result);
+                        Log.v(TAG, "updateUserInfo json=" + json);
+
+                    } else {
+
+                    }
+
+                }
+            });
+        }
     }
 
     public void getUserInfo (String uid, final OnGetListener<User> userListener) {
@@ -64,10 +94,11 @@ public class UserInfoOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    if (result != null) {
+                    if (result != null && response.getStatus().getStatusCode() == 0) {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
                         Log.v(TAG, "getUserInfo json=" + json);
+
                         Result<User> resultData = gson.fromJson(json, new TypeToken<Result<User>>(){}.getType());
                         if (resultData != null) {
                             User user = resultData.getData();
@@ -111,7 +142,7 @@ public class UserInfoOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    if (result != null) {
+                    if (result != null && response.getStatus().getStatusCode() == 0) {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
                         Log.v(TAG, index + " getFavoriteList json=" + json);

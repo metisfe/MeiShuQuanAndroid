@@ -1,6 +1,7 @@
 package com.metis.meishuquan.fragment.main;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.AdvanceActivity;
@@ -19,7 +25,9 @@ import com.metis.meishuquan.activity.info.InfoActivity;
 import com.metis.meishuquan.activity.info.MyCommentsActivity;
 import com.metis.meishuquan.activity.info.MyCourseActivity;
 import com.metis.meishuquan.activity.info.MyFavoritesActivity;
+import com.metis.meishuquan.activity.info.QrActivity;
 import com.metis.meishuquan.activity.info.SettingActivity;
+import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.login.LoginFragment;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.User;
@@ -30,6 +38,8 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
+import java.util.Hashtable;
+
 /**
  * Created by wudi on 3/15/2015.
  */
@@ -38,7 +48,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = MyInfoFragment.class.getSimpleName();
 
     private TabBar tabBar;
-    private View mInfoContainer = null, mLoginView;
+    private View mInfoContainer = null, mLoginView = null, mInfoDetailsContainer = null;
     private TextView mInfoName = null, mAttentionCountTv = null, mFollowersCountTv = null;
     private View mCollectionView, mCommentView, mClassesView, mNameCardView, mAdvanceView, mSettingView;
     private ImageView mProfileIv = null;
@@ -61,6 +71,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mInfoContainer = view.findViewById(R.id.my_info_profile_container);
+        mInfoDetailsContainer = view.findViewById(R.id.my_info_container);
         mLoginView = view.findViewById(R.id.my_info_login);
         mInfoName = (TextView)view.findViewById(R.id.my_info_name);
         mProfileIv = (ImageView)view.findViewById(R.id.my_info_profile);
@@ -83,6 +94,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         mNameCardView.setOnClickListener(this);
         mAdvanceView.setOnClickListener(this);
         mSettingView.setOnClickListener(this);
+
     }
 
     @Override
@@ -93,9 +105,11 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
             public void onGet(boolean succeed, User user) {
                 if (succeed) {
                     mLoginView.setVisibility(View.GONE);
+                    mInfoDetailsContainer.setVisibility(View.VISIBLE);
                     fillUserInfo(user);
                 } else {
                     mLoginView.setVisibility(View.VISIBLE);
+                    mInfoDetailsContainer.setVisibility(View.GONE);
                 }
             }
         });
@@ -125,7 +139,8 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 startActivity(new Intent(getActivity(), InfoActivity.class));
                 break;
             case R.id.my_info_login:
-                showLoginFragment();
+                //showLoginFragment();
+                startActivity(new Intent (getActivity(), LoginActivity.class));
                 break;
             case R.id.my_info_collections:
                 startActivity(new Intent(getActivity(), MyFavoritesActivity.class));
@@ -137,6 +152,9 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 startActivity(new Intent(getActivity(), MyCourseActivity.class));
                 break;
             case R.id.my_info_name_card:
+                Intent it = new Intent (getActivity(), QrActivity.class);
+                it.putExtra(QrActivity.KEY_DATA_STR, "草料网是国内最大的二维码在线服务网站。我们用心制作了");
+                startActivity(it);
                 break;
             case R.id.my_info_advances:
                 startActivity(new Intent(getActivity(), AdvanceActivity.class));

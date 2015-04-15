@@ -1,5 +1,7 @@
 package com.metis.meishuquan.activity.info;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -8,8 +10,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.view.shared.MyInfoBtn;
 
-public class AboutActivity extends BaseActivity {
+public class AboutActivity extends BaseActivity implements View.OnClickListener {
+
+    private MyInfoBtn mScoreBtn = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +27,19 @@ public class AboutActivity extends BaseActivity {
                 finish();
             }
         });
+
+        mScoreBtn = (MyInfoBtn)this.findViewById(R.id.about_score);
+        mScoreBtn.setOnClickListener(this);
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.about_score:
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("market://details?id=" + this.getPackageName()));
+                startActivity(intent);
+                break;
+        }
+    }
 }

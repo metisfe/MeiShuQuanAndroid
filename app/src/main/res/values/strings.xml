@@ -37,6 +37,10 @@
     <string name="title_activity_department">DepartmentActivity</string>
     <string name="title_activity_department_edit">DepartmentEditActivity</string>
     <string name="title_activity_constellation">ConstellationActivity</string>
+    <string name="title_activity_qr">QrActivity</string>
+    <string name="title_activity_qr_scan">QrScanActivity</string>
+
     <string name="title_activity_news_info_actity">NewsInfoActity</string>
+
 
 </resources>

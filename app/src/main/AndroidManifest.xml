@@ -75,9 +75,6 @@
             android:name=".activity.login.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
-            android:name=".activity.info.MyAskActivity"
-            android:label="@string/title_activity_my_ask" />
-        <activity
             android:name=".activity.info.MyCommentsActivity"
             android:label="@string/title_activity_my_comments" />
         <activity
@@ -281,8 +278,15 @@
             android:label="@string/title_activity_constellation" >
         </activity>
         <activity
+            android:name=".activity.info.QrActivity"
+            android:label="@string/title_activity_qr" >
+        </activity>
+        <activity
+            android:name=".activity.info.QrScanActivity"
+            android:label="@string/title_activity_qr_scan" >
+        <activity
             android:name=".activity.topline.NewsInfoActity"
-            android:label="@string/title_activity_news_info_actity" >
+            android:label="@string/title_activity_news_info_actity" />
         </activity>
     </application>
 

@@ -70,6 +70,7 @@
         <attr name="src" format="reference" />
         <attr name="text" format="string|reference"/>
         <attr name="imageVisible" format="boolean"/>
+        <attr name="arrowVisible" format="boolean"/>
         <attr name="secondaryText" format="string|reference"/>
         <attr name="secondaryTextVisible" format="boolean"/>
     </declare-styleable>

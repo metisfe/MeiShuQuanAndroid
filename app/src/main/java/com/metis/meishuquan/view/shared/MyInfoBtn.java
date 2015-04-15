@@ -20,6 +20,7 @@ public class MyInfoBtn extends RelativeLayout {
     private ImageView mIv = null;
     private TextView mTv = null;
     private TextView mSecondaryTv = null;
+    private ImageView mArrowIv = null;
 
     private Drawable mSrcDrawable = null;
     private String mText = null;
@@ -27,6 +28,7 @@ public class MyInfoBtn extends RelativeLayout {
 
     private boolean mImageVisible = true;
     private boolean mSecondaryTextVisible = true;
+    private boolean mArrowVisible = true;
 
     public MyInfoBtn(Context context) {
         this(context, null);
@@ -46,6 +48,7 @@ public class MyInfoBtn extends RelativeLayout {
             mSecondaryText = typed.getString(R.styleable.MyInfoBtn_secondaryText);
             mImageVisible = typed.getBoolean(R.styleable.MyInfoBtn_imageVisible, true);
             mSecondaryTextVisible = typed.getBoolean(R.styleable.MyInfoBtn_secondaryTextVisible, true);
+            mArrowVisible = typed.getBoolean(R.styleable.MyInfoBtn_arrowVisible, true);
         } finally {
             typed.recycle();
         }
@@ -58,6 +61,7 @@ public class MyInfoBtn extends RelativeLayout {
         mIv = (ImageView)this.findViewById(R.id.my_info_btn_img);
         mTv = (TextView)this.findViewById(R.id.my_info_btn_text);
         mSecondaryTv = (TextView)this.findViewById(R.id.my_info_btn_secondary_text);
+        mArrowIv = (ImageView)this.findViewById(R.id.my_info_btn_arrow);
 
         mIv.setImageDrawable(mSrcDrawable);
         mTv.setText(mText);
@@ -65,6 +69,7 @@ public class MyInfoBtn extends RelativeLayout {
 
         mIv.setVisibility(mImageVisible ? View.VISIBLE : View.GONE);
         mSecondaryTv.setVisibility(mSecondaryTextVisible ? View.VISIBLE : View.GONE);
+        mArrowIv.setVisibility(mArrowVisible ? View.VISIBLE : View.INVISIBLE);
     }
 
     public void setSecondaryText (CharSequence txt) {

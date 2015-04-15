@@ -60,6 +60,10 @@
     <string name="department_duration">时间</string>
     <string name="department_to">至</string>
 
+    <string name="advance_tip">您的联系方式</string>
+    <string name="advance_hint">请简要描述您的问题和意见...</string>
+    <string name="advance_hint_contact">QQ/邮箱/手机号码</string>
+
     <string-array name="constellation">
         <item>摩羯座</item>
         <item>水瓶座</item>

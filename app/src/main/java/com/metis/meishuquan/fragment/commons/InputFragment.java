@@ -49,6 +49,7 @@ public class InputFragment extends Fragment {
                 s.delete(mMaxCount, length);
             }
             updateCountTip(s.length());
+            mInputEt.setSelection(mInputEt.getSelectionEnd());
         }
     };
 
