@@ -96,8 +96,9 @@ public class LoginFragment extends Fragment {
                             user.getData().setAppLoginState(LoginStateEnum.YES);
 
                             //connect to Rong
-                            final String token = user.getData().getToken();
-                            if (!token.isEmpty() && token.length() >= 100) {
+                            //String token = user.getData().getToken();
+                            String token = "vHlcG4hORBuPENRljGB6MoGn6Ui0bBlr+zHn5QT+0f+TueCwMF65klGMwsE+P2SPd8eazBQpOPpagJ1/lOVNMg==";
+                            if (!token.isEmpty() && token.length() >= 50) {
                                 MainApplication.rongConnect(token, new RongIMClient.ConnectCallback() {
                                     @Override
                                     public void onSuccess(String s) {
