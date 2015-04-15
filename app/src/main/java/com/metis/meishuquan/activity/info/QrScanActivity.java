@@ -177,46 +177,6 @@ public class QrScanActivity extends BaseActivity implements
 
     }
 
-    private String scanningImage(/*byte[] data*/Bitmap bmp) {
-
-        //Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-
-        Map<DecodeHintType, String> hints = new HashMap<DecodeHintType, String>();
-        hints.put(DecodeHintType.CHARACTER_SET, "utf-8");
-
-        final int[] pixels = new int[bmp.getWidth() * bmp.getHeight()];
-        bmp.getPixels(pixels, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
-
-        /*final int qrWidth = getResources().getDimensionPixelSize(R.dimen.qr_code_size);
-        final int qrHeight = getResources().getDimensionPixelSize(R.dimen.qr_code_size);
-
-        int bmpWidth = mCamera.getParameters().getPictureSize().width;
-        int bmpHeight = mCamera.getParameters().getPictureSize().height;
-
-        PlanarYUVLuminanceSource source = new PlanarYUVLuminanceSource(data, bmpWidth, bmpHeight,
-                (bmpWidth - qrWidth)/2, (bmpHeight - qrHeight)/2,
-                (bmpWidth + qrWidth)/2, (bmpHeight + qrHeight)/2, false);*/
-
-        // 获得待解析的图片
-        RGBLuminanceSource source = new RGBLuminanceSource(
-                bmp.getWidth(), bmp.getHeight(), pixels);
-        BinaryBitmap bitmap1 = new BinaryBitmap(new HybridBinarizer(source));
-        QRCodeReader reader = new QRCodeReader();
-        Result result;
-        try {
-            result = reader.decode(bitmap1, hints);
-            // 得到解析后的文字
-            return result.getText();
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-        } catch (ChecksumException e) {
-            e.printStackTrace();
-        } catch (FormatException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     /**
      * Decode the data within the viewfinder rectangle, and time how long it took. For efficiency,
      * reuse the same reader objects from one decode to the next.
@@ -232,10 +192,6 @@ public class QrScanActivity extends BaseActivity implements
         hints.put(DecodeHintType.CHARACTER_SET, "utf-8");
         multiFormatReader.setHints(hints);
         Result rawResult = null;
-        /*int bmpWidth = mCamera.getParameters().getPictureSize().width;
-        int bmpHeight = mCamera.getParameters().getPictureSize().height;
-        final int qrWidth = getResources().getDimensionPixelSize(R.dimen.qr_code_size);
-        final int qrHeight = getResources().getDimensionPixelSize(R.dimen.qr_code_size);*/
         PlanarYUVLuminanceSource source = buildLuminanceSource(data, width, height);
         if (source != null) {
             BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
@@ -265,30 +221,7 @@ public class QrScanActivity extends BaseActivity implements
     }
 
     public synchronized Rect getFramingRectInPreview() {
-        /*int bmpWidth = mCamera.getParameters().getPictureSize().width;
-        int bmpHeight = mCamera.getParameters().getPictureSize().height;
-        final int qrWidth = getResources().getDimensionPixelSize(R.dimen.qr_code_size);
-        final int qrHeight = getResources().getDimensionPixelSize(R.dimen.qr_code_size);*/
         return new Rect(359, 202, 1559, 877);
-        /*if (framingRectInPreview == null) {
-            Rect framingRect = getFramingRect();
-            if (framingRect == null) {
-                return null;
-            }
-            Rect rect = new Rect(framingRect);
-            Point cameraResolution = configManager.getCameraResolution();
-            Point screenResolution = configManager.getScreenResolution();
-            if (cameraResolution == null || screenResolution == null) {
-                // Called early, before init even finished
-                return null;
-            }
-            rect.left = rect.left * cameraResolution.x / screenResolution.x;
-            rect.right = rect.right * cameraResolution.x / screenResolution.x;
-            rect.top = rect.top * cameraResolution.y / screenResolution.y;
-            rect.bottom = rect.bottom * cameraResolution.y / screenResolution.y;
-            framingRectInPreview = rect;
-        }
-        return framingRectInPreview;*/
     }
 
     private class DecodeTask extends AsyncTask<byte[], Integer, String> {
@@ -296,18 +229,6 @@ public class QrScanActivity extends BaseActivity implements
         @Override
         protected String doInBackground(byte[]... params) {
             mState = STATE_DECODING;
-            /*byte[] data = new byte[268 * 270];
-            InputStream is = getResources().openRawResource(R.raw.qrcode);
-
-            try {
-                is.read(data);
-                is.close();
-                String result = scanningImage(data);
-                Log.v(TAG, TAG + " onCreate data.size=" + data.length);
-                Log.v(TAG, TAG + " onCreate result=" + result);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
             int bmpWidth = mCamera.getParameters().getPictureSize().width;
             int bmpHeight = mCamera.getParameters().getPictureSize().height;
             byte[] data = params[0];

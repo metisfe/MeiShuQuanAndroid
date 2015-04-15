@@ -40,6 +40,8 @@ import io.rong.imkit.view.SwitchGroup;
 
 public class InfoActivity extends BaseActivity implements View.OnClickListener {
 
+    private static final String TAG = InfoActivity.class.getSimpleName();
+
     private View mParentView = null;
     private View mProfileContainer = null;
     private TitleView mTitleView = null;
@@ -198,6 +200,10 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                     mConstellationView.setSecondaryText(constellation);
                 }
                 break;
+            case 222:
+                break;
+            case 333:
+                break;
         }
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -267,31 +273,34 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
 
     public void showPopwindow (View view) {
         Toast.makeText(this, "showPopwindow", Toast.LENGTH_SHORT).show();
-        View contentView = LayoutInflater.from(this).inflate(R.layout.choose_img_source_popupwindows, null);
+        final View contentView = LayoutInflater.from(this).inflate(R.layout.choose_img_source_popupwindows, null);
         mPopupWindow = new PopupWindow(contentView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setOutsideTouchable(true);
-        mPopupWindow.setTouchable(true);
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
+        mPopupWindow.setFocusable(true);
 
-        mPopupWindow.setTouchInterceptor(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-              mPopupWindow.dismiss();
-              return false;
-            }
-        });
-        /*mPopupWindow.findViewById(R.id.item_popupwindows_Photo).setOnClickListener(new View.OnClickListener() {
+        final View photoView = contentView.findViewById(R.id.item_popupwindows_camera);
+        photoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 photo();
             }
         });
-        contentView.findViewById(R.id.item_popupwindows_camera).setOnClickListener(new View.OnClickListener() {
+        contentView.findViewById(R.id.item_popupwindows_Photo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pickFromGallery();
             }
-        });*/
+        });
+        mPopupWindow.setTouchInterceptor(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+              //mPopupWindow.dismiss();
+              return false;
+            }
+        });
+
+
         mPopupWindow.showAtLocation(mParentView, Gravity.BOTTOM, 0, 0);
     }
 
