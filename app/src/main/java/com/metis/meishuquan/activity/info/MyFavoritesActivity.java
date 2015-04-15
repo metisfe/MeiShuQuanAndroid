@@ -32,7 +32,6 @@ public class MyFavoritesActivity extends DataListActivity {
         UserInfoOperator.getInstance().getFavoriteList("100001", index, new UserInfoOperator.OnGetListener<List<Item>>() {
             @Override
             public void onGet(boolean succeed, List<Item> items) {
-                Log.v(TAG, "loadData succeed=" + succeed + " items.size=" + items.size());
                 if (succeed) {
                     if (mAdapter == null) {
                         mDataList = items;

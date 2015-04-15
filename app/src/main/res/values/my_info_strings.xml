@@ -16,9 +16,11 @@
     <string name="my_info_settings">设置</string>
 
     <string name="advance_send">发送</string>
+
     <string name="setting_modify_pwd">修改密码</string>
     <string name="setting_clear_cache">清理缓存</string>
     <string name="setting_about_us">关于我们</string>
+    <string name="setting_logout">退出登录</string>
 
     <string name="info_modify_nick">更改昵称</string>
     <string name="info_title">个人信息</string>
