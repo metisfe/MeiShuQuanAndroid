@@ -3,4 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.metis.meishuquan.activity.info.QrScanActivity">
+    <SurfaceView
+        android:id="@+id/qr_scan_surface"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+    <Button
+        android:id="@+id/qr_scan_redo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
 </RelativeLayout>

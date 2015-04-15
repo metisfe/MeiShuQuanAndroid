@@ -153,7 +153,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.my_info_name_card:
                 Intent it = new Intent (getActivity(), QrActivity.class);
-                it.putExtra(QrActivity.KEY_DATA_STR, "草料网是国内最大的二维码在线服务网站。我们用心制作了");
+                it.putExtra(QrActivity.KEY_DATA_STR, "小朋友最好了");
                 startActivity(it);
                 break;
             case R.id.my_info_advances:
