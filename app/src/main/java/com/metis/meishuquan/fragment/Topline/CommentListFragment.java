@@ -34,11 +34,11 @@ import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.enums.LoginStateEnum;
 import com.metis.meishuquan.model.enums.PrivateResultEnum;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.model.topline.AllComments;
 import com.metis.meishuquan.model.topline.Comment;
-import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.metis.meishuquan.view.shared.DragListView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -66,11 +66,12 @@ public class CommentListFragment extends Fragment {
     private int userId = 1;
     private int newsId = 0;
     private int totalCommentCount = 0;
+    private int childCommentId = -1;
     private List<Comment> lstAllComments = new ArrayList<Comment>();
     private CommentsAdapter adapter;
     private FragmentManager fm;
     private Animation animation;
-    private int childCommentId = -1;
+
 
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
@@ -167,9 +168,7 @@ public class CommentListFragment extends Fragment {
         rl_WriteComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
-                String loginState = spu.getStringByKey(SharedPreferencesUtil.LOGIN_STATE);
-                if (loginState != null && loginState.equals("已登录")) {
+                if (MainApplication.userInfo.getAppLoginState() == LoginStateEnum.YES) {
                     showInputView();
                 } else {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -203,7 +202,7 @@ public class CommentListFragment extends Fragment {
 
         this.rl_Share.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view) {//分享
                 new SharePopupWindow(MainApplication.UIContext, rootView);
             }
         });
@@ -416,8 +415,13 @@ public class CommentListFragment extends Fragment {
             holder.rl_reply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    childCommentId = comment.getId();
-                    showInputView();
+                    if (MainApplication.userInfo.getAppLoginState() == LoginStateEnum.YES) {
+                        childCommentId = comment.getId();
+                        showInputView();
+                    } else {
+                        Intent intent = new Intent(getActivity(), LoginActivity.class);
+                        getActivity().startActivity(intent);
+                    }
                 }
             });
         }

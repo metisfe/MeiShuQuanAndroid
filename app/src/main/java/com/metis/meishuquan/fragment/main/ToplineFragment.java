@@ -47,6 +47,7 @@ public class ToplineFragment extends Fragment {
     private List<News> lstNews = new ArrayList<News>();
     private boolean addChannelPoped;
     private int lastNewsId = 0;
+    private int userId = MainApplication.userInfo.getUserId();
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -89,7 +90,7 @@ public class ToplineFragment extends Fragment {
     private void getChannelItems() {
         TopLineOperator topLineOperator = TopLineOperator.getInstance();
         //将网络返回的数据添加至缓存中
-        topLineOperator.addChannelItemsToLoacal();
+        topLineOperator.addChannelItemsToLoacal(String.valueOf(userId), 0);
 
 
         //加载缓存中的数据

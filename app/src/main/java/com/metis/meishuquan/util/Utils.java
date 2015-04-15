@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -38,8 +39,7 @@ import java.util.Locale;
 /**
  * Created by wudi on 3/15/2015.
  */
-public class Utils
-{
+public class Utils {
     public static final String IMAGE_DOWNLOAD_DIR = MainApplication.Resources.getString(R.string.app_name);
     public static final String CLIENT_SOURCE = "MobileApp";
 
@@ -74,10 +74,8 @@ public class Utils
     public static final int MAX_TOP_CELEBRITIES_PAGE_GRID_NUM = 16;
     public static final int MIN_SELECTED_FOLLOWEE = 3;
 
-    public static String getDateFromNow(Date date)
-    {
-        if (date == null)
-        {
+    public static String getDateFromNow(Date date) {
+        if (date == null) {
             return "";
         }
 
@@ -85,135 +83,103 @@ public class Utils
         long nowTime = nowDate.getTime();
         long dateTime = date.getTime();
         long diffTime = nowTime - dateTime;
-        if (diffTime <= MINUTE_IN_MILISECOND)
-        {
+        if (diffTime <= MINUTE_IN_MILISECOND) {
             return "1 min ago";
-        }
-        else if (diffTime < HOUR_IN_MILISECOND)
-        {
+        } else if (diffTime < HOUR_IN_MILISECOND) {
             int minutes = (int) (diffTime / MINUTE_IN_MILISECOND);
             return String.format("%d mins ago", minutes);
-        }
-        else if (diffTime < DAY_IN_MILISECOND)
-        {
+        } else if (diffTime < DAY_IN_MILISECOND) {
             int hours = (int) (diffTime / HOUR_IN_MILISECOND);
-            if (hours == 1)
-            {
+            if (hours == 1) {
                 return "1 hour ago";
-            }
-            else
-            {
+            } else {
                 return String.format("%d hours ago", hours);
             }
-        }
-        else
-        {
+        } else {
             SimpleDateFormat outputFmt = new SimpleDateFormat(DAY_FORMAT);
             return outputFmt.format(date);
         }
     }
 
-    public static String getTimeFromDate(Date date)
-    {
+    public static String getTimeFromDate(Date date) {
         SimpleDateFormat outputFmt = new SimpleDateFormat(DATE_FORMAT);
         return outputFmt.format(date);
     }
 
-    public static String decodeImageUrl(String url)
-    {
-        if (TextUtils.isEmpty(url))
-        {
+    public static String decodeImageUrl(String url) {
+        if (TextUtils.isEmpty(url)) {
             return url;
         }
 
         // we should not encode url as :
         // http://www.bing.com/imagenewsfetcher.aspx?q=http%3a%2f%2fgx.people.com.cn%2fNMediaFile%2f2013%2f0724%2fLOCAL201307240808000165861116094.jpg&id=CBCA74FC0B7AA0F5C66E1CC96153CB86
-        if (url.indexOf("http", 4) == -1 && url.indexOf("%", 4) == -1)
-        {
-            try
-            {
+        if (url.indexOf("http", 4) == -1 && url.indexOf("%", 4) == -1) {
+            try {
                 URL u = new URL(url);
                 URI i = new URI(u.getProtocol(), u.getUserInfo(), u.getHost(), u.getPort(), u.getPath(), u.getQuery(), u.getRef());
                 u = i.toURL();
                 url = i.toString();
                 Log.d("TextureRender", "after encode url==" + url);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         return url;
     }
 
-    public static String getImageSuffix(String imageUrl)
-    {
-        if (TextUtils.isEmpty(imageUrl))
-        {
+    public static String getImageSuffix(String imageUrl) {
+        if (TextUtils.isEmpty(imageUrl)) {
             return "";
         }
 
         int suffixIndex = imageUrl.lastIndexOf(".");
-        if (suffixIndex != -1 && imageUrl.length() - suffixIndex < 6)
-        {
+        if (suffixIndex != -1 && imageUrl.length() - suffixIndex < 6) {
             return imageUrl.substring(suffixIndex);
-        }
-        else
-        {
+        } else {
             return ".png";
         }
     }
 
-    public static boolean isPathExists(String path)
-    {
+    public static boolean isPathExists(String path) {
         File file = new File(path);
-        if (file.exists())
-        {
+        if (file.exists()) {
             return true;
         }
 
         file.mkdirs();
-        if (file.exists())
-        {
+        if (file.exists()) {
             return true;
         }
 
         return false;
     }
 
-    public static String getDownloadImageDir()
-    {
+    public static String getDownloadImageDir() {
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + IMAGE_DOWNLOAD_DIR;
         File file = new File(path);
-        if (!file.exists())
-        {
+        if (!file.exists()) {
             file.mkdirs();
         }
 
         return path;
     }
 
-    public static int getTopCelebritiesPages(int size)
-    {
+    public static int getTopCelebritiesPages(int size) {
         int pages = size / MAX_TOP_CELEBRITIES_PAGE_GRID_NUM;
         int mod = size % MAX_TOP_CELEBRITIES_PAGE_GRID_NUM;
-        if (mod > 0)
-        {
+        if (mod > 0) {
             pages++;
         }
         return pages;
     }
 
-    public static void alertMessageDialog(String title, String desc)
-    {
+    public static void alertMessageDialog(String title, String desc) {
         BaseDialog.Builder builder = new BaseDialog.Builder(MainApplication.MainActivity);
         builder.setTitle(title);
         builder.setMessage(desc);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
-        {
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface arg0, int arg1)
-            {
+            public void onClick(DialogInterface arg0, int arg1) {
                 arg0.dismiss();
             }
         });
@@ -221,16 +187,12 @@ public class Utils
         builder.create().show();
     }
 
-    public static String getVersion(Context icontext)
-    {
+    public static String getVersion(Context icontext) {
         PackageManager pm = icontext.getPackageManager();
         PackageInfo packInfo = null;
-        try
-        {
+        try {
             packInfo = pm.getPackageInfo(icontext.getPackageName(), 0);
-        }
-        catch (PackageManager.NameNotFoundException e)
-        {
+        } catch (PackageManager.NameNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -238,31 +200,25 @@ public class Utils
         return version;
     }
 
-    public static boolean showConfigureNetwork(final Context icontext)
-    {
-        if (!SystemUtil.isNetworkAvailable(icontext))
-        {
+    public static boolean showConfigureNetwork(final Context icontext) {
+        if (!SystemUtil.isNetworkAvailable(icontext)) {
             BaseDialog.Builder builder = new BaseDialog.Builder(icontext);
             builder.setTitle("Network Tip");
             builder.setMessage("Network Unavailable, go to setting?");
-            builder.setPositiveButton("Setting", new DialogInterface.OnClickListener()
-            {
+            builder.setPositiveButton("Setting", new DialogInterface.OnClickListener() {
 
                 @Override
-                public void onClick(DialogInterface arg0, int arg1)
-                {
+                public void onClick(DialogInterface arg0, int arg1) {
                     // TODO Auto-generated method stub
                     Intent intent = new Intent(android.provider.Settings.ACTION_SETTINGS);
                     icontext.startActivity(intent);
                     arg0.dismiss();
                 }
             });
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-            {
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 
                 @Override
-                public void onClick(DialogInterface arg0, int arg1)
-                {
+                public void onClick(DialogInterface arg0, int arg1) {
                     // TODO Auto-generated method stub
                     arg0.dismiss();
                 }
@@ -270,22 +226,18 @@ public class Utils
             builder.create().show();
 
             return false;
-        }
-        else
+        } else
             return true;
     }
 
-    public static void setListViewHeightBasedOnChildren(ListView listView)
-    {
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null)
-        {
+        if (listAdapter == null) {
             return;
         }
 
         int totalHeight = 0;
-        for (int i = 0, len = listAdapter.getCount(); i < len; i++)
-        {
+        for (int i = 0, len = listAdapter.getCount(); i < len; i++) {
             View listItem = listAdapter.getView(i, null, listView);
             listItem.measure(0, 0);
             totalHeight += listItem.getMeasuredHeight();
@@ -296,46 +248,37 @@ public class Utils
         listView.setLayoutParams(params);
     }
 
-    public static int[] getLayoutParamsForHeroImage()
-    {
+    public static int[] getLayoutParamsForHeroImage() {
         DisplayMetrics dm = MainApplication.getDisplayMetrics();
-        return new int[] { dm.widthPixels, (int) (dm.widthPixels / 2.2) };
+        return new int[]{dm.widthPixels, (int) (dm.widthPixels / 2.2)};
     }
 
-    public static void setSnsLogo(ImageView imageView, URL sourceUrl)
-    {
-        if (sourceUrl != null)
-        {
+    public static void setSnsLogo(ImageView imageView, URL sourceUrl) {
+        if (sourceUrl != null) {
             imageView.setVisibility(View.VISIBLE);
             TextureRender.getInstance().setBitmap(sourceUrl, imageView, R.color.transparent);
-        }
-        else
-        {
+        } else {
             imageView.setVisibility(View.GONE);
         }
     }
 
-    public static int dip2px(Context context, float dpValue)
-    {
+    public static int dip2px(Context context, float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
 
-    public static int px2dip(Context context, float pxValue)
-    {
+    public static int px2dip(Context context, float pxValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }
 
-    public static String getStringFromPosition(int position)
-    {
-        int minutes = position/1000/60;
-        int seconds = position/1000%60;
+    public static String getStringFromPosition(int position) {
+        int minutes = position / 1000 / 60;
+        int seconds = position / 1000 % 60;
         return String.format(Locale.US, "%d:%02d", minutes, seconds);
     }
 
-    public static String getImageSavePath(String imageUrl)
-    {
+    public static String getImageSavePath(String imageUrl) {
         String suffix = Utils.getImageSuffix(imageUrl);
         imageUrl = Utils.decodeImageUrl(imageUrl);
         return Utils.getDownloadImageDir() + File.separator + SystemUtil.hashKeyForDisk(imageUrl) + suffix;
@@ -352,14 +295,14 @@ public class Utils
         return getCurrentTime("yyyy-MM-dd  HH:mm:ss");
     }
 
-    public static void showInputMethod(Context context,View view){
+    public static void showInputMethod(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);
     }
 
-    public static void hideInputMethod(Context context,View view){
+    public static void hideInputMethod(Context context, EditText editText) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getApplicationWindowToken() , 0);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 
     public static String toPinYinStringWithPrefix(String word) {
@@ -389,7 +332,7 @@ public class Utils
             }
         }
 
-        ret=ret.toLowerCase();
+        ret = ret.toLowerCase();
         if (ret.length() == 0)
             return "~";
         if (ret.charAt(0) >= 'a' && ret.charAt(0) <= 'z')

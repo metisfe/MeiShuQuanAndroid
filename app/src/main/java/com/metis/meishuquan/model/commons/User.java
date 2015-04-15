@@ -10,47 +10,57 @@ import java.io.Serializable;
  */
 public class User implements Serializable {
 
-    @SerializedName("name")
-    private String name;
-
-    @SerializedName("mailbox")
-    private String mailbox;
-
-    @SerializedName("gender")
-    private String gender;
-
-    @SerializedName("phoneNum")
-    private String phoneNum;
-
-    @SerializedName("selfIntroduce")
-    private String selfIntroduce;
-
-    @SerializedName("grade")
-    private String grade;
-
-    @SerializedName("region")
-    private String region;
-
     @SerializedName("userId")
     private int userId = -1;
 
+    @SerializedName("name")
+    private String name = "";
+
+    @SerializedName("mailbox")
+    private String mailbox = "";
+
+    @SerializedName("gender")
+    private String gender = "";
+
+    @SerializedName("phoneNum")
+    private String phoneNum = "";
+
+    @SerializedName("selfIntroduce")
+    private String selfIntroduce = "";
+
+    @SerializedName("grade")
+    private String grade = "";
+
+    @SerializedName("region")
+    private String region = "";
+
     @SerializedName("userAvatar")
-    private String userAvatar;
+    private String userAvatar = "";
 
     @SerializedName("userRole")
-    private String userRole;
+    private String userRole = "";
 
     @SerializedName("birthday")
-    private String birthday;
+    private String birthday = "";
 
     @SerializedName("accout")
-    private String accout;
+    private String accout = "";
 
     @SerializedName("relationType")
     private int relationType;
 
     @SerializedName("registrationDate")
-    private String registrationDate;
+    private String registrationDate = "";
+
+    @SerializedName("cookie")
+    private String cookie = "";
+
+    @SerializedName("token")
+    private String token = "";
+
+    private LoginStateEnum appLoginState = LoginStateEnum.NO;
+
+    private LoginStateEnum rongLoginState = LoginStateEnum.NO;
 
     public void setName(String name) {
         this.name = name;
@@ -162,6 +172,38 @@ public class User implements Serializable {
 
     public void setRegistrationDate(String registrationDate) {
         this.registrationDate = registrationDate;
+    }
+
+    public String getCookie() {
+        return cookie;
+    }
+
+    public void setCookie(String cookie) {
+        this.cookie = cookie;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public LoginStateEnum getAppLoginState() {
+        return appLoginState;
+    }
+
+    public void setAppLoginState(LoginStateEnum appLoginState) {
+        this.appLoginState = appLoginState;
+    }
+
+    public LoginStateEnum getRongLoginState() {
+        return rongLoginState;
+    }
+
+    public void setRongLoginState(LoginStateEnum rongLoginState) {
+        this.rongLoginState = rongLoginState;
     }
 
     public int getAttCount() {

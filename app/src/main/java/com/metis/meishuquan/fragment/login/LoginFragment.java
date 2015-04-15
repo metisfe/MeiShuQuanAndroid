@@ -18,12 +18,17 @@ import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.BLL.UserOperator;
-import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.LoginStateEnum;
+import com.metis.meishuquan.model.login.LoginUserData;
+import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
+import com.metis.meishuquan.util.Utils;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+
+import io.rong.imkit.RongIM;
+import io.rong.imlib.RongIMClient;
 
 /**
  * Fragment:登录
@@ -63,6 +68,8 @@ public class LoginFragment extends Fragment {
         btnBack.setOnClickListener(new View.OnClickListener() {//返回
             @Override
             public void onClick(View view) {
+                Utils.hideInputMethod(getActivity(), etUserName);
+                Utils.hideInputMethod(getActivity(), etPwd);
                 getActivity().finish();
             }
         });
@@ -72,11 +79,8 @@ public class LoginFragment extends Fragment {
             public void onClick(View view) {
                 String accout = etUserName.getText().toString().trim();
                 String pwd = etPwd.getText().toString().trim();
-                if (accout.isEmpty()) {
-                    Toast.makeText(MainApplication.UIContext, "请输入登录账号", Toast.LENGTH_SHORT).show();
-                }
-                if (pwd.isEmpty()) {
-                    Toast.makeText(MainApplication.UIContext, "请输入密码", Toast.LENGTH_SHORT).show();
+                if (!verify()) {
+                    return;
                 }
                 userOperator.login(accout, pwd, new ApiOperationCallback<ReturnInfo<String>>() {
                     @Override
@@ -85,9 +89,45 @@ public class LoginFragment extends Fragment {
                             Gson gson = new Gson();
                             String json = gson.toJson(result);
                             Log.e("userInfo", json);
-                            User user = gson.fromJson(json, new TypeToken<User>() {
+                            //json to object
+                            final LoginUserData user = gson.fromJson(json, new TypeToken<LoginUserData>() {
                             }.getType());
+                            //set login state
+                            user.getData().setAppLoginState(LoginStateEnum.YES);
 
+                            //connect to Rong
+                            final String token = user.getData().getToken();
+                            if (!token.isEmpty() && token.length() >= 100) {
+                                MainApplication.rongConnect(token, new RongIMClient.ConnectCallback() {
+                                    @Override
+                                    public void onSuccess(String s) {
+                                        if (MainApplication.rongIM != null) {
+                                            MainApplication.rongIM.setReceiveMessageListener(new RongIM.OnReceiveMessageListener() {
+                                                @Override
+                                                public void onReceived(RongIMClient.Message message, int i) {
+                                                    user.getData().setRongLoginState(LoginStateEnum.YES);
+                                                    ChatManager.onReceive(message);
+                                                }
+                                            });
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onError(ErrorCode errorCode) {
+                                        Log.e("rongConnect", errorCode.toString());
+                                    }
+                                });
+                            }
+
+                            //add userInfo into sharedPreferences
+                            Gson gson1 = new Gson();
+                            String finalUserInfoJson = gson1.toJson(user);
+                            SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(getActivity());
+                            spu.update(SharedPreferencesUtil.USER_LOGIN_INFO, finalUserInfoJson);
+
+                            //update field of UserInfo to main application
+                            MainApplication.userInfo = user.getData();
+                            Utils.hideInputMethod(getActivity(), etPwd);
                             Toast.makeText(MainApplication.UIContext, "登录成功", Toast.LENGTH_SHORT).show();
                             getActivity().finish();
                         } else {
@@ -119,5 +159,19 @@ public class LoginFragment extends Fragment {
                 ft.commit();
             }
         });
+    }
+
+    private boolean verify() {
+        String accout = etUserName.getText().toString().trim();
+        String pwd = etPwd.getText().toString().trim();
+        if (accout.isEmpty()) {
+            Toast.makeText(MainApplication.UIContext, "请输入登录账号", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (pwd.isEmpty()) {
+            Toast.makeText(MainApplication.UIContext, "请输入密码", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 }

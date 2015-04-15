@@ -5,17 +5,11 @@ package com.metis.meishuquan.model.login;
  */
 public class User {
     private int userId=0;
-
     private String name="";
-
     private String remarkName="";
-
     private String avatar="";
-
     private String grade="";
-
     private int identity=0;
-
     private String mailbox = "";
     private String userAvatar = "";
     private String gender = "";

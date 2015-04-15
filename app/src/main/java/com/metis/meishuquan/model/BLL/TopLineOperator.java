@@ -1,5 +1,6 @@
 package com.metis.meishuquan.model.BLL;
 
+import android.graphics.Path;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -27,13 +28,14 @@ public class TopLineOperator {
     private boolean flag;
     private static TopLineOperator operator = null;
 
-    private final String CHANNELLIST_URL = "v1.1/Channel/ChannelList?userId=1&type=0&session=2891560b-d254-42f8-850d-ff960543aa46";//根据用户Id和模块类型获得频道集合
-    private final String CHANNEL_NEW_LIST_URL = "v1.1/News/NewsList";//根据频道获取news列表
-    private final String NEWS_INFO_URL = "v1.1/News/NewsDetail";//根据newsId获得详情
-    private final String COMMENT_LIST_NEWSID = "v1.1/Comment/CommentList";//根据newsId获得评论列表
-    private final String COMMENT_SUPPORT = "v1.1/Comment/Support";//赞/踩
-    private final String PUBLISHCOMMENT = "v1.1/Comment/PublishComment";//发表评论
-    private final String FAVORITE = "v1.1/Comment/Favorite";//收藏
+    private final String CHANNELLIST_URL = "v1.1/Channel/ChannelList?";//根据用户Id和模块类型获得频道集合
+    private final String CHANNEL_NEW_LIST_URL = "v1.1/News/NewsList?";//根据频道获取news列表
+    private final String NEWS_INFO_URL = "v1.1/News/NewsDetail?";//根据newsId获得详情
+    private final String COMMENT_LIST_NEWSID = "v1.1/Comment/CommentList?";//根据newsId获得评论列表
+    private final String COMMENT_SUPPORT = "v1.1/Comment/Support?";//赞/踩
+    private final String PUBLISHCOMMENT = "v1.1/Comment/PublishComment?";//发表评论
+    private final String FAVORITE = "v1.1/Comment/Favorite?";//收藏
+    private final String SESSION = MainApplication.userInfo.getCookie();
 
 
     private TopLineOperator() {
@@ -50,10 +52,14 @@ public class TopLineOperator {
     /**
      * 将频道集合数据添加至sharedPreferences中
      */
-    public void addChannelItemsToLoacal() {
+    public void addChannelItemsToLoacal(String userId, int type) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {//判断网络状态
             //加载网络数据
             if (flag) {
+                StringBuilder PATH = new StringBuilder(COMMENT_LIST_NEWSID);
+                PATH.append("userId=" + userId);
+                PATH.append("&type=" + type);
+                PATH.append("&session=" + SESSION);
                 ApiDataProvider.getmClient().invokeApi(CHANNELLIST_URL, null,
                         HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(),
                         new ApiOperationCallback<ReturnInfo<String>>() {
@@ -98,9 +104,9 @@ public class TopLineOperator {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuffer PATH = new StringBuffer(CHANNEL_NEW_LIST_URL);
-                PATH.append("?ChanelId=" + channelId);
+                PATH.append("ChanelId=" + channelId);
                 PATH.append("&lastNewsId=" + lastNewsId);
-                PATH.append("&session=" + "2891560b-d254-42f8-850d-ff960543aa46");
+                PATH.append("&session=" + SESSION);
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
 
@@ -142,9 +148,9 @@ public class TopLineOperator {
     public void getNewsListByChannelId(ApiOperationCallback<ReturnInfo<String>> callback, int channelId, int lastNewsId) {
         if (flag) {
             StringBuffer PATH = new StringBuffer(CHANNEL_NEW_LIST_URL);
-            PATH.append("?ChanelId=" + channelId);
+            PATH.append("ChanelId=" + channelId);
             PATH.append("&lastNewsId=" + lastNewsId);
-            PATH.append("&session=" + "2891560b-d254-42f8-850d-ff960543aa46");
+            PATH.append("&session=" + SESSION);
             ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                     (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
         }
@@ -159,9 +165,10 @@ public class TopLineOperator {
     public void getNewsInfoById(int newsId, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
-                StringBuffer path = new StringBuffer(NEWS_INFO_URL);
-                path.append("?newsId=" + newsId);
-                ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
+                StringBuffer PATH = new StringBuffer(NEWS_INFO_URL);
+                PATH.append("newsId=" + newsId);
+                PATH.append("&session=" + SESSION);
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
         }
@@ -179,11 +186,12 @@ public class TopLineOperator {
     public void getCommentListByNewId(int type, int newsId, int lastCommentId, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
-                StringBuffer path = new StringBuffer(COMMENT_LIST_NEWSID);
-                path.append("?type=" + type);
-                path.append("&newsId=" + newsId);
-                path.append("&lastCommentId=" + lastCommentId);
-                ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
+                StringBuffer PATH = new StringBuffer(COMMENT_LIST_NEWSID);
+                PATH.append("type=" + type);
+                PATH.append("&newsId=" + newsId);
+                PATH.append("&lastCommentId=" + lastCommentId);
+                PATH.append("&session=" + SESSION);
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
         }
@@ -201,13 +209,14 @@ public class TopLineOperator {
     public void commentSurpot(int userid, int newsid, int commentid, int type, int result) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
-                StringBuffer path = new StringBuffer(COMMENT_SUPPORT);
-                path.append("?userid=" + userid);
-                path.append("&newsid=" + newsid);
-                path.append("&commentid=" + commentid);
-                path.append("&type=" + type);
-                path.append("&result=" + result);
-                ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
+                StringBuffer PATH = new StringBuffer(COMMENT_SUPPORT);
+                PATH.append("userid=" + userid);
+                PATH.append("&newsid=" + newsid);
+                PATH.append("&commentid=" + commentid);
+                PATH.append("&type=" + type);
+                PATH.append("&result=" + result);
+                PATH.append("&session=" + SESSION);
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
@@ -224,20 +233,21 @@ public class TopLineOperator {
      * 收藏news
      *
      * @param userid
-     * @param newsId
+     * @param id
      * @param type
      * @param result   1收藏，2取消
      * @param callback
      */
-    public void newsPrivate(int userid, int newsId, int type, PrivateResultEnum result, ApiOperationCallback<ReturnInfo<String>> callback) {
+    public void newsPrivate(int userid, int id, int type, PrivateResultEnum result, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
-                StringBuffer path = new StringBuffer(FAVORITE);
-                path.append("?userid=" + userid);
-                path.append("&id=" + newsId);
-                path.append("&type=" + type);
-                path.append("&result=" + result.getVal());
-                ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
+                StringBuffer PATH = new StringBuffer(FAVORITE);
+                PATH.append("userid=" + userid);
+                PATH.append("&id=" + id);
+                PATH.append("&type=" + type);
+                PATH.append("&result=" + result.getVal());
+                PATH.append("&session=" + SESSION);
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
         }

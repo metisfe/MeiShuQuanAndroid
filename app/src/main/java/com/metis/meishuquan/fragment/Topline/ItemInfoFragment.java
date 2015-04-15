@@ -36,11 +36,11 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.enums.LoginStateEnum;
 import com.metis.meishuquan.model.enums.PrivateResultEnum;
 import com.metis.meishuquan.model.topline.ContentInfo;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
 import com.metis.meishuquan.model.topline.Urls;
-import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
@@ -81,7 +81,6 @@ public class ItemInfoFragment extends Fragment {
             //根据新闻Id获取新闻内容
             getInfoData(newsId);
         }
-
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_topline_topbar_list_item_info, null, false);
 
         initView(rootView);
@@ -271,9 +270,7 @@ public class ItemInfoFragment extends Fragment {
         this.rl_writeCommont.setOnClickListener(new View.OnClickListener() {//写评论
             @Override
             public void onClick(View view) {//写评论
-                SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
-                String loginState = spu.getStringByKey(SharedPreferencesUtil.LOGIN_STATE);
-                if (loginState != null && loginState.equals("已登录")) {
+                if (MainApplication.userInfo.getAppLoginState() == LoginStateEnum.YES) {
                     showInputView();
                 } else {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -303,15 +300,14 @@ public class ItemInfoFragment extends Fragment {
             }
         });
 
+        //收藏
         this.rl_private.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {//收藏
-                SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
-                String loginState = spu.getStringByKey(SharedPreferencesUtil.LOGIN_STATE);
-                TopLineOperator topLineOperator = TopLineOperator.getInstance();
-                if (loginState != null && loginState.equals("已登录")) {
+            public void onClick(View view) {
+                if (MainApplication.userInfo.getAppLoginState() == LoginStateEnum.YES) {
                     if (!isPrivate) {
-                        topLineOperator.newsPrivate(1, newsId, 0, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
+                        //收藏
+                        TopLineOperator.getInstance().newsPrivate(1, newsId, 0, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
@@ -322,8 +318,8 @@ public class ItemInfoFragment extends Fragment {
                             }
                         });
                     } else {
-                        //TODO：取消收藏
-                        topLineOperator.newsPrivate(1, newsId, 0, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
+                        //取消收藏
+                        TopLineOperator.getInstance().newsPrivate(1, newsId, 0, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
@@ -341,6 +337,7 @@ public class ItemInfoFragment extends Fragment {
             }
         });
 
+        //分享
         this.rl_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -348,6 +345,7 @@ public class ItemInfoFragment extends Fragment {
             }
         });
 
+        //发送
         rlSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

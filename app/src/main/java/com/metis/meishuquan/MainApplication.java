@@ -5,12 +5,16 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.metis.meishuquan.model.circle.UserAdvanceInfo;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.enums.LoginStateEnum;
+import com.metis.meishuquan.model.login.LoginUserData;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.model.provider.DataProvider;
 import com.metis.meishuquan.util.ChatManager;
+import com.metis.meishuquan.util.SharedPreferencesUtil;
 
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
@@ -42,32 +46,20 @@ public class MainApplication extends Application {
         UIThread = Thread.currentThread();
         UIContext = this.getApplicationContext();
         Handler = new Handler();
+        userInfo = getUserInfoFromSharedPreferences();
 
         DataProvider.setDefaultUIThreadHandler(Handler);
         ApiDataProvider.initProvider();
         RongIM.init(this);
-        String token = "vHlcG4hORBuPENRljGB6MoGn6Ui0bBlr+zHn5QT+0f+TueCwMF65klGMwsE+P2SPd8eazBQpOPpagJ1/lOVNMg==";
+        //String token = "vHlcG4hORBuPENRljGB6MoGn6Ui0bBlr+zHn5QT+0f+TueCwMF65klGMwsE+P2SPd8eazBQpOPpagJ1/lOVNMg==";
+    }
 
-        // 连接融云服务器。
+    /**
+     * 连接融云服务器
+     */
+    public static void rongConnect(String token, RongIMClient.ConnectCallback connectCallback) {
         try {
-            rongIM = RongIM.connect(token, new RongIMClient.ConnectCallback() {
-
-                @Override
-                public void onSuccess(String s) {
-                    if (rongIM != null) {
-                        rongIM.setReceiveMessageListener(new RongIM.OnReceiveMessageListener() {
-                            @Override
-                            public void onReceived(RongIMClient.Message message, int i) {
-                                ChatManager.onReceive(message);
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public void onError(ErrorCode errorCode) {
-                }
-            });
+            rongIM = RongIM.connect(token, connectCallback);
             rongClient = rongIM.getRongIMClient();
         } catch (Exception e) {
             e.printStackTrace();
@@ -93,5 +85,16 @@ public class MainApplication extends Application {
 
     public static DisplayMetrics getDisplayMetrics() {
         return displayMetrics;
+    }
+
+    private User getUserInfoFromSharedPreferences() {
+        SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(UIContext);
+        String json = spu.getStringByKey(SharedPreferencesUtil.USER_LOGIN_INFO);
+        User user = new Gson().fromJson(json, new TypeToken<User>() {
+        }.getType());
+        if (user == null) {
+            return new User();
+        }
+        return user;
     }
 }

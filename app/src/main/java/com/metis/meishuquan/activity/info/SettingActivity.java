@@ -5,8 +5,12 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.model.commons.User;
+import com.metis.meishuquan.util.SharedPreferencesUtil;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
@@ -29,7 +33,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             }
         });
 
-        mLogoutBtn = (Button)findViewById(R.id.setting_logout);
+        mLogoutBtn = (Button) findViewById(R.id.setting_logout);
         mLogoutBtn.setOnClickListener(this);
     }
 
@@ -40,7 +44,21 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 startActivity(new Intent(this, AboutActivity.class));
                 break;
             case R.id.setting_logout:
-                //TODO
+                //disconnect rong
+                if (MainApplication.rongClient != null) {
+                    MainApplication.rongClient.disconnect();
+                }
+
+                //clear userinfo of MainApplication
+                MainApplication.userInfo = new User();
+
+                //clear sharedpreferences
+                SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(this);
+                spu.delete(SharedPreferencesUtil.USER_LOGIN_INFO);
+
+                //tip
+                Toast.makeText(this, "已退出", Toast.LENGTH_SHORT).show();
+                this.finish();
                 break;
         }
     }
