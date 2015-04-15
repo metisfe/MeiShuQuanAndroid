@@ -72,12 +72,6 @@ public class ToplineFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    @Override
-    public void onResume() {
-
-        super.onResume();
-    }
-
     /**
      * 根据频道Id获取频道列表
      *

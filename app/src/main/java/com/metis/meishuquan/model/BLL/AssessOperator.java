@@ -1,18 +1,21 @@
 package com.metis.meishuquan.model.BLL;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.util.Pair;
 
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.AssessStateEnum;
+import com.metis.meishuquan.model.enums.FileUploadTypeEnum;
 import com.metis.meishuquan.model.enums.QueryTypeEnum;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.SystemUtil;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -152,51 +155,46 @@ public class AssessOperator {
      * @param desc
      * @param channelId
      * @param friendUserId
-     * @param type
-     * @param define       图片描述"图片大小，图片数量，图片字节长度"
-     * @param imgByte      图片字节数组
      * @param callback
      */
-    public void uploadAssess(final int userId, final String desc, final int channelId, final int friendUserId, int type, String define, byte[] imgByte, final ApiOperationCallback<ReturnInfo<String>> callback) {
+    public void uploadAssess(int userId, String desc, int channelId, int friendUserId, String file, String fileObjectStr, ApiOperationCallback<ReturnInfo<String>> callback) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                //获得文件上传后服务器发送来的Json串，再上传Assess
+                StringBuilder PATH = new StringBuilder(UploadAssess);
+                PATH.append("?userId=" + userId);
+                PATH.append("&desc=" + desc);
+                PATH.append("&channelId=" + channelId);
+                PATH.append("&friendUserId=" + friendUserId);
+                PATH.append("&file=" + fileObjectStr);
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpPost.METHOD_NAME, null,
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+            }
+
+        }
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param type     上传文件类型
+     * @param define   文件格式定义
+     * @param imgByte  文件的byte[]
+     * @param callback
+     */
+    public void fileUpload(FileUploadTypeEnum type, String define, byte[] imgByte, ServiceFilterResponseCallback callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuilder FILEUPLOAD = new StringBuilder(FileUpload);
-                FILEUPLOAD.append("?type=" + type);
+                FILEUPLOAD.append("?type=" + type.getVal());
                 FILEUPLOAD.append("&define=" + define);
                 List<Pair<String, String>> pram = new ArrayList<>();
                 Pair<String, String> pair1 = new Pair<String, String>("type", String.valueOf(type));
                 Pair<String, String> pair2 = new Pair<String, String>("define", define);
                 pram.add(pair1);
                 pram.add(pair2);
-                ApiDataProvider.getmClient().invokeApi(FILEUPLOAD.toString(), imgByte, HttpPost.METHOD_NAME, pram, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(),
-                        new ApiOperationCallback<ReturnInfo<String>>() {
-                            @Override
-                            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                                    Gson gson = new Gson();
-                                    String json = gson.toJson(result);
-                                    String fileObjectStr = "";
-                                    try {
-                                        JSONObject object = new JSONObject(json);
-                                        JSONArray array = object.getJSONArray("data");
-                                        fileObjectStr = array.getString(0);
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                    //获得文件上传后服务器发送来的Json串，再上传Assess
-                                    StringBuilder PATH = new StringBuilder(UploadAssess);
-                                    PATH.append("?userId=" + userId);
-                                    PATH.append("&desc=" + desc);
-                                    PATH.append("&channelId=" + channelId);
-                                    PATH.append("&friendUserId=" + friendUserId);
-                                    PATH.append("&file=" + fileObjectStr);
-                                    ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpPost.METHOD_NAME, null,
-                                            (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
-                                }
-                            }
-                        });
+                ApiDataProvider.getmClient().invokeApi(FILEUPLOAD.toString(), imgByte, HttpPost.METHOD_NAME, null, pram, callback);
             }
-
         }
     }
 

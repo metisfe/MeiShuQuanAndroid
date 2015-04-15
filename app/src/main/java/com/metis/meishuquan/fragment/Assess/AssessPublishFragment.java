@@ -31,9 +31,15 @@ import com.metis.meishuquan.model.BLL.AssessOperator;
 import com.metis.meishuquan.model.assess.Bimp;
 import com.metis.meishuquan.model.assess.Channel;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.enums.FileUploadTypeEnum;
 import com.metis.meishuquan.util.Utils;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -86,31 +92,56 @@ public class AssessPublishFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //获取作品描述信息
-                String desc = etDesc.getText().toString();
+                final String desc = etDesc.getText().toString();
 
                 //得到图片的字节数组
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bimp.bmp.get(0).compress(Bitmap.CompressFormat.JPEG, 100, stream);
                 byte[] imgByte = stream.toByteArray();
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 //文件描述信息
                 String define = imgByte.length + "," + 1 + "," + imgByte.length;
+                Log.i("define", define);
 
                 //发布提问
                 assessOperator = AssessOperator.getInstance();
-                assessOperator.uploadAssess(0, desc, selectedChannel.getChannelId(), 0, 1, define, imgByte, new ApiOperationCallback<ReturnInfo<String>>() {
+                assessOperator.fileUpload(FileUploadTypeEnum.IMG, define, imgByte, new ServiceFilterResponseCallback() {
                     @Override
-                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                            Utils.alertMessageDialog("提示", "发布成功");
-                            FragmentTransaction ft = fm.beginTransaction();
-                            ft.remove(AssessPublishFragment.this);
-                            ft.commit();
-                        } else {
-                            Log.e("图片上传", "图片上传失败");
+                    public void onResponse(ServiceFilterResponse response, Exception exception) {
+                        //上传文件
+                        if (!response.getContent().isEmpty()) {
+                            String json = response.getContent();
+                            String fileObjectStr = "";
+                            try {
+                                JSONObject object = new JSONObject(json);
+                                JSONArray array = object.getJSONArray("data");
+                                fileObjectStr = array.getString(0);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+//                            assessOperator.uploadAssess(1,desc,0,0,fileObjectStr, new ApiOperationCallback<ReturnInfo<String>>() {
+//                                @Override
+//                                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+//
+//                                }
+//                            });
                         }
+
                     }
                 });
+
+
+//                assessOperator.uploadAssess(0, desc, selectedChannel.getChannelId(), 0, 1, define, imgByte, new ApiOperationCallback<ReturnInfo<String>>() {
+//                    @Override
+//                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+//
+//                    }
+//                });
             }
         });
 

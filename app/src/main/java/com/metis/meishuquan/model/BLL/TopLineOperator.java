@@ -6,6 +6,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.enums.PrivateResultEnum;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.SystemUtil;
@@ -26,7 +27,7 @@ public class TopLineOperator {
     private boolean flag;
     private static TopLineOperator operator = null;
 
-    private final String CHANNELLIST_URL = "v1.1/Channel/ChannelList?userId=1&type=0";//根据用户Id和模块类型获得频道集合
+    private final String CHANNELLIST_URL = "v1.1/Channel/ChannelList?userId=1&type=0&session=2891560b-d254-42f8-850d-ff960543aa46";//根据用户Id和模块类型获得频道集合
     private final String CHANNEL_NEW_LIST_URL = "v1.1/News/NewsList";//根据频道获取news列表
     private final String NEWS_INFO_URL = "v1.1/News/NewsDetail";//根据newsId获得详情
     private final String COMMENT_LIST_NEWSID = "v1.1/Comment/CommentList";//根据newsId获得评论列表
@@ -98,8 +99,8 @@ public class TopLineOperator {
             if (flag) {
                 StringBuffer PATH = new StringBuffer(CHANNEL_NEW_LIST_URL);
                 PATH.append("?ChanelId=" + channelId);
-                PATH.append("&");
-                PATH.append("lastNewsId=" + lastNewsId);
+                PATH.append("&lastNewsId=" + lastNewsId);
+                PATH.append("&session=" + "2891560b-d254-42f8-850d-ff960543aa46");
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
 
@@ -142,8 +143,8 @@ public class TopLineOperator {
         if (flag) {
             StringBuffer PATH = new StringBuffer(CHANNEL_NEW_LIST_URL);
             PATH.append("?ChanelId=" + channelId);
-            PATH.append("&");
-            PATH.append("lastNewsId=" + lastNewsId);
+            PATH.append("&lastNewsId=" + lastNewsId);
+            PATH.append("&session=" + "2891560b-d254-42f8-850d-ff960543aa46");
             ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                     (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
         }
@@ -225,15 +226,17 @@ public class TopLineOperator {
      * @param userid
      * @param newsId
      * @param type
+     * @param result   1收藏，2取消
      * @param callback
      */
-    public void newsPrivate(int userid, int newsId, int type, ApiOperationCallback<ReturnInfo<String>> callback) {
+    public void newsPrivate(int userid, int newsId, int type, PrivateResultEnum result, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuffer path = new StringBuffer(FAVORITE);
                 path.append("?userid=" + userid);
                 path.append("&id=" + newsId);
                 path.append("&type=" + type);
+                path.append("&result=" + result.getVal());
                 ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }

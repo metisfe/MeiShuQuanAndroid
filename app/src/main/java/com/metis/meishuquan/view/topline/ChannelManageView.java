@@ -135,7 +135,7 @@ public class ChannelManageView extends RelativeLayout implements OnItemClickList
         }
         switch (parent.getId()) {
             case R.id.userGridView:
-                if (position != 0 && position != 1) {
+                if (position != 0) {
                     final ImageView moveImageView = getView(view);
                     if (moveImageView != null) {
                         TextView newTextView = (TextView) view
@@ -187,7 +187,7 @@ public class ChannelManageView extends RelativeLayout implements OnItemClickList
                             } catch (Exception localException) {
                             }
                         }
-                    }, 50L);
+                    },50L);
                 }
                 break;
             default:
@@ -218,7 +218,7 @@ public class ChannelManageView extends RelativeLayout implements OnItemClickList
         TranslateAnimation moveAnimation = new TranslateAnimation(
                 startLocation[0], endLocation[0], startLocation[1],
                 endLocation[1]);
-        moveAnimation.setDuration(300L);// 动画时间
+        moveAnimation.setDuration(30);// 动画时间
         // 动画配置
         AnimationSet moveAnimationSet = new AnimationSet(true);
         moveAnimationSet.setFillAfter(false);// 动画效果执行完毕后，View对象不保留在终止的位置

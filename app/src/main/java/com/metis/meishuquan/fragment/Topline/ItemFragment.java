@@ -195,7 +195,6 @@ public class ItemFragment extends Fragment implements AdapterView.OnItemClickLis
                 } else {
                     getData(lastNewsId);
                 }
-                //TODO:添加至缓存
             }
         }, channelId, lastNewsId);
     }

@@ -1,5 +1,6 @@
 package com.metis.meishuquan.fragment.Topline;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,21 +34,17 @@ import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.login.LoginActivity;
-import com.metis.meishuquan.fragment.main.ToplineFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
-import com.metis.meishuquan.model.topline.Content;
+import com.metis.meishuquan.model.enums.PrivateResultEnum;
 import com.metis.meishuquan.model.topline.ContentInfo;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
 import com.metis.meishuquan.model.topline.Urls;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
-import com.metis.meishuquan.view.topline.CommentInputView;
-import com.metis.meishuquan.view.topline.NewsShareView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -57,6 +54,8 @@ import java.util.StringTokenizer;
  * Created by wj on 15/3/23.
  */
 public class ItemInfoFragment extends Fragment {
+    private final int LOGINREQUESTCODE = 1001;
+
     private int newsId = 0;
     private Button btnBack, btnShare;
     private ViewGroup rootView;
@@ -65,10 +64,11 @@ public class ItemInfoFragment extends Fragment {
     private TextView tv_title, tv_createtime, tv_sourse, tv_comment_count;
     private RelativeLayout rl_writeCommont, rl_commontList, rl_private, rl_share, rl_main;
     private RelativeLayout rl_Input;
-    private ImageView imgFavorite;
+    private ImageView imgPrivate;
     private ScrollView contentScrollView;
     private EditText editText;
     private RelativeLayout rlSend;
+    private boolean isPrivate = false;
 
     private FragmentManager fm;
 
@@ -94,6 +94,18 @@ public class ItemInfoFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (resultCode) {
+            case Activity.RESULT_OK:
+                //登录成功后，更新登录状态
+                Toast.makeText(getActivity(), "已登录", Toast.LENGTH_SHORT).show();
+                break;
+
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     //初始化视图
     private void initView(ViewGroup rootView) {
         btnBack = (Button) rootView.findViewById(R.id.id_btn_back);
@@ -103,18 +115,19 @@ public class ItemInfoFragment extends Fragment {
         tv_comment_count = (TextView) rootView.findViewById(R.id.id_tv_topline_info_comment_count);//评论数
         rl_writeCommont = (RelativeLayout) rootView.findViewById(R.id.id_rl_writecomment);
         rl_commontList = (RelativeLayout) rootView.findViewById(R.id.id_rl_commentlist);
-        rl_private = (RelativeLayout) rootView.findViewById(R.id.id_rl_private);
-        rl_share = (RelativeLayout) rootView.findViewById(R.id.id_rl_share);
-        rl_Input = (RelativeLayout) rootView.findViewById(R.id.id_rl_input);
+        rl_private = (RelativeLayout) rootView.findViewById(R.id.id_rl_private);//收藏
+        rl_share = (RelativeLayout) rootView.findViewById(R.id.id_rl_share);//分享
+        rl_Input = (RelativeLayout) rootView.findViewById(R.id.id_rl_input);//输入框
         rl_main = (RelativeLayout) rootView.findViewById(R.id.ll_parent);
-        rlSend = (RelativeLayout) rootView.findViewById(R.id.id_rl_send);
+        rlSend = (RelativeLayout) rootView.findViewById(R.id.id_rl_send);//发送评论
         contentScrollView = (ScrollView) rootView.findViewById(R.id.id_scrollview_info_content);
 
         editText = (EditText) rootView.findViewById(R.id.id_comment_edittext);
-        imgFavorite = (ImageView) rootView.findViewById(R.id.id_img_favorite);
+        imgPrivate = (ImageView) rootView.findViewById(R.id.id_img_favorite);//分享图标
 
         fm = getActivity().getSupportFragmentManager();
     }
+
 
     private void addViewByContent() {
         if (newsInfo != null) {
@@ -152,7 +165,7 @@ public class ItemInfoFragment extends Fragment {
             ll_content = (LinearLayout) rootView.findViewById(R.id.id_ll_news_content);//内容父布局
         }
 
-        SmartImageView imageView = new SmartImageView(MainApplication.UIContext);
+        SmartImageView imageView = new SmartImageView(getActivity());
         imageView.setImageUrl(url.trim());
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
@@ -169,7 +182,7 @@ public class ItemInfoFragment extends Fragment {
         if (ll_content == null) {
             ll_content = (LinearLayout) rootView.findViewById(R.id.id_ll_news_content);//内容父布局
         }
-        TextView textView = new TextView(MainApplication.UIContext);
+        TextView textView = new TextView(getActivity());
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.topMargin = 10;
         textView.setLayoutParams(lp);
@@ -183,7 +196,7 @@ public class ItemInfoFragment extends Fragment {
 
         while (tokenizer.hasMoreTokens()) {
             str[k] = new String();
-            str[k] = tokenizer.nextToken();
+            str[k] = tokenizer.nextToken().trim();
             k++;
         }
 
@@ -195,7 +208,7 @@ public class ItemInfoFragment extends Fragment {
         for (int j = 0; j < str.length; j++) {
             for (int i = 0; i < newsInfo.getData().getUrlss().size(); i++) {
                 Urls url = newsInfo.getData().getUrlss().get(i);
-                String newShowContent = url.getNewShowContent().substring(1, url.getNewShowContent().length() - 1);
+                String newShowContent = url.getNewShowContent().trim();
                 if (str[j].equals(newShowContent)) {
                     str[j] = url.getDescription();
                 }
@@ -227,7 +240,6 @@ public class ItemInfoFragment extends Fragment {
             textView.setMovementMethod(LinkMovementMethod.getInstance());
         }
 
-
         ll_content.addView(textView);
     }
 
@@ -237,9 +249,8 @@ public class ItemInfoFragment extends Fragment {
             @Override
             public void onClick(View view) {//返回
                 hideInputView();
-                ToplineFragment toplineFragment = new ToplineFragment();
                 FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.content_container, toplineFragment);
+                ft.remove(ItemInfoFragment.this);
                 ft.commit();
             }
         });
@@ -295,15 +306,38 @@ public class ItemInfoFragment extends Fragment {
         this.rl_private.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//收藏
+                SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
+                String loginState = spu.getStringByKey(SharedPreferencesUtil.LOGIN_STATE);
                 TopLineOperator topLineOperator = TopLineOperator.getInstance();
-                topLineOperator.newsPrivate(1, newsId, 0, new ApiOperationCallback<ReturnInfo<String>>() {
-                    @Override
-                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                            Toast.makeText(MainApplication.UIContext, "收藏成功", Toast.LENGTH_SHORT).show();
-                        }
+                if (loginState != null && loginState.equals("已登录")) {
+                    if (!isPrivate) {
+                        topLineOperator.newsPrivate(1, newsId, 0, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
+                            @Override
+                            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                    Toast.makeText(MainApplication.UIContext, "收藏成功", Toast.LENGTH_SHORT).show();
+                                    isPrivate = true;
+                                    imgPrivate.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_topline_private));
+                                }
+                            }
+                        });
+                    } else {
+                        //TODO：取消收藏
+                        topLineOperator.newsPrivate(1, newsId, 0, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
+                            @Override
+                            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                    Toast.makeText(MainApplication.UIContext, "取消收藏", Toast.LENGTH_SHORT).show();
+                                    isPrivate = false;
+                                    imgPrivate.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_topline_unprivate));
+                                }
+                            }
+                        });
                     }
-                });
+                } else {
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    getActivity().startActivityForResult(intent, LOGINREQUESTCODE);
+                }
             }
         });
 
@@ -367,6 +401,10 @@ public class ItemInfoFragment extends Fragment {
             } else {
                 this.tv_comment_count.setVisibility(View.GONE);
             }
+
+            //TODO:收藏状态,根据用户当前登录状态，设置收藏状态
+
+
         }
     }
 

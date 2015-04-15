@@ -34,6 +34,7 @@ import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.enums.PrivateResultEnum;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.model.topline.AllComments;
 import com.metis.meishuquan.model.topline.Comment;
@@ -188,7 +189,7 @@ public class CommentListFragment extends Fragment {
             @Override
             public void onClick(View view) {//收藏
                 TopLineOperator topLineOperator = TopLineOperator.getInstance();
-                topLineOperator.newsPrivate(0, newsId, 0, new ApiOperationCallback<ReturnInfo<String>>() {
+                topLineOperator.newsPrivate(0, newsId, 0, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
                     @Override
                     public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                         if (result != null && result.getInfo().equals(String.valueOf(0))) {

@@ -34,7 +34,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/img_write_comment"
             android:clickable="false"
-            android:text="我来说两句"
+            android:text="我来说两句 ..."
             android:textColor="#7e7e7e"
             android:textSize="12sp" />
     </RelativeLayout>
@@ -91,7 +91,7 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_centerInParent="true"
-                android:background="@drawable/ic_action_topline_private"
+                android:background="@drawable/ic_action_topline_unprivate"
                 android:clickable="false" />
         </RelativeLayout>
 
