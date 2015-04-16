@@ -111,9 +111,12 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     public void onResume() {
         super.onResume();
         Log.v(TAG, "onResume " + MainApplication.userInfo);
-        if (MainApplication.userInfo != null) {
+        if (MainApplication.userInfo != null && MainApplication.userInfo.getUserId() != -1) {
             getUserInfo(MainApplication.userInfo.getUserId());
             fillUserInfo(MainApplication.userInfo);
+        } else {
+            mLoginView.setVisibility(View.VISIBLE);
+            mInfoDetailsContainer.setVisibility(View.INVISIBLE);
         }
     }
 
