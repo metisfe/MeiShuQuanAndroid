@@ -72,7 +72,13 @@ public class AddFriendFragment extends Fragment {
         this.item2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: contact book match
+                FriendMatchFragment friendMatchFragment = new FriendMatchFragment();
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                ft.add(R.id.content_container, friendMatchFragment);
+                ft.addToBackStack(null);
+                ft.commit();
             }
         });
 

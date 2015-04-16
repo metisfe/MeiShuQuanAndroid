@@ -1,5 +1,7 @@
 package com.metis.meishuquan.util;
 
+import android.database.Cursor;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
@@ -207,6 +209,26 @@ public class ChatManager {
         }
 
         return "";
+    }
+
+    public static String getPhoneNumberList() {
+        String ret = "";
+        Cursor phones = MainApplication.UIContext.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+        while (phones.moveToNext()) {
+            String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            phoneNumber = normalizePhoneNumber(phoneNumber);
+            if (!TextUtils.isEmpty(phoneNumber)) ret += phoneNumber + ',';
+        }
+        phones.close();
+        if (ret.length() > 0) ret = ret.substring(0, ret.length()-1);
+        return ret;
+    }
+
+    private static String normalizePhoneNumber(String s) {
+        if (s == null || s.length() < 11) return null;
+        s = s.substring(s.length() - 11);
+        if (s.charAt(0) != '1') return null;
+        return s;
     }
 
     public interface OnReceivedListener {
