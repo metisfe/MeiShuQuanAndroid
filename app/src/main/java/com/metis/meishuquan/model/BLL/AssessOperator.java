@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * 业务逻辑类：点评
  * <p/>
- * Created by wj on 15/3/20.
+ * Created by wangjin on 15/3/20.
  */
 public class AssessOperator {
     private boolean flag;
@@ -133,7 +133,7 @@ public class AssessOperator {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuilder PATH = new StringBuilder(AssessChannelList);
-                PATH.append("&session=" + SESSION);
+                PATH.append("?&session=" + SESSION);
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
@@ -243,7 +243,9 @@ public class AssessOperator {
     public void AddRegionToCache() {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
-                ApiDataProvider.getmClient().invokeApi(Region, null, HttpGet.METHOD_NAME, null,
+                StringBuilder PATH = new StringBuilder(Region);
+                PATH.append("&session=" + SESSION);
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
