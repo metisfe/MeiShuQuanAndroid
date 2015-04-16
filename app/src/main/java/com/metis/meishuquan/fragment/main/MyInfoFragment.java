@@ -1,5 +1,6 @@
 package com.metis.meishuquan.fragment.main;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +55,14 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     private View mCollectionView, mCommentView, mClassesView, mNameCardView, mAdvanceView, mSettingView;
     private ImageView mProfileIv = null;
 
+    private MainApplication mMainApplication = null;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mMainApplication = (MainApplication)activity.getApplication();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +96,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         mSettingView = view.findViewById(R.id.my_info_setting);
 
         mInfoContainer.setOnClickListener(this);
-        //mLoginView.setOnClickListener(this);
+        mLoginView.setOnClickListener(this);
 
         mCollectionView.setOnClickListener(this);
         mCommentView.setOnClickListener(this);
@@ -98,9 +108,17 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        UserInfoOperator.getInstance().getUserInfo("100001", new UserInfoOperator.OnGetListener<User>() {
+    public void onResume() {
+        super.onResume();
+        Log.v(TAG, "onResume " + MainApplication.userInfo);
+        if (MainApplication.userInfo != null) {
+            getUserInfo(MainApplication.userInfo.getUserId());
+            fillUserInfo(MainApplication.userInfo);
+        }
+    }
+
+    private void getUserInfo (long userId) {
+        UserInfoOperator.getInstance().getUserInfo(userId, new UserInfoOperator.OnGetListener<User>() {
             @Override
             public void onGet(boolean succeed, User user) {
                 if (succeed) {
@@ -113,6 +131,11 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 }
             }
         });
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         /*UserInfoOperator.getInstance().getFavoriteList("100001", new UserInfoOperator.OnGetListener<List<Item>>() {
             @Override

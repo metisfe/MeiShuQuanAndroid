@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
@@ -23,9 +25,12 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.InputActivity;
+import com.metis.meishuquan.fragment.assess.ChooseCityFragment;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
+import com.metis.meishuquan.model.assess.City;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.view.shared.BaseDialog;
@@ -47,7 +52,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
     private TitleView mTitleView = null;
     private ImageView mProfile = null;
 
-    private MyInfoBtn mNickView, mGenderView, mConstellationView, mGradeView,
+    private MyInfoBtn mNickView, mGenderView, mConstellationView, mGradeView, mProvienceView,
             mAgeView, mCvView, mDepartmentView, mDepartmentAddrView,
             mAchievementView;
 
@@ -78,6 +83,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
         mGenderView = (MyInfoBtn)findViewById(R.id.info_gender);
         mConstellationView = (MyInfoBtn)findViewById(R.id.info_constellation);
         mGradeView = (MyInfoBtn)findViewById(R.id.info_level);
+        mProvienceView = (MyInfoBtn)findViewById(R.id.info_provience);
         mAgeView = (MyInfoBtn)findViewById(R.id.info_age);
         mDepartmentView = (MyInfoBtn)findViewById(R.id.info_department);
         mDepartmentAddrView = (MyInfoBtn)findViewById(R.id.info_department_address);
@@ -91,6 +97,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
         mNickView.setOnClickListener(this);
         mRecentsContainer.setOnClickListener(this);
         mGenderView.setOnClickListener(this);
+        mProvienceView.setOnClickListener(this);
         mConstellationView.setOnClickListener(this);
         mAgeView.setOnClickListener(this);
         mDepartmentView.setOnClickListener(this);
@@ -102,7 +109,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        UserInfoOperator.getInstance().getUserInfo("100001", new UserInfoOperator.OnGetListener<User>() {
+        UserInfoOperator.getInstance().getUserInfo(MainApplication.userInfo.getUserId(), new UserInfoOperator.OnGetListener<User>() {
             @Override
             public void onGet(boolean succeed, User user) {
                 if (succeed) {
@@ -127,6 +134,9 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.info_gender:
                 showDialog();
+                break;
+            case R.id.info_provience:
+                showCityFragment();
                 break;
             case R.id.info_constellation:
                 it = new Intent(this, ConstellationActivity.class);
@@ -341,5 +351,32 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);//调用android的图库
         startActivityForResult(intent, 333);
     }
+    private ChooseCityFragment mCityFragment = null;
+    public void showCityFragment () {
+        if (mCityFragment == null) {
+            mCityFragment = new ChooseCityFragment();
+            mCityFragment.setOnCityChooseListener(mCityListener);
+        }
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.fragment_container, mCityFragment);
+        ft.addToBackStack(null);
+        ft.commit();
+    }
+
+    public void hideCityFragment () {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction ft = manager.beginTransaction();
+        ft.remove(mCityFragment);
+        manager.popBackStack();
+        ft.commit();
+    }
+
+    private ChooseCityFragment.OnCityChooseListener mCityListener = new ChooseCityFragment.OnCityChooseListener() {
+        @Override
+        public void onChoose(City city) {
+            mProvienceView.setSecondaryText(city.getGroupName() + "-" + city.getCityName());
+            hideCityFragment();
+        }
+    };
 
 }

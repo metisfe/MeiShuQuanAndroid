@@ -38,7 +38,8 @@ public class UserInfoOperator {
                             URL_UPDATE_USER_INFO = "v1.1/UserCenter/UpdateUserInfo?param=";
 
     private static String KEY_USER_ID = "userId",
-                        KEY_INDEX = "index";
+                        KEY_INDEX = "index",
+                        KEY_SESSION = "session";
 
     public static UserInfoOperator getInstance () {
         return sOperator;
@@ -58,7 +59,10 @@ public class UserInfoOperator {
             for (String key : set) {
                 json.addProperty(key, map.get(key));
             }
-            ApiDataProvider.getmClient().invokeApi(URL_UPDATE_USER_INFO + json.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+            StringBuilder sb = new StringBuilder(json.toString());
+            sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+            Log.v(TAG, "updateUserInfo request url=" + URL_UPDATE_USER_INFO + sb);
+            ApiDataProvider.getmClient().invokeApi(URL_UPDATE_USER_INFO + sb, null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
@@ -76,13 +80,13 @@ public class UserInfoOperator {
         }
     }
 
-    public void getUserInfo (String uid, final OnGetListener<User> userListener) {
+    public void getUserInfo (long uid, final OnGetListener<User> userListener) {
         getUserInfo(uid, false, userListener);
     }
 
-    public void getUserInfo (final String uid, boolean refreshCache, final OnGetListener<User> userListener) {
+    public void getUserInfo (final long uid, boolean refreshCache, final OnGetListener<User> userListener) {
         if (mUserCache.containsKey(uid)) {
-            userListener.onGet(true, mUserCache.get(uid));
+            userListener.onGet(true, mUserCache.get(uid + ""));
             if (!refreshCache) {
                 return;
             }
@@ -90,11 +94,13 @@ public class UserInfoOperator {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_CENTER);
             sb.append(KEY_USER_ID + "=" + uid);
+            sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+            Log.v(TAG, "getUserInfo request=" + sb);
             ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    if (result != null && response.getStatus().getStatusCode() == 0) {
+                    if (result != null) {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
                         Log.v(TAG, "getUserInfo json=" + json);
@@ -102,7 +108,7 @@ public class UserInfoOperator {
                         Result<User> resultData = gson.fromJson(json, new TypeToken<Result<User>>(){}.getType());
                         if (resultData != null) {
                             User user = resultData.getData();
-                            mUserCache.put(uid, user);
+                            mUserCache.put(uid + "", user);
 
                             if (userListener != null) {
                                 userListener.onGet(true, user);
@@ -142,7 +148,7 @@ public class UserInfoOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    if (result != null && response.getStatus().getStatusCode() == 0) {
+                    if (result != null) {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
                         Log.v(TAG, index + " getFavoriteList json=" + json);
