@@ -39,10 +39,7 @@ public class ChooseCityFragment extends Fragment {
     private Button btnBack;
     private SearchView searchView;
     private ExpandeAdapter adapter;
-<<<<<<< HEAD
     private AllCity mAllCity = null;
-=======
-    private AllCity mAllCity;
     private OnCityChooseListener mListener = null;
 
     @Override
@@ -53,7 +50,6 @@ public class ChooseCityFragment extends Fragment {
         }
         return AnimationUtils.loadAnimation(getActivity(), animId);
     }
->>>>>>> origin/master
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -158,11 +154,11 @@ public class ChooseCityFragment extends Fragment {
 
     }
 
-    public void setOnCityChooseListener (OnCityChooseListener listener) {
+    public void setOnCityChooseListener(OnCityChooseListener listener) {
         mListener = listener;
     }
 
     public static interface OnCityChooseListener {
-        public void onChoose (City city);
+        public void onChoose(City city);
     }
 }
