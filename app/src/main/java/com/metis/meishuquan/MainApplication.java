@@ -90,11 +90,11 @@ public class MainApplication extends Application {
     private User getUserInfoFromSharedPreferences() {
         SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(UIContext);
         String json = spu.getStringByKey(SharedPreferencesUtil.USER_LOGIN_INFO);
-        LoginUserData user = new Gson().fromJson(json, new TypeToken<LoginUserData>() {
-        }.getType());
-        if (user.getData() == null) {
+        if (json.isEmpty()) {
             return new User();
         }
+        LoginUserData user = new Gson().fromJson(json, new TypeToken<LoginUserData>() {
+        }.getType());
         return user.getData();
     }
 }

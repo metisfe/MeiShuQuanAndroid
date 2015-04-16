@@ -47,6 +47,7 @@ public class AssessOperator {
     private final String Friend = "";//获取好友/老师
     private final String FileUpload = "v1.1/File/Upload";//文件上传
     private final String Region = "v1.1/UserCenter/Region";
+    private final String SESSION = MainApplication.userInfo.getCookie();
 
     private AssessOperator() {
         flag = ApiDataProvider.initProvider();
@@ -81,6 +82,7 @@ public class AssessOperator {
                 PATH.append("&channelIds=" + channelIds);
                 PATH.append("&index=" + index);
                 PATH.append("&queryType=" + queryType.getVal());
+                PATH.append("&session=" + SESSION);
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
@@ -106,6 +108,7 @@ public class AssessOperator {
                 PATH.append("&channelIds=" + 0);
                 PATH.append("&index=" + index);
                 PATH.append("&queryType=" + queryType);
+                PATH.append("&session=" + SESSION);
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
@@ -130,6 +133,7 @@ public class AssessOperator {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuilder PATH = new StringBuilder(AssessChannelList);
+                PATH.append("&session=" + SESSION);
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
@@ -167,6 +171,7 @@ public class AssessOperator {
                 PATH.append("&channelId=" + channelId);
                 PATH.append("&friendUserId=" + friendUserId);
                 PATH.append("&file=" + fileObjectStr);
+                PATH.append("&session=" + SESSION);
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpPost.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
@@ -188,6 +193,7 @@ public class AssessOperator {
                 StringBuilder FILEUPLOAD = new StringBuilder(FileUpload);
                 FILEUPLOAD.append("?type=" + type.getVal());
                 FILEUPLOAD.append("&define=" + define);
+                FILEUPLOAD.append("&session=" + SESSION);
                 List<Pair<String, String>> pram = new ArrayList<>();
                 Pair<String, String> pair1 = new Pair<String, String>("type", String.valueOf(type));
                 Pair<String, String> pair2 = new Pair<String, String>("define", define);
@@ -208,10 +214,11 @@ public class AssessOperator {
     public void shareAssess(int id, int type, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
-                StringBuilder stringBuilder = new StringBuilder(Assess_Comment_Share);
-                stringBuilder.append("?id" + id);
-                stringBuilder.append("&type" + type);
-                ApiDataProvider.getmClient().invokeApi(stringBuilder.toString(), null, HttpGet.METHOD_NAME, null,
+                StringBuilder PATH = new StringBuilder(Assess_Comment_Share);
+                PATH.append("?id" + id);
+                PATH.append("&type" + type);
+                PATH.append("&session=" + SESSION);
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
         }
