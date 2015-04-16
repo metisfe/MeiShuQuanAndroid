@@ -1,5 +1,7 @@
 package com.metis.meishuquan.model.commons;
 
+import android.util.Log;
+
 import com.google.gson.annotations.SerializedName;
 import com.metis.meishuquan.model.enums.LoginStateEnum;
 
@@ -9,6 +11,16 @@ import java.io.Serializable;
  * Created by WJ on 2015/4/9.
  */
 public class User implements Serializable {
+
+    private static final String TAG = User.class.getSimpleName();
+
+    public static final String
+            KEY_NICK_NAME = "UserNickName",
+            KEY_GENDER = "Gender",
+            KEY_GRADE = "Grade",
+            KEY_SELFINTRODUCE = "SelfIntroduce",
+            KEY_USERAVATAR = "UserAvatar",
+            KEY_REGION = "Region";
 
     @SerializedName("userId")
     private int userId = -1;
@@ -135,10 +147,12 @@ public class User implements Serializable {
     }
 
     public String getUserAvatar() {
+        Log.v(TAG, "getUserAvatar " + userAvatar);
         return userAvatar;
     }
 
     public void setUserAvatar(String userAvatar) {
+        Log.v(TAG, "setUserAvatar " + userAvatar);
         this.userAvatar = userAvatar;
     }
 

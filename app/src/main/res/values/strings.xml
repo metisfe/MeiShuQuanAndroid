@@ -41,6 +41,7 @@
     <string name="title_activity_qr_scan">QrScanActivity</string>
 
     <string name="title_activity_news_info_actity">NewsInfoActity</string>
+    <string name="title_activity_image_preview">ImagePreview</string>
 
 
 </resources>

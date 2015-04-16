@@ -1,6 +1,7 @@
 package com.metis.meishuquan.activity.info;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -68,7 +69,11 @@ public class QrScanActivity extends BaseActivity implements
 
     private Button reScanBtn = null;
 
+    private ScanCoverView mCoverView = null;
+
     private int mState = STATE_SCANNING;
+
+    private int mDisplayWidth, mDisplayHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +82,18 @@ public class QrScanActivity extends BaseActivity implements
 
         reScanBtn = (Button)findViewById(R.id.qr_scan_redo);
         reScanBtn.setOnClickListener(this);
+        reScanBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(QrScanActivity.this, ImagePreviewActivity.class));
+            }
+        });
 
+        mCoverView = (ScanCoverView)this.findViewById(R.id.qr_scan_cover);
+
+        mDisplayWidth = getWindowManager().getDefaultDisplay().getWidth();
+        mDisplayHeight = getWindowManager().getDefaultDisplay().getHeight();
+        Log.v(TAG, "onCreate " + mDisplayWidth + " " + mDisplayHeight);
     }
 
     @Override
@@ -153,6 +169,12 @@ public class QrScanActivity extends BaseActivity implements
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         mCamera.release();
     }
 
@@ -215,12 +237,15 @@ public class QrScanActivity extends BaseActivity implements
         if (rect == null) {
             return null;
         }
+        mCoverView.setRect(rect);
         // Go ahead and assume it's YUV rather than die.
         return new PlanarYUVLuminanceSource(data, width, height, rect.left, rect.top,
                 rect.width(), rect.height(), false);
     }
 
     public synchronized Rect getFramingRectInPreview() {
+        //return new Rect(202, 359, 877, 1559);
+
         return new Rect(359, 202, 1559, 877);
     }
 

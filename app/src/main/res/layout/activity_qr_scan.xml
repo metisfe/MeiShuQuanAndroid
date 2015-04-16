@@ -7,6 +7,10 @@
         android:id="@+id/qr_scan_surface"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
+    <com.metis.meishuquan.activity.info.ScanCoverView
+        android:id="@+id/qr_scan_cover"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
     <Button
         android:id="@+id/qr_scan_redo"
         android:layout_width="fill_parent"

@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.SearchView;
@@ -37,7 +39,21 @@ public class ChooseCityFragment extends Fragment {
     private Button btnBack;
     private SearchView searchView;
     private ExpandeAdapter adapter;
+<<<<<<< HEAD
     private AllCity mAllCity = null;
+=======
+    private AllCity mAllCity;
+    private OnCityChooseListener mListener = null;
+
+    @Override
+    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        int animId = R.anim.right_out;
+        if (enter) {
+            animId = R.anim.right_in;
+        }
+        return AnimationUtils.loadAnimation(getActivity(), animId);
+    }
+>>>>>>> origin/master
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -72,6 +88,7 @@ public class ChooseCityFragment extends Fragment {
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.remove(ChooseCityFragment.this);
+                fm.popBackStack();
                 ft.commit();
             }
         });
@@ -80,6 +97,9 @@ public class ChooseCityFragment extends Fragment {
             @Override
             public boolean onChildClick(ExpandableListView listView, View view, int groupPosition, int childPosition, long id) {
                 City city = adapter.getChild(groupPosition, childPosition);
+                if (mListener != null) {
+                    mListener.onChoose(city);
+                }
                 Toast.makeText(MainApplication.UIContext, "您选择的城市为:" + city.getCityName(), Toast.LENGTH_SHORT).show();
                 return true;
             }
@@ -113,6 +133,7 @@ public class ChooseCityFragment extends Fragment {
             List<City> citysTemp = province.getCityList();
             for (int j = 0; j < citysTemp.size(); j++) {
                 City city = citysTemp.get(j);
+                city.setGroupName(province.getGroupName());
                 if (city.getCityName().indexOf(val) != -1) {
                     citys.add(city);
                 }
@@ -135,5 +156,13 @@ public class ChooseCityFragment extends Fragment {
             }.getType());
         }
 
+    }
+
+    public void setOnCityChooseListener (OnCityChooseListener listener) {
+        mListener = listener;
+    }
+
+    public static interface OnCityChooseListener {
+        public void onChoose (City city);
     }
 }

@@ -283,11 +283,15 @@
         </activity>
         <activity
             android:name=".activity.info.QrScanActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_qr_scan" >
+            android:label="@string/title_activity_qr_scan"
+            android:screenOrientation="portrait" >
+            <activity
+                android:name=".activity.topline.NewsInfoActity"
+                android:label="@string/title_activity_news_info_actity" />
+        </activity>
         <activity
-            android:name=".activity.topline.NewsInfoActity"
-            android:label="@string/title_activity_news_info_actity" />
+            android:name=".activity.info.ImagePreviewActivity"
+            android:label="@string/title_activity_image_preview" >
         </activity>
     </application>
 
