@@ -61,8 +61,7 @@ public class UserInfoOperator {
 
     }
 
-    public void updateUserProfile (final long userId, String path) {
-        Bitmap bmp = BitmapFactory.decodeFile(path);
+    public void updateUserProfile (final long userId, Bitmap bmp) {
         byte[] data = ImageLoaderUtils.BitmapToByteArray(bmp);
         String defineStr = data.length + "," + 1 + "," + data.length;
         AssessOperator.getInstance().fileUpload(FileUploadTypeEnum.IMG, defineStr, data, new ServiceFilterResponseCallback () {
@@ -82,6 +81,11 @@ public class UserInfoOperator {
                 Log.v(TAG, "onResponse " + response.getContent());
             }
         });
+    }
+
+    public void updateUserProfile (final long userId, String path) {
+        Bitmap bmp = BitmapFactory.decodeFile(path);
+        updateUserProfile(userId, bmp);
     }
 
     public void updateUserProfileByUrl (long userId, String url) {

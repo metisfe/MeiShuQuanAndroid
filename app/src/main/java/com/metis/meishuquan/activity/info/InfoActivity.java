@@ -65,6 +65,8 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
 
     private PopupWindow mPopupWindow = null;
 
+    private String mCameraOutputPath = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -216,17 +218,25 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                 }
                 break;
             case 222:
-                Log.v(TAG, "onActivityResult 222 " + data.getData());
+                if (resultCode == RESULT_OK) {
+                    final int size = getResources().getDimensionPixelSize(R.dimen.info_profile_size);
+                    ImageLoaderUtils.getImageLoader(this).displayImage(ImageDownloader.Scheme.FILE.wrap(mCameraOutputPath), mProfile, ImageLoaderUtils.getRoundDisplayOptions(size));
+                    UserInfoOperator.getInstance().updateUserProfile(MainApplication.userInfo.getUserId(), mCameraOutputPath);
+                }
+                hidePopwindow();
                 break;
             case 333:
-                final String path = ImageLoaderUtils.getFilePathFromUri(this, data.getData());
-                final int profileSize = getResources().getDimensionPixelSize(R.dimen.info_profile_size);
-                ImageLoaderUtils.getImageLoader(this).displayImage(ImageDownloader.Scheme.FILE.wrap(path), mProfile, ImageLoaderUtils.getRoundDisplayOptions(profileSize));
-                UserInfoOperator.getInstance().updateUserProfile(MainApplication.userInfo.getUserId(), path);
-                //UserInfoOperator.getInstance().updateUserProfileByUrl(MainApplication.userInfo.getUserId(), "http://ww1.sinaimg.cn/bmiddle/6cd6d028jw1er7i1933eaj20go0cnjs7.jpg");
+                if (resultCode == RESULT_OK) {
+                    final String path = ImageLoaderUtils.getFilePathFromUri(this, data.getData());
+                    final int profileSize = getResources().getDimensionPixelSize(R.dimen.info_profile_size);
+                    ImageLoaderUtils.getImageLoader(this).displayImage(ImageDownloader.Scheme.FILE.wrap(path), mProfile, ImageLoaderUtils.getRoundDisplayOptions(profileSize));
+                    UserInfoOperator.getInstance().updateUserProfile(MainApplication.userInfo.getUserId(), path);
+                    //UserInfoOperator.getInstance().updateUserProfileByUrl(MainApplication.userInfo.getUserId(), "http://ww1.sinaimg.cn/bmiddle/6cd6d028jw1er7i1933eaj20go0cnjs7.jpg");
 
-                File file = new File(path);
-                Log.v(TAG, "onActivityResult 333 " + file.getAbsolutePath());
+                    File file = new File(path);
+                    Log.v(TAG, "onActivityResult 333 " + file.getAbsolutePath());
+                }
+                hidePopwindow();
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -308,13 +318,19 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
         photoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                photo();
+                mCameraOutputPath = photo();
             }
         });
         contentView.findViewById(R.id.item_popupwindows_Photo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pickFromGallery();
+            }
+        });
+        contentView.findViewById(R.id.item_popupwindows_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hidePopwindow();
             }
         });
         mPopupWindow.setTouchInterceptor(new View.OnTouchListener() {
@@ -330,7 +346,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
     }
 
     public void hidePopwindow () {
-        if (mPopupWindow != null) {
+        if (mPopupWindow != null && mPopupWindow.isShowing()) {
             mPopupWindow.dismiss();
         }
     }
@@ -339,7 +355,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
         return mPopupWindow != null && mPopupWindow.isShowing();
     }
 
-    public void photo() {
+    public String photo() {
         Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File dir = new File(Environment.getExternalStorageDirectory()
                 + "/myimage/");
@@ -359,6 +375,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
         Uri imageUri = Uri.fromFile(file);
         openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(openCameraIntent, 222);
+        return file.getAbsolutePath();
     }
 
     public void pickFromGallery() {
