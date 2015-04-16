@@ -35,9 +35,10 @@ import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.enums.BlockTypeEnum;
 import com.metis.meishuquan.model.enums.LoginStateEnum;
 import com.metis.meishuquan.model.enums.PrivateResultEnum;
-import com.metis.meishuquan.model.enums.SupportTypeEnum;
+import com.metis.meishuquan.model.enums.SupportStepTypeEnum;
 import com.metis.meishuquan.model.topline.AllComments;
 import com.metis.meishuquan.model.topline.Comment;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
@@ -250,8 +251,7 @@ public class CommentListFragment extends Fragment {
                 if (childCommentId == -1) {
                     String content = editText.getText().toString();
                     if (!content.isEmpty()) {
-                        TopLineOperator topLineOperator = TopLineOperator.getInstance();
-                        topLineOperator.publishComment(0, newsId, content, 0, 0, new ApiOperationCallback<ReturnInfo<String>>() {
+                        CommonOperator.getInstance().publishComment(0, newsId, content, 0, BlockTypeEnum.TOPLINE, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
@@ -262,9 +262,8 @@ public class CommentListFragment extends Fragment {
                         });
                     }
                 } else {
-                    TopLineOperator operator = TopLineOperator.getInstance();
                     String content = editText.getText().toString();
-                    operator.publishComment(0, newsId, content, childCommentId, 0, new ApiOperationCallback<ReturnInfo<String>>() {
+                    CommonOperator.getInstance().publishComment(0, newsId, content, childCommentId, BlockTypeEnum.TOPLINE, new ApiOperationCallback<ReturnInfo<String>>() {
                         @Override
                         public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                             if (result != null && result.getInfo().equals(String.valueOf(0))) {
@@ -424,7 +423,7 @@ public class CommentListFragment extends Fragment {
                         return;
                     }
                     CommonOperator operator = CommonOperator.getInstance();
-                    operator.supportOrStep(userId, comment.getId(), SupportTypeEnum.NewsComment, 1, new ApiOperationCallback<ReturnInfo<String>>() {
+                    operator.supportOrStep(userId, comment.getId(), SupportStepTypeEnum.NewsComment, 1, new ApiOperationCallback<ReturnInfo<String>>() {
                         @Override
                         public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                             if (result != null && result.getInfo().equals(String.valueOf(0))) {

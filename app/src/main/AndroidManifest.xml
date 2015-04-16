@@ -294,6 +294,14 @@
             android:name=".activity.info.ImagePreviewActivity"
             android:label="@string/title_activity_image_preview" >
         </activity>
+        <activity
+            android:name=".activity.course.ChooseCourseActivity"
+            android:label="@string/title_activity_choose_course" >
+        </activity>
+        <activity
+            android:name=".activity.course.CourseInfoActivity"
+            android:label="@string/title_activity_course_info" >
+        </activity>
     </application>
 
 </manifest>

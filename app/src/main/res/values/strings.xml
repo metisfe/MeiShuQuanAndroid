@@ -42,6 +42,8 @@
 
     <string name="title_activity_news_info_actity">NewsInfoActity</string>
     <string name="title_activity_image_preview">ImagePreview</string>
+    <string name="title_activity_choose_course">ChooseCourseActivity</string>
+    <string name="title_activity_course_info">CourseInfoActivity</string>
 
 
 </resources>

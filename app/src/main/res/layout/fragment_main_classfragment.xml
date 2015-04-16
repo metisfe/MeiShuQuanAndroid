@@ -56,7 +56,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/id_rl_content"
+        android:id="@+id/id_rl_container_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/fragment_shared_classfragment_tab_bar"

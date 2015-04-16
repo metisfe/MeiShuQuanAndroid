@@ -1,0 +1,213 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#cccccc">
+
+    <RelativeLayout
+        android:id="@+id/id_rl_title_bar"
+        android:layout_width="match_parent"
+        android:background="#2c2c3f"
+        android:layout_height="44dp">
+
+        <Button
+            android:id="@+id/id_assess_city_btn_back"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_btn_arrow_left" />
+
+        <RelativeLayout
+            android:id="@+id/id_rl_data_from"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_centerInParent="true">
+
+            <ImageView
+                android:id="@+id/id_img_dynamic"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/default_user_dynamic" />
+
+            <TextView
+                android:id="@+id/id_tv_assess_create_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/id_img_dynamic"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/id_img_dynamic"
+                android:text="相关机构"
+                android:textColor="#fb6d6d"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/id_img_dynamic"
+                android:layout_marginBottom="-5dp"
+                android:layout_marginLeft="7dp"
+                android:layout_toRightOf="@+id/id_img_dynamic"
+                android:text="2014-11-11"
+                android:textColor="#cfd5ec"
+                android:textSize="10sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/id_rl_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/id_rl_title_bar"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/id_tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="男青年 立体意识"
+            android:textSize="18sp"
+            android:textColor="#424242" />
+
+        <TextView
+            android:id="@+id/id_tv_create_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/id_tv_title"
+            android:layout_marginTop="10dp"
+            android:text="2013-12-12"
+            android:textSize="10sp"
+            android:textColor="#7e7e7e" />
+
+        <TextView
+            android:id="@+id/id_tv_read_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/id_tv_title"
+            android:layout_toLeftOf="@+id/id_tv_comment_count"
+            android:layout_marginRight="10dp"
+
+            android:layout_marginTop="10dp"
+            android:text="阅读(100)"
+            android:textSize="12sp"
+            android:textColor="#7e7e7e" />
+
+        <TextView
+            android:id="@+id/id_tv_comment_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/id_tv_title"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:text="评论(100)"
+            android:textSize="12sp"
+            android:textColor="#7e7e7e" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/id_rl_img"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/id_rl_title"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <ImageView
+            android:id="@+id/id_img_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/img_topline_default" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/id_rl_content_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_below="@+id/id_rl_img">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#7e7e7e"
+            android:text="dfasfsdfasdffadfasdfsdf老师的加夫里什见到了飞机；萨肯的肌肤；啊睡觉的房间；圣诞节分；阿克苏封口机；阿里斯顿减肥；阿萨德减肥；阿三决定；发觉上的风景；阿萨德减肥；将阿萨德发；圣诞节分；阿萨德减肥；江苏队福建省的；分阿三快点放假就圣诞节分； ；的飞机啊" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/id_rl_relation"
+        android:layout_width="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/id_rl_content_desc"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="相关阅读"
+            android:textColor="#fb6d6d"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/id_rl_container_support"
+        android:layout_below="@+id/id_rl_relation"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:padding="10dp"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <RelativeLayout
+                android:id="@+id/id_rl_support"
+                android:layout_width="100dp"
+                android:background="@color/white"
+                android:layout_height="wrap_content">
+
+                <ImageButton
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="10dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/icon_unsupport" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="100dp"
+                android:background="@color/white"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/id_rl_support">
+
+                <ImageButton
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="10dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/icon_unstep" />
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/id_rl_footer_bar"
+        layout="@layout/fragment_topline_topbar_list_item_info_footbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>

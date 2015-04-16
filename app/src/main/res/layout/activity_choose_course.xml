@@ -11,7 +11,7 @@
         android:background="#2d2a40">
 
         <Button
-            android:id="@+id/id_assess_city_btn_back"
+            android:id="@+id/id_btn_back"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_alignParentLeft="true"
@@ -22,13 +22,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="地区"
+            android:text="选课"
             android:textColor="#fb6d6d"
             android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/id_btn_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:background="@color/transparent"
+            android:textColor="#f0f0f0"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:textSize="16sp"
+            android:text="确定" />
 
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/id_rl_all_channel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#f0f0f0">
@@ -52,10 +65,10 @@
     </RelativeLayout>
 
     <ExpandableListView
-        android:id="@+id/id_assess_city_listview"
+        android:id="@+id/id_course_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ffffff"
+        android:background="#f0f0f0"
         android:cacheColorHint="#00000000"
         android:divider="#cccccc"
         android:dividerHeight="1px"

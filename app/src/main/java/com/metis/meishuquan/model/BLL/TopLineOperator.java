@@ -33,7 +33,7 @@ public class TopLineOperator {
     private final String NEWS_INFO_URL = "v1.1/News/NewsDetail?";//根据newsId获得详情
     private final String COMMENT_LIST_NEWSID = "v1.1/Comment/CommentList?";//根据newsId获得评论列表
     private final String COMMENT_SUPPORT = "v1.1/Comment/Support?";//赞/踩
-    private final String PUBLISHCOMMENT = "v1.1/Comment/PublishComment?";//发表评论
+
     private final String FAVORITE = "v1.1/Comment/Favorite?";//收藏
     private final String SESSION = MainApplication.userInfo.getCookie();
 
@@ -252,30 +252,4 @@ public class TopLineOperator {
             }
         }
     }
-
-    /**
-     * 发表评论
-     *
-     * @param userid
-     * @param newsId
-     * @param replyCid  不是子评论时默认为0
-     * @param blockType 0头条，1点评，2课程
-     * @param callback
-     */
-    public void publishComment(int userid, int newsId, String content, int replyCid, int blockType, ApiOperationCallback<ReturnInfo<String>> callback) {
-        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
-            if (flag) {
-                StringBuffer path = new StringBuffer(PUBLISHCOMMENT);
-                path.append("?userid=" + userid);
-                path.append("&newsid=" + newsId);
-                path.append("&content=" + content);
-                path.append("&replyCid=" + replyCid);
-                path.append("&blockType=" + blockType);
-                ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
-                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
-            }
-        }
-    }
-
-
 }

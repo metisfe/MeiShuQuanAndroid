@@ -17,6 +17,7 @@ public class SharedPreferencesUtil {
     public static final String LOGIN_STATE = "login_state";
     public static final String USER_ROLE = "user_role";
     public static final String USER_LOGIN_INFO = "user_login_info";
+    public static final String COURSE_LIST = "course_list";
 
     private static SharedPreferencesUtil spu = null;
     private Context context;
