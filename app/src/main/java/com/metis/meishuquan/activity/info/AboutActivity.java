@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.view.shared.MyInfoBtn;
@@ -36,9 +37,14 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.about_score:
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("market://details?id=" + this.getPackageName()));
-                startActivity(intent);
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("market://details?id=" + this.getPackageName()));
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Toast.makeText(this, "no activity found to handle this intent", Toast.LENGTH_SHORT).show();
+                }
+
                 break;
         }
     }

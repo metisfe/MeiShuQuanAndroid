@@ -1,5 +1,7 @@
 package com.metis.meishuquan.model.BLL;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.google.common.reflect.TypeToken;
@@ -7,17 +9,25 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.commons.Item;
+import com.metis.meishuquan.model.commons.Profile;
 import com.metis.meishuquan.model.commons.Result;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.enums.FileUploadTypeEnum;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
+import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SystemUtil;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
 
+import org.apache.http.Header;
+import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpGet;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +61,36 @@ public class UserInfoOperator {
 
     }
 
-    public void updateUserInfo (String uid, Map<String, String> map) {
+    public void updateUserProfile (final long userId, String path) {
+        Bitmap bmp = BitmapFactory.decodeFile(path);
+        byte[] data = ImageLoaderUtils.BitmapToByteArray(bmp);
+        String defineStr = data.length + "," + 1 + "," + data.length;
+        AssessOperator.getInstance().fileUpload(FileUploadTypeEnum.IMG, defineStr, data, new ServiceFilterResponseCallback () {
+
+            @Override
+            public void onResponse(ServiceFilterResponse response, Exception exception) {
+                if (response != null) {
+                    String result = response.getContent();
+                    Log.v(TAG, "updateUserProfile " + result);
+                    Gson gson = new Gson();
+                    Result<List<Profile>> profileResult = gson.fromJson(result, new TypeToken<Result<List<Profile>>>(){}.getType());
+                    updateUserProfileByUrl(userId, profileResult.getData().get(0).getOriginalImage());
+                    /*if (listener != null) {
+                        listener.onGet(true, profileResult.getData());
+                    }*/
+                }
+                Log.v(TAG, "onResponse " + response.getContent());
+            }
+        });
+    }
+
+    public void updateUserProfileByUrl (long userId, String url) {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put(User.KEY_USERAVATAR, URLEncoder.encode(url));
+        updateUserInfo(userId, map);
+    }
+
+    public void updateUserInfo (long uid, Map<String, String> map) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             JsonObject json = new JsonObject();
             json.addProperty(KEY_USER_ID, uid);

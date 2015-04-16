@@ -30,14 +30,18 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.InputActivity;
 import com.metis.meishuquan.fragment.assess.ChooseCityFragment;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
+import com.metis.meishuquan.model.BLL.UserOperator;
 import com.metis.meishuquan.model.assess.City;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.view.shared.BaseDialog;
 import com.metis.meishuquan.view.shared.MyInfoBtn;
 import com.metis.meishuquan.view.shared.TitleView;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -169,7 +173,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                 if (resultCode == RESULT_OK) {
                     CharSequence nick = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR);
                     mNickView.setSecondaryText(nick);
-                    updateInfo("name", nick.toString());
+                    updateInfo("UserNickName", nick.toString());
                 }
 
                 break;
@@ -190,6 +194,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                 if (resultCode == RESULT_OK) {
                     CharSequence content = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR);
                     mCvView.setSecondaryText(content);
+                    updateInfo(User.KEY_SELFINTRODUCE, content.toString());
                 }
                 break;
             case InputActivity.REQUEST_CODE_DEPARTMENT_ADDRESS:
@@ -211,8 +216,17 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                 }
                 break;
             case 222:
+                Log.v(TAG, "onActivityResult 222 " + data.getData());
                 break;
             case 333:
+                final String path = ImageLoaderUtils.getFilePathFromUri(this, data.getData());
+                final int profileSize = getResources().getDimensionPixelSize(R.dimen.info_profile_size);
+                ImageLoaderUtils.getImageLoader(this).displayImage(ImageDownloader.Scheme.FILE.wrap(path), mProfile, ImageLoaderUtils.getRoundDisplayOptions(profileSize));
+                UserInfoOperator.getInstance().updateUserProfile(MainApplication.userInfo.getUserId(), path);
+                //UserInfoOperator.getInstance().updateUserProfileByUrl(MainApplication.userInfo.getUserId(), "http://ww1.sinaimg.cn/bmiddle/6cd6d028jw1er7i1933eaj20go0cnjs7.jpg");
+
+                File file = new File(path);
+                Log.v(TAG, "onActivityResult 333 " + file.getAbsolutePath());
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -231,7 +245,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
     public void updateInfo (String key, String value) {
         Map<String, String> map = new HashMap<String, String>();
         map.put(key, value);
-        UserInfoOperator.getInstance().updateUserInfo("100001", map);
+        UserInfoOperator.getInstance().updateUserInfo(MainApplication.userInfo.getUserId(), map);
     }
 
     private void fillUserInfo (User user) {
@@ -240,7 +254,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
         mGradeView.setSecondaryText(user.getGrade());
         final int profileSize = getResources().getDimensionPixelSize(R.dimen.info_profile_size);
         ImageLoaderUtils.getImageLoader(this).displayImage(
-                "http://static.228.cn/upload/2015/01/28/AfterTreatment/1422412585979_b3m5-0.jpg",
+                user.getUserAvatar(),
                 mProfile,
                 ImageLoaderUtils.getRoundDisplayOptions(profileSize));
     }
@@ -275,6 +289,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                 } else {
                     mGenderView.setSecondaryText(maleStr);
                 }
+                updateInfo(User.KEY_GENDER, mGenderView.getSecondaryText().toString());
             }
         });
         mDialog = builder.create();
@@ -375,6 +390,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
         @Override
         public void onChoose(City city) {
             mProvienceView.setSecondaryText(city.getGroupName() + "-" + city.getCityName());
+            updateInfo(User.KEY_REGION, "city.getGroupName() + \"-\" + city.getCityName()");
             hideCityFragment();
         }
     };

@@ -150,7 +150,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         mInfoName.setText(user.getName());
         mAttentionCountTv.setText(getString(R.string.my_info_count, user.getAttCount()));
         mFollowersCountTv.setText(getString(R.string.my_info_count, user.getFollowsCount()));
-        ImageLoaderUtils.getImageLoader(getActivity()).displayImage("http://static.228.cn/upload/Image/201501/1422424493077_2582_x.jpg",
+        ImageLoaderUtils.getImageLoader(getActivity()).displayImage(user.getUserAvatar(),
                 mProfileIv,
                 ImageLoaderUtils.getRoundDisplayOptions(profilePix));
     }
