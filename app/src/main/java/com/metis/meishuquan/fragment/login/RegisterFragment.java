@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +24,20 @@ import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.BLL.UserOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.enums.LoginStateEnum;
+import com.metis.meishuquan.model.enums.RequestCodeTypeEnum;
+import com.metis.meishuquan.model.login.LoginUserData;
 import com.metis.meishuquan.model.login.RegisterCode;
+import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
+import com.metis.meishuquan.util.Utils;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import java.util.regex.Pattern;
+
+import io.rong.imkit.RongIM;
+import io.rong.imlib.RongIMClient;
 
 /**
  * Fragment:用户注册
@@ -43,9 +52,15 @@ public class RegisterFragment extends Fragment {
     private TimeCount time;
     private UserOperator userOperator;
     private String requestCode = "";
+    private int selectedId;//身份
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        //接收身份信息
+        if (getArguments() != null) {
+            selectedId = getArguments().getInt("selectedId", -1);
+        }
+
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_user_register, null, false);
         initView(rootView);
         initEvent();
@@ -117,18 +132,71 @@ public class RegisterFragment extends Fragment {
                 if (!verCode.equals("")) {
                     int i = verCode.compareTo(requestCode);
                     if (i == 0) {
-                        userOperator.register(phone, requestCode, pwd, new ApiOperationCallback<ReturnInfo<String>>() {
+                        if (selectedId == -1) {
+                            Log.e("roleId", "selectedRoleId为-1");
+                        }
+                        userOperator.register(phone, requestCode, pwd, selectedId, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+//                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
+//                                    //修改本地登录状态
+//                                    SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(getActivity());
+//                                    spu.update(SharedPreferencesUtil.LOGIN_STATE, String.valueOf(true));
+//                                    Toast.makeText(getActivity(), "注册成功", Toast.LENGTH_SHORT).show();
+//                                    getActivity().finish();
+//                                } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
+//                                    //TODO:根据返回的errorcode判断注册状态
+//                                    Toast.makeText(getActivity(), "注册失败", Toast.LENGTH_SHORT).show();
+//                                }
+
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                                    //修改本地登录状态
+                                    Gson gson = new Gson();
+                                    String json = gson.toJson(result);
+                                    Log.e("userInfo", json);
+                                    //json to object
+                                    final LoginUserData user = gson.fromJson(json, new TypeToken<LoginUserData>() {
+                                    }.getType());
+                                    //set login state
+                                    user.getData().setAppLoginState(LoginStateEnum.YES);
+
+                                    //connect to Rong
+                                    String token = user.getData().getToken();
+                                    if (!token.isEmpty() && token.length() >= 50) {
+                                        MainApplication.rongConnect(token, new RongIMClient.ConnectCallback() {
+                                            @Override
+                                            public void onSuccess(String s) {
+                                                if (MainApplication.rongIM != null) {
+                                                    MainApplication.rongIM.setReceiveMessageListener(new RongIM.OnReceiveMessageListener() {
+                                                        @Override
+                                                        public void onReceived(RongIMClient.Message message, int i) {
+                                                            user.getData().setRongLoginState(LoginStateEnum.YES);
+                                                            ChatManager.onReceive(message);
+                                                        }
+                                                    });
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onError(ErrorCode errorCode) {
+                                                Log.e("rongConnect", errorCode.toString());
+                                            }
+                                        });
+                                    }
+
+                                    //add userInfo into sharedPreferences
+                                    Gson gson1 = new Gson();
+                                    String finalUserInfoJson = gson1.toJson(user);
                                     SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(getActivity());
-                                    spu.update(SharedPreferencesUtil.LOGIN_STATE, String.valueOf(true));
-                                    Toast.makeText(getActivity(), "注册成功", Toast.LENGTH_SHORT).show();
+                                    spu.update(SharedPreferencesUtil.USER_LOGIN_INFO, finalUserInfoJson);
+
+                                    //update field of UserInfo to main application
+                                    MainApplication.userInfo = user.getData();
+
+                                    //hide input method
+                                    Utils.hideInputMethod(getActivity(), etPwd);
+                                    Utils.hideInputMethod(getActivity(), etUserName);
+                                    Toast.makeText(MainApplication.UIContext, "注册成功", Toast.LENGTH_SHORT).show();
                                     getActivity().finish();
-                                } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
-                                    //TODO:根据返回的errorcode判断注册状态
-                                    Toast.makeText(getActivity(), "注册失败", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -143,6 +211,7 @@ public class RegisterFragment extends Fragment {
         });
 
         btnGetVerificationCode.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 String phone = etUserName.getText().toString().trim();
@@ -156,7 +225,7 @@ public class RegisterFragment extends Fragment {
                     return;
                 }
                 time.start();//开始计时
-                userOperator.getRequestCode(phone, new ApiOperationCallback<ReturnInfo<String>>() {
+                userOperator.getRequestCode(phone, RequestCodeTypeEnum.REGISTOR, new ApiOperationCallback<ReturnInfo<String>>() {
                     @Override
                     public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                         if (result != null && result.getInfo().equals(String.valueOf(0))) {

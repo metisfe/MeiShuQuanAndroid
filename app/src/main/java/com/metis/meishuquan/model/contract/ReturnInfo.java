@@ -15,5 +15,19 @@ public class ReturnInfo<E> {
         return "";
     }
 
+    public String getErrorCode() {
+        if (option != null && option.errorCode != null) {
+            return option.errorCode;
+        }
+        return "";
+    }
+
+    public String getMessage() {
+        if (option != null && option.message != null) {
+            return option.message;
+        }
+        return "";
+    }
+
     private E data;
 }

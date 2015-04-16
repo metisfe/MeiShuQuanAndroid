@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.enums.RequestCodeTypeEnum;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.SystemUtil;
@@ -67,40 +68,43 @@ public class UserOperator {
         }
     }
 
-    public void register(String phone, String code, String pwd, ApiOperationCallback<ReturnInfo<String>> callback) {
+    public void register(String phone, String code, String pwd, int roleId, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuilder PATH = new StringBuilder(REGISTER);
                 PATH.append("phone=" + phone);
                 PATH.append("&code=" + code);
                 PATH.append("&pwd=" + pwd);
+                PATH.append("&roleId=" + roleId);
                 PATH.append("&session=" + SESSION);
                 List<Pair<String, String>> pram = new ArrayList<>();
                 Pair<String, String> pair1 = new Pair<>("phone", phone);
                 Pair<String, String> pair2 = new Pair<>("code", code);
                 Pair<String, String> pair3 = new Pair<>("pwd", pwd);
+                Pair<String, String> pair4 = new Pair<>("roleId", String.valueOf(roleId));
                 pram.add(pair1);
                 pram.add(pair2);
                 pram.add(pair3);
+                pram.add(pair4);
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpPost.METHOD_NAME, pram, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
         }
     }
 
 
-    public void getRequestCode(String phone, int operation, ApiOperationCallback<ReturnInfo<String>> callback) {
+    public void getRequestCode(String phone, RequestCodeTypeEnum operation, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuilder PATH = new StringBuilder(REQUESTCODE);
                 PATH.append("phone=" + phone);
-                PATH.append("&operation=" + operation);
+                PATH.append("&operation=" + operation.getVal());
                 PATH.append("&session=" + SESSION);
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
         }
     }
 
-    public void resetPwd(String phone, String newPwd, ApiOperationCallback<ReturnInfo<String>> callback) {
+    public void forgetPwd(String phone, String newPwd, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuilder PATH = new StringBuilder(RESETPWD);

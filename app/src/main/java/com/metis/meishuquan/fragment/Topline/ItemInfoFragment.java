@@ -296,6 +296,7 @@ public class ItemInfoFragment extends Fragment {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.add(R.id.content_container, commentListFragment);
+                fragmentTransaction.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
                 fragmentTransaction.commit();
             }
         });

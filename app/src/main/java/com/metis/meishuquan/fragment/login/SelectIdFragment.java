@@ -45,8 +45,7 @@ public class SelectIdFragment extends Fragment {
     private FragmentManager fm;
     private IdTypeEnum idTypeEnum = null;
     private UserRole userRole;
-    private Identity identity;
-
+    private Identity identity = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -114,19 +113,19 @@ public class SelectIdFragment extends Fragment {
         btnNext.setOnClickListener(new View.OnClickListener() {//下一步
             @Override
             public void onClick(View view) {
-                if (idTypeEnum == null) {
+                if (identity == null) {
                     Toast.makeText(MainApplication.UIContext, "请选择身份", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 RegisterFragment registerFragment = new RegisterFragment();
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("identity", identity);
+                bundle.putInt("selectedId", identity.getId());
                 registerFragment.setArguments(bundle);
 
                 FragmentTransaction ft = fm.beginTransaction();
+                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
                 ft.add(R.id.id_rl_login_main, registerFragment);
                 ft.addToBackStack(null);
-                //TODO:动画
                 ft.commit();
             }
         });

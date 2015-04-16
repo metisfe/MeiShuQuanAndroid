@@ -96,8 +96,7 @@ public class LoginFragment extends Fragment {
                             user.getData().setAppLoginState(LoginStateEnum.YES);
 
                             //connect to Rong
-                            //String token = user.getData().getToken();
-                            String token = "vHlcG4hORBuPENRljGB6MoGn6Ui0bBlr+zHn5QT+0f+TueCwMF65klGMwsE+P2SPd8eazBQpOPpagJ1/lOVNMg==";
+                            String token = user.getData().getToken();
                             if (!token.isEmpty() && token.length() >= 50) {
                                 MainApplication.rongConnect(token, new RongIMClient.ConnectCallback() {
                                     @Override
@@ -128,7 +127,10 @@ public class LoginFragment extends Fragment {
 
                             //update field of UserInfo to main application
                             MainApplication.userInfo = user.getData();
+
+                            //hide input method
                             Utils.hideInputMethod(getActivity(), etPwd);
+                            Utils.hideInputMethod(getActivity(), etUserName);
                             Toast.makeText(MainApplication.UIContext, "登录成功", Toast.LENGTH_SHORT).show();
                             getActivity().finish();
                         } else {
@@ -142,8 +144,14 @@ public class LoginFragment extends Fragment {
         btnRegister.setOnClickListener(new View.OnClickListener() {//注册
             @Override
             public void onClick(View view) {
+                //hide input method
+                Utils.hideInputMethod(getActivity(), etPwd);
+                Utils.hideInputMethod(getActivity(), etUserName);
+
+                //turn to selectIdFragment
                 SelectIdFragment selectIdFragment = new SelectIdFragment();
                 FragmentTransaction ft = fragmentManager.beginTransaction();
+                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
                 ft.add(R.id.id_rl_login_main, selectIdFragment);
                 ft.addToBackStack(null);
                 ft.commit();
@@ -153,6 +161,10 @@ public class LoginFragment extends Fragment {
         btnResetPwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //hide input method
+                Utils.hideInputMethod(getActivity(), etPwd);
+                Utils.hideInputMethod(getActivity(), etUserName);
+
                 ResetPwdFragment resetPwdFragment = new ResetPwdFragment();
                 FragmentTransaction ft = fragmentManager.beginTransaction();
                 ft.add(R.id.id_rl_login_main, resetPwdFragment);

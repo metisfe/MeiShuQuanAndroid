@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.BLL.UserOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.enums.RequestCodeTypeEnum;
 import com.metis.meishuquan.model.login.RegisterCode;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -107,7 +108,7 @@ public class ResetPwdFragment extends Fragment {
                 if (!verCode.equals("")) {
                     int i = verCode.compareTo(code);
                     if (i == 0) {
-                        userOperator.resetPwd(phone, pwd, new ApiOperationCallback<ReturnInfo<String>>() {
+                        userOperator.forgetPwd(phone, pwd, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
@@ -149,7 +150,7 @@ public class ResetPwdFragment extends Fragment {
                     return;
                 }
                 time.start();//开始计时
-                userOperator.getRequestCode(phone, new ApiOperationCallback<ReturnInfo<String>>() {
+                userOperator.getRequestCode(phone, RequestCodeTypeEnum.RESETPWD, new ApiOperationCallback<ReturnInfo<String>>() {
                     @Override
                     public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                         if (result != null && result.getInfo().equals(String.valueOf(0))) {
@@ -158,6 +159,11 @@ public class ResetPwdFragment extends Fragment {
                             RegisterCode registerCode = gson.fromJson(json, new TypeToken<RegisterCode>() {
                             }.getType());
                             code = registerCode.getData();
+                        } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
+                            if (result.getErrorCode().equals("0")) {
+                                Toast.makeText(getActivity(), result.getMessage(), Toast.LENGTH_SHORT).show();
+                                time.onFinish();
+                            }
                         }
                     }
                 });
