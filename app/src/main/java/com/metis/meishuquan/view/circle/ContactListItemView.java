@@ -79,7 +79,7 @@ public class ContactListItemView extends LinearLayout {
             this.smartImageView.setImageResource(resourceId);
         } else {
             //if image url missing then use rongcloud to get real picture
-            if (TextUtils.isEmpty(url)) {
+            if (TextUtils.isEmpty(url) && MainApplication.rongClient != null) {
                 MainApplication.rongClient.getUserInfo(uid, new RongIMClient.GetUserInfoCallback() {
                     @Override
                     public void onSuccess(final RongIMClient.UserInfo userInfo) {

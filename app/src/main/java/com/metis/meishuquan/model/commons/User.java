@@ -212,14 +212,6 @@ public class User implements Serializable {
         this.appLoginState = appLoginState;
     }
 
-    public LoginStateEnum getRongLoginState() {
-        return rongLoginState;
-    }
-
-    public void setRongLoginState(LoginStateEnum rongLoginState) {
-        this.rongLoginState = rongLoginState;
-    }
-
     public int getAttCount() {
         //TODO
         return 0;

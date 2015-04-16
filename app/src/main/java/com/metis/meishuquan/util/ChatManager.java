@@ -67,7 +67,7 @@ public class ChatManager {
             switch (message.getConversationType()) {
                 case PRIVATE:
                     final String uid = message.getSenderUserId();
-                    if (!ChatManager.contactCache.containsKey(uid)) {
+                    if (!ChatManager.contactCache.containsKey(uid) && MainApplication.rongClient != null) {
                         MainApplication.rongClient.getUserInfo(uid, new RongIMClient.GetUserInfoCallback() {
                             @Override
                             public void onSuccess(RongIMClient.UserInfo userInfo) {
@@ -87,7 +87,7 @@ public class ChatManager {
                     break;
                 case DISCUSSION:
                     final String targetId = message.getTargetId();
-                    if (!ChatManager.discussionCache.containsKey(targetId)) {
+                    if (!ChatManager.discussionCache.containsKey(targetId) && MainApplication.rongClient != null) {
                         MainApplication.rongClient.getDiscussion(targetId, new RongIMClient.GetDiscussionCallback() {
 
                             @Override

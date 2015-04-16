@@ -3,7 +3,9 @@ package com.metis.meishuquan;
 import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -51,15 +53,35 @@ public class MainApplication extends Application {
         DataProvider.setDefaultUIThreadHandler(Handler);
         ApiDataProvider.initProvider();
         RongIM.init(this);
-        //String token = "vHlcG4hORBuPENRljGB6MoGn6Ui0bBlr+zHn5QT+0f+TueCwMF65klGMwsE+P2SPd8eazBQpOPpagJ1/lOVNMg==";
+        rongConnect(userInfo.getToken());
     }
 
     /**
      * 连接融云服务器
      */
-    public static void rongConnect(String token, RongIMClient.ConnectCallback connectCallback) {
+    public static void rongConnect(String token) {
+        if (TextUtils.isEmpty(token) || token.length() < 50) return;
         try {
-            rongIM = RongIM.connect(token, connectCallback);
+            rongIM = RongIM.connect(token, new RongIMClient.ConnectCallback() {
+                @Override
+                public void onSuccess(String s) {
+                    if (MainApplication.rongIM != null) {
+                        MainApplication.rongIM.setReceiveMessageListener(new RongIM.OnReceiveMessageListener() {
+                            @Override
+                            public void onReceived(RongIMClient.Message message, int i) {
+                                ChatManager.onReceive(message);
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onError(ErrorCode errorCode) {
+                    Log.e("rongConnect", errorCode.toString());
+                    MainApplication.rongClient = null;
+                    MainApplication.rongIM = null;
+                }
+            });
             rongClient = rongIM.getRongIMClient();
         } catch (Exception e) {
             e.printStackTrace();

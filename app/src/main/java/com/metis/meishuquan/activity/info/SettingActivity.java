@@ -45,8 +45,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.setting_logout:
                 //disconnect rong
-                if (MainApplication.rongClient != null) {
-                    MainApplication.rongClient.disconnect();
+                if (MainApplication.rongIM != null) {
+                    MainApplication.rongIM.disconnect();
+                    MainApplication.rongIM = null;
+                    MainApplication.rongClient = null;
                 }
 
                 //clear userinfo of MainApplication

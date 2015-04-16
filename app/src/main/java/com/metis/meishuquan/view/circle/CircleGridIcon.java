@@ -44,7 +44,7 @@ public class CircleGridIcon extends RelativeLayout {
                 imageView.setImageUrl(url);
             }
         } else {
-            if (TextUtils.isEmpty(url)) {
+            if (TextUtils.isEmpty(url) && MainApplication.rongClient != null) {
                 MainApplication.rongClient.getUserInfo(uid, new RongIMClient.GetUserInfoCallback() {
                     @Override
                     public void onSuccess(final RongIMClient.UserInfo userInfo) {

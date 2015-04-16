@@ -62,7 +62,7 @@ public class ChatConfigActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //TODO: looks like rong's bug
-                MainApplication.rongIM.clearMessages(ChatConfigActivity.this, type, targetId);
+                if (MainApplication.rongIM != null) MainApplication.rongIM.clearMessages(ChatConfigActivity.this, type, targetId);
             }
         });
 
@@ -84,7 +84,7 @@ public class ChatConfigActivity extends Activity {
     }
 
     private void refreshDataFromRong() {
-        if (type == RongIMClient.ConversationType.DISCUSSION) {
+        if (type == RongIMClient.ConversationType.DISCUSSION && MainApplication.rongClient != null) {
             MainApplication.rongClient.getDiscussion(targetId, new RongIMClient.GetDiscussionCallback() {
                 @Override
                 public void onSuccess(RongIMClient.Discussion discussion) {
@@ -184,7 +184,7 @@ public class ChatConfigActivity extends Activity {
                     titleBar.setRightButton("confirm", 0, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (!TextUtils.isEmpty(editText.getText().toString()))
+                            if (!TextUtils.isEmpty(editText.getText().toString()) &&  MainApplication.rongClient != null)
                             {
                                 final ProgressDialog progressDialog = new ProgressDialog(ChatConfigActivity.this);
                                 progressDialog.show();
@@ -224,7 +224,7 @@ public class ChatConfigActivity extends Activity {
                 CircleGridIcon icon = (CircleGridIcon) view;
                 switch (icon.type) {
                     case 0:
-                        if (adapter.isEditMode && position > 0) {
+                        if (adapter.isEditMode && position > 0 && MainApplication.rongClient != null) {
                             //remove item
                             final ProgressDialog progressDialog = new ProgressDialog(ChatConfigActivity.this);
                             progressDialog.show();

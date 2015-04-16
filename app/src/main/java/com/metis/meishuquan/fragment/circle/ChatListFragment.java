@@ -113,7 +113,7 @@ public class ChatListFragment extends CircleBaseFragment {
     }
 
     private void refreshList() {
-        if (this.listView != null && adapter != null) {
+        if (this.listView != null && adapter != null && MainApplication.rongClient != null) {
             List<RongIMClient.Conversation> clist = MainApplication.rongClient.getConversationList();
             if (clist != null) adapter.data = clist;
             ViewUtils.delayExecute(new Runnable() {
@@ -142,7 +142,15 @@ public class ChatListFragment extends CircleBaseFragment {
             }
         });
 
-        adapter.data = MainApplication.rongClient.getConversationList();
+        if (MainApplication.rongClient!=null)
+        {
+            adapter.data = MainApplication.rongClient.getConversationList();
+        }
+        else
+        {
+            //TODO: tell user to login
+        }
+
         listView.setAdapter(adapter);
         return rootView;
     }

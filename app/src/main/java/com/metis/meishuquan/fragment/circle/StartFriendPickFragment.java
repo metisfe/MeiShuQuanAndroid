@@ -166,6 +166,7 @@ public class StartFriendPickFragment extends Fragment {
             ulist.add(targetId);
         }
 
+        if (MainApplication.rongClient == null) return;
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.show();
         MainApplication.rongClient.createDiscussion("Not Set", ulist, new RongIMClient.CreateDiscussionCallback() {
@@ -208,6 +209,7 @@ public class StartFriendPickFragment extends Fragment {
     private void addMemberToDiscussion() {
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.show();
+        if (MainApplication.rongClient==null) return;
         //first we need to check the existing member list to prevent crash
         MainApplication.rongClient.getDiscussion(targetId, new RongIMClient.GetDiscussionCallback() {
             @Override
@@ -220,7 +222,7 @@ public class StartFriendPickFragment extends Fragment {
 
                 final int totalCount = discussion.getMemberIdList().size() + ulist.size();
 
-                if (ulist.size() > 0) {
+                if (ulist.size() > 0 && MainApplication.rongClient != null) {
                     MainApplication.rongClient.addMemberToDiscussion(targetId, ulist, new RongIMClient.OperationCallback() {
                         @Override
                         public void onSuccess() {

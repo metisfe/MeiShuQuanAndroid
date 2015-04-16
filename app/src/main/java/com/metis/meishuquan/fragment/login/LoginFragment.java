@@ -97,27 +97,7 @@ public class LoginFragment extends Fragment {
 
                             //connect to Rong
                             String token = user.getData().getToken();
-                            if (!token.isEmpty() && token.length() >= 50) {
-                                MainApplication.rongConnect(token, new RongIMClient.ConnectCallback() {
-                                    @Override
-                                    public void onSuccess(String s) {
-                                        if (MainApplication.rongIM != null) {
-                                            MainApplication.rongIM.setReceiveMessageListener(new RongIM.OnReceiveMessageListener() {
-                                                @Override
-                                                public void onReceived(RongIMClient.Message message, int i) {
-                                                    user.getData().setRongLoginState(LoginStateEnum.YES);
-                                                    ChatManager.onReceive(message);
-                                                }
-                                            });
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onError(ErrorCode errorCode) {
-                                        Log.e("rongConnect", errorCode.toString());
-                                    }
-                                });
-                            }
+                            MainApplication.rongConnect(token);
 
                             //add userInfo into sharedPreferences
                             Gson gson1 = new Gson();
