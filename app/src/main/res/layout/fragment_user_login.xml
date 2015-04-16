@@ -50,7 +50,7 @@
                 android:layout_height="50dp"
                 android:background="@null"
                 android:inputType="number"
-                android:hint="请输入邮箱/手机号" />
+                android:hint="请输入手机号" />
 
             <TextView
                 android:id="@+id/id_horizontal_line"

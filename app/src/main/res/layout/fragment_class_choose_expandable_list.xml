@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray"
+    android:background="#cccccc"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -12,24 +12,43 @@
 
         <Button
             android:id="@+id/id_assess_city_btn_back"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:background="#2d2a40"
-            android:text="返回"
-            android:textColor="#CFD5E0"
-            android:textSize="16sp" />
+            android:background="@drawable/bg_btn_arrow_left" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="地区"
-            android:textColor="#fd6d6d"
+            android:textColor="#fb6d6d"
             android:textSize="18sp" />
 
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#f0f0f0">
+
+        <TextView
+            android:id="@+id/id_tv_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:text="全部"
+            android:textColor="#424242"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_below="@+id/id_tv_all"
+            android:background="#cccccc" />
     </RelativeLayout>
 
     <ExpandableListView

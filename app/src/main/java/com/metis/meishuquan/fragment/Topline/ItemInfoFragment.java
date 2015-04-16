@@ -56,7 +56,6 @@ import java.util.StringTokenizer;
 public class ItemInfoFragment extends Fragment {
     private final int LOGINREQUESTCODE = 1001;
 
-    private int newsId = 0;
     private Button btnBack, btnShare;
     private ViewGroup rootView;
     private LinearLayout ll_content;
@@ -70,6 +69,8 @@ public class ItemInfoFragment extends Fragment {
     private RelativeLayout rlSend;
     private boolean isPrivate = false;
 
+    private int newsId = 0;
+    private int userId = MainApplication.userInfo.getUserId();
     private FragmentManager fm;
 
     @Override
@@ -122,7 +123,7 @@ public class ItemInfoFragment extends Fragment {
         contentScrollView = (ScrollView) rootView.findViewById(R.id.id_scrollview_info_content);
 
         editText = (EditText) rootView.findViewById(R.id.id_comment_edittext);
-        imgPrivate = (ImageView) rootView.findViewById(R.id.id_img_favorite);//分享图标
+        imgPrivate = (ImageView) rootView.findViewById(R.id.id_img_favorite);//收藏图标
 
         fm = getActivity().getSupportFragmentManager();
     }
@@ -308,7 +309,7 @@ public class ItemInfoFragment extends Fragment {
                 if (MainApplication.userInfo.getAppLoginState() == LoginStateEnum.YES) {
                     if (!isPrivate) {
                         //收藏
-                        TopLineOperator.getInstance().newsPrivate(1, newsId, 0, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
+                        TopLineOperator.getInstance().newsPrivate(userId, newsId, 0, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
@@ -320,7 +321,7 @@ public class ItemInfoFragment extends Fragment {
                         });
                     } else {
                         //取消收藏
-                        TopLineOperator.getInstance().newsPrivate(1, newsId, 0, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
+                        TopLineOperator.getInstance().newsPrivate(userId, newsId, 0, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {

@@ -21,6 +21,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,14 +60,16 @@ public class CommentListFragment extends Fragment {
     private TextView tvCommentCount;
     private Button btnBack;
     private RelativeLayout rl_WriteComment, rl_Commentlist, rl_Share, rl_Private;
+    private ImageView imgPrivate;
     private EditText editText;//评论或回复输入框
     private RelativeLayout rlSend, rlInput;//发送
 
 
-    private int userId = 1;
+    private int userId = MainApplication.userInfo.getUserId();
     private int newsId = 0;
     private int totalCommentCount = 0;
     private int childCommentId = -1;
+    private boolean isPrivate = false;
     private List<Comment> lstAllComments = new ArrayList<Comment>();
     private CommentsAdapter adapter;
     private FragmentManager fm;
@@ -120,6 +123,7 @@ public class CommentListFragment extends Fragment {
         rl_Share = (RelativeLayout) rootView.findViewById(R.id.id_rl_share);//分享
         rl_Private = (RelativeLayout) rootView.findViewById(R.id.id_rl_private);//收藏
         tvCommentCount = (TextView) rootView.findViewById(R.id.id_tv_topline_info_comment_count);//评论数
+        imgPrivate = (ImageView) rootView.findViewById(R.id.id_img_favorite);//收藏图标
 
         //设置评论数
         if (totalCommentCount > 0) {
@@ -187,16 +191,36 @@ public class CommentListFragment extends Fragment {
         this.rl_Private.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//收藏
-                TopLineOperator topLineOperator = TopLineOperator.getInstance();
-                topLineOperator.newsPrivate(0, newsId, 0, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
-                    @Override
-                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                            Toast.makeText(MainApplication.UIContext, "收藏成功", Toast.LENGTH_SHORT).show();
-                        }
+                if (MainApplication.userInfo.getAppLoginState() == LoginStateEnum.YES) {
+                    if (!isPrivate) {
+                        //收藏
+                        TopLineOperator.getInstance().newsPrivate(userId, newsId, 0, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
+                            @Override
+                            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                    Toast.makeText(MainApplication.UIContext, "收藏成功", Toast.LENGTH_SHORT).show();
+                                    isPrivate = true;
+                                    imgPrivate.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_topline_private));
+                                }
+                            }
+                        });
+                    } else {
+                        //取消收藏
+                        TopLineOperator.getInstance().newsPrivate(userId, newsId, 0, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
+                            @Override
+                            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                    Toast.makeText(MainApplication.UIContext, "取消收藏", Toast.LENGTH_SHORT).show();
+                                    isPrivate = false;
+                                    imgPrivate.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_topline_unprivate));
+                                }
+                            }
+                        });
                     }
-                });
-
+                } else {
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    getActivity().startActivity(intent);
+                }
             }
         });
 

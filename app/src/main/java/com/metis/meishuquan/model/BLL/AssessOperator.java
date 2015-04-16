@@ -222,7 +222,6 @@ public class AssessOperator {
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
         }
-
     }
 
     public byte[] getBitmapByte(Bitmap bitmap) {
@@ -244,7 +243,7 @@ public class AssessOperator {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuilder PATH = new StringBuilder(Region);
-                PATH.append("&session=" + SESSION);
+                PATH.append("?session=" + SESSION);
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
@@ -253,8 +252,10 @@ public class AssessOperator {
                                     Gson gson = new Gson();
                                     String json = gson.toJson(result);
                                     //缓存至本地
-                                    SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
-                                    spu.add(SharedPreferencesUtil.REGION, json);
+                                    if (!json.isEmpty()) {
+                                        SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
+                                        spu.add(SharedPreferencesUtil.REGION, json);
+                                    }
                                 }
                             }
                         });

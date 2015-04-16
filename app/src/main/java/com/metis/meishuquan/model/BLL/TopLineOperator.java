@@ -56,11 +56,11 @@ public class TopLineOperator {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {//判断网络状态
             //加载网络数据
             if (flag) {
-                StringBuilder PATH = new StringBuilder(COMMENT_LIST_NEWSID);
+                StringBuilder PATH = new StringBuilder(CHANNELLIST_URL);
                 PATH.append("userId=" + userId);
                 PATH.append("&type=" + type);
                 PATH.append("&session=" + SESSION);
-                ApiDataProvider.getmClient().invokeApi(CHANNELLIST_URL, null,
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null,
                         HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(),
                         new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
@@ -83,7 +83,7 @@ public class TopLineOperator {
                                         e.printStackTrace();
                                     }
                                 } else {
-                                    Log.e("addChannelItemsToLoacal", "网络状态码不为0,头条频道缓存失败");
+                                    Log.e("ChannelItems", "result为空");
                                 }
                             }
                         });

@@ -30,13 +30,15 @@ public class ExpandeAdapter extends BaseExpandableListAdapter {
     private static final String PROVINCE = "省份";
     private Context context;
     private LayoutInflater mInflater = null;
-    private AllCity mData = null;
+    private AllCity mData = new AllCity();
 
 
     public ExpandeAdapter(Context context, AllCity mData) {
         this.context = context;
         this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.mData = mData;
+        if (mData != null) {
+            this.mData = mData;
+        }
         changeData();
     }
 

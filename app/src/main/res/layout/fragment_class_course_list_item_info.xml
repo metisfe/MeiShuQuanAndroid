@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#2c2c3f">
+
+    <RelativeLayout
+        android:id="@+id/id_rl_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="44dp">
+
+        <Button
+            android:id="@+id/id_assess_city_btn_back"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_btn_arrow_left" />
+
+        <RelativeLayout
+            android:id="@+id/id_rl_data_from"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_centerInParent="true">
+
+            <ImageView
+                android:id="@+id/id_img_dynamic"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/default_user_dynamic" />
+
+            <TextView
+                android:id="@+id/id_tv_assess_create_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/id_img_dynamic"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/id_img_dynamic"
+                android:text="相关机构"
+                android:textColor="#fb6d6d"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/id_img_dynamic"
+                android:layout_marginBottom="-5dp"
+                android:layout_marginLeft="7dp"
+                android:layout_toRightOf="@+id/id_img_dynamic"
+                android:text="2014-11-11"
+                android:textColor="#cfd5ec"
+                android:textSize="10sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/id_img_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/id_rl_title_bar"
+        android:layout_marginTop="90dp">
+
+        <ImageView
+            android:id="@+id/id_img_photo"
+            android:layout_width="match_parent"
+            android:layout_height="275dp"
+            android:background="@drawable/img_topline_default"
+            android:scaleType="centerCrop" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/id_img_content"
+        android:layout_marginTop="45dp">
+
+        <RelativeLayout
+            android:id="@+id/id_rl_index"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="15dp">
+
+            <TextView
+                android:id="@+id/id_tv_img_index"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="1 "
+                android:textColor="#f0f0f0"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/id_tv_total_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/id_tv_img_index"
+                android:text="/12"
+                android:textColor="#f0f0f0"
+                android:textSize="10sp" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/id_vertical_line"
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@+id/id_rl_index"
+            android:background="#cccccc" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="15dp"
+            android:layout_toRightOf="@+id/id_vertical_line"
+            android:scrollbars="none">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="fill_horizontal"
+                android:text="央视网消息(新闻联播)：国家主席习近平4月14日在人民大会堂接受9国新任驻华大使递交国书。他们是：马拉维驻华大使纳蒙德维、中非驻华大使姆巴佐阿、汤加驻华大使乌塔阿图、英国驻华大使吴百纳、泰国驻华大使醍乐堃、南非驻华大使姆西曼、哈萨克斯坦驻华大使努雷舍夫、韩国驻华大使金章洙、安提瓜和巴布达驻华大使斯图亚特-杨。
+
+　　习近平欢迎外国使节们来华履新，请他们转达对各有关国家领导人和人民的诚挚问候和良好祝愿。习近平表示，中国愿继续加强与各国的友好务实合作，并共同为维护人类和平、促进世界繁荣而努力。中国政府将为各位使节履职提供便利和支持，希望各位使节为推动中国同有关国家双边关系发展、促进中国同有关国家人民之间的友谊作出积极贡献。"
+                android:textColor="#f0f0f0"
+                android:textSize="12sp" />
+        </ScrollView>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

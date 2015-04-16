@@ -37,7 +37,7 @@ public class ChooseCityFragment extends Fragment {
     private Button btnBack;
     private SearchView searchView;
     private ExpandeAdapter adapter;
-    private AllCity mAllCity;
+    private AllCity mAllCity = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -129,8 +129,11 @@ public class ChooseCityFragment extends Fragment {
     private void getData() {
         SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
         String json = spu.getStringByKey(SharedPreferencesUtil.REGION);
-        Gson gson = new Gson();
-        mAllCity = gson.fromJson(json, new TypeToken<AllCity>() {
-        }.getType());
+        if (!json.isEmpty()) {
+            Gson gson = new Gson();
+            mAllCity = gson.fromJson(json, new TypeToken<AllCity>() {
+            }.getType());
+        }
+
     }
 }

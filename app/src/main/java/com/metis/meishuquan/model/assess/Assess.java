@@ -1,6 +1,6 @@
 package com.metis.meishuquan.model.assess;
 
-import com.metis.meishuquan.model.login.User;
+import com.metis.meishuquan.model.commons.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ public class Assess {
 
     private OriginalImage originalImage;
 
-    private AssessChannel assessChannel=null;
+    private AssessChannel assessChannel = null;
 
     private int region;
 
@@ -37,7 +37,7 @@ public class Assess {
 
     private String desc = "";
 
-    private String group="";//分组
+    private String group = "";//分组
 
     public int getId() {
         return id;
@@ -48,6 +48,9 @@ public class Assess {
     }
 
     public User getUser() {
+        if (user == null) {
+            user = new User();
+        }
         return user;
     }
 
@@ -83,8 +86,8 @@ public class Assess {
     }
 
     public AssessChannel getAssessChannel() {
-        if (assessChannel==null){
-            assessChannel= new AssessChannel();
+        if (assessChannel == null) {
+            assessChannel = new AssessChannel();
         }
         return assessChannel;
     }
