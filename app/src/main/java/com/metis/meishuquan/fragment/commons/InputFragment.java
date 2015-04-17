@@ -49,7 +49,7 @@ public class InputFragment extends Fragment {
                 s.delete(mMaxCount, length);
             }
             updateCountTip(s.length());
-            mInputEt.setSelection(mInputEt.getSelectionEnd());
+            /*mInputEt.setSelection(mInputEt.getSelectionEnd());*/
         }
     };
 
@@ -112,7 +112,8 @@ public class InputFragment extends Fragment {
         mText = cs;
         if (mInputEt != null) {
             mInputEt.setText(mText);
-            mInputEt.selectAll();
+            /*mInputEt.selectAll();
+            mInputEt.selec*/
         }
     }
 

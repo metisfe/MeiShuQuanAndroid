@@ -20,7 +20,14 @@ public class User implements Serializable {
             KEY_GRADE = "Grade",
             KEY_SELFINTRODUCE = "SelfIntroduce",
             KEY_USERAVATAR = "UserAvatar",
-            KEY_REGION = "Region";
+            KEY_REGION = "Region",
+            KEY_SELFSIGNATURE = "SelfSignature",
+            KEY_HOROSCOPE = "Horoscope",
+            KEY_LOCATION = "Location",
+            KEY_LOCATIONADDRESS = "LocationAddress",
+            KEY_GOODSUBJECTS = "GoodSubjects",
+            KEY_ACHIEVEMENT = "Achievement"
+                    ;
 
     @SerializedName("userId")
     private int userId = -1;

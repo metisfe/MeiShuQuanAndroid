@@ -47,6 +47,7 @@
     <string name="about_statement">免责声明</string>
 
     <string name="input_tip">好名字可以让朋友更快记住你</string>
+    <string name="input_complete">完成</string>
 
     <string name="collections_read_count">阅读(%1$d)</string>
     <string name="collections_comment_count">评论(%1$d)</string>

@@ -4,5 +4,5 @@
 
     <dimen name="info_profile_size">50dp</dimen>
 
-    <dimen name="qr_code_size">300dp</dimen>
+    <dimen name="qr_code_size">200dp</dimen>
 </resources>

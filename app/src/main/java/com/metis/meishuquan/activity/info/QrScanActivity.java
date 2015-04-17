@@ -2,6 +2,7 @@ package com.metis.meishuquan.activity.info;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,10 +17,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -33,6 +37,7 @@ import com.google.zxing.PlanarYUVLuminanceSource;
 import com.google.zxing.RGBLuminanceSource;
 import com.google.zxing.ReaderException;
 import com.google.zxing.Result;
+import com.google.zxing.client.android.camera.CameraConfigurationUtils;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeReader;
 import com.metis.meishuquan.R;
@@ -51,6 +56,11 @@ public class QrScanActivity extends BaseActivity implements
         Camera.PreviewCallback,
         View.OnClickListener,
         Camera.AutoFocusCallback{
+
+    private static final int MIN_FRAME_WIDTH = 240;
+    private static final int MIN_FRAME_HEIGHT = 240;
+    private static final int MAX_FRAME_WIDTH = 1200; // = 5/8 * 1920
+    private static final int MAX_FRAME_HEIGHT = 675; // = 5/8 * 1080
 
     private static final String TAG = QrScanActivity.class.getSimpleName();
 
@@ -74,6 +84,11 @@ public class QrScanActivity extends BaseActivity implements
     private int mState = STATE_SCANNING;
 
     private int mDisplayWidth, mDisplayHeight;
+
+    private Point cameraResolution = null;
+    private Point theScreenResolution = null;
+    private Rect framingRectInPreview = null;
+    private Rect framingRect = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +150,7 @@ public class QrScanActivity extends BaseActivity implements
             //mCamera.autoFocus(this);
             mCamera.setOneShotPreviewCallback(this);
             mCamera.startPreview();
+            initFromCameraParameters(mCamera);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -237,16 +253,80 @@ public class QrScanActivity extends BaseActivity implements
         if (rect == null) {
             return null;
         }
-        mCoverView.setRect(rect);
+        //mCoverView.setRect(rect);
         // Go ahead and assume it's YUV rather than die.
+        Log.v(TAG, "buildLuminanceSource "
+                + rect.left + " "
+                + rect.top + " "
+                + rect.right + " "
+                + rect.bottom);
         return new PlanarYUVLuminanceSource(data, width, height, rect.left, rect.top,
                 rect.width(), rect.height(), false);
     }
 
     public synchronized Rect getFramingRectInPreview() {
-        //return new Rect(202, 359, 877, 1559);
+        if (framingRectInPreview == null) {
+            Rect framingRect = getFramingRect();
+            if (framingRect == null) {
+                return null;
+            }
+            Rect rect = new Rect(framingRect);
+            //Point cameraResolution = configManager.getCameraResolution();
+            //Point screenResolution = configManager.getScreenResolution();
+            if (cameraResolution == null || theScreenResolution == null) {
+                // Called early, before init even finished
+                return null;
+            }
+            rect.left = rect.left * cameraResolution.x / theScreenResolution.x;
+            rect.right = rect.right * cameraResolution.x / theScreenResolution.x;
+            rect.top = rect.top * cameraResolution.y / theScreenResolution.y;
+            rect.bottom = rect.bottom * cameraResolution.y / theScreenResolution.y;
+            framingRectInPreview = rect;
+        }
+        return framingRectInPreview;
+    }
 
-        return new Rect(359, 202, 1559, 877);
+    public synchronized Rect getFramingRect() {
+        if (framingRect == null) {
+            if (mCamera == null) {
+                return null;
+            }
+            Point screenResolution = theScreenResolution;
+            if (screenResolution == null) {
+                // Called early, before init even finished
+                return null;
+            }
+
+            int width = findDesiredDimensionInRange(screenResolution.x, MIN_FRAME_WIDTH, MAX_FRAME_WIDTH);
+            int height = findDesiredDimensionInRange(screenResolution.y, MIN_FRAME_HEIGHT, MAX_FRAME_HEIGHT);
+
+            int leftOffset = (screenResolution.x - width) / 2;
+            int topOffset = (screenResolution.y - height) / 2;
+            framingRect = new Rect(leftOffset, topOffset, leftOffset + width, topOffset + height);
+            Log.d(TAG, "Calculated framing rect: " + framingRect);
+        }
+        return framingRect;
+    }
+
+    private static int findDesiredDimensionInRange(int resolution, int hardMin, int hardMax) {
+        int dim = 5 * resolution / 8; // Target 5/8 of each dimension
+        if (dim < hardMin) {
+            return hardMin;
+        }
+        if (dim > hardMax) {
+            return hardMax;
+        }
+        return dim;
+    }
+
+    private void initFromCameraParameters(Camera camera) {
+        Camera.Parameters parameters = camera.getParameters();
+        WindowManager manager = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        Display display = manager.getDefaultDisplay();
+        theScreenResolution = new Point();
+        display.getSize(theScreenResolution);
+        //screenResolution = theScreenResolution;
+        cameraResolution = CameraConfigurationUtils.findBestPreviewSizeValue(parameters, theScreenResolution);
     }
 
     private class DecodeTask extends AsyncTask<byte[], Integer, String> {
@@ -261,8 +341,10 @@ public class QrScanActivity extends BaseActivity implements
             final int qrHeight = getResources().getDimensionPixelSize(R.dimen.qr_code_size);
 
             Log.v(TAG, TAG + " decoding ... " + data.length + " " + bmpWidth + " " + bmpHeight);
-            //1920 1080 3110400
-            return decode(data, 1920, 1080)/*scanningImage(data)*/;
+            if (cameraResolution != null) {
+                decode(data, cameraResolution.x, cameraResolution.y);
+            }
+            return null;
         }
 
         @Override

@@ -115,7 +115,7 @@ public class UserInfoOperator {
                         Log.v(TAG, "updateUserInfo json=" + json);
 
                     } else {
-
+                        Log.v(TAG, "updateUserInfo failed " + exception.getMessage() + " " + response.getContent());
                     }
 
                 }
