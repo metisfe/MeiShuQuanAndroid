@@ -3,7 +3,7 @@
     android:id="@+id/id_scrollview_info_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F7F5F5">
+    android:background="#F0F0F0">
 
     <LinearLayout
         android:id="@+id/id_ll_news_content"
@@ -24,12 +24,20 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp">
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/id_rl_relation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
             <TextView
-                android:id="@+id/id_createtime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#7e7e7e"
-                android:textSize="11sp" />
+                android:text="相关阅读"
+                android:textColor="#fb6d6d"
+                android:textSize="16sp" />
         </LinearLayout>
 
     </LinearLayout>

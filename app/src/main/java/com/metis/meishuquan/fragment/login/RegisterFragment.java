@@ -49,7 +49,7 @@ public class RegisterFragment extends Fragment {
     private CheckBox chLicense;
 
     private FragmentManager fm;
-    private TimeCount time;
+    private TimeCount time = null;
     private UserOperator userOperator;
     private String requestCode = "";
     private int selectedId;//身份
@@ -77,7 +77,6 @@ public class RegisterFragment extends Fragment {
         chLicense = (CheckBox) rootView.findViewById(R.id.id_register_chb_license);
 
         fm = getActivity().getSupportFragmentManager();
-        time = new TimeCount(60000, 1000);//构造CountDownTimer对象
         userOperator = UserOperator.getInstance();
     }
 
@@ -138,17 +137,6 @@ public class RegisterFragment extends Fragment {
                         userOperator.register(phone, requestCode, pwd, selectedId, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-//                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
-//                                    //修改本地登录状态
-//                                    SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(getActivity());
-//                                    spu.update(SharedPreferencesUtil.LOGIN_STATE, String.valueOf(true));
-//                                    Toast.makeText(getActivity(), "注册成功", Toast.LENGTH_SHORT).show();
-//                                    getActivity().finish();
-//                                } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
-//                                    //TODO:根据返回的errorcode判断注册状态
-//                                    Toast.makeText(getActivity(), "注册失败", Toast.LENGTH_SHORT).show();
-//                                }
-
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
                                     Gson gson = new Gson();
                                     String json = gson.toJson(result);
@@ -177,6 +165,8 @@ public class RegisterFragment extends Fragment {
                                     Utils.hideInputMethod(getActivity(), etUserName);
                                     Toast.makeText(MainApplication.UIContext, "注册成功", Toast.LENGTH_SHORT).show();
                                     getActivity().finish();
+                                } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
+                                    Toast.makeText(MainApplication.UIContext, result.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -204,6 +194,7 @@ public class RegisterFragment extends Fragment {
                     Toast.makeText(getActivity(), "您输入的手机格式有误", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                time = new TimeCount(60000, 1000);//构造CountDownTimer对象
                 time.start();//开始计时
                 userOperator.getRequestCode(phone, RequestCodeTypeEnum.REGISTOR, new ApiOperationCallback<ReturnInfo<String>>() {
                     @Override
@@ -214,6 +205,8 @@ public class RegisterFragment extends Fragment {
                             RegisterCode code = gson.fromJson(json, new TypeToken<RegisterCode>() {
                             }.getType());
                             requestCode = code.getData();
+                        } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
+                            Toast.makeText(MainApplication.UIContext, result.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

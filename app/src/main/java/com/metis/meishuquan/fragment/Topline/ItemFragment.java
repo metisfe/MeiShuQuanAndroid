@@ -105,16 +105,15 @@ public class ItemFragment extends Fragment implements AdapterView.OnItemClickLis
         this.listView.setOnRefreshListener(new DragListView.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadData(DragListView.REFRESH);
+                getData(0, DragListView.REFRESH);
             }
         });
 
         this.listView.setOnLoadListener(new DragListView.OnLoadListener() {
             @Override
             public void onLoad() {
-                //loadData(DragListView.LOAD);
                 if (channelId != -1) {
-                    getData(list.get(list.size() - 1).getNewsId());
+                    getData(list.get(list.size() - 1).getNewsId(), DragListView.LOAD);
                 }
             }
         });
@@ -139,61 +138,31 @@ public class ItemFragment extends Fragment implements AdapterView.OnItemClickLis
     }
 
     private void initData() {
-        loadData(DragListView.REFRESH);
-    }
-
-    private void loadData(final int what) {
-        // 从本地或服务器获取数据
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                Message msg = handler.obtainMessage();
-                msg.what = what;
-                msg.obj = getData();
-                handler.sendMessage(msg);
-            }
-        }).start();
-    }
-
-    // 从缓存中拿之前加载好的数据
-    public List<News> getData() {
-        ToplineNewsList result = new ToplineNewsList();
-        SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
-        if (channelId != -1) {
-            String jsonString = spu.getStringByKey(String.valueOf(channelId));
-            if (!jsonString.equals("")) {
-                Gson gson = new Gson();
-                result = gson.fromJson(jsonString, new TypeToken<ToplineNewsList>() {
-                }.getType());
-            } else {
-                this.getData(0);
-            }
-        }
-        return result.getData();
+        getData(0, DragListView.REFRESH);
     }
 
     //加载更多
-    public void getData(final int lastNewsId) {
+    public void getData(final int lastNewsId, final int what) {
         operator = TopLineOperator.getInstance();
         operator.getNewsListByChannelId(new ApiOperationCallback<ReturnInfo<String>>() {
             @Override
             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                Message msg = handler.obtainMessage();
-                msg.what = DragListView.LOAD;
-                Gson gson = new Gson();
-                if (result != null) {
+                if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                    Gson gson = new Gson();
                     String json = gson.toJson(result);
                     ToplineNewsList data = gson.fromJson(json, new TypeToken<ToplineNewsList>() {
                     }.getType());
-                    msg.obj = data.getData();
-                    handler.sendMessage(msg);
-                } else {
-                    getData(lastNewsId);
+
+                    if (what == DragListView.REFRESH) {
+                        listView.onRefreshComplete();
+                        list.clear();
+                        list.addAll(data.getData());
+                    } else if (what == DragListView.LOAD) {
+                        listView.onLoadComplete();
+                        list.addAll(data.getData());
+                    }
+                    listView.setResultSize(data.getData().size());
+                    toplineAdapter.notifyDataSetChanged();
                 }
             }
         }, channelId, lastNewsId);

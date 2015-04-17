@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <com.loopj.android.image.SmartImageView
             android:id="@+id/id_img_class"
             android:layout_width="100dp"
             android:layout_height="65dp"
@@ -19,6 +19,7 @@
             android:src="@drawable/img_topline_default" />
 
         <TextView
+            android:id="@+id/id_tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/id_img_class"
@@ -32,6 +33,7 @@
             android:textSize="16sp" />
 
         <TextView
+            android:id="@+id/id_tv_source"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/id_img_class"

@@ -55,5 +55,6 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/fragment_shared_classfragment_tab_bar"
         android:layout_below="@+id/id_horizontal_line"
-        android:background="#f0f0f0" />
+        android:background="#f0f0f0"
+        android:listSelector="@color/transparent" />
 </RelativeLayout>
