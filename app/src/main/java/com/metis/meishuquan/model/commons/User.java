@@ -77,6 +77,18 @@ public class User implements Serializable {
     @SerializedName("token")
     private String token = "";
 
+    @SerializedName("selfSignature")
+    private String selfSignature;
+
+    @SerializedName("horoscope")
+    private String horoscope;
+
+    @SerializedName("locationAddress")
+    private String locationAddress;
+
+    @SerializedName("achievement")
+    private String achievement;
+
     private LoginStateEnum appLoginState = LoginStateEnum.NO;
 
     private LoginStateEnum rongLoginState = LoginStateEnum.NO;
@@ -217,6 +229,38 @@ public class User implements Serializable {
 
     public void setAppLoginState(LoginStateEnum appLoginState) {
         this.appLoginState = appLoginState;
+    }
+
+    public String getSelfSignature() {
+        return selfSignature;
+    }
+
+    public void setSelfSignature(String selfSignature) {
+        this.selfSignature = selfSignature;
+    }
+
+    public String getHoroscope() {
+        return horoscope;
+    }
+
+    public void setHoroscope(String horoscope) {
+        this.horoscope = horoscope;
+    }
+
+    public String getLocationAddress() {
+        return locationAddress;
+    }
+
+    public void setLocationAddress(String locationAddress) {
+        this.locationAddress = locationAddress;
+    }
+
+    public String getAchievement() {
+        return achievement;
+    }
+
+    public void setAchievement(String achievement) {
+        this.achievement = achievement;
     }
 
     public int getAttCount() {

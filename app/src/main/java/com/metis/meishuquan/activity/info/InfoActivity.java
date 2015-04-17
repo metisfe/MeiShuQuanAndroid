@@ -272,6 +272,10 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                 mProfile,
                 ImageLoaderUtils.getRoundDisplayOptions(profileSize));
         mCvView.setSecondaryText(user.getSelfIntroduce());
+        mConstellationView.setSecondaryText(user.getHoroscope());
+        mRecentsContentTv.setText(user.getSelfSignature());
+        mDepartmentAddrView.setSecondaryText(user.getLocationAddress());
+        mAchievementView.setSecondaryText(user.getAchievement());
     }
 
     private Dialog mDialog = null;
