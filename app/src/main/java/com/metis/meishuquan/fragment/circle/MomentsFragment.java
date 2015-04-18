@@ -20,11 +20,11 @@ import com.metis.meishuquan.adapter.circle.CircleMomentAdapter;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CircleMoments;
-import com.metis.meishuquan.model.contract.ReturnGsonInfo;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.model.topline.News;
 import com.metis.meishuquan.model.topline.ToplineNewsList;
+import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.shared.DragListView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -79,6 +79,7 @@ public class MomentsFragment extends CircleBaseFragment {
 //                Bundle args = new Bundle();
 //                args.putInt("newsId", newsId);
 //                itemInfoFragment.setArguments(args);
+                GlobalData.moment = list.get(position);
 
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
@@ -88,6 +89,19 @@ public class MomentsFragment extends CircleBaseFragment {
                 ft.commit();
             }
         });
+
+//        //TODO: remove
+//        {
+//            MomentCommentFragment momentCommentFragment = new MomentCommentFragment();
+//
+//            FragmentManager fm = getActivity().getSupportFragmentManager();
+//            FragmentTransaction ft = fm.beginTransaction();
+//            ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+//            ft.add(R.id.content_container, momentCommentFragment);
+//            ft.addToBackStack(null);
+//            ft.commit();
+//        }
+
         return contextView;
     }
 

@@ -1,5 +1,6 @@
 package com.metis.meishuquan.util;
 
+import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.ui.SelectedTabType;
 
 /**
@@ -7,6 +8,7 @@ import com.metis.meishuquan.ui.SelectedTabType;
  */
 public class GlobalData {
     private static GlobalData instance = new GlobalData();
+    public static CCircleDetailModel moment; //for data between moment list and moment detail
 
     private SelectedTabType tabTypeSelected;
     private int[] titleBarTypeSelected = new int[] { -1, -1, -1, -1, -1 };

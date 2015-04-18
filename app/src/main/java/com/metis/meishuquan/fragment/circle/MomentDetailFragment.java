@@ -41,18 +41,27 @@ import com.metis.meishuquan.fragment.Topline.CommentListFragment;
 import com.metis.meishuquan.fragment.main.CircleFragment;
 import com.metis.meishuquan.fragment.main.ToplineFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
-import com.metis.meishuquan.model.circle.CircleMomentComment;
+import com.metis.meishuquan.model.circle.CCircleCommentModel;
+import com.metis.meishuquan.model.circle.CCircleDetailModel;
+import com.metis.meishuquan.model.circle.CCircleTabModel;
+import com.metis.meishuquan.model.circle.CircleMomentDetail;
+import com.metis.meishuquan.model.circle.CircleMoments;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
+import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.view.circle.moment.MomentActionBar;
 import com.metis.meishuquan.view.circle.moment.MomentPageListView;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
+import com.metis.meishuquan.view.shared.DragListView;
 import com.metis.meishuquan.view.topline.CommentInputView;
 import com.metis.meishuquan.view.topline.NewsShareView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+
+import org.apache.http.client.methods.HttpGet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,25 +80,31 @@ public class MomentDetailFragment extends Fragment {
     private ImageView btnShare, btnLike;
     private ViewGroup rootView;
 
-    private TextView tv_createtime, tv_nickname;
+    private TextView tv_nickname;
     private RelativeLayout rl_writeCommont;
 
     private FragmentManager fm;
 
-    private List<CircleMomentComment> list = new ArrayList<CircleMomentComment>();
+    private List<CCircleCommentModel> list = new ArrayList<CCircleCommentModel>();
     private CircleMomentDetailCommentAdapter circleMomentCommentAdapter;
     private MomentActionBar actionBar;
+    private CCircleDetailModel moment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        Bundle args = this.getArguments();
-//        if (args != null) {
-//            newsId = args.getInt("newsId");
-//            getInfoData(newsId);
-//        }
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_circle_moment_detail, null, false);
+        if (GlobalData.moment != null)
+        {
+            this.moment = GlobalData.moment;
+            GlobalData.moment = null;
+        }
 
         initView(rootView);
+        getData(0, 0); // type = 0 : get comment and like
+
+        circleMomentCommentAdapter = new CircleMomentDetailCommentAdapter(list);
+        listView.setAdapter(circleMomentCommentAdapter);
+
         initEvent();
         return rootView;
     }
@@ -99,12 +114,9 @@ public class MomentDetailFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    //初始化视图
     private void initView(final ViewGroup rootView) {
         btnBack = (Button) rootView.findViewById(R.id.btn_back);
         tv_nickname = (TextView) rootView.findViewById(R.id.moment_detail_tv_nickname);
-
-        tv_createtime = (TextView) rootView.findViewById(R.id.id_createtime);
 
         rl_writeCommont = (RelativeLayout) rootView.findViewById(R.id.id_rl_writecomment);
         btnLike = (ImageView) rootView.findViewById(R.id.circle_moment_detail_footer_like);
@@ -112,28 +124,48 @@ public class MomentDetailFragment extends Fragment {
 
         listView = (MomentPageListView) rootView.findViewById(R.id.moment_detail_listview);
 
-        View view = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_circle_moment_list_item, null);
+        View headerView = getHeaderView(moment);
 
         actionBar = (MomentActionBar) rootView.findViewById(R.id.moment_action_bar);
+        listView.addHeaderView(headerView);
+        actionBar.setData(moment.relayCount, moment.comentCount, moment.supportCount);
 
-        listView.addHeaderView(view);
         listView.setOnSocialActionBarPositionChangedListener(new MomentPageListView.OnSocialActionBarPositionChangedListener() {
             @Override
             public void OnSocialActionBarPositionChanged(MomentPageListView.Position type) {
-                if (type == MomentPageListView.Position.Top)
-                {
-                        actionBar.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-                        actionBar.setVisibility(View.GONE);
+                if (type == MomentPageListView.Position.Top) {
+                    actionBar.setVisibility(View.VISIBLE);
+                } else {
+                    actionBar.setVisibility(View.GONE);
                 }
             }
         });
-        circleMomentCommentAdapter = new CircleMomentDetailCommentAdapter(list);
-        this.listView.setAdapter(circleMomentCommentAdapter);
+
         fm = getActivity().getSupportFragmentManager();
     }
+
+    private View getHeaderView(CCircleDetailModel moment)
+    {
+        View headerView = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_circle_moment_list_item, null);
+
+        ((SmartImageView) headerView.findViewById(R.id.id_img_portrait)).setImageUrl(moment.user.avatar);
+        ((TextView) headerView.findViewById(R.id.id_username)).setText(moment.user.name);
+        ((TextView) headerView.findViewById(R.id.id_tv_grade)).setText(moment.user.grade);
+        ((TextView) headerView.findViewById(R.id.id_createtime)).setText(moment.getTimeText());
+        ((TextView) headerView.findViewById(R.id.id_tv_content)).setText(moment.content);
+        ((TextView) headerView.findViewById(R.id.tv_device)).setText(moment.getDeviceText());
+        if (moment.images.size() > 0) {
+            ((SmartImageView) headerView.findViewById(R.id.id_img_content)).setImageUrl(moment.images.get(0).thumbnails);
+        }
+        else{
+            ((SmartImageView) headerView.findViewById(R.id.id_img_content)).setVisibility(View.GONE);
+        }
+
+        ((MomentActionBar) headerView.findViewById(R.id.moment_action_bar)).setData(moment.relayCount, moment.comentCount, moment.supportCount);
+
+        return headerView;
+    }
+
 
     //初始化事件
     private void initEvent() {
@@ -154,9 +186,6 @@ public class MomentDetailFragment extends Fragment {
                 String loginState = spu.getStringByKey(SharedPreferencesUtil.LOGIN_STATE);
 
                 MomentCommentFragment momentCommentFragment = new MomentCommentFragment();
-//                Bundle args = new Bundle();
-//                args.putInt("newsId", newsId);
-//                itemInfoFragment.setArguments(args);
 
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
@@ -232,21 +261,53 @@ public class MomentDetailFragment extends Fragment {
         }
     }
 
+    public void getData(int type, final int lastId) {
+        String url = String.format("v1.1/Circle/CircleTabList?type=%s&id=%s&lastId=%s&session=%s", type, moment.id, lastId, MainApplication.userInfo.getCookie());
+
+        ApiDataProvider.getmClient().invokeApi(url, null,
+                HttpGet.METHOD_NAME, null,  CircleMomentDetail.class,
+                new ApiOperationCallback<CircleMomentDetail>() {
+                    @Override
+                    public void onCompleted(CircleMomentDetail result, Exception exception, ServiceFilterResponse response) {
+
+                        if (result != null || !result.isSuccess())
+                        {
+                            return;
+                        }
+
+                        CCircleTabModel data = result.data;
+                        List<CCircleCommentModel> commentList = data.commentList;
+
+                        if (commentList != null) {
+                            for (int i = commentList.size() - 1; i >= 0; i--) {
+                                if (!commentList.get(i).isValid()) {
+                                    commentList.remove(i);
+                                }
+                            }
+
+                            circleMomentCommentAdapter = new CircleMomentDetailCommentAdapter(commentList);
+                            listView.setAdapter(circleMomentCommentAdapter);
+                            circleMomentCommentAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });
+    }
+
     class CircleMomentDetailCommentAdapter extends BaseAdapter {
-        private List<CircleMomentComment> commentList = new ArrayList<CircleMomentComment>();
+        private List<CCircleCommentModel> commentList = new ArrayList<CCircleCommentModel>();
         private ViewHolder holder;
 
-        public CircleMomentDetailCommentAdapter(List<CircleMomentComment> momentList) {
+        public CircleMomentDetailCommentAdapter(List<CCircleCommentModel> momentList) {
             this.commentList = momentList;
         }
 
         @Override
         public int getCount() {
-            return 7;
+            return this.commentList == null ? 0 : this.commentList.size();
         }
 
         @Override
-        public CircleMomentComment getItem(int i) {
+        public CCircleCommentModel getItem(int i) {
             return commentList.get(i);
         }
 

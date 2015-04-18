@@ -32,7 +32,6 @@ import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.main.CircleFragment;
-import com.metis.meishuquan.model.circle.CircleMomentComment;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.util.ViewUtils;
@@ -57,8 +56,8 @@ public class MomentCommentFragment extends Fragment {
     private static final int SoftInputMinHeight = ScreenHeight / 5;
     private static final int EmotionSelectViewHeight = MainApplication.Resources.getDimensionPixelSize(R.dimen.emotion_input_height);
     private static final int EmotionSwitchContainerHeight = MainApplication.Resources.getDimensionPixelSize(R.dimen.switch_emotion_container_height);
-    private static final int MarginTopForEmotionSwitch = ScreenHeight - EmotionSelectViewHeight - EmotionSwitchContainerHeight;
-
+    private int MarginTopForEmotionSwitch = ScreenHeight - EmotionSelectViewHeight - EmotionSwitchContainerHeight;
+    private int StatusBarHeight;
     private ViewGroup rootView;
 
     private FragmentManager fm;
@@ -155,6 +154,9 @@ public class MomentCommentFragment extends Fragment {
         emotionSelectView = (EmotionSelectView) rootView.findViewById(R.id.emotion_input);
         emotionSelectView.setEditText(editText);
 
+        StatusBarHeight = this.getStatusBarHeight();
+        MarginTopForEmotionSwitch = ScreenHeight - EmotionSelectViewHeight - EmotionSwitchContainerHeight - StatusBarHeight;
+
         showKeyBoard();
         return rootView;
     }
@@ -197,7 +199,7 @@ public class MomentCommentFragment extends Fragment {
                     isEmotionSoftInputSwitchInMiddle = true;
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                     params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                    params.setMargins(0, visible_height - EmotionSwitchContainerHeight, 0, 0);
+                    params.setMargins(0, visible_height - EmotionSwitchContainerHeight - StatusBarHeight, 0, 0);
                     emotionKeyboardSwitchButtonContainer.setLayoutParams(params);
                 }
 
@@ -223,4 +225,19 @@ public class MomentCommentFragment extends Fragment {
         });
     }
 
+    private int getStatusBarHeight()
+    {
+        int result = 0;
+        int resourceId = MainApplication.Resources.getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0)
+        {
+            result = MainApplication.Resources.getDimensionPixelSize(resourceId);
+        }
+        else
+        {
+            return (int) (MainApplication.getDisplayMetrics().density * 25);
+        }
+
+        return result;
+    }
 }

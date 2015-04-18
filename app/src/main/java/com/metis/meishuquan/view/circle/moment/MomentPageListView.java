@@ -146,37 +146,6 @@ public class MomentPageListView extends ListView implements OnScrollListener
         this.onSocialActionBarPositionChangedListener = l;
     }
 
-    public void scrollToContent()
-    {
-//        ViewUtility.delayExecute(new Runnable()
-//        {
-//            @Override
-//            public void run()
-//            {
-//                if (getFirstVisiblePosition() == 0)
-//                {
-//                    int bottom = getChildAt(0).getBottom();
-//                    if (bottom > MAX_SCROLL_DISTANCE)
-//                    {
-//                        if (socialActionBarPosition != Position.Top)
-//                        {
-//                            onSocialActionBarPositionChangedListener.OnSocialActionBarPositionChanged(Position.Top);
-//                            socialActionBarPosition = Position.Top;
-//                        }
-//
-//                        setSelection(1);
-//                        View contentView = getChildAt(0);
-//                        onScrolledListener.OnScrolled(contentView.getMeasuredHeight(), (String) getTag());
-//                    }
-//                    else
-//                    {
-//                        smoothScrollBy(bottom, DURATION_SMOOTH_SCROLL);
-//                    }
-//                }
-//            }
-//        }, 50);
-    }
-
     public void setOnScrolledListener(OnScrolledListener listener)
     {
         this.onScrolledListener = listener;
