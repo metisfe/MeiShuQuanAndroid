@@ -7,6 +7,7 @@ import android.util.Log;
 import android.util.SparseArray;
 
 import com.metis.meishuquan.MainApplication;
+import com.metis.meishuquan.model.circle.CPhoneFriend;
 import com.metis.meishuquan.model.circle.UserAdvanceInfo;
 
 import java.util.ArrayList;
@@ -148,6 +149,40 @@ public class ChatManager {
         return ret;
     }
 
+    public static List<List<UserAdvanceInfo>> getGroupedFriendMatchList(List<CPhoneFriend> friends) {
+        List<UserAdvanceInfo> fList = new ArrayList<>();
+        List<List<UserAdvanceInfo>> ret = new ArrayList<>();
+        for (CPhoneFriend friend : friends) {
+            RongIMClient.UserInfo info=new RongIMClient.UserInfo(String.valueOf(friend.Userid),friend.UserNickName,friend.UserAvatar);
+            UserAdvanceInfo ainfo = new UserAdvanceInfo(info);
+            fList.add(ainfo);
+        }
+
+        Collections.sort(fList, new Comparator<UserAdvanceInfo>() {
+            @Override
+            public int compare(UserAdvanceInfo user1, UserAdvanceInfo user2) {
+
+                return user1.getPinYin().compareTo(user2.getPinYin());
+            }
+        });
+
+        char lastChar = 0;
+        for (UserAdvanceInfo info : fList) {
+            if (lastChar != info.getPinYin().charAt(0)) {
+                //new group found
+                List<UserAdvanceInfo> tl = new ArrayList<UserAdvanceInfo>();
+                tl.add(info);
+                ret.add(tl);
+                lastChar = info.getPinYin().charAt(0);
+            } else {
+                //old group
+                ret.get(ret.size() - 1).add(info);
+            }
+        }
+
+        return ret;
+    }
+
     public static void normalizeDiscussion(RongIMClient.Discussion discussion) {
         if (discussion == null) return;
         List<String> mlist = discussion.getMemberIdList();
@@ -211,16 +246,15 @@ public class ChatManager {
         return "";
     }
 
-    public static String getPhoneNumberList() {
-        String ret = "";
+    public static List<String> getPhoneNumberList() {
+        List<String> ret=new ArrayList<>();
         Cursor phones = MainApplication.UIContext.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
         while (phones.moveToNext()) {
             String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             phoneNumber = normalizePhoneNumber(phoneNumber);
-            if (!TextUtils.isEmpty(phoneNumber)) ret += phoneNumber + ',';
+            if (!TextUtils.isEmpty(phoneNumber)) ret.add(phoneNumber);
         }
         phones.close();
-        if (ret.length() > 0) ret = ret.substring(0, ret.length()-1);
         return ret;
     }
 
