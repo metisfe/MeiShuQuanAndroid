@@ -94,6 +94,10 @@ public class GroupListFragment extends Fragment {
                                     d.count = tp.getMemberIdList().size();
                                     d.name = tp.getName();
                                 }
+
+                                adapter.discussions = result.data;
+                                footerView.setText(String.valueOf(adapter.getCount()) + "个群聊");
+                                adapter.notifyDataSetChanged();
                             }
                         }
                     }
@@ -128,12 +132,6 @@ public class GroupListFragment extends Fragment {
 
             ((CircleGroupListItemView) convertView).setData(discussions.get(position).name, discussions.get(position).count, "");
             return convertView;
-        }
-
-        @Override
-        public void notifyDataSetChanged() {
-            footerView.setText(String.valueOf(getCount()) + "个群聊");
-            super.notifyDataSetChanged();
         }
     }
 

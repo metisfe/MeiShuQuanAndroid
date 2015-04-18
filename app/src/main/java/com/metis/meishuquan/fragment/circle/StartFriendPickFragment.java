@@ -194,6 +194,21 @@ public class StartFriendPickFragment extends Fragment {
         });
     }
 
+    private String createName(List<String> ids)
+    {
+        String ret=MainApplication.userInfo.getName();
+        for (String id:ids)
+        {
+            if (!id.equals(ChatManager.userId))
+            {
+
+            }
+        }
+
+        return ret;
+    }
+
+
     private void finish()
     {
         if (fromActivity)
