@@ -53,6 +53,12 @@ public class InputActivity extends FragmentActivity {
         mTitleView.setBackListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
+            }
+        });
+        mTitleView.setRightListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 Intent it = new Intent();
                 it.putExtra(KEY_DEFAULT_STR, mInputFragment.getText());
                 setResult(RESULT_OK, it);

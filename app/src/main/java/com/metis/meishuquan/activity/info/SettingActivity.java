@@ -59,7 +59,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 spu.delete(SharedPreferencesUtil.USER_LOGIN_INFO);
 
                 //tip
-                Toast.makeText(this, "已退出", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "���˳�", Toast.LENGTH_SHORT).show();
                 this.finish();
                 break;
         }

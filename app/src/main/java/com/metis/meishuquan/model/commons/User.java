@@ -20,7 +20,14 @@ public class User implements Serializable {
             KEY_GRADE = "Grade",
             KEY_SELFINTRODUCE = "SelfIntroduce",
             KEY_USERAVATAR = "UserAvatar",
-            KEY_REGION = "Region";
+            KEY_REGION = "Region",
+            KEY_SELFSIGNATURE = "SelfSignature",
+            KEY_HOROSCOPE = "Horoscope",
+            KEY_LOCATION = "Location",
+            KEY_LOCATIONADDRESS = "LocationAddress",
+            KEY_GOODSUBJECTS = "GoodSubjects",
+            KEY_ACHIEVEMENT = "Achievement"
+                    ;
 
     @SerializedName("userId")
     private int userId = -1;
@@ -69,6 +76,18 @@ public class User implements Serializable {
 
     @SerializedName("token")
     private String token = "";
+
+    @SerializedName("selfSignature")
+    private String selfSignature;
+
+    @SerializedName("horoscope")
+    private String horoscope;
+
+    @SerializedName("locationAddress")
+    private String locationAddress;
+
+    @SerializedName("achievement")
+    private String achievement;
 
     private LoginStateEnum appLoginState = LoginStateEnum.NO;
 
@@ -210,6 +229,38 @@ public class User implements Serializable {
 
     public void setAppLoginState(LoginStateEnum appLoginState) {
         this.appLoginState = appLoginState;
+    }
+
+    public String getSelfSignature() {
+        return selfSignature;
+    }
+
+    public void setSelfSignature(String selfSignature) {
+        this.selfSignature = selfSignature;
+    }
+
+    public String getHoroscope() {
+        return horoscope;
+    }
+
+    public void setHoroscope(String horoscope) {
+        this.horoscope = horoscope;
+    }
+
+    public String getLocationAddress() {
+        return locationAddress;
+    }
+
+    public void setLocationAddress(String locationAddress) {
+        this.locationAddress = locationAddress;
+    }
+
+    public String getAchievement() {
+        return achievement;
+    }
+
+    public void setAchievement(String achievement) {
+        this.achievement = achievement;
     }
 
     public int getAttCount() {

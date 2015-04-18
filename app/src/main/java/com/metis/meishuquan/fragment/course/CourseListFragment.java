@@ -1,5 +1,6 @@
 package com.metis.meishuquan.fragment.course;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,14 +11,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.course.CourseInfoActivity;
 import com.metis.meishuquan.adapter.course.CourseListAdapter;
 import com.metis.meishuquan.model.BLL.CourseOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.course.Course;
+import com.metis.meishuquan.model.course.CourseData;
 import com.metis.meishuquan.model.enums.CourseType;
 import com.metis.meishuquan.view.shared.DragListView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -36,28 +41,8 @@ public class CourseListFragment extends Fragment {
     private CourseListAdapter adapter;
     private List<Course> list = new ArrayList<Course>();
     private CourseType type = CourseType.Recommend;
-    private int index = 1;
-
-    private Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
-            List<Course> result = (List<Course>) msg.obj;
-            switch (msg.what) {
-                case DragListView.REFRESH:
-                    listView.onRefreshComplete();
-                    list.clear();
-                    list.addAll(result);
-                    break;
-                case DragListView.LOAD:
-                    listView.onLoadComplete();
-                    list.addAll(result);
-                    break;
-            }
-            listView.setResultSize(result.size());
-            adapter.notifyDataSetChanged();
-        }
-
-        ;
-    };
+    private static int index = 1;
+    private String tags = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -71,55 +56,40 @@ public class CourseListFragment extends Fragment {
     }
 
     private void initData() {
-        loadData(DragListView.REFRESH);
+        index = 1;
+        getData(null, index, type, DragListView.REFRESH);
     }
 
-    private void loadData(final int what) {
-        // 从本地或服务器获取数据
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                Message msg = handler.obtainMessage();
-                msg.what = what;
-                msg.obj = getData();
-                handler.sendMessage(msg);
-            }
-        }).start();
-    }
-
-    private List<Course> getData() {
-        getData(index, type);
-        return new ArrayList<Course>();
-    }
-
-    //加载更多
-    public void getData(int index, CourseType type) {
+    //刷新或加载更多
+    public void getData(String tags, final int index, CourseType type, final int what) {
         //请求数据
-//        SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
-//        String json = spu.getStringByKey(SharedPreferencesUtil.COURSE_LIST);
-//        if (!json.isEmpty()) {
-//            Gson gson= new Gson();
-//
-//        }
-        CourseOperator.getInstance().getCouseList("", type, "", index, new ApiOperationCallback<ReturnInfo<String>>() {
+        CourseOperator.getInstance().getCouseList(tags, type, "", index, new ApiOperationCallback<ReturnInfo<String>>() {
 
             @Override
             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
-//                    Message msg = handler.obtainMessage();
-//                    msg.what = DragListView.LOAD;
                     Gson gson = new Gson();
                     String json = gson.toJson(result);
-                    Log.i("getCouseList_data", json);
-                } else if (result != null && result.getErrorCode().equals(String.valueOf(0))) {
-                    Log.e("getCouseList", result.getMessage());
+                    Log.i("getCourseList_data", json);
+                    CourseData data = gson.fromJson(json, new TypeToken<CourseData>() {
+                    }.getType());
+                    if (what == DragListView.REFRESH) {
+                        listView.onRefreshComplete();
+                        list.clear();
+                        list.addAll(data.getData());
+                    } else if (what == DragListView.LOAD) {
+                        if (data.getData().size() == 30) {
+                            CourseListFragment.index++;
+                        }
+                        listView.onLoadComplete();
+                        list.addAll(data.getData());
+                    }
+                    listView.setResultSize(data.getData().size());
+                    adapter.notifyDataSetChanged();
+                } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
+                    Log.e("getCourseList_data", result.getMessage());
                 } else {
-                    Log.e("getCousetList", "请求失败");
+                    Log.e("getCourseList_data", "请求失败");
                 }
             }
         });
@@ -140,23 +110,37 @@ public class CourseListFragment extends Fragment {
         this.listView.setOnRefreshListener(new DragListView.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadData(DragListView.REFRESH);
+                getData(tags, 1, type, DragListView.REFRESH);
             }
         });
 
         this.listView.setOnLoadListener(new DragListView.OnLoadListener() {
             @Override
             public void onLoad() {
-
+                getData(tags, index, type, DragListView.LOAD);
             }
         });
 
+        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Course course = list.get(i);
+                if (course != null) {
+                    Intent intent = new Intent(getActivity(), CourseInfoActivity.class);
+                    intent.putExtra("courseId", course.getCourseId());
+                    getActivity().startActivity(intent);
+                }
+
+            }
+        });
 
         this.btnrecommend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setButtonChecked(btnrecommend);
                 setButtonUnChecked(new Button[]{btnNewPublish, btnHotCourse});
+                type = CourseType.Recommend;
+                getData(tags, 1, type, DragListView.REFRESH);
             }
         });
 
@@ -165,6 +149,8 @@ public class CourseListFragment extends Fragment {
             public void onClick(View view) {
                 setButtonChecked(btnNewPublish);
                 setButtonUnChecked(new Button[]{btnrecommend, btnHotCourse});
+                type = CourseType.NewPublish;
+                getData(tags, 1, type, DragListView.REFRESH);
             }
         });
 
@@ -173,6 +159,8 @@ public class CourseListFragment extends Fragment {
             public void onClick(View view) {
                 setButtonChecked(btnHotCourse);
                 setButtonUnChecked(new Button[]{btnNewPublish, btnrecommend});
+                type = CourseType.HotCourse;
+                getData(tags, 1, type, DragListView.REFRESH);
             }
         });
     }

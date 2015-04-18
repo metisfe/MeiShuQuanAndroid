@@ -24,6 +24,8 @@ public class Urls {
 
     private String newShowContent;
 
+    private String thumbnails;
+
     public String getNewsUploadID() {
         return newsUploadID;
     }
@@ -102,5 +104,13 @@ public class Urls {
 
     public void setNewShowContent(String newShowContent) {
         this.newShowContent = newShowContent;
+    }
+
+    public String getThumbnails() {
+        return thumbnails;
+    }
+
+    public void setThumbnails(String thumbnails) {
+        this.thumbnails = thumbnails;
     }
 }

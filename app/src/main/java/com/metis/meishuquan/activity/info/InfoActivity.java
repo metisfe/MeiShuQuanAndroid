@@ -183,6 +183,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                 if (resultCode == RESULT_OK) {
                     CharSequence recents = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR);
                     mRecentsContentTv.setText(recents);
+                    updateInfo(User.KEY_SELFSIGNATURE, recents.toString());
                 }
                 break;
             case InputActivity.REQUEST_CODE_AGE:
@@ -203,18 +204,21 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                 if (resultCode == RESULT_OK) {
                     CharSequence content = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR);
                     mDepartmentAddrView.setSecondaryText(content);
+                    updateInfo(User.KEY_LOCATIONADDRESS, content.toString());
                 }
                 break;
             case InputActivity.REQUEST_CODE_ACHIEVEMENT:
                 if (resultCode == RESULT_OK) {
                     CharSequence content = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR);
                     mAchievementView.setSecondaryText(content);
+                    updateInfo(User.KEY_ACHIEVEMENT, content.toString());
                 }
                 break;
             case ConstellationActivity.REQUEST_CODE_CONSTELLATION:
                 if (resultCode == RESULT_OK) {
                     String constellation = data.getStringExtra(ConstellationActivity.KEY_CONSTELLATION);
                     mConstellationView.setSecondaryText(constellation);
+                    updateInfo(User.KEY_HOROSCOPE, constellation.toString());
                 }
                 break;
             case 222:
@@ -267,6 +271,11 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                 user.getUserAvatar(),
                 mProfile,
                 ImageLoaderUtils.getRoundDisplayOptions(profileSize));
+        mCvView.setSecondaryText(user.getSelfIntroduce());
+        mConstellationView.setSecondaryText(user.getHoroscope());
+        mRecentsContentTv.setText(user.getSelfSignature());
+        mDepartmentAddrView.setSecondaryText(user.getLocationAddress());
+        mAchievementView.setSecondaryText(user.getAchievement());
     }
 
     private Dialog mDialog = null;

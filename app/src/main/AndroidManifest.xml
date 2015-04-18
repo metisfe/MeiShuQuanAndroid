@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.metis.meishuquan" >
+    package="com.metis.meishuquan">
 
     <!-- App Required -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -27,11 +27,11 @@
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:theme="@style/StyledIndicators" >
+        android:theme="@style/StyledIndicators">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -52,35 +52,44 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.info.AdvanceActivity"
-            android:label="@string/title_activity_advance" />
+            android:label="@string/title_activity_advance"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.info.SettingActivity"
-            android:label="@string/title_activity_setting" />
+            android:label="@string/title_activity_setting"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.info.AboutActivity"
-            android:label="@string/title_activity_about" />
+            android:label="@string/title_activity_about"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.info.InfoActivity"
-            android:label="@string/title_activity_info" />
+            android:label="@string/title_activity_info"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.InputActivity"
             android:label="@string/title_activity_input"
             android:windowSoftInputMode="stateAlwaysVisible" />
         <activity
             android:name=".activity.info.MyFavoritesActivity"
-            android:label="@string/title_activity_my_favorites" />
+            android:label="@string/title_activity_my_favorites"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.info.MyCourseActivity"
-            android:label="@string/title_activity_my_course" />
+            android:label="@string/title_activity_my_course"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.login.LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:label="@string/title_activity_login"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.info.MyCommentsActivity"
-            android:label="@string/title_activity_my_comments" />
+            android:label="@string/title_activity_my_comments"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.info.DepartmentActivity"
-            android:label="@string/title_activity_department" />
+            android:label="@string/title_activity_department"
+            android:screenOrientation="portrait" />
 
         <!-- End UMeng -->
 
@@ -94,7 +103,7 @@
 
         <activity
             android:name="io.rong.imkit.RongActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -139,7 +148,7 @@
         <activity
             android:name="io.rong.imkit.RongSingleActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -154,7 +163,7 @@
         <activity
             android:name="io.rong.imkit.RongSecActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -212,7 +221,7 @@
         <activity
             android:name="io.rong.voipkit.activity.CalledSideActivity"
             android:excludeFromRecents="true"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="io.rong.voipkit.calledSideActivity.action" />
 
@@ -232,7 +241,7 @@
             android:priority="1000" />
         <service
             android:name="io.rong.imlib.push.PushService"
-            android:process="io.rong.push" >
+            android:process="io.rong.push">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -241,7 +250,7 @@
         </service>
         <service
             android:name="io.rong.imlib.push.CommandService"
-            android:process="io.rong.push" >
+            android:process="io.rong.push">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -251,7 +260,7 @@
 
         <receiver
             android:name="io.rong.imlib.push.PushReceiver"
-            android:process="io.rong.push" >
+            android:process="io.rong.push">
             <intent-filter>
                 <action android:name="io.rong.imlib.action.push.heartbeat" />
             </intent-filter>
@@ -262,7 +271,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name="io.rong.imlib.push.PushMessageReceiver" >
+        <receiver android:name="io.rong.imlib.push.PushMessageReceiver">
             <intent-filter>
                 <action android:name="io.rong.push.message" />
             </intent-filter>
@@ -272,36 +281,36 @@
 
         <activity
             android:name=".activity.info.DepartmentEditActivity"
-            android:label="@string/title_activity_department_edit" >
-        </activity>
+            android:label="@string/title_activity_department_edit"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.info.ConstellationActivity"
-            android:label="@string/title_activity_constellation" >
-        </activity>
+            android:label="@string/title_activity_constellation"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.info.QrActivity"
-            android:label="@string/title_activity_qr" >
-        </activity>
+            android:label="@string/title_activity_qr"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.info.QrScanActivity"
             android:label="@string/title_activity_qr_scan"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <activity
                 android:name=".activity.topline.NewsInfoActity"
-                android:label="@string/title_activity_news_info_actity" />
+                android:label="@string/title_activity_news_info_actity"
+                android:screenOrientation="portrait" />
         </activity>
         <activity
             android:name=".activity.info.ImagePreviewActivity"
-            android:label="@string/title_activity_image_preview" >
-        </activity>
+            android:label="@string/title_activity_image_preview"></activity>
         <activity
             android:name=".activity.course.ChooseCourseActivity"
-            android:label="@string/title_activity_choose_course" >
-        </activity>
+            android:label="@string/title_activity_choose_course"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.course.CourseInfoActivity"
-            android:label="@string/title_activity_course_info" >
-        </activity>
+            android:label="@string/title_activity_course_info"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
