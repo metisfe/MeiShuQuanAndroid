@@ -11,7 +11,7 @@ import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.assess.Assess;
-import com.metis.meishuquan.model.circle.CircleMoment;
+import com.metis.meishuquan.model.circle.CCircleDetailModel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,10 +20,10 @@ import java.util.Date;
 import java.util.List;
 
 public class CircleMomentAdapter extends BaseAdapter {
-    private List<CircleMoment> momentList = new ArrayList<CircleMoment>();
+    private List<CCircleDetailModel> momentList = new ArrayList<CCircleDetailModel>();
     private ViewHolder holder;
 
-    public CircleMomentAdapter(List<CircleMoment> momentList) {
+    public CircleMomentAdapter(List<CCircleDetailModel> momentList) {
         this.momentList = momentList;
     }
 
@@ -37,7 +37,7 @@ public class CircleMomentAdapter extends BaseAdapter {
     }
 
     @Override
-    public CircleMoment getItem(int i) {
+    public CCircleDetailModel getItem(int i) {
         return momentList.get(i);
     }
 

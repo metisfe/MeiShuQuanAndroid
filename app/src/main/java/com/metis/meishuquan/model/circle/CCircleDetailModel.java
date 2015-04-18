@@ -5,11 +5,11 @@ package com.metis.meishuquan.model.circle;
  */
 public class CCircleDetailModel {
     @com.google.gson.annotations.SerializedName("Id")
-    private int id;
+    public int id;
 
     @com.google.gson.annotations.SerializedName("ComentCount")
-    private int commentCount;
+    public int commentCount;
 
     @com.google.gson.annotations.SerializedName("Device")
-    private String device;
+    public String device;
 }

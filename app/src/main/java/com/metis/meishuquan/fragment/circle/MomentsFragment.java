@@ -4,10 +4,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +17,8 @@ import com.metis.meishuquan.MainApplication;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.adapter.circle.CircleMomentAdapter;
-import com.metis.meishuquan.adapter.topline.ToplineCustomAdapter;
-import com.metis.meishuquan.fragment.Topline.ItemInfoFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
-import com.metis.meishuquan.model.circle.CircleMoment;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.model.topline.News;
@@ -34,8 +29,6 @@ import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import org.apache.http.client.methods.HttpGet;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,60 +39,36 @@ import java.util.List;
 public class MomentsFragment extends CircleBaseFragment {
     @Override
     public void timeToSetTitleBar() {
-        getTitleBar().setText("this is the moments page");
+        getTitleBar().setText("首页");
         getTitleBar().setRightButton("", 0, null);
     }
 
     private DragListView listView;
-    private List<CircleMoment> list = new ArrayList<CircleMoment>();
-    private int channelId = 6;
-    private TopLineOperator operator;
-
+    private List<CCircleDetailModel> list = new ArrayList<>();
+    private int momentLastId = 0;
     private CircleMomentAdapter circleMomentAdapter;
-
-    private Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
-            List<CircleMoment> result = (List<CircleMoment>) msg.obj;
-            switch (msg.what) {
-                case DragListView.REFRESH:
-                    listView.onRefreshComplete();
-                    list.clear();
-                    list.addAll(result);
-                    break;
-                case DragListView.LOAD:
-                    listView.onLoadComplete();
-                    list.addAll(result);
-                    break;
-            }
-            listView.setResultSize(result.size());
-            circleMomentAdapter.notifyDataSetChanged();
-        }
-
-        ;
-    };
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        //初始化列表数据
-        initData();
-
         View contextView = inflater.inflate(R.layout.fragment_circle_momentsfragment, container, false);
+        this.listView = (DragListView) contextView.findViewById(R.id.fragment_circle_moments_list);
+        circleMomentAdapter = new CircleMomentAdapter(list);
+        this.listView.setAdapter(circleMomentAdapter);
+//        getData(0, momentLastId, DragListView.LOAD);
 
-        ApiDataProvider.getmClient().invokeApi("v1.1/Circle/CircleList?groupId=0&lastId=0", null,
-                HttpGet.METHOD_NAME, null, (Class<ReturnInfo<List<CCircleDetailModel>>>) new ReturnInfo<List<CCircleDetailModel>>().getClass(),
-                new ApiOperationCallback<ReturnInfo<List<CCircleDetailModel>>>() {
-                    @Override
-                    public void onCompleted(ReturnInfo<List<CCircleDetailModel>> result, Exception exception, ServiceFilterResponse response) {
-                        Log.d("circle","");
-                    }
-                });
+        this.listView.setOnRefreshListener(new DragListView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getData(0, momentLastId, DragListView.REFRESH);
+            }
+        });
 
-        //初始化
-        initView(contextView);
-
-        //初始化事件
-        initEvent();
+        this.listView.setOnLoadListener(new DragListView.OnLoadListener() {
+            @Override
+            public void onLoad() {
+                getData(0, momentLastId, DragListView.LOAD);
+            }
+        });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -120,96 +89,36 @@ public class MomentsFragment extends CircleBaseFragment {
         return contextView;
     }
 
-    /**
-     * 初始化
-     *
-     * @param contextView
-     */
-    private void initView(View contextView) {
-        //view
-        this.listView = (DragListView) contextView.findViewById(R.id.fragment_circle_moments_list);
+    public void getData(final int groupId, final int lastId, final int mode) {
+        String url = String.format("v1.1/Circle/CircleList?groupId=%s&lastId=%s&session=%s", groupId, lastId, MainApplication.userInfo.getCookie());
 
-        //初始化成员
-        circleMomentAdapter = new CircleMomentAdapter(list);
-        this.listView.setAdapter(circleMomentAdapter);
+        ApiDataProvider.getmClient().invokeApi(url, null,
+                HttpGet.METHOD_NAME, null, (Class<ReturnInfo<List<CCircleDetailModel>>>) new ReturnInfo<List<CCircleDetailModel>>().getClass(),
+                new ApiOperationCallback<ReturnInfo<List<CCircleDetailModel>>>() {
+                    @Override
+                    public void onCompleted(ReturnInfo<List<CCircleDetailModel>> result, Exception exception, ServiceFilterResponse response) {
+
+                        List<CCircleDetailModel> result_list = result.data;
+                        if (result_list.size() > 0)
+                        {
+                            momentLastId = result_list.get(0).id;
+                        }
+
+                        switch (mode) {
+                            case DragListView.REFRESH:
+                                listView.onRefreshComplete();
+                                list.clear();
+                                list.addAll(result_list);
+                                break;
+                            case DragListView.LOAD:
+                                listView.onLoadComplete();
+                                list.addAll(result_list);
+                                break;
+                        }
+
+                        listView.setResultSize(result_list.size());
+                        circleMomentAdapter.notifyDataSetChanged();
+                    }
+                });
     }
-
-    private void initEvent() {
-        this.listView.setOnRefreshListener(new DragListView.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                loadData(DragListView.REFRESH);
-            }
-        });
-
-        this.listView.setOnLoadListener(new DragListView.OnLoadListener() {
-            @Override
-            public void onLoad() {
-                //TODO
-            }
-        });
-    }
-
-    private void initData() {
-        loadData(DragListView.REFRESH);
-    }
-
-    private void loadData(final int what) {
-        // 从本地或服务器获取数据
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                Message msg = handler.obtainMessage();
-                msg.what = what;
-                msg.obj = getData();
-                handler.sendMessage(msg);
-            }
-        }).start();
-    }
-
-    // 从缓存中拿之前加载好的数据
-    public List<News> getData() {
-        ToplineNewsList result = new ToplineNewsList();
-        SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
-        if (channelId != -1) {
-            String jsonString = spu.getStringByKey(String.valueOf(channelId));
-            if (!jsonString.equals("")) {
-                Gson gson = new Gson();
-                result = gson.fromJson(jsonString, new TypeToken<ToplineNewsList>() {
-                }.getType());
-            } else {
-                this.getData(0);
-            }
-        }
-        return result.getData();
-    }
-
-    //加载更多
-    public void getData(final int lastNewsId) {
-        operator = TopLineOperator.getInstance();
-        operator.getNewsListByChannelId(new ApiOperationCallback<ReturnInfo<String>>() {
-            @Override
-            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                Message msg = handler.obtainMessage();
-                msg.what = DragListView.LOAD;
-                Gson gson = new Gson();
-                if (result != null) {
-                    String json = gson.toJson(result);
-                    ToplineNewsList data = gson.fromJson(json, new TypeToken<ToplineNewsList>() {
-                    }.getType());
-                    msg.obj = data.getData();
-                    handler.sendMessage(msg);
-                } else {
-                    getData(lastNewsId);
-                }
-                //TODO:添加至缓存
-            }
-        }, channelId, lastNewsId);
-    }
-
 }
