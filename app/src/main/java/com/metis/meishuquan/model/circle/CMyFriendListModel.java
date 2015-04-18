@@ -1,5 +1,6 @@
 package com.metis.meishuquan.model.circle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**

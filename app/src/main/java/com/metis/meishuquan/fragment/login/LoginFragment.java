@@ -95,6 +95,11 @@ public class LoginFragment extends Fragment {
                             //set login state
                             user.getData().setAppLoginState(LoginStateEnum.YES);
 
+                            //connect to Rong
+                            String token = user.getData().getToken();
+                            ChatManager.userId = user.getData().getRongCloudId();
+                            MainApplication.rongConnect(token);
+
                             //add userInfo into sharedPreferences
                             Gson gson1 = new Gson();
                             String finalUserInfoJson = gson1.toJson(user);
@@ -103,10 +108,6 @@ public class LoginFragment extends Fragment {
 
                             //update field of UserInfo to main application
                             MainApplication.userInfo = user.getData();
-
-                            //connect to Rong
-                            String token = user.getData().getToken();
-                            MainApplication.rongConnect(token);
 
                             //hide input method
                             Utils.hideInputMethod(getActivity(), etPwd);

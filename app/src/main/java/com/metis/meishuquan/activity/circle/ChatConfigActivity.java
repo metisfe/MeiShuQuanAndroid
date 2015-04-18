@@ -62,7 +62,8 @@ public class ChatConfigActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //TODO: looks like rong's bug
-                if (MainApplication.rongIM != null) MainApplication.rongIM.clearMessages(ChatConfigActivity.this, type, targetId);
+                if (MainApplication.rongIM != null)
+                    MainApplication.rongIM.clearMessages(ChatConfigActivity.this, type, targetId);
             }
         });
 
@@ -184,11 +185,10 @@ public class ChatConfigActivity extends Activity {
                     titleBar.setRightButton("confirm", 0, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (!TextUtils.isEmpty(editText.getText().toString()) &&  MainApplication.rongClient != null)
-                            {
+                            if (!TextUtils.isEmpty(editText.getText().toString()) && MainApplication.rongClient != null) {
                                 final ProgressDialog progressDialog = new ProgressDialog(ChatConfigActivity.this);
                                 progressDialog.show();
-                                MainApplication.rongClient.setDiscussionName(targetId,editText.getText().toString(),new RongIMClient.OperationCallback() {
+                                MainApplication.rongClient.setDiscussionName(targetId, editText.getText().toString(), new RongIMClient.OperationCallback() {
                                     @Override
                                     public void onSuccess() {
                                         progressDialog.cancel();
@@ -198,7 +198,7 @@ public class ChatConfigActivity extends Activity {
                                             public void run() {
                                                 setData();
                                             }
-                                        },50);
+                                        }, 50);
                                     }
 
                                     @Override

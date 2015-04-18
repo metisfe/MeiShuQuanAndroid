@@ -129,15 +129,23 @@ public class ContactListItemView extends LinearLayout {
         this.nextView.setVisibility(next ? VISIBLE : GONE);
     }
 
-    public void setAcceptMode(String title, String url, boolean mode) {
+    public void setAcceptMode(String title, String url, String reason, OnClickListener onClickListener) {
         this.nameView.setText(title);
         this.smartImageView.setImageUrl(url);
 
         this.checkView.setVisibility(GONE);
-        this.reasonView.setVisibility(GONE);
-        this.addedView.setVisibility(mode ? VISIBLE : GONE);
-        this.buttonView.setVisibility(mode ? GONE : VISIBLE);
-        this.buttonView.setText("接受");
+        this.reasonView.setVisibility(VISIBLE);
+        this.reasonView.setText(reason);
+        if (onClickListener != null) {
+            this.addedView.setVisibility(GONE);
+            this.buttonView.setVisibility(VISIBLE);
+            this.buttonView.setText("接受");
+            this.buttonView.setOnClickListener(onClickListener);
+        } else {
+            this.addedView.setVisibility(VISIBLE);
+            this.buttonView.setVisibility(GONE);
+        }
+
         this.nextView.setVisibility(GONE);
     }
 
@@ -147,8 +155,6 @@ public class ContactListItemView extends LinearLayout {
 
         this.checkView.setVisibility(GONE);
         this.reasonView.setVisibility(GONE);
-//        this.reasonView.setVisibility(VISIBLE);
-//        this.reasonView.setText(reason);
         if (onClickListener != null) {
             this.addedView.setVisibility(GONE);
             this.buttonView.setVisibility(VISIBLE);

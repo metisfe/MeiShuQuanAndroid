@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp">
+
+    <View
+        android:layout_height="1px"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="#AAAAAA"
+        android:layout_alignParentBottom="true" />
+
+    <ImageView
+        android:id="@+id/view_circle_cieclegrouplistitemview_icon"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:src="@drawable/view_circle_groupicon" />
+
+    <TextView
+        android:id="@+id/view_circle_cieclegrouplistitemview_count"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="（7人）"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:gravity="center_vertical" />
+
+    <TextView
+        android:id="@+id/view_circle_cieclegrouplistitemview_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:singleLine="true"
+        android:layout_toRightOf="@id/view_circle_cieclegrouplistitemview_icon"
+        android:layout_toLeftOf="@id/view_circle_cieclegrouplistitemview_count"
+        android:textSize="20sp"
+        android:text="张三，李四，王二，麻子，很多很多人"
+        android:gravity="center_vertical" />
+
+</RelativeLayout>
