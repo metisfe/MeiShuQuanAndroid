@@ -14,15 +14,20 @@ import android.widget.BaseAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.model.circle.CMyFriendListModel;
 import com.metis.meishuquan.model.circle.CPhoneFriend;
+import com.metis.meishuquan.model.circle.CUserModel;
 import com.metis.meishuquan.model.circle.MyFriendList;
 import com.metis.meishuquan.model.circle.PhoneFriend;
+import com.metis.meishuquan.model.circle.ReturnOnlyInfo;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
+import com.metis.meishuquan.view.circle.ContactListItemView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
@@ -85,9 +90,11 @@ public class FriendConfirmFragment extends Fragment {
         });
 
         this.adapter = new CircleFriendListAdapter();
+        //TODO: cache
+        listView.setAdapter(adapter);
 
         StringBuilder PATH = new StringBuilder("v1.1/Message/MyFriendList");
-        PATH.append("?&session=");
+        PATH.append("?type=2&session=");
         PATH.append(MainApplication.userInfo.getCookie());
 
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
@@ -99,8 +106,10 @@ public class FriendConfirmFragment extends Fragment {
                     @Override
                     public void onCompleted(MyFriendList result, Exception exception, ServiceFilterResponse response) {
                         progressDialog.cancel();
-//                        adapter.friendList = ChatManager.getGroupedFriendMatchList(result.data);
-                        listView.setAdapter(adapter);
+                        if (result != null && result.data != null && result.data.historyFirends != null) {
+                            adapter.data = result.data.historyFirends;
+                            adapter.notifyDataSetChanged();
+                        }
                     }
                 });
 
@@ -108,15 +117,16 @@ public class FriendConfirmFragment extends Fragment {
     }
 
     class CircleFriendListAdapter extends BaseAdapter {
+        public List<CUserModel> data = new ArrayList<>();
 
         @Override
         public int getCount() {
-            return 0;
+            return data.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return null;
+            return data.get(position);
         }
 
         @Override
@@ -125,8 +135,42 @@ public class FriendConfirmFragment extends Fragment {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            return null;
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            if (convertView == null || !(convertView instanceof ContactListItemView)) {
+                convertView = new ContactListItemView(getActivity());
+            }
+
+            ((ContactListItemView) convertView).setAcceptMode(data.get(position).name, data.get(position).avatar, "申请理由，backend required", data.get(position).relation == 2 ? new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    StringBuilder PATH = new StringBuilder("v1.1/Message/AddFriend");
+                    PATH.append("?session=");
+                    PATH.append(MainApplication.userInfo.getCookie());
+                    PATH.append("&userId=");
+                    PATH.append(data.get(position).userId);
+                    PATH.append("&type=2");
+
+                    final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+                    progressDialog.show();
+                    ApiDataProvider.getmClient().invokeApi(PATH.toString(), null,
+                            HttpGet.METHOD_NAME, null, ReturnOnlyInfo.class,
+                            new ApiOperationCallback<ReturnOnlyInfo>() {
+                                @Override
+                                public void onCompleted(ReturnOnlyInfo result, Exception exception, ServiceFilterResponse response) {
+                                    progressDialog.cancel();
+                                    if (result != null && result.option != null && result.option.isSuccess()) {
+                                        Toast.makeText(getActivity(), "接受请求成功", Toast.LENGTH_LONG).show();
+                                        data.get(position).relation = 1;
+                                        notifyDataSetChanged();
+                                    } else {
+                                        Toast.makeText(getActivity(), "接受请求失败", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                }
+            } : null);
+
+            return convertView;
         }
     }
 }

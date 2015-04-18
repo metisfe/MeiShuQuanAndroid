@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class CUserModel {
+
     public long userId;
 
     public String name;

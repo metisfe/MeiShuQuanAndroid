@@ -53,6 +53,7 @@ public class MainApplication extends Application {
         DataProvider.setDefaultUIThreadHandler(Handler);
         ApiDataProvider.initProvider();
         RongIM.init(this);
+        ChatManager.userId = userInfo.getRongCloudId();
         rongConnect(userInfo.getToken());
     }
 
@@ -80,6 +81,7 @@ public class MainApplication extends Application {
                     Log.e("rongConnect", errorCode.toString());
                     MainApplication.rongClient = null;
                     MainApplication.rongIM = null;
+                    ChatManager.userId = "";
                 }
             });
             rongClient = rongIM.getRongIMClient();

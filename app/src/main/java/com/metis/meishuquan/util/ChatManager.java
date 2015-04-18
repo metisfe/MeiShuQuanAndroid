@@ -24,7 +24,7 @@ import io.rong.message.TextMessage;
  * Created by wudi on 4/7/2015.
  */
 public class ChatManager {
-    public static String userId = "diwu3";
+    public static String userId = "";
 
     public static List<RongIMClient.Conversation> conversations;
     public static HashMap<String, RongIMClient.UserInfo> contactCache = new HashMap<String, RongIMClient.UserInfo>();
@@ -50,17 +50,35 @@ public class ChatManager {
         return info;
     }
 
-    public static RongIMClient.Discussion getDiscussion(String targetId) {
+    public static RongIMClient.Discussion getDiscussion(final String targetId) {
+        //if exist in memery cache
         if (discussionCache != null && discussionCache.containsKey(targetId)) {
             return discussionCache.get(targetId);
         }
 
-        //TODO: this is fake data in real data remember to put myself to the front
+        //if not put fake data
         List<String> mlist = new ArrayList<>();
         mlist.add(userId);
-        mlist.add("diwulechao2");
+        mlist.add(MainApplication.userInfo.getName());
         RongIMClient.Discussion discussion = new RongIMClient.Discussion(targetId, targetId, userId, true, mlist);
         discussionCache.put(targetId, discussion);
+
+        //get real data from Rong
+        if (MainApplication.rongClient != null) {
+            MainApplication.rongClient.getDiscussion(targetId, new RongIMClient.GetDiscussionCallback() {
+
+                @Override
+                public void onSuccess(RongIMClient.Discussion discussion) {
+                    ChatManager.normalizeDiscussion(discussion);
+                    ChatManager.discussionCache.put(targetId, discussion);
+                }
+
+                @Override
+                public void onError(ErrorCode errorCode) {
+                }
+            });
+        }
+
         return discussion;
     }
 

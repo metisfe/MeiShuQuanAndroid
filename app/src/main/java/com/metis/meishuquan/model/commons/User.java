@@ -74,6 +74,9 @@ public class User implements Serializable {
     @SerializedName("cookie")
     private String cookie = "";
 
+    @SerializedName("rongCloudId")
+    private String rongCloudId = "";
+
     @SerializedName("token")
     private String token = "";
 
@@ -237,6 +240,14 @@ public class User implements Serializable {
 
     public void setSelfSignature(String selfSignature) {
         this.selfSignature = selfSignature;
+    }
+
+    public String getRongCloudId() {
+        return rongCloudId;
+    }
+
+    public void setRongCloudId(String rongCloudId) {
+        this.rongCloudId = rongCloudId;
     }
 
     public String getHoroscope() {
