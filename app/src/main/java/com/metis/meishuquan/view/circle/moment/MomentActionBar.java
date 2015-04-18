@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import com.metis.meishuquan.R;
 
 /**
@@ -11,6 +13,7 @@ import com.metis.meishuquan.R;
  */
 public class MomentActionBar extends LinearLayout {
     private LinearLayout repostActionLayout, commentActionLayout, likeActionLayout;
+    private TextView tvRepostCount, tvCommentCount, tvLikeCount;
 
     public MomentActionBar(Context context) {
         super(context);
@@ -22,11 +25,22 @@ public class MomentActionBar extends LinearLayout {
         init();
     }
 
+    public void setData(int repostCount, int commentCount, int likeCount)
+    {
+        this.tvRepostCount.setText(repostCount > 0 ? "" + repostCount : "");
+        this.tvCommentCount.setText(commentCount > 0 ? "" + commentCount : "");
+        this.tvLikeCount.setText(likeCount > 0 ? "" + likeCount : "");
+    }
+
     public void init()
     {
         LayoutInflater.from(getContext()).inflate(R.layout.fragment_circle_moment_action_bar, this);
         repostActionLayout = (LinearLayout) this.findViewById(R.id.action_repost);
         commentActionLayout = (LinearLayout) this.findViewById(R.id.action_comment);
         likeActionLayout = (LinearLayout) this.findViewById(R.id.action_like);
+
+        tvRepostCount = (TextView) this.findViewById(R.id.tv_repost_count);
+        tvCommentCount = (TextView) this.findViewById(R.id.tv_comment_count);
+        tvLikeCount = (TextView) this.findViewById(R.id.tv_like_count);
     }
 }

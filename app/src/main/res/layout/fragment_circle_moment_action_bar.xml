@@ -19,6 +19,7 @@
             android:gravity="center"
             android:src="@drawable/circle_moment_detail_share" />
         <TextView
+            android:id="@+id/tv_repost_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="5"
@@ -39,6 +40,7 @@
             android:gravity="center"
             android:src="@drawable/ic_action_topline_comment_count" />
         <TextView
+            android:id="@+id/tv_comment_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="12"
@@ -59,6 +61,7 @@
             android:gravity="center"
             android:src="@drawable/circle_moment_detail_like" />
         <TextView
+            android:id="@+id/tv_like_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="6"
