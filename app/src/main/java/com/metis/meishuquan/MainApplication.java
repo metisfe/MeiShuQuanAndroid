@@ -80,9 +80,11 @@ public class MainApplication extends Application {
                     Log.e("rongConnect", errorCode.toString());
                     MainApplication.rongClient = null;
                     MainApplication.rongIM = null;
+                    ChatManager.userId = "";
                 }
             });
             rongClient = rongIM.getRongIMClient();
+            ChatManager.userId = String.valueOf(MainApplication.userInfo.getUserId());
         } catch (Exception e) {
             e.printStackTrace();
         }

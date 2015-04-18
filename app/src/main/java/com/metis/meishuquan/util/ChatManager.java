@@ -24,7 +24,7 @@ import io.rong.message.TextMessage;
  * Created by wudi on 4/7/2015.
  */
 public class ChatManager {
-    public static String userId = "diwu3";
+    public static String userId = "";
 
     public static List<RongIMClient.Conversation> conversations;
     public static HashMap<String, RongIMClient.UserInfo> contactCache = new HashMap<String, RongIMClient.UserInfo>();
