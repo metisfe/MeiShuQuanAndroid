@@ -35,6 +35,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.text.ParseException;
 
 /**
  * Created by wudi on 3/15/2015.
@@ -74,6 +75,25 @@ public class Utils {
     public static final int MAX_TOP_CELEBRITIES_PAGE_GRID_NUM = 16;
     public static final int MIN_SELECTED_FOLLOWEE = 3;
 
+    public static SimpleDateFormat DateFormatter = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss.SSS", Locale.US);
+    public static Date getDate(String dateString, Date defaultValue)
+    {
+        Date result = defaultValue;
+        try
+        {
+            if (dateString != null)
+            {
+                result = DateFormatter.parse(dateString.replace("T", "").replace("Z", ""));
+            }
+        }
+        catch (ParseException ex)
+        {
+            result = defaultValue;
+        }
+
+        return result;
+    }
+
     public static String getDateFromNow(Date date) {
         if (date == null) {
             return "";
@@ -84,16 +104,16 @@ public class Utils {
         long dateTime = date.getTime();
         long diffTime = nowTime - dateTime;
         if (diffTime <= MINUTE_IN_MILISECOND) {
-            return "1 min ago";
+            return "一分钟前";
         } else if (diffTime < HOUR_IN_MILISECOND) {
             int minutes = (int) (diffTime / MINUTE_IN_MILISECOND);
-            return String.format("%d mins ago", minutes);
+            return String.format("%d分钟以前", minutes);
         } else if (diffTime < DAY_IN_MILISECOND) {
             int hours = (int) (diffTime / HOUR_IN_MILISECOND);
             if (hours == 1) {
-                return "1 hour ago";
+                return "1小时之前";
             } else {
-                return String.format("%d hours ago", hours);
+                return String.format("%d 小时之前", hours);
             }
         } else {
             SimpleDateFormat outputFmt = new SimpleDateFormat(DAY_FORMAT);

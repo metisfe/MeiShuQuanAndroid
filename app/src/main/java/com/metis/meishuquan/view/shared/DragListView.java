@@ -63,7 +63,7 @@ public class DragListView extends ListView implements AbsListView.OnScrollListen
     private boolean isLoading;// 判断是否正在加载
     private boolean loadEnable = true;// 开启或者关闭加载更多功能
     private boolean isLoadFull;
-    private int pageSize = 30;
+    private int pageSize = 40;
 
     private OnRefreshListener onRefreshListener;
     private OnLoadListener onLoadListener;

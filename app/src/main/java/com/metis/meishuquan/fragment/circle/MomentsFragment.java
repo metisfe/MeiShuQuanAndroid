@@ -19,6 +19,8 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.adapter.circle.CircleMomentAdapter;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
+import com.metis.meishuquan.model.circle.CircleMoments;
+import com.metis.meishuquan.model.contract.ReturnGsonInfo;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.model.topline.News;
@@ -45,7 +47,6 @@ public class MomentsFragment extends CircleBaseFragment {
 
     private DragListView listView;
     private List<CCircleDetailModel> list = new ArrayList<>();
-    private int momentLastId = 0;
     private CircleMomentAdapter circleMomentAdapter;
 
     @Override
@@ -54,18 +55,19 @@ public class MomentsFragment extends CircleBaseFragment {
         this.listView = (DragListView) contextView.findViewById(R.id.fragment_circle_moments_list);
         circleMomentAdapter = new CircleMomentAdapter(list);
         this.listView.setAdapter(circleMomentAdapter);
-//        getData(0, momentLastId, DragListView.LOAD);
+        getData(0, 0, DragListView.LOAD);
 
         this.listView.setOnRefreshListener(new DragListView.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getData(0, momentLastId, DragListView.REFRESH);
+                getData(0, 0, DragListView.REFRESH);
             }
         });
 
         this.listView.setOnLoadListener(new DragListView.OnLoadListener() {
             @Override
             public void onLoad() {
+                int momentLastId = list != null && list.size() > 0 ? list.get(list.size() -1).id : 0;
                 getData(0, momentLastId, DragListView.LOAD);
             }
         });
@@ -93,15 +95,34 @@ public class MomentsFragment extends CircleBaseFragment {
         String url = String.format("v1.1/Circle/CircleList?groupId=%s&lastId=%s&session=%s", groupId, lastId, MainApplication.userInfo.getCookie());
 
         ApiDataProvider.getmClient().invokeApi(url, null,
-                HttpGet.METHOD_NAME, null, (Class<ReturnInfo<List<CCircleDetailModel>>>) new ReturnInfo<List<CCircleDetailModel>>().getClass(),
-                new ApiOperationCallback<ReturnInfo<List<CCircleDetailModel>>>() {
+                HttpGet.METHOD_NAME, null,  CircleMoments.class,
+                new ApiOperationCallback<CircleMoments>() {
                     @Override
-                    public void onCompleted(ReturnInfo<List<CCircleDetailModel>> result, Exception exception, ServiceFilterResponse response) {
+                    public void onCompleted(CircleMoments result, Exception exception, ServiceFilterResponse response) {
+
+                        if (!result.isSuccess())
+                        {
+                            switch (mode) {
+                                case DragListView.REFRESH:
+                                    listView.onRefreshComplete();
+                                    break;
+                                case DragListView.LOAD:
+                                    listView.onLoadComplete();
+                                    break;
+                            }
+
+                            listView.setResultSize(list.size());
+                            circleMomentAdapter.notifyDataSetChanged();
+                            return;
+                        }
 
                         List<CCircleDetailModel> result_list = result.data;
-                        if (result_list.size() > 0)
+                        for (int i = result_list.size() -1 ;i >=0; i--)
                         {
-                            momentLastId = result_list.get(0).id;
+                            if (!result_list.get(i).isValid())
+                            {
+                                result_list.remove(i);
+                            }
                         }
 
                         switch (mode) {

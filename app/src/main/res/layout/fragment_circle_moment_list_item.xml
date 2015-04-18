@@ -36,26 +36,32 @@
             android:singleLine="true"
             android:text="高三" />
 
-        <TextView
-            android:id="@+id/id_createtime"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_alignLeft="@+id/id_username"
             android:layout_below="@+id/id_username"
             android:layout_marginTop="10dp"
-            android:singleLine="true"
-            android:text="45分钟前"
-            android:textColor="#909090" />
+            >
+            <TextView
+                android:id="@+id/id_createtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="45分钟前"
+                android:textColor="#909090" />
 
-        <TextView
-            android:id="@+id/id_tv_content_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/id_username"
-            android:text="105\n阅读"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#909090" />
+            <TextView
+                android:id="@+id/tv_device"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="来自"
+                android:textColor="#909090" />
+        </LinearLayout>
     </RelativeLayout>
 
     <TextView

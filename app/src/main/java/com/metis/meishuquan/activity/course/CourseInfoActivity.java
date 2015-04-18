@@ -118,18 +118,16 @@ public class CourseInfoActivity extends FragmentActivity {
                 if (contentInfo.getType().equals("TXT")) {
                     if (contentInfo.getData().getContentType().equals("p")) {
                         addTextView(contentInfo.getData().getContent());
+                    } else if (contentInfo.getData().getContentType().equals("")) {
+                        addTextView(contentInfo.getData().getContent());
                     }
                 }
                 if (contentInfo.getType().equals("IMG")) {
                     addImageView(contentInfo.getData().getUrl(), contentInfo.getData().getWidth(), contentInfo.getData().getHeight());
                 }
-                if (contentInfo.getType().equals("LINK")) {
-                    //addImageView(contentInfo.getData().getUrl(), contentInfo.getData().getWidth(), contentInfo.getData().getHeight());
-                }
                 if (contentInfo.getType().equals("VOIDE")) {
                     //addImageView(contentInfo.getData().getUrl(), contentInfo.getData().getWidth(), contentInfo.getData().getHeight());
                 }
-
             }
         }
     }
