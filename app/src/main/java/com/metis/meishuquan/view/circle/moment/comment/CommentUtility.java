@@ -43,7 +43,7 @@ public class CommentUtility
         EmotionStringPattern = Pattern.compile(patternString.toString());
     }
 
-    public static void initEmotionIcons()
+    static
     {
         Resources resources = MainApplication.Resources;
         String[] emotion_names = resources.getStringArray(R.array.emotion_names);
