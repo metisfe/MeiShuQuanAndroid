@@ -1,10 +1,12 @@
 package com.metis.meishuquan.fragment.circle;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.circle.CPhoneFriend;
 import com.metis.meishuquan.model.circle.UserAdvanceInfo;
+import com.metis.meishuquan.model.contract.ReturnGsonInfo;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.ChatManager;
@@ -28,6 +31,7 @@ import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -63,7 +67,7 @@ public class FriendMatchFragment extends Fragment {
             }
         });
 
-        titleBar.setRightButton("完成",0,new View.OnClickListener() {
+        titleBar.setRightButton("完成", 0, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager().popBackStack();
@@ -107,20 +111,42 @@ public class FriendMatchFragment extends Fragment {
         });
 
         this.adapter = new CircleFriendListAdapter();
-//        this.adapter.friendList = ChatManager.getGroupedFriendList();
-//        this.listView.setAdapter(adapter);
-//        expandAll();
 
         //TODO: should use non-UI thread to read DB
-        String list = ChatManager.getPhoneNumberList();
-        StringBuilder PATH = new StringBuilder("v1.1/Message/GetFriendByPhoneNums?");
-        PATH.append("phoneNumList=" + "18600945505");
-        ApiDataProvider.getmClient().invokeApi(PATH.toString(), null,
-                HttpGet.METHOD_NAME, null, (Class<ReturnInfo<List<CPhoneFriend>>>) new ReturnInfo<List<CPhoneFriend>>().getClass(),
-                new ApiOperationCallback<ReturnInfo<List<CPhoneFriend>>>() {
+        List<String> list = ChatManager.getPhoneNumberList();
+        String PATH = "v1.1/Message/GetFriendByPhoneNums";
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.show();
+
+        ApiDataProvider.getmClient().invokeApi(PATH, list,
+                HttpPost.METHOD_NAME, null, (Class<ReturnGsonInfo<List<CPhoneFriend>>>) new ReturnGsonInfo<List<CPhoneFriend>>().getClass(),
+                new ApiOperationCallback<ReturnGsonInfo<List<CPhoneFriend>>>() {
                     @Override
-                    public void onCompleted(ReturnInfo<List<CPhoneFriend>> result, Exception exception, ServiceFilterResponse response) {
-                        Log.d("circle","phone match result return");
+                    public void onCompleted(ReturnGsonInfo<List<CPhoneFriend>> result, Exception exception, ServiceFilterResponse response) {
+                        if (result == null || result.getData() == null) {
+                            List<CPhoneFriend> fakeList = new ArrayList<CPhoneFriend>();
+
+                            CPhoneFriend cPhoneFriend = new CPhoneFriend();
+                            cPhoneFriend.IsFriend = 1;
+                            cPhoneFriend.PhoneNumber = "158274";
+                            cPhoneFriend.UserNickName = "友好大白";
+                            cPhoneFriend.UserAvatar = "http://www.google.com.hk/imgres?imgurl=http://img1.wikia.nocookie.net/__cb20140912133822/disney/images/6/6f/Baymax_Disney_INFINITY.png&imgrefurl=http://disney.wikia.com/wiki/Baymax&h=295&w=275&tbnid=AhZNjnTb0zLpcM:&zoom=1&docid=iJRsmavDXZMTXM&hl=zh-CN&ei=6_8wVdHNAcWOmwW6xYHACw&tbm=isch&ved=0CCUQMygKMAo";
+
+                            fakeList.add(cPhoneFriend);
+
+                            cPhoneFriend = new CPhoneFriend();
+                            cPhoneFriend.IsFriend = 0;
+                            cPhoneFriend.PhoneNumber = "213123";
+                            cPhoneFriend.UserNickName = "战斗大白";
+                            cPhoneFriend.UserAvatar = "http://www.google.com.hk/imgres?imgurl=http://img2.wikia.nocookie.net/__cb20140728161309/disney/images/3/3b/Baymax_with_a_Rose_in_his_hand.png&imgrefurl=http://disney.wikia.com/wiki/Baymax/Gallery&h=960&w=960&tbnid=houTI6OGLkKZbM:&zoom=1&docid=U2t5iSvGKlMqdM&hl=zh-CN&ei=6_8wVdHNAcWOmwW6xYHACw&tbm=isch&ved=0CBwQMygBMAE";
+                            fakeList.add(cPhoneFriend);
+                            result = new ReturnGsonInfo<List<CPhoneFriend>>(fakeList);
+                        }
+
+                        progressDialog.cancel();
+                        adapter.friendList = ChatManager.getGroupedFriendMatchList(result.getData());
+                        listView.setAdapter(adapter);
+                        expandAll();
                     }
                 });
     }

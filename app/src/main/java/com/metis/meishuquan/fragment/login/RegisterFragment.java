@@ -214,6 +214,7 @@ public class RegisterFragment extends Fragment {
                             RegisterCode code = gson.fromJson(json, new TypeToken<RegisterCode>() {
                             }.getType());
                             requestCode = code.getData();
+                            etVerificationCode.setText(requestCode);
                         }
                     }
                 });

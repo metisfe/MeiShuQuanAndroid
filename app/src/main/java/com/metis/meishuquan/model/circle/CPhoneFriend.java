@@ -13,4 +13,10 @@ public class CPhoneFriend {
 
     @com.google.gson.annotations.SerializedName("IsFriend")
     public int IsFriend;
+
+    @com.google.gson.annotations.SerializedName("UserNickName")
+    public String UserNickName;
+
+    @com.google.gson.annotations.SerializedName("UserAvatar")
+    public String UserAvatar;
 }
