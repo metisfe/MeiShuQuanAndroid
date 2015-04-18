@@ -20,7 +20,6 @@ import com.metis.meishuquan.adapter.circle.CircleMomentAdapter;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CircleMoments;
-import com.metis.meishuquan.model.contract.ReturnGsonInfo;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.model.topline.News;
