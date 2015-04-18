@@ -140,7 +140,7 @@ public class ChooseCourseActivity extends FragmentActivity {
         public View getView(int i, View view, ViewGroup viewGroup) {
             if (view == null) {
                 List<CourseChannelItem> mDataItem = mData.get(i).getChildChannelLists();
-                view = LayoutInflater.from(ChooseCourseActivity.this).inflate(R.layout.activity_class_choose_list_child_item, null);
+                view = LayoutInflater.from(mContext).inflate(R.layout.activity_class_choose_list_child_item, null);
                 RelativeLayout rlCourseChannel = (RelativeLayout) view.findViewById(R.id.id_rl_main);
                 TextView tvChannel = (TextView) view.findViewById(R.id.id_tv_channel_name);
                 ImageView imgArrow = (ImageView) view.findViewById(R.id.id_img_arrow);
