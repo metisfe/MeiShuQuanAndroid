@@ -93,6 +93,7 @@ public class MomentCommentFragment extends Fragment {
                 ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
                 ft.replace(R.id.content_container, momentDetailFragment);
                 ft.commit();
+                hideKeyBoard();
             }
         });
 

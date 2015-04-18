@@ -96,7 +96,6 @@ public class MomentDetailFragment extends Fragment {
         if (GlobalData.moment != null)
         {
             this.moment = GlobalData.moment;
-            GlobalData.moment = null;
         }
 
         initView(rootView);
