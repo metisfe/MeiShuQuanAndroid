@@ -3,6 +3,8 @@ package com.metis.meishuquan.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.metis.meishuquan.MainApplication;
+
 import java.util.Map;
 
 /**
@@ -19,6 +21,8 @@ public class SharedPreferencesUtil {
     public static final String USER_LOGIN_INFO = "user_login_info";
     public static final String COURSE_LIST = "course_list";
     public static final String COURSECHANNELLIST = "course_channel_list";
+    public static final String COURSEIMGLIST = "course_img_list";
+    public static final String CHECKED_CHANNEL_ITEMS = "checked_channel_items_";
 
     private static SharedPreferencesUtil spu = null;
     private Context context;

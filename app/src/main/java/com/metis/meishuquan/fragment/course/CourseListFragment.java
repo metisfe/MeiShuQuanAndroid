@@ -22,6 +22,7 @@ import com.metis.meishuquan.adapter.course.CourseListAdapter;
 import com.metis.meishuquan.model.BLL.CourseOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.course.Course;
+import com.metis.meishuquan.model.course.CourseChannelItem;
 import com.metis.meishuquan.model.course.CourseData;
 import com.metis.meishuquan.model.enums.CourseType;
 import com.metis.meishuquan.view.shared.DragListView;
@@ -42,12 +43,17 @@ public class CourseListFragment extends Fragment {
     private List<Course> list = new ArrayList<Course>();
     private CourseType type = CourseType.Recommend;
     private static int index = 1;
-    private String tags = "";
+    private String tags;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_class_course_list, container, false);
         CourseOperator.getInstance().addCourseChannelToCathe();
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            tags = getArguments().getString("tags");
+        }
+
         initData();
         initView(rootView);
         initEvent();
@@ -57,7 +63,7 @@ public class CourseListFragment extends Fragment {
 
     private void initData() {
         index = 1;
-        getData(null, index, type, DragListView.REFRESH);
+        getData(tags, index, type, DragListView.REFRESH);
     }
 
     //刷新或加载更多

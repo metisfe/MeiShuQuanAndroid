@@ -1,5 +1,6 @@
 package com.metis.meishuquan.model.BLL;
 
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
@@ -118,10 +119,9 @@ public class CourseOperator {
      * @param tag       id数组字符串
      * @param orderType 1,推荐，2最新，3，最多收藏，4图片
      * @param type      0图片，1视频
-     * @param index     最后一条数据索引
-     * @param callback
+     * @param index     索引（页）
      */
-    public void getCourseImgList(String tag, CourseType orderType, int type, int index, ApiOperationCallback callback) {
+    public void getCourseImgList(String tag, CourseType orderType, int type, int index) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuilder PATH = new StringBuilder(COURSEIMGLIST);
@@ -130,7 +130,16 @@ public class CourseOperator {
                 PATH.append("&type=" + type);
                 PATH.append("&index=" + index);
                 PATH.append("&session=" + SESSION);
-                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+                    @Override
+                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                            String json = new Gson().toJson(result);
+                            Log.i("getCourseImgList", json);
+                            SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(SharedPreferencesUtil.COURSEIMGLIST, json);
+                        }
+                    }
+                });
             } else {
                 Toast.makeText(MainApplication.UIContext, "无网络", Toast.LENGTH_SHORT).show();
             }
