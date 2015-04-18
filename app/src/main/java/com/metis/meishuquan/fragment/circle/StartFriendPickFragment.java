@@ -85,6 +85,18 @@ public class StartFriendPickFragment extends Fragment {
                     createDiscussion();
                 } else if ("discussionconfig".equals(fromType)) {
                     addMemberToDiscussion();
+                } else if ("friendpickfragment".equals(fromType)) {
+                    if (selectedSet.size() == 1) {
+                        String id = (new ArrayList<String>(selectedSet)).get(0);
+                        Intent intent = new Intent(getActivity(), ChatActivity.class);
+                        intent.putExtra("title", ChatManager.getUserInfo(id).getName());
+                        intent.putExtra("targetId", id);
+                        intent.putExtra("type", RongIMClient.ConversationType.PRIVATE.toString());
+                        getActivity().startActivity(intent);
+                        getActivity().getSupportFragmentManager().popBackStack();
+                    } else {
+                        createDiscussion();
+                    }
                 } else {
                     finish();
                 }

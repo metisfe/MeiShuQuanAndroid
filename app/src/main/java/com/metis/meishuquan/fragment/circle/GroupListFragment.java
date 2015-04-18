@@ -96,7 +96,10 @@ public class GroupListFragment extends Fragment {
                                 }
 
                                 adapter.discussions = result.data;
-                                footerView.setText(String.valueOf(adapter.getCount()) + "个群聊");
+                                if (adapter.getCount() > 0) {
+                                    footerView.setText(String.valueOf(adapter.getCount()) + "个群聊");
+                                }
+
                                 adapter.notifyDataSetChanged();
                             }
                         }
