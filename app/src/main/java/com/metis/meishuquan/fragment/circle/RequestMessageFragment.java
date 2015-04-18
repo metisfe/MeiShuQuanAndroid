@@ -67,7 +67,7 @@ public class RequestMessageFragment extends Fragment {
                             @Override
                             public void onCompleted(ReturnOnlyInfo result, Exception exception, ServiceFilterResponse response) {
                                 progressDialog.cancel();
-                                if (result != null && result.isSuccess()) {
+                                if (result != null && result.option != null && result.option.isSuccess()) {
                                     Toast.makeText(getActivity(), "请求成功", Toast.LENGTH_LONG);
                                     getActivity().getSupportFragmentManager().popBackStack();
                                 } else {
