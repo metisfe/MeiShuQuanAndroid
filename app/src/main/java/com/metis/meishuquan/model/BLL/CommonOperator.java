@@ -16,7 +16,8 @@ import org.apache.http.client.methods.HttpGet;
 public class CommonOperator {
     private static final String URL_SUPPORTORSTEP = "v1.1/Comment/Support";
     private static CommonOperator operator = null;
-    private final String PUBLISHCOMMENT = "v1.1/Comment/PublishComment?";//发表评论
+    private final String PUBLISHCOMMENT = "v1.1/Comment/PublishComment";//发表评论
+    private final String SESSION = MainApplication.userInfo.getCookie();
     private boolean flag;
 
     private CommonOperator() {
@@ -47,6 +48,7 @@ public class CommonOperator {
                 path.append("&id=" + id);
                 path.append("&type=" + type.getVal());
                 path.append("&result=" + result);
+                path.append("&session=" + SESSION);
                 ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
@@ -71,6 +73,7 @@ public class CommonOperator {
                 path.append("&content=" + content);
                 path.append("&replyCid=" + replyCid);
                 path.append("&blockType=" + blockType.getVal());
+                path.append("&session=" + SESSION);
                 ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }

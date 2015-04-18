@@ -72,7 +72,6 @@ public class ItemInfoFragment extends Fragment {
     private boolean isPrivate = false;
 
     private int newsId = 0;
-    private int userId = MainApplication.userInfo.getUserId();
     private FragmentManager fm;
 
     @Override
@@ -311,7 +310,7 @@ public class ItemInfoFragment extends Fragment {
                 if (MainApplication.userInfo.getAppLoginState() == LoginStateEnum.YES) {
                     if (!isPrivate) {
                         //收藏
-                        TopLineOperator.getInstance().newsPrivate(userId, newsId, 0, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
+                        TopLineOperator.getInstance().newsPrivate(MainApplication.userInfo.getUserId(), newsId, 0, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
@@ -323,7 +322,7 @@ public class ItemInfoFragment extends Fragment {
                         });
                     } else {
                         //取消收藏
-                        TopLineOperator.getInstance().newsPrivate(userId, newsId, 0, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
+                        TopLineOperator.getInstance().newsPrivate(MainApplication.userInfo.getUserId(), newsId, 0, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
@@ -355,7 +354,7 @@ public class ItemInfoFragment extends Fragment {
             public void onClick(View view) {
                 String content = editText.getText().toString();
                 if (!content.isEmpty()) {
-                    CommonOperator.getInstance().publishComment(0, newsId, content, 0, BlockTypeEnum.TOPLINE, new ApiOperationCallback<ReturnInfo<String>>() {
+                    CommonOperator.getInstance().publishComment(MainApplication.userInfo.getUserId(), newsId, content, 0, BlockTypeEnum.TOPLINE, new ApiOperationCallback<ReturnInfo<String>>() {
                         @Override
                         public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                             if (result != null && result.getInfo().equals(String.valueOf(0))) {
