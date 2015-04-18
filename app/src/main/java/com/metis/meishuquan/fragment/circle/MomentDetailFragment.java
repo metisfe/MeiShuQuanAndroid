@@ -41,7 +41,6 @@ import com.metis.meishuquan.fragment.Topline.CommentListFragment;
 import com.metis.meishuquan.fragment.main.CircleFragment;
 import com.metis.meishuquan.fragment.main.ToplineFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
-import com.metis.meishuquan.model.circle.CircleMoment;
 import com.metis.meishuquan.model.circle.CircleMomentComment;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;

@@ -29,5 +29,5 @@ public class ReturnInfo<E> {
         return "";
     }
 
-    private E data;
+    public E data;
 }
