@@ -1,13 +1,17 @@
-package com.metis.meishuquan.model.contract;
+package com.metis.meishuquan.model.circle;
+
+import com.metis.meishuquan.model.circle.CPhoneFriend;
+import com.metis.meishuquan.model.contract.OptionSettings;
+
+import java.util.List;
 
 /**
  * Created by wudi on 4/17/2015.
  */
-public class ReturnGsonInfo<E> {
+public class PhoneFriend {
 
     @com.google.gson.annotations.SerializedName("option")
-    private OptionSettings option;
-
+    public OptionSettings option;
 
     public String getInfo() {
         if (option != null && option.status != null) {
@@ -31,16 +35,5 @@ public class ReturnGsonInfo<E> {
     }
 
     @com.google.gson.annotations.SerializedName("data")
-    private E data;
-
-    public ReturnGsonInfo() {
-    }
-
-    public ReturnGsonInfo(E data) {
-        this.data = data;
-    }
-
-    public E getData() {
-        return this.data;
-    }
+    public List<CPhoneFriend> data;
 }

@@ -5,8 +5,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.util.Pair;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,28 +15,21 @@ import android.widget.ExpandableListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.circle.CPhoneFriend;
 import com.metis.meishuquan.model.circle.UserAdvanceInfo;
-import com.metis.meishuquan.model.contract.ReturnGsonInfo;
-import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.circle.PhoneFriend;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.ChatManager;
-import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
 import com.metis.meishuquan.view.circle.ContactListItemView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -85,16 +78,6 @@ public class FriendMatchFragment extends Fragment {
             }
         });
 
-        this.listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                String uid = ((UserAdvanceInfo) adapter.getChild(groupPosition, childPosition)).getUserId();
-                //TODO: should open personal page
-
-                return true;
-            }
-        });
-
         this.searchView = (SearchView) rootView.findViewById(R.id.fragment_circle_friendmatch_search);
         this.searchView.setSubmitButtonEnabled(false);
         this.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -114,37 +97,24 @@ public class FriendMatchFragment extends Fragment {
 
         //TODO: should use non-UI thread to read DB
         List<String> list = ChatManager.getPhoneNumberList();
-        String PATH = "v1.1/Message/GetFriendByPhoneNums";
+        StringBuilder PATH = new StringBuilder("v1.1/Message/GetFriendByPhoneNums");
+        PATH.append("?&session=" + MainApplication.userInfo.getCookie());
+
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.show();
 
-        ApiDataProvider.getmClient().invokeApi(PATH, list,
-                HttpPost.METHOD_NAME, null, (Class<ReturnGsonInfo<List<CPhoneFriend>>>) new ReturnGsonInfo<List<CPhoneFriend>>().getClass(),
-                new ApiOperationCallback<ReturnGsonInfo<List<CPhoneFriend>>>() {
+        ApiDataProvider.getmClient().invokeApi(PATH.toString(), list,
+                HttpPost.METHOD_NAME, null, PhoneFriend.class,
+                new ApiOperationCallback<PhoneFriend>() {
                     @Override
-                    public void onCompleted(ReturnGsonInfo<List<CPhoneFriend>> result, Exception exception, ServiceFilterResponse response) {
-                        if (result == null || result.getData() == null) {
-                            List<CPhoneFriend> fakeList = new ArrayList<CPhoneFriend>();
-
-                            CPhoneFriend cPhoneFriend = new CPhoneFriend();
-                            cPhoneFriend.IsFriend = 1;
-                            cPhoneFriend.PhoneNumber = "158274";
-                            cPhoneFriend.UserNickName = "友好大白";
-                            cPhoneFriend.UserAvatar = "http://www.google.com.hk/imgres?imgurl=http://img1.wikia.nocookie.net/__cb20140912133822/disney/images/6/6f/Baymax_Disney_INFINITY.png&imgrefurl=http://disney.wikia.com/wiki/Baymax&h=295&w=275&tbnid=AhZNjnTb0zLpcM:&zoom=1&docid=iJRsmavDXZMTXM&hl=zh-CN&ei=6_8wVdHNAcWOmwW6xYHACw&tbm=isch&ved=0CCUQMygKMAo";
-
-                            fakeList.add(cPhoneFriend);
-
-                            cPhoneFriend = new CPhoneFriend();
-                            cPhoneFriend.IsFriend = 0;
-                            cPhoneFriend.PhoneNumber = "213123";
-                            cPhoneFriend.UserNickName = "战斗大白";
-                            cPhoneFriend.UserAvatar = "http://www.google.com.hk/imgres?imgurl=http://img2.wikia.nocookie.net/__cb20140728161309/disney/images/3/3b/Baymax_with_a_Rose_in_his_hand.png&imgrefurl=http://disney.wikia.com/wiki/Baymax/Gallery&h=960&w=960&tbnid=houTI6OGLkKZbM:&zoom=1&docid=U2t5iSvGKlMqdM&hl=zh-CN&ei=6_8wVdHNAcWOmwW6xYHACw&tbm=isch&ved=0CBwQMygBMAE";
-                            fakeList.add(cPhoneFriend);
-                            result = new ReturnGsonInfo<List<CPhoneFriend>>(fakeList);
+                    public void onCompleted(PhoneFriend result, Exception exception, ServiceFilterResponse response) {
+                        if (result == null || result.data == null) {
+                            result = new PhoneFriend();
+                            result.data = new ArrayList<CPhoneFriend>();
                         }
 
                         progressDialog.cancel();
-                        adapter.friendList = ChatManager.getGroupedFriendMatchList(result.getData());
+                        adapter.friendList = ChatManager.getGroupedFriendMatchList(result.data);
                         listView.setAdapter(adapter);
                         expandAll();
                     }
@@ -219,8 +189,25 @@ public class FriendMatchFragment extends Fragment {
                 convertView = new ContactListItemView(getActivity());
             }
 
-            UserAdvanceInfo info = friendList.get(groupPosition).get(childPosition);
-            //((ContactListItemView) convertView).setCheckMode(info.getName(), info.getPortraitUri(), excludeSet.contains(info.getUserId()) ? -1 : (selectedSet.contains(info.getUserId()) ? 1 : 0));
+            final UserAdvanceInfo info = friendList.get(groupPosition).get(childPosition);
+            ((ContactListItemView) convertView).setRequestMode(info.getName(), info.getPortraitUri(), info.mode ? null : new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    RequestMessageFragment requestMessageFragment = new RequestMessageFragment();
+
+                    Bundle args = new Bundle();
+                    args.putString("targetid", info.getUserId());
+                    requestMessageFragment.setArguments(args);
+
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                    ft.add(R.id.content_container, requestMessageFragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }
+            });
+
             return convertView;
         }
 
