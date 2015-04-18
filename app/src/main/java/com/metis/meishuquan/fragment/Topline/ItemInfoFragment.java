@@ -112,7 +112,7 @@ public class ItemInfoFragment extends Fragment {
     private void initView(ViewGroup rootView) {
         btnBack = (Button) rootView.findViewById(R.id.id_btn_back);
         tv_title = (TextView) rootView.findViewById(R.id.id_title);
-        tv_createtime = (TextView) rootView.findViewById(R.id.id_createtime);
+        tv_createtime = (TextView) rootView.findViewById(R.id.id_tv_create_time);
         tv_sourse = (TextView) rootView.findViewById(R.id.id_tv_source);
         tv_comment_count = (TextView) rootView.findViewById(R.id.id_tv_topline_info_comment_count);//评论数
         rl_writeCommont = (RelativeLayout) rootView.findViewById(R.id.id_rl_writecomment);
@@ -171,7 +171,7 @@ public class ItemInfoFragment extends Fragment {
         imageView.setImageUrl(url.trim());
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width * 2, height * 2);
         lp.topMargin = 10;
         lp.gravity = Gravity.CENTER_HORIZONTAL;
         imageView.setLayoutParams(lp);

@@ -5,18 +5,18 @@ package com.metis.meishuquan.model.circle;
  */
 public class CPhoneFriend {
 
-    @com.google.gson.annotations.SerializedName("Userid")
-    public long Userid;
+    @com.google.gson.annotations.SerializedName("userid")
+    public long userid;
 
-    @com.google.gson.annotations.SerializedName("PhoneNumber")
-    public String PhoneNumber;
+    @com.google.gson.annotations.SerializedName("phoneNumber")
+    public String phoneNumber;
 
-    @com.google.gson.annotations.SerializedName("IsFriend")
-    public int IsFriend;
+    @com.google.gson.annotations.SerializedName("isFriend")
+    public int isFriend;
 
-    @com.google.gson.annotations.SerializedName("UserNickName")
-    public String UserNickName;
+    @com.google.gson.annotations.SerializedName("userNickName")
+    public String userNickName;
 
-    @com.google.gson.annotations.SerializedName("UserAvatar")
-    public String UserAvatar;
+    @com.google.gson.annotations.SerializedName("userAvatar")
+    public String userAvatar;
 }

@@ -153,15 +153,16 @@ public class ChatManager {
         List<UserAdvanceInfo> fList = new ArrayList<>();
         List<List<UserAdvanceInfo>> ret = new ArrayList<>();
         for (CPhoneFriend friend : friends) {
-            RongIMClient.UserInfo info=new RongIMClient.UserInfo(String.valueOf(friend.Userid),friend.UserNickName,friend.UserAvatar);
+            RongIMClient.UserInfo info = new RongIMClient.UserInfo(String.valueOf(friend.userid), friend.userNickName, friend.userAvatar);
+            if (TextUtils.isEmpty(info.getName())) info.setName(String.valueOf(friend.userid));
             UserAdvanceInfo ainfo = new UserAdvanceInfo(info);
+            ainfo.mode = friend.isFriend == 0 ? false : true;
             fList.add(ainfo);
         }
 
         Collections.sort(fList, new Comparator<UserAdvanceInfo>() {
             @Override
             public int compare(UserAdvanceInfo user1, UserAdvanceInfo user2) {
-
                 return user1.getPinYin().compareTo(user2.getPinYin());
             }
         });
@@ -232,13 +233,10 @@ public class ChatManager {
         onReceivedListener = null;
     }
 
-    public static String getLastString(RongIMClient.Conversation conversation)
-    {
-        if (conversation!=null && conversation.getLatestMessage()!=null)
-        {
+    public static String getLastString(RongIMClient.Conversation conversation) {
+        if (conversation != null && conversation.getLatestMessage() != null) {
             RongIMClient.MessageContent content = conversation.getLatestMessage();
-            if (content instanceof TextMessage)
-            {
+            if (content instanceof TextMessage) {
                 return ((TextMessage) content).getContent();
             }
         }
@@ -247,7 +245,7 @@ public class ChatManager {
     }
 
     public static List<String> getPhoneNumberList() {
-        List<String> ret=new ArrayList<>();
+        List<String> ret = new ArrayList<>();
         Cursor phones = MainApplication.UIContext.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
         while (phones.moveToNext()) {
             String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));

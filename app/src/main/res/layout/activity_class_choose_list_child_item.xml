@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#f0f0f0"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <RelativeLayout
+        android:id="@+id/id_rl_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/id_tv_channel_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="素描几何形体"
+            android:textColor="#424242"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/id_img_arrow"
+            android:layout_width="18dp"
+            android:layout_height="8dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/ic_arrow_down" />
+
+
+    </RelativeLayout>
+
+    <com.metis.meishuquan.view.course.FlowLayout
+        android:id="@+id/id_fl_channels"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#f0f0f0"
+        android:visibility="gone">
+    </com.metis.meishuquan.view.course.FlowLayout>
+
+</LinearLayout>

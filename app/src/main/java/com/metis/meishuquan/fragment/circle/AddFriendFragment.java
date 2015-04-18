@@ -36,7 +36,7 @@ public class AddFriendFragment extends Fragment {
             }
         });
 
-        this.searchView = (View) rootView.findViewById(R.id.fragment_circle_addfriendfragment_search);
+        this.searchView = rootView.findViewById(R.id.fragment_circle_addfriendfragment_search);
         this.searchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -47,7 +47,7 @@ public class CourseListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_class_course_list, container, false);
-
+        CourseOperator.getInstance().addCourseChannelToCathe();
         initData();
         initView(rootView);
         initEvent();
@@ -124,7 +124,8 @@ public class CourseListFragment extends Fragment {
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Course course = list.get(i);
+                if (i >= list.size() + 1) return;
+                Course course = list.get(i - 1);
                 if (course != null) {
                     Intent intent = new Intent(getActivity(), CourseInfoActivity.class);
                     intent.putExtra("courseId", course.getCourseId());
