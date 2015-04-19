@@ -100,6 +100,14 @@ public class MainApplication extends Application {
         }
 
         ChatManager.refreshFriendData();
+        ChatManager.getMyWatchGroupFromApi(new ChatManager.OnGroupListReceivedListener() {
+            @Override
+            public void onReceive(List<String> ids) {
+                if (ids != null) {
+                    ChatManager.setMyWatchGroup(ids);
+                }
+            }
+        });
     }
 
     public static void setDisplayMetrics(DisplayMetrics dm) {

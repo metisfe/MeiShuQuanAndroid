@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Path;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,12 +22,19 @@ import android.widget.Toast;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.circle.CUserModel;
+import com.metis.meishuquan.model.circle.MyFriendList;
+import com.metis.meishuquan.model.circle.ReturnOnlyInfo;
+import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.util.ViewUtils;
 import com.metis.meishuquan.view.circle.CircleGridIcon;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
 import com.metis.meishuquan.view.shared.SwitchButton;
+import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+
+import org.apache.http.client.methods.HttpGet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,9 +46,9 @@ import io.rong.imlib.RongIMClient;
  */
 public class ChatConfigActivity extends Activity {
     private CircleTitleBar titleBar;
-    private ViewGroup nameGroup, clearGroup;
+    private ViewGroup nameGroup, clearGroup, watchGroup;
     private GridView gridView;
-    private SwitchButton switchButton;
+    private SwitchButton switchButton, watchButton;
     private TextView leaveGroup;
     private FriendGridViewAdapter adapter;
     private ScrollView scrollView;
@@ -57,6 +65,9 @@ public class ChatConfigActivity extends Activity {
         this.gridView = (GridView) this.findViewById(R.id.activity_circle_chatconfigactivity_gridview);
         this.nameGroup = (ViewGroup) this.findViewById(R.id.activity_circle_chatconfigactivity_namegroup);
         this.switchButton = (SwitchButton) this.findViewById(R.id.activity_circle_chatconfigactivity_nodisturbswitch);
+        this.watchButton = (SwitchButton) this.findViewById(R.id.activity_circle_chatconfigactivity_watchswitch);
+
+        this.watchGroup = (ViewGroup) this.findViewById(R.id.activity_circle_chatconfigactivity_watchgroup);
         this.clearGroup = (ViewGroup) this.findViewById(R.id.activity_circle_chatconfigactivity_clearhistorygroup);
         clearGroup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +115,6 @@ public class ChatConfigActivity extends Activity {
 
                 @Override
                 public void onError(ErrorCode errorCode) {
-
                 }
             });
         }
@@ -175,6 +185,7 @@ public class ChatConfigActivity extends Activity {
                             });
                         }
                     });
+
                     editText.requestFocus();
 
                     titleBar.setText("edit group name");
@@ -218,6 +229,45 @@ public class ChatConfigActivity extends Activity {
             });
             this.adapter.setDiscussionData(targetId);
             this.titleBar.setText("Chat Info(" + adapter.getMemberCount() + ")");
+            this.watchGroup.setVisibility(View.VISIBLE);
+            this.watchButton.setStatus(ChatManager.getMyWatchGroup().contains(targetId));
+            this.watchButton.setOnChangeListener(new SwitchButton.OnChangeListener() {
+                @Override
+                public void onChange(SwitchButton sb, final boolean state) {
+                    final ProgressDialog dialog = new ProgressDialog(ChatConfigActivity.this);
+                    dialog.show();
+
+                    StringBuilder PATH = new StringBuilder("v1.1/Message/AddDiscussion");
+                    PATH.append("?session=");
+                    PATH.append(MainApplication.userInfo.getCookie());
+                    PATH.append("&userId=");
+                    PATH.append(MainApplication.userInfo.getUserId());
+                    PATH.append("&discussionId=");
+                    PATH.append(targetId);
+                    PATH.append("&type=");
+                    PATH.append(state ? "0" : "1");
+
+                    ApiDataProvider.getmClient().invokeApi(PATH.toString(), null,
+                            HttpGet.METHOD_NAME, null, ReturnOnlyInfo.class,
+                            new ApiOperationCallback<ReturnOnlyInfo>() {
+                                @Override
+                                public void onCompleted(ReturnOnlyInfo result, Exception exception, ServiceFilterResponse response) {
+                                    dialog.cancel();
+
+                                    if (result != null && result.option != null && result.option.isSuccess()) {
+                                        Toast.makeText(ChatConfigActivity.this, "success", Toast.LENGTH_SHORT).show();
+                                        Log.d("circle","success watch group id:" +targetId + "Status:" + state);
+                                        if (state && !ChatManager.getMyWatchGroup().contains(targetId))
+                                            ChatManager.getMyWatchGroup().add(targetId);
+                                        else if (!state && ChatManager.getMyWatchGroup().contains(targetId))
+                                            ChatManager.getMyWatchGroup().remove(targetId);
+                                    } else {
+                                        watchButton.setStatus(!state);
+                                    }
+                                }
+                            });
+                }
+            });
         }
 
         this.gridView.setAdapter(adapter);
@@ -374,6 +424,8 @@ public class ChatConfigActivity extends Activity {
         private void setDiscussionData(String targetId) {
             isPrivate = false;
             this.discussion = ChatManager.getDiscussion(targetId);
+            setGridViewHeight(adapter.getCount());
+            Log.d("circle", "set Discussion Data with cid:" + discussion.getCreatorId());
         }
 
         private String getName() {

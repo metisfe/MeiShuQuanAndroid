@@ -8,9 +8,11 @@ import android.util.Log;
 import android.util.SparseArray;
 
 import com.metis.meishuquan.MainApplication;
+import com.metis.meishuquan.model.circle.CDiscussion;
 import com.metis.meishuquan.model.circle.CPhoneFriend;
 import com.metis.meishuquan.model.circle.CUserModel;
 import com.metis.meishuquan.model.circle.MyFriendList;
+import com.metis.meishuquan.model.circle.MyGroupList;
 import com.metis.meishuquan.model.circle.PhoneFriend;
 import com.metis.meishuquan.model.circle.UserAdvanceInfo;
 import com.metis.meishuquan.model.circle.UserInfoMulGet;
@@ -39,9 +41,45 @@ public class ChatManager {
     private static HashMap<String, CUserModel> contacts = new HashMap<String, CUserModel>();
     private static HashMap<String, RongIMClient.Discussion> discussions = new HashMap<String, RongIMClient.Discussion>();
     private static List<String> friends = new ArrayList<>();
+    private static List<String> myWatchGroup = new ArrayList<>();
 
     private static OnReceivedListener onReceivedListener;
     private static OnFriendListReceivedListener onFriendListReceivedListener;
+
+    public static List<String> getMyWatchGroup() {
+        return myWatchGroup;
+    }
+
+    public static void setMyWatchGroup(List<String> group) {
+        if (group != null)
+            myWatchGroup = group;
+    }
+
+    public static void getMyWatchGroupFromApi(final OnGroupListReceivedListener onReceivedListener) {
+        StringBuilder PATH = new StringBuilder("v1.1/Message/GetMyDiscussion");
+        PATH.append("?&session=" + MainApplication.userInfo.getCookie());
+        PATH.append("&userid=");
+        PATH.append(MainApplication.userInfo.getUserId());
+
+        ApiDataProvider.getmClient().invokeApi(PATH.toString(), null,
+                HttpGet.METHOD_NAME, null, MyGroupList.class,
+                new ApiOperationCallback<MyGroupList>() {
+                    @Override
+                    public void onCompleted(MyGroupList result, Exception exception, ServiceFilterResponse response) {
+                        Log.d("circle","test" + response.getContent());
+                        if (result != null && result.option != null && result.option.isSuccess() && result.data != null) {
+                            List<String> ids = new ArrayList<String>();
+                            for (CDiscussion d : result.data) {
+                                ids.add(d.discussionId);
+                            }
+                            onReceivedListener.onReceive(ids);
+                            setMyWatchGroup(ids);
+                        } else {
+                            onReceivedListener.onReceive(null);
+                        }
+                    }
+                });
+    }
 
     public static boolean containUserInfo(String rongId) {
         return contacts.containsKey(rongId);
@@ -75,6 +113,7 @@ public class ChatManager {
     }
 
     public static void putUserInfos(List<CUserModel> userModels) {
+        if (userModels == null) return;
         for (CUserModel model : userModels) {
             contacts.put(model.rongCloud, model);
         }
@@ -396,5 +435,9 @@ public class ChatManager {
 
     public interface OnFriendListReceivedListener {
         public void onReceive();
+    }
+
+    public interface OnGroupListReceivedListener {
+        public void onReceive(List<String> ids);
     }
 }

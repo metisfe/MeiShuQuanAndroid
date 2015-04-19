@@ -87,10 +87,35 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:layout_centerVertical="true"
-                    android:text="No disturb" />
+                    android:text="免打扰" />
 
                 <com.metis.meishuquan.view.shared.SwitchButton
                     android:id="@+id/activity_circle_chatconfigactivity_nodisturbswitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_alignParentRight="true" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/activity_circle_chatconfigactivity_watchgroup"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:visibility="gone"
+                android:background="#FFFFFF">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_centerVertical="true"
+                    android:text="关注该群组" />
+
+                <com.metis.meishuquan.view.shared.SwitchButton
+                    android:id="@+id/activity_circle_chatconfigactivity_watchswitch"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"

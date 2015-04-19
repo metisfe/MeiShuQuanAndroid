@@ -69,42 +69,48 @@ public class GroupListFragment extends Fragment {
         list.setDivider(null);
 
         adapter = new CircleFriendListAdapter();
+        List<String> ids = ChatManager.getMyWatchGroup();
+        if (ids != null) {
+            List<CDiscussion> discussions = new ArrayList<CDiscussion>();
+            for (String id : ids) {
+                RongIMClient.Discussion tp = ChatManager.getDiscussion(id);
+                CDiscussion d = new CDiscussion();
+                d.name = tp.getName();
+                d.discussionId = tp.getId();
+                d.count = tp.getMemberIdList().size();
+                discussions.add(d);
+            }
+
+            adapter.discussions = discussions;
+            if (discussions.size() > 0) {
+                footerView.setText(String.valueOf(adapter.getCount()) + "个群聊");
+            }
+        }
         list.setAdapter(adapter);
 
-        //TODO: should have cache
-        StringBuilder PATH = new StringBuilder("v1.1/Circle/MyDiscussions");
-        PATH.append("?&session=" + MainApplication.userInfo.getCookie());
-        PATH.append("&userid=");
-        PATH.append(MainApplication.userInfo.getUserId());
-        PATH.append("&type=2");
-
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-        progressDialog.show();
-
-        ApiDataProvider.getmClient().invokeApi(PATH.toString(), null,
-                HttpGet.METHOD_NAME, null, MyGroupList.class,
-                new ApiOperationCallback<MyGroupList>() {
-                    @Override
-                    public void onCompleted(MyGroupList result, Exception exception, ServiceFilterResponse response) {
-                        progressDialog.cancel();
-                        if (result != null && result.option != null && result.option.isSuccess()) {
-                            if (result.data != null) {
-                                for (CDiscussion d : result.data) {
-                                    RongIMClient.Discussion tp = ChatManager.getDiscussion(d.id);
-                                    d.count = tp.getMemberIdList().size();
-                                    d.name = tp.getName();
-                                }
-
-                                adapter.discussions = result.data;
-                                if (adapter.getCount() > 0) {
-                                    footerView.setText(String.valueOf(adapter.getCount()) + "个群聊");
-                                }
-
-                                adapter.notifyDataSetChanged();
-                            }
-                        }
+        ChatManager.getMyWatchGroupFromApi(new ChatManager.OnGroupListReceivedListener() {
+            @Override
+            public void onReceive(List<String> ids) {
+                if (ids != null) {
+                    List<CDiscussion> discussions = new ArrayList<CDiscussion>();
+                    for (String id : ids) {
+                        RongIMClient.Discussion tp = ChatManager.getDiscussion(id);
+                        CDiscussion d = new CDiscussion();
+                        d.name = tp.getName();
+                        d.discussionId = tp.getId();
+                        d.count = tp.getMemberIdList().size();
+                        discussions.add(d);
                     }
-                });
+
+                    adapter.discussions = discussions;
+                    if (adapter.getCount() > 0) {
+                        footerView.setText(String.valueOf(adapter.getCount()) + "个群聊");
+                    }
+
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
 
         return rootView;
     }
