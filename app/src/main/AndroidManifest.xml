@@ -294,6 +294,7 @@
         <activity
             android:name=".activity.info.QrScanActivity"
             android:label="@string/title_activity_qr_scan"
+            android:theme="@style/QrScanTheme"
             android:screenOrientation="portrait">
             <activity
                 android:name=".activity.topline.NewsInfoActity"
