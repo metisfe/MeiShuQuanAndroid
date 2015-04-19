@@ -439,7 +439,8 @@ public class ItemInfoFragment extends Fragment {
         topLineOperator.getNewsInfoById(newsId, new ApiOperationCallback<ReturnInfo<String>>() {
             @Override
             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                if (result != null && windowAttached) {
+                if (!windowAttached) return;
+                if (result != null) {
                     if (result.getInfo().equals(String.valueOf(0))) {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
