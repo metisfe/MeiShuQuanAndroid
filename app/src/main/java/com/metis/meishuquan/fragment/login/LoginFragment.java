@@ -41,6 +41,8 @@ public class LoginFragment extends Fragment {
     private FragmentManager fragmentManager;
     private UserOperator userOperator;
 
+    private boolean isPressLogin = true;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //缓存注册所需的身份数据
@@ -77,6 +79,9 @@ public class LoginFragment extends Fragment {
         btnLogin.setOnClickListener(new View.OnClickListener() {//登录
             @Override
             public void onClick(View view) {
+                if (isPressLogin) {
+                    return;
+                }
                 String accout = etUserName.getText().toString().trim();
                 String pwd = etPwd.getText().toString().trim();
                 if (!verify()) {
@@ -86,6 +91,7 @@ public class LoginFragment extends Fragment {
                     @Override
                     public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                         if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                            isPressLogin = false;
                             Gson gson = new Gson();
                             String json = gson.toJson(result);
                             Log.e("userInfo", json);
@@ -116,6 +122,7 @@ public class LoginFragment extends Fragment {
                             getActivity().finish();
                         } else {
                             Toast.makeText(MainApplication.UIContext, "账号与密码不匹配，请重新输入", Toast.LENGTH_SHORT).show();
+                            isPressLogin = false;
                         }
                     }
                 });

@@ -1,6 +1,12 @@
 package com.metis.meishuquan.activity.course;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -10,6 +16,12 @@ import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -19,12 +31,22 @@ import android.widget.Toast;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.loopj.android.image.SmartImageView;
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.login.LoginActivity;
+import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.BLL.CourseOperator;
+import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.course.CourseInfo;
+import com.metis.meishuquan.model.enums.BlockTypeEnum;
+import com.metis.meishuquan.model.enums.LoginStateEnum;
+import com.metis.meishuquan.model.enums.PrivateResultEnum;
+import com.metis.meishuquan.model.enums.SupportStepTypeEnum;
 import com.metis.meishuquan.model.topline.ContentInfo;
 import com.metis.meishuquan.model.topline.Urls;
+import com.metis.meishuquan.util.Utils;
+import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
@@ -33,18 +55,23 @@ import java.util.StringTokenizer;
 
 public class CourseInfoActivity extends FragmentActivity {
 
-    private TextView tvAuthor, tvTitle, tvCreateTime, tvReadCount, tvContent;
+    private TextView tvAuthor, tvTitle, tvCreateTime, tvReadCount, tvSupportAddOne, tvStepAddOne, tvSupportCount, tvStepCount;
+    private RelativeLayout rlSupport, rlStep, rlWriteComment, rlCommentList, rlPrivate, rlShare, rlInputComment, rlSend;
+    private LinearLayout ll_content, llRelation, ll_support_step;
+    private Button btnBack;
     private SmartImageView imgAuthor, imgContent;
-    private RelativeLayout rlSupport, rlStep, rlWriteComment, rlCommentList, rlPrivate, rlShare;
-    private LinearLayout ll_content, llRelation;
+    private ImageView imgSupport, imgStep, imgPrivate;
+    private EditText editText;
     private CourseInfo courseInfo;
+    private Animation animation;
 
     private int courseId = -1;
+    private boolean isPrivate = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course_info);
+        this.setContentView(R.layout.activity_course_info);
         if (getIntent().getExtras() != null) {
             this.courseId = getIntent().getIntExtra("courseId", -1);
         }
@@ -58,26 +85,79 @@ public class CourseInfoActivity extends FragmentActivity {
         tvTitle = (TextView) this.findViewById(R.id.id_tv_title);
         tvCreateTime = (TextView) this.findViewById(R.id.id_tv_create_time);
         tvReadCount = (TextView) this.findViewById(R.id.id_tv_read_count);
-        tvContent = (TextView) this.findViewById(R.id.id_tv_content);
 
         imgAuthor = (SmartImageView) this.findViewById(R.id.id_img_dynamic);
+        imgSupport = (ImageView) this.findViewById(R.id.id_img_support);
+        imgStep = (ImageView) this.findViewById(R.id.id_img_step);
+        imgPrivate = (ImageView) this.findViewById(R.id.id_img_favorite);
 
         llRelation = (LinearLayout) this.findViewById(R.id.id_ll_relation);
         ll_content = (LinearLayout) this.findViewById(R.id.id_ll_class_content);//内容父布局
+        ll_support_step = (LinearLayout) this.findViewById(R.id.id_ll_support_step);
+
+        btnBack = (Button) this.findViewById(R.id.id_course_info_btn_back);
+
         rlSupport = (RelativeLayout) this.findViewById(R.id.id_rl_support);//赞
+        tvSupportAddOne = (TextView) this.findViewById(R.id.id_tv_support_add_one);
+        tvStepAddOne = (TextView) this.findViewById(R.id.id_tv_step_add_one);
+        tvSupportCount = (TextView) this.findViewById(R.id.id_tv_support_count);
+        tvStepCount = (TextView) this.findViewById(R.id.id_tv_step_count);
+
         rlStep = (RelativeLayout) this.findViewById(R.id.id_rl_step);//踩
         rlWriteComment = (RelativeLayout) this.findViewById(R.id.id_rl_writecomment);
         rlCommentList = (RelativeLayout) this.findViewById(R.id.id_rl_commentlist);
         rlPrivate = (RelativeLayout) this.findViewById(R.id.id_rl_private);
         rlShare = (RelativeLayout) this.findViewById(R.id.id_rl_share);
+        rlInputComment = (RelativeLayout) this.findViewById(R.id.id_rl_input);
+        rlSend = (RelativeLayout) this.findViewById(R.id.id_rl_send);
+
+        editText = (EditText) this.findViewById(R.id.id_comment_edittext);
+
+        animation = AnimationUtils.loadAnimation(this, R.anim.support_add_one);
     }
 
     private void initEvent() {
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         //赞
         rlSupport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //判断登录状态
+                if (!MainApplication.isLogin()) {
+                    startActivity(new Intent(CourseInfoActivity.this, LoginActivity.class));
+                    return;
+                }
 
+                int count = 10;
+                Object supportCount = tvSupportCount.getTag();
+                if (tvStepCount.getTag() != null) {
+                    Toast.makeText(MainApplication.UIContext, "已踩", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (supportCount != null) {
+                    int temp = (int) supportCount;
+                    if (temp == count + 1) {
+                        Toast.makeText(MainApplication.UIContext, "已赞", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                //点赞加1效果
+                supportOrStep(tvSupportCount, tvSupportAddOne, imgSupport, count, true);
+
+                CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), courseInfo.getData().getCourseId(), SupportStepTypeEnum.Course, 1, new ApiOperationCallback<ReturnInfo<String>>() {
+                    @Override
+                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                            Log.i("supportOrStep", "赞成功");
+                        }
+                    }
+                });
             }
         });
 
@@ -85,7 +165,36 @@ public class CourseInfoActivity extends FragmentActivity {
         rlStep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //判断登录状态
+                if (!MainApplication.isLogin()) {
+                    startActivity(new Intent(CourseInfoActivity.this, LoginActivity.class));
+                    return;
+                }
 
+                //点踩加1效果
+                int count = 10;
+                Object stepCount = tvSupportCount.getTag();
+                if (tvSupportCount.getTag() != null) {
+                    Toast.makeText(MainApplication.UIContext, "已赞", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (stepCount != null) {
+                    int temp = (int) stepCount;
+                    if (temp == count + 1) {
+                        Toast.makeText(MainApplication.UIContext, "已踩", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                supportOrStep(tvStepCount, tvStepAddOne, imgStep, count, false);
+
+                CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), courseInfo.getData().getCourseId(), SupportStepTypeEnum.Course, 1, new ApiOperationCallback<ReturnInfo<String>>() {
+                    @Override
+                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                            Log.i("supportOrStep", "赞成功");
+                        }
+                    }
+                });
             }
         });
 
@@ -93,7 +202,34 @@ public class CourseInfoActivity extends FragmentActivity {
         rlWriteComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (MainApplication.isLogin()) {
+                    showInputView();
+                } else {
+                    Intent intent = new Intent(CourseInfoActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
 
+        rlSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String content = editText.getText().toString();
+                if (!content.isEmpty()) {
+                    CommonOperator.getInstance().publishComment(MainApplication.userInfo.getUserId(), courseId, content, 0, BlockTypeEnum.COURSE, new ApiOperationCallback<ReturnInfo<String>>() {
+                        @Override
+                        public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                            if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                Toast.makeText(CourseInfoActivity.this, "发送成功", Toast.LENGTH_SHORT).show();
+                                hideInputView();
+                            } else {
+                                Log.e("publishComment", "发送失败");
+                            }
+                        }
+                    });
+                } else {
+                    Toast.makeText(CourseInfoActivity.this, "请输入评论内容", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -109,7 +245,36 @@ public class CourseInfoActivity extends FragmentActivity {
         rlPrivate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (MainApplication.isLogin()) {
+                    if (!isPrivate) {
+                        //收藏
+                        TopLineOperator.getInstance().newsPrivate(MainApplication.userInfo.getUserId(), courseId, 0, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
+                            @Override
+                            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                    Toast.makeText(MainApplication.UIContext, "收藏成功", Toast.LENGTH_SHORT).show();
+                                    isPrivate = true;
+                                    imgPrivate.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_topline_private));
+                                }
+                            }
+                        });
+                    } else {
+                        //取消收藏
+                        TopLineOperator.getInstance().newsPrivate(MainApplication.userInfo.getUserId(), courseId, 0, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
+                            @Override
+                            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                    Toast.makeText(MainApplication.UIContext, "取消收藏", Toast.LENGTH_SHORT).show();
+                                    isPrivate = false;
+                                    imgPrivate.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_topline_unprivate));
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    Intent intent = new Intent(CourseInfoActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -117,9 +282,49 @@ public class CourseInfoActivity extends FragmentActivity {
         rlShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                new SharePopupWindow(CourseInfoActivity.this, getRootView(CourseInfoActivity.this));
             }
         });
+    }
+
+    private static ViewGroup getRootView(Activity context) {
+        return (ViewGroup) ((ViewGroup) context.findViewById(android.R.id.content)).getChildAt(0);
+    }
+
+    private void supportOrStep(TextView tvCount, final TextView tvAddOne, ImageView img, int count, boolean isSupport) {
+        tvAddOne.setVisibility(View.VISIBLE);
+        tvAddOne.startAnimation(animation);
+        int addCount = count + 1;
+        tvCount.setText("(" + addCount + ")");
+        tvCount.setTag(count + 1);
+        tvCount.setTextColor(Color.RED);
+        if (isSupport) {
+            img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.icon_support));
+        } else {
+            img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.icon_step));
+        }
+
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                tvAddOne.setVisibility(View.GONE);
+            }
+        }, 500);
+    }
+
+    private void hideInputView() {
+        Utils.hideInputMethod(this, editText);
+        rlInputComment.setVisibility(View.GONE);
+    }
+
+    private void showInputView() {
+        //显示输入框
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+
+        rlInputComment.setVisibility(View.VISIBLE);
+        editText.setText("");
+        editText.setFocusableInTouchMode(true);
+        editText.requestFocus();
     }
 
     private void getInfo() {
@@ -179,6 +384,7 @@ public class CourseInfoActivity extends FragmentActivity {
                     //addImageView(contentInfo.getData().getUrl(), contentInfo.getData().getWidth(), contentInfo.getData().getHeight());
                 }
             }
+            ll_support_step.setVisibility(View.VISIBLE);
         }
     }
 

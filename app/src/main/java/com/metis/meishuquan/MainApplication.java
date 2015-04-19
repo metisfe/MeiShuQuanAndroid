@@ -128,4 +128,11 @@ public class MainApplication extends Application {
         }.getType());
         return user.getData();
     }
+
+    public static boolean isLogin() {
+        if (userInfo.getAppLoginState() == LoginStateEnum.NO) {
+            return false;
+        }
+        return true;
+    }
 }

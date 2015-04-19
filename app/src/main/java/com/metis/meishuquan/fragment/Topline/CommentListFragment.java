@@ -245,13 +245,14 @@ public class CommentListFragment extends Fragment {
             }
         });
 
+        //发送
         rlSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (childCommentId == -1) {
                     String content = editText.getText().toString();
                     if (!content.isEmpty()) {
-                        CommonOperator.getInstance().publishComment(0, newsId, content, 0, BlockTypeEnum.TOPLINE, new ApiOperationCallback<ReturnInfo<String>>() {
+                        CommonOperator.getInstance().publishComment(MainApplication.userInfo.getUserId(), newsId, content, 0, BlockTypeEnum.TOPLINE, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
@@ -260,18 +261,25 @@ public class CommentListFragment extends Fragment {
                                 }
                             }
                         });
+                    } else {
+                        Toast.makeText(getActivity(), "请输入评论内容", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     String content = editText.getText().toString();
-                    CommonOperator.getInstance().publishComment(0, newsId, content, childCommentId, BlockTypeEnum.TOPLINE, new ApiOperationCallback<ReturnInfo<String>>() {
-                        @Override
-                        public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                            if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                                getData(newsId, DragListView.REFRESH);
-                                hideInputView();
+                    if (!content.isEmpty()) {
+                        CommonOperator.getInstance().publishComment(MainApplication.userInfo.getUserId(), newsId, content, childCommentId, BlockTypeEnum.TOPLINE, new ApiOperationCallback<ReturnInfo<String>>() {
+                            @Override
+                            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                    getData(newsId, DragListView.REFRESH);
+                                    hideInputView();
+                                }
                             }
-                        }
-                    });
+                        });
+                    } else {
+                        Toast.makeText(getActivity(), "请输入评论内容", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             }
         });
@@ -419,9 +427,6 @@ public class CommentListFragment extends Fragment {
                     }, 1000);
 
                     //后台提交赞加1
-                    if (userId == -1) {
-                        return;
-                    }
                     CommonOperator operator = CommonOperator.getInstance();
                     operator.supportOrStep(userId, comment.getId(), SupportStepTypeEnum.NewsComment, 1, new ApiOperationCallback<ReturnInfo<String>>() {
                         @Override

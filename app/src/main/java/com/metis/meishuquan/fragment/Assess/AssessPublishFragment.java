@@ -30,10 +30,7 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.BLL.AssessOperator;
 import com.metis.meishuquan.model.assess.Bimp;
 import com.metis.meishuquan.model.assess.Channel;
-import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.FileUploadTypeEnum;
-import com.metis.meishuquan.util.Utils;
-import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
 
@@ -149,7 +146,7 @@ public class AssessPublishFragment extends Fragment {
         this.addImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new PopupWindows(MainApplication.UIContext, rootView);
+                new ChoosePhotoPopupWindows(MainApplication.UIContext, rootView);
             }
         });
 
@@ -196,9 +193,9 @@ public class AssessPublishFragment extends Fragment {
     /**
      * 选择图片来源对话框
      */
-    public class PopupWindows extends PopupWindow {
+    public class ChoosePhotoPopupWindows extends PopupWindow {
 
-        public PopupWindows(Context mContext, View parent) {
+        public ChoosePhotoPopupWindows(Context mContext, View parent) {
 
             View view = View.inflate(mContext, R.layout.choose_img_source_popupwindows, null);
             view.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_ins));

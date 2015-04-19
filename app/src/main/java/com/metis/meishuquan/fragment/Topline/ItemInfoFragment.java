@@ -148,6 +148,8 @@ public class ItemInfoFragment extends Fragment {
                 if (contentInfo.getType().equals("TXT")) {
                     if (contentInfo.getData().getContentType().equals("p")) {
                         addTextView(contentInfo.getData().getContent());
+                    } else {
+                        addTextView(contentInfo.getData().getContent());
                     }
                 }
                 if (contentInfo.getType().equals("IMG")) {
@@ -312,7 +314,7 @@ public class ItemInfoFragment extends Fragment {
         this.rl_private.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (MainApplication.userInfo.getAppLoginState() == LoginStateEnum.YES) {
+                if (MainApplication.isLogin()) {
                     if (!isPrivate) {
                         //收藏
                         TopLineOperator.getInstance().newsPrivate(MainApplication.userInfo.getUserId(), newsId, 0, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
