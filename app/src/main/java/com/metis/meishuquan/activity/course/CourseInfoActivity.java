@@ -9,6 +9,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -39,17 +40,16 @@ public class CourseInfoActivity extends FragmentActivity {
     private CourseInfo courseInfo;
 
     private int courseId = -1;
-    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_info);
-        mContext = this;
         if (getIntent().getExtras() != null) {
             this.courseId = getIntent().getIntExtra("courseId", -1);
         }
         initView();
+        initEvent();
         getInfo();
     }
 
@@ -64,12 +64,62 @@ public class CourseInfoActivity extends FragmentActivity {
 
         llRelation = (LinearLayout) this.findViewById(R.id.id_ll_relation);
         ll_content = (LinearLayout) this.findViewById(R.id.id_ll_class_content);//内容父布局
-//        rlSupport = (RelativeLayout) this.findViewById(R.id.id_rl_relation);
-//        rlStep = (RelativeLayout) this.findViewById(R.id.id_rl_relation);
+        rlSupport = (RelativeLayout) this.findViewById(R.id.id_rl_support);//赞
+        rlStep = (RelativeLayout) this.findViewById(R.id.id_rl_step);//踩
         rlWriteComment = (RelativeLayout) this.findViewById(R.id.id_rl_writecomment);
         rlCommentList = (RelativeLayout) this.findViewById(R.id.id_rl_commentlist);
         rlPrivate = (RelativeLayout) this.findViewById(R.id.id_rl_private);
         rlShare = (RelativeLayout) this.findViewById(R.id.id_rl_share);
+    }
+
+    private void initEvent() {
+        //赞
+        rlSupport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        //踩
+        rlStep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        //写评论
+        rlWriteComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        //评论列表
+        rlCommentList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        //收藏
+        rlPrivate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        //分享
+        rlShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     private void getInfo() {
@@ -142,6 +192,13 @@ public class CourseInfoActivity extends FragmentActivity {
         lp.topMargin = 10;
         lp.gravity = Gravity.CENTER_HORIZONTAL;
         imageView.setLayoutParams(lp);
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO:大图浏览
+            }
+        });
 
         ll_content.addView(imageView);
     }

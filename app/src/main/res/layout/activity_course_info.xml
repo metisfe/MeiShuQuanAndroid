@@ -69,6 +69,6 @@
         android:id="@+id/id_rl_footer_bar"
         layout="@layout/fragment_topline_topbar_list_item_info_footbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="44dp"
         android:layout_alignParentBottom="true" />
 </RelativeLayout>
