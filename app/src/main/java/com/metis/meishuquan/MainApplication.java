@@ -1,6 +1,7 @@
 package com.metis.meishuquan;
 
 import android.app.Application;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -9,6 +10,8 @@ import android.util.Log;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.metis.meishuquan.model.circle.CUserModel;
+import com.metis.meishuquan.model.circle.MyFriendList;
 import com.metis.meishuquan.model.circle.UserAdvanceInfo;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.enums.LoginStateEnum;
@@ -17,6 +20,13 @@ import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.model.provider.DataProvider;
 import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
+import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+
+import org.apache.http.client.methods.HttpGet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
@@ -53,7 +63,7 @@ public class MainApplication extends Application {
         DataProvider.setDefaultUIThreadHandler(Handler);
         ApiDataProvider.initProvider();
         RongIM.init(this);
-        ChatManager.userId = userInfo.getRongCloudId();
+        ChatManager.userRongId = userInfo.getRongCloudId();
         rongConnect(userInfo.getToken());
     }
 
@@ -81,7 +91,7 @@ public class MainApplication extends Application {
                     Log.e("rongConnect", errorCode.toString());
                     MainApplication.rongClient = null;
                     MainApplication.rongIM = null;
-                    ChatManager.userId = "";
+                    ChatManager.userRongId = "";
                 }
             });
             rongClient = rongIM.getRongIMClient();
@@ -89,18 +99,7 @@ public class MainApplication extends Application {
             e.printStackTrace();
         }
 
-        //TODO: this is fake data
-        ChatManager.friendIdList.add("diwulechao");
-        ChatManager.friendIdList.add("diwulechao1");
-        ChatManager.friendIdList.add("diwulechao2");
-        ChatManager.friendIdList.add("diwulechao4");
-        ChatManager.friendIdList.add("diwulechao3");
-
-        ChatManager.contactCache.put("diwulechao", new RongIMClient.UserInfo("diwulechao", "张三", ""));
-        ChatManager.contactCache.put("diwulechao1", new RongIMClient.UserInfo("diwulechao1", "李四", ""));
-        ChatManager.contactCache.put("diwulechao2", new RongIMClient.UserInfo("diwulechao2", "王二", ""));
-        ChatManager.contactCache.put("diwulechao4", new RongIMClient.UserInfo("diwulechao4", "321（）", ""));
-        ChatManager.contactCache.put("diwulechao3", new RongIMClient.UserInfo("diwulechao3", "麻子", ""));
+        ChatManager.refreshFriendData();
     }
 
     public static void setDisplayMetrics(DisplayMetrics dm) {

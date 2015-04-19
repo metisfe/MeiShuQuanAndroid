@@ -13,8 +13,12 @@ import android.widget.TextView;
 import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.model.circle.CUserModel;
 import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.util.ViewUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.rong.imlib.RongIMClient;
 
@@ -36,51 +40,13 @@ public class CircleGridIcon extends RelativeLayout {
     }
 
     public void setData(String url, String name, final String uid) {
-        //for user himself
-        if (uid.equals(ChatManager.userId)) {
-            if (TextUtils.isEmpty(url)) {
-                imageView.setImageResource(R.drawable.view_circle_defaulticon);
-            } else {
-                imageView.setImageUrl(url);
-            }
+        if (TextUtils.isEmpty(url)) {
+            imageView.setImageResource(R.drawable.view_circle_defaulticon);
         } else {
-            if (TextUtils.isEmpty(url) && MainApplication.rongClient != null) {
-                MainApplication.rongClient.getUserInfo(uid, new RongIMClient.GetUserInfoCallback() {
-                    @Override
-                    public void onSuccess(final RongIMClient.UserInfo userInfo) {
-                        Log.d("circle", "get user info success id: " + uid);
-                        ChatManager.contactCache.put(userInfo.getUserId(), userInfo);
-                        //TODO: save to DB
-                        ViewUtils.delayExecute(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (!TextUtils.isEmpty(userInfo.getPortraitUri())) {
-                                    imageView.setImageUrl(userInfo.getPortraitUri());
-                                } else {
-                                    imageView.setImageResource(R.drawable.view_circle_defaulticon);
-                                }
-                            }
-                        }, 50);
-                    }
-
-                    @Override
-                    public void onError(ErrorCode errorCode) {
-                        ViewUtils.delayExecute(new Runnable() {
-                            @Override
-                            public void run() {
-                                imageView.setImageResource(R.drawable.view_circle_defaulticon);
-                            }
-                        }, 50);
-                        Log.d("circle", "fail to get user info id: " + uid);
-                    }
-                });
-            } else {
-                this.imageView.setImageUrl(url);
-            }
+            imageView.setImageUrl(url);
         }
 
-        this.textView.setText(name);
-        type = 0;
+        textView.setText(name);
     }
 
     public void setPlusMinus(boolean plus) {

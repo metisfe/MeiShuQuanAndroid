@@ -1,5 +1,6 @@
 package com.metis.meishuquan.util;
 
+import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
@@ -8,7 +9,17 @@ import android.util.SparseArray;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.circle.CPhoneFriend;
+import com.metis.meishuquan.model.circle.CUserModel;
+import com.metis.meishuquan.model.circle.MyFriendList;
+import com.metis.meishuquan.model.circle.PhoneFriend;
 import com.metis.meishuquan.model.circle.UserAdvanceInfo;
+import com.metis.meishuquan.model.circle.UserInfoMulGet;
+import com.metis.meishuquan.model.provider.ApiDataProvider;
+import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,44 +35,68 @@ import io.rong.message.TextMessage;
  * Created by wudi on 4/7/2015.
  */
 public class ChatManager {
-    public static String userId = "";
+    public static String userRongId = "";
+    private static HashMap<String, CUserModel> contacts = new HashMap<String, CUserModel>();
+    private static HashMap<String, RongIMClient.Discussion> discussions = new HashMap<String, RongIMClient.Discussion>();
+    private static List<String> friends = new ArrayList<>();
 
-    public static List<RongIMClient.Conversation> conversations;
-    public static HashMap<String, RongIMClient.UserInfo> contactCache = new HashMap<String, RongIMClient.UserInfo>();
-    public static HashMap<String, RongIMClient.Discussion> discussionCache = new HashMap<String, RongIMClient.Discussion>();
-    public static List<String> friendIdList = new ArrayList<>();
     private static OnReceivedListener onReceivedListener;
+    private static OnFriendListReceivedListener onFriendListReceivedListener;
 
-    public static boolean isDiscussionMine(RongIMClient.Discussion discussion) {
-        if (discussion != null && !TextUtils.isEmpty(userId) && discussion != null && !TextUtils.isEmpty(discussion.getCreatorId())) {
-            return userId.equals(discussion.getCreatorId());
-        }
-
-        return false;
+    public static boolean containUserInfo(String rongId) {
+        return contacts.containsKey(rongId);
     }
 
-    public static RongIMClient.UserInfo getUserInfo(String targetId) {
-        if (contactCache != null && contactCache.containsKey(targetId)) {
-            return contactCache.get(targetId);
+    public static CUserModel getUserInfo(String rongId) {
+        if (contacts.containsKey(rongId)) {
+            return contacts.get(rongId);
         }
 
-        RongIMClient.UserInfo info = new RongIMClient.UserInfo(targetId, targetId, "");
-        contactCache.put(targetId, info);
+        if (rongId.equals(userRongId)) {
+            CUserModel my = new CUserModel();
+            my.name = MainApplication.userInfo.getName();
+            my.rongCloud = MainApplication.userInfo.getRongCloudId();
+            my.avatar = MainApplication.userInfo.getUserAvatar();
+            putUserInfo(my);
+            return my;
+        }
+
+        //for now don't get real data, view will try to get real data
+        CUserModel info = new CUserModel();
+        info.name = info.rongCloud = rongId;
+        info.avatar = "";
+        info.isFakeData = true;
         return info;
     }
 
+    public static void putUserInfo(CUserModel userModel) {
+        contacts.put(userModel.rongCloud, userModel);
+        //TODO: save to DB
+    }
+
+    public static void putUserInfos(List<CUserModel> userModels) {
+        for (CUserModel model : userModels) {
+            contacts.put(model.rongCloud, model);
+        }
+        //TODO: save to DB
+    }
+
+    public static void putDiscussion(String targetId, RongIMClient.Discussion discussion) {
+        normalizeDiscussion(discussion);
+        discussions.put(targetId, discussion);
+        //TODO: save to DB
+    }
+
     public static RongIMClient.Discussion getDiscussion(final String targetId) {
-        //if exist in memery cache
-        if (discussionCache != null && discussionCache.containsKey(targetId)) {
-            return discussionCache.get(targetId);
+        if (discussions.containsKey(targetId)) {
+            return discussions.get(targetId);
         }
 
         //if not put fake data
         List<String> mlist = new ArrayList<>();
-        mlist.add(userId);
+        mlist.add(userRongId);
         mlist.add(MainApplication.userInfo.getName());
-        RongIMClient.Discussion discussion = new RongIMClient.Discussion(targetId, targetId, userId, true, mlist);
-        discussionCache.put(targetId, discussion);
+        RongIMClient.Discussion discussion = new RongIMClient.Discussion(targetId, targetId, userRongId, true, mlist);
 
         //get real data from Rong
         if (MainApplication.rongClient != null) {
@@ -69,8 +104,7 @@ public class ChatManager {
 
                 @Override
                 public void onSuccess(RongIMClient.Discussion discussion) {
-                    ChatManager.normalizeDiscussion(discussion);
-                    ChatManager.discussionCache.put(targetId, discussion);
+                    ChatManager.putDiscussion(targetId, discussion);
                 }
 
                 @Override
@@ -82,23 +116,47 @@ public class ChatManager {
         return discussion;
     }
 
+    public static void putFriendList(List<CUserModel> models) {
+        List<String> ids = new ArrayList<>();
+        for (CUserModel model : models) {
+            Log.d("circle", "frind id:" + model.userId + "name:" + model.name + "rid:" + model.rongCloud);
+            if (!TextUtils.isEmpty(model.rongCloud)) ids.add(model.rongCloud);
+        }
+
+        friends = ids;
+    }
+
+    public static List<CUserModel> getFriendList() {
+        List<CUserModel> flist = new ArrayList<>();
+        for (String rid : friends) {
+            if (contacts.containsKey(rid)) {
+                flist.add(contacts.get(rid));
+            }
+        }
+
+        return flist;
+    }
+
+    public static boolean isDiscussionMine(RongIMClient.Discussion discussion) {
+        if (discussion != null && !TextUtils.isEmpty(userRongId) && discussion != null && !TextUtils.isEmpty(discussion.getCreatorId())) {
+            return userRongId.equals(discussion.getCreatorId());
+        }
+        return false;
+    }
+
     public static void onReceive(final RongIMClient.Message message) {
         Log.d("im", "onReceive: targetId:" + message.getTargetId() + "sender Id:" + message.getSenderUserId() + "type:" + message.getConversationType().toString());
         if (onReceivedListener != null) {
             switch (message.getConversationType()) {
                 case PRIVATE:
                     final String uid = message.getSenderUserId();
-                    if (!ChatManager.contactCache.containsKey(uid) && MainApplication.rongClient != null) {
-                        MainApplication.rongClient.getUserInfo(uid, new RongIMClient.GetUserInfoCallback() {
+                    if (!ChatManager.contacts.containsKey(uid)) {
+                        List<String> list = new ArrayList<>();
+                        list.add(uid);
+                        getUserInfoFromApi(list, new OnUserInfoDataReceived() {
                             @Override
-                            public void onSuccess(RongIMClient.UserInfo userInfo) {
-                                ChatManager.contactCache.put(uid, userInfo);
-                                onReceivedListener.onReceive(message);
-                            }
-
-                            @Override
-                            public void onError(ErrorCode errorCode) {
-                                onReceivedListener.onReceive(message);
+                            public void onReceive(List<CUserModel> models) {
+                                putUserInfos(models);
                             }
                         });
                     } else {
@@ -108,13 +166,12 @@ public class ChatManager {
                     break;
                 case DISCUSSION:
                     final String targetId = message.getTargetId();
-                    if (!ChatManager.discussionCache.containsKey(targetId) && MainApplication.rongClient != null) {
+                    if (!discussions.containsKey(targetId) && MainApplication.rongClient != null) {
                         MainApplication.rongClient.getDiscussion(targetId, new RongIMClient.GetDiscussionCallback() {
 
                             @Override
                             public void onSuccess(RongIMClient.Discussion discussion) {
-                                ChatManager.normalizeDiscussion(discussion);
-                                ChatManager.discussionCache.put(targetId, discussion);
+                                putDiscussion(targetId, discussion);
                                 onReceivedListener.onReceive(message);
                             }
 
@@ -126,19 +183,39 @@ public class ChatManager {
                     } else {
                         onReceivedListener.onReceive(message);
                     }
-
                     break;
             }
-
-
         }
+    }
+
+    public static void refreshFriendData() {
+        StringBuilder PATH = new StringBuilder("v1.1/Message/MyFriendList");
+        PATH.append("?type=1&session=");
+        PATH.append(MainApplication.userInfo.getCookie());
+
+        ApiDataProvider.getmClient().invokeApi(PATH.toString(), null,
+                HttpGet.METHOD_NAME, null, MyFriendList.class,
+                new ApiOperationCallback<MyFriendList>() {
+                    @Override
+                    public void onCompleted(MyFriendList result, Exception exception, ServiceFilterResponse response) {
+                        if (result != null && result.option != null && result.option.isSuccess() && result.data.myFirends != null) {
+                            Log.d("circle", "get flist size:" + result.data.myFirends.size());
+                            ChatManager.putFriendList(result.data.myFirends);
+                            ChatManager.putUserInfos(result.data.myFirends);
+                            if (onFriendListReceivedListener != null) {
+                                onFriendListReceivedListener.onReceive();
+                            }
+                        }
+                    }
+                });
     }
 
     public static List<List<UserAdvanceInfo>> getGroupedFriendList() {
         List<UserAdvanceInfo> fList = new ArrayList<>();
         List<List<UserAdvanceInfo>> ret = new ArrayList<>();
-        for (String id : friendIdList) {
-            UserAdvanceInfo ainfo = new UserAdvanceInfo(getUserInfo(id));
+        for (String id : friends) {
+            CUserModel user = getUserInfo(id);
+            UserAdvanceInfo ainfo = new UserAdvanceInfo(user.rongCloud, user.name, user.avatar);
             fList.add(ainfo);
         }
 
@@ -202,7 +279,7 @@ public class ChatManager {
         return ret;
     }
 
-    public static void normalizeDiscussion(RongIMClient.Discussion discussion) {
+    private static void normalizeDiscussion(RongIMClient.Discussion discussion) {
         if (discussion == null) return;
         List<String> mlist = discussion.getMemberIdList();
         if (mlist == null) return;
@@ -210,7 +287,7 @@ public class ChatManager {
         String firstString = "";
         for (String id : mlist) {
             if (pos == 0) firstString = id;
-            if (id.equals(ChatManager.userId) && pos > 0) {
+            if (id.equals(ChatManager.userRongId) && pos > 0) {
                 mlist.set(pos, firstString);
                 mlist.set(0, id);
             }
@@ -222,6 +299,18 @@ public class ChatManager {
         onReceivedListener = listener;
     }
 
+    public static void SetOnFriendListReceivedListener(OnFriendListReceivedListener listener) {
+        onFriendListReceivedListener = listener;
+    }
+
+    public static void RemoveOnReceivedListener() {
+        onReceivedListener = null;
+    }
+
+    public static void RemoveOnFriendListReceivedListener() {
+        onFriendListReceivedListener = null;
+    }
+
     public static String getConversationTitle(RongIMClient.Conversation conversation) {
         if (conversation == null) {
             return "null";
@@ -231,7 +320,7 @@ public class ChatManager {
         }
         switch (conversation.getConversationType()) {
             case PRIVATE:
-                String title = ChatManager.getUserInfo(conversation.getTargetId()).getName();
+                String title = ChatManager.getUserInfo(conversation.getTargetId()).name;
                 if (TextUtils.isEmpty(title)) {
                     title = "Some one";
                 }
@@ -245,10 +334,6 @@ public class ChatManager {
             default:
                 return "some other type";
         }
-    }
-
-    public static void RemoveOnReceivedListener() {
-        onReceivedListener = null;
     }
 
     public static String getLastString(RongIMClient.Conversation conversation) {
@@ -281,7 +366,35 @@ public class ChatManager {
         return s;
     }
 
+    public static void getUserInfoFromApi(List<String> rids, final OnUserInfoDataReceived onUserInfoDataReceived) {
+        StringBuilder PATH = new StringBuilder("v1.1/Message/GetUserInfoByRongCouldId");
+        PATH.append("?&session=" + MainApplication.userInfo.getCookie());
+
+        ApiDataProvider.getmClient().invokeApi(PATH.toString(), rids,
+                HttpPost.METHOD_NAME, null, UserInfoMulGet.class,
+                new ApiOperationCallback<UserInfoMulGet>() {
+                    @Override
+                    public void onCompleted(UserInfoMulGet result, Exception exception, ServiceFilterResponse response) {
+                        if (onUserInfoDataReceived != null) {
+                            if (result == null || result.data == null || result.data.size() == 0) {
+                                onUserInfoDataReceived.onReceive(null);
+                            } else {
+                                onUserInfoDataReceived.onReceive(result.data);
+                            }
+                        }
+                    }
+                });
+    }
+
     public interface OnReceivedListener {
         public void onReceive(RongIMClient.Message message);
+    }
+
+    public interface OnUserInfoDataReceived {
+        public void onReceive(List<CUserModel> models);
+    }
+
+    public interface OnFriendListReceivedListener {
+        public void onReceive();
     }
 }

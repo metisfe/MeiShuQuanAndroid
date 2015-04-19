@@ -21,4 +21,10 @@ public class CUserModel {
     public int identity;
 
     public int relation;
+
+    public String account;
+
+    public String rongCloud;
+
+    public boolean isFakeData;
 }

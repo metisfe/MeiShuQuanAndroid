@@ -5,8 +5,27 @@
     android:clickable="true"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/fragment_circle_onlinesearchfragment_input"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="This is online search page\nDesign required!"/>
+        />
+
+    <Button
+        android:id="@+id/fragment_circle_onlinesearchfragment_search"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="查询"/>
+
+    <Button
+        android:id="@+id/fragment_circle_onlinesearchfragment_add"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="增加"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/fragment_circle_onlinesearchfragment_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

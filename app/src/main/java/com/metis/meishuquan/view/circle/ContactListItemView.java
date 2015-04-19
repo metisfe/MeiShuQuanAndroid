@@ -79,40 +79,8 @@ public class ContactListItemView extends LinearLayout {
             this.smartImageView.setImageResource(resourceId);
         } else {
             //if image url missing then use rongcloud to get real picture
-            if (TextUtils.isEmpty(url) && MainApplication.rongClient != null) {
-                MainApplication.rongClient.getUserInfo(uid, new RongIMClient.GetUserInfoCallback() {
-                    @Override
-                    public void onSuccess(final RongIMClient.UserInfo userInfo) {
-                        Log.d("circle", "get user info success id: " + uid);
-                        ChatManager.contactCache.put(userInfo.getUserId(), userInfo);
-                        //TODO: save to DB
-                        ViewUtils.delayExecute(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (smartImageView != null) {
-                                    if (!TextUtils.isEmpty(userInfo.getPortraitUri())) {
-                                        smartImageView.setImageUrl(userInfo.getPortraitUri());
-                                    } else {
-                                        smartImageView.setImageResource(R.drawable.view_circle_defaulticon);
-                                    }
-                                }
-                            }
-                        }, 50);
-                    }
-
-                    @Override
-                    public void onError(ErrorCode errorCode) {
-                        ViewUtils.delayExecute(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (smartImageView != null) {
-                                    smartImageView.setImageResource(R.drawable.view_circle_defaulticon);
-                                }
-                            }
-                        }, 50);
-                        Log.d("circle", "fail to get user info id: " + uid);
-                    }
-                });
+            if (TextUtils.isEmpty(url)) {
+                smartImageView.setImageResource(R.drawable.view_circle_defaulticon);
             } else {
                 smartImageView.setImageUrl(url);
             }

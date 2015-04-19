@@ -89,7 +89,7 @@ public class StartFriendPickFragment extends Fragment {
                     if (selectedSet.size() == 1) {
                         String id = (new ArrayList<String>(selectedSet)).get(0);
                         Intent intent = new Intent(getActivity(), ChatActivity.class);
-                        intent.putExtra("title", ChatManager.getUserInfo(id).getName());
+                        intent.putExtra("title", ChatManager.getUserInfo(id).name);
                         intent.putExtra("targetId", id);
                         intent.putExtra("type", RongIMClient.ConversationType.PRIVATE.toString());
                         getActivity().startActivity(intent);
@@ -170,8 +170,8 @@ public class StartFriendPickFragment extends Fragment {
 
     private void createDiscussion() {
         final List<String> ulist = new ArrayList<String>(selectedSet);
-        if (!selectedSet.contains(ChatManager.userId)) {
-            ulist.add(ChatManager.userId);
+        if (!selectedSet.contains(ChatManager.userRongId)) {
+            ulist.add(ChatManager.userRongId);
         }
 
         if (!selectedSet.contains(targetId) && !TextUtils.isEmpty(targetId)) {
@@ -194,8 +194,7 @@ public class StartFriendPickFragment extends Fragment {
                 intent.putExtra("type", RongIMClient.ConversationType.DISCUSSION.toString());
                 startActivity(intent);
 
-                ChatManager.discussionCache.put(s, new RongIMClient.Discussion(s, dname, ChatManager.userId, true, ulist));
-                //TODO: should also save to DB
+                ChatManager.putDiscussion(s, new RongIMClient.Discussion(s, dname, ChatManager.userRongId, true, ulist));
                 finish();
             }
 
@@ -212,8 +211,8 @@ public class StartFriendPickFragment extends Fragment {
         List<String> toAdd = new ArrayList<>();
         if (ids != null && ids.size() > 1) {
             for (int i = 1; i < ids.size(); i++) {
-                if (ChatManager.contactCache != null && ChatManager.contactCache.containsKey(ids.get(i))) {
-                    ret += "," + ChatManager.contactCache.get(ids.get(i)).getName();
+                if (ChatManager.containUserInfo(ids.get(i))) {
+                    ret += "," + ChatManager.getUserInfo(ids.get(i)).name;
                     if (ret.length() >= 30) break;
                 } else {
                     toAdd.add(ids.get(i));
@@ -265,7 +264,7 @@ public class StartFriendPickFragment extends Fragment {
                             }
 
                             discussion.setMemberIdList(mlist);
-                            ChatManager.discussionCache.put(targetId, discussion);
+                            ChatManager.putDiscussion(targetId, discussion);
                             //TODO: should also save to DB
 
                             progressDialog.cancel();

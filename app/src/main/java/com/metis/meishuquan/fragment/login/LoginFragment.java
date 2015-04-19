@@ -97,7 +97,7 @@ public class LoginFragment extends Fragment {
 
                             //connect to Rong
                             String token = user.getData().getToken();
-                            ChatManager.userId = user.getData().getRongCloudId();
+                            ChatManager.userRongId = user.getData().getRongCloudId();
                             MainApplication.rongConnect(token);
 
                             //add userInfo into sharedPreferences

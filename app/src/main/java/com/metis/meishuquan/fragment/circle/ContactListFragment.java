@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,8 @@ import com.metis.meishuquan.view.circle.ContactListItemView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.rong.imlib.RongIMClient;
 
 /**
  * Created by wudi on 4/2/2015.
@@ -83,6 +86,29 @@ public class ContactListFragment extends CircleBaseFragment {
         expandAll();
 
         return rootView;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        Log.d("circle", "on attach contact list");
+        super.onAttach(activity);
+        ChatManager.SetOnFriendListReceivedListener(new ChatManager.OnFriendListReceivedListener() {
+            @Override
+            public void onReceive() {
+                Log.d("circle", "refresh contact list");
+                if (adapter != null) {
+                    adapter.friendList = ChatManager.getGroupedFriendList();
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.d("circle", "on detach contact list");
+        ChatManager.RemoveOnFriendListReceivedListener();
     }
 
     @Override

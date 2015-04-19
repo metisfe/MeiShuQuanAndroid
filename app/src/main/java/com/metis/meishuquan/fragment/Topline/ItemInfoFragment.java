@@ -3,6 +3,7 @@ package com.metis.meishuquan.fragment.Topline;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -47,6 +48,7 @@ import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -70,6 +72,8 @@ public class ItemInfoFragment extends Fragment {
     private EditText editText;
     private RelativeLayout rlSend;
     private boolean isPrivate = false;
+    private List<SmartImageView> imageGroup = new ArrayList<>();
+    private boolean windowAttached;
 
     private int newsId = 0;
     private FragmentManager fm;
@@ -176,6 +180,7 @@ public class ItemInfoFragment extends Fragment {
         imageView.setLayoutParams(lp);
 
         ll_content.addView(imageView);
+        imageGroup.add(imageView);
     }
 
     //添加文本控件
@@ -408,13 +413,33 @@ public class ItemInfoFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        windowAttached = true;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        windowAttached = false;
+        for (ImageView imageView : imageGroup) {
+            if (imageView != null && imageView.getDrawable() != null) {
+                ((BitmapDrawable) imageView.getDrawable()).getBitmap().recycle();
+                imageView.setImageDrawable(null);
+            }
+        }
+
+        imageGroup = null;
+    }
+
     //根据新闻Id获取新闻内容
     private void getInfoData(final int newsId) {
         TopLineOperator topLineOperator = TopLineOperator.getInstance();
         topLineOperator.getNewsInfoById(newsId, new ApiOperationCallback<ReturnInfo<String>>() {
             @Override
             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                if (result != null) {
+                if (result != null && windowAttached) {
                     if (result.getInfo().equals(String.valueOf(0))) {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);

@@ -68,10 +68,10 @@ public class RequestMessageFragment extends Fragment {
                             public void onCompleted(ReturnOnlyInfo result, Exception exception, ServiceFilterResponse response) {
                                 progressDialog.cancel();
                                 if (result != null && result.option != null && result.option.isSuccess()) {
-                                    Toast.makeText(getActivity(), "请求成功", Toast.LENGTH_LONG);
+                                    Toast.makeText(getActivity(), "请求成功", Toast.LENGTH_LONG).show();
                                     getActivity().getSupportFragmentManager().popBackStack();
                                 } else {
-                                    Toast.makeText(getActivity(), "请求失败", Toast.LENGTH_LONG);
+                                    Toast.makeText(getActivity(), "请求失败", Toast.LENGTH_LONG).show();
                                 }
                             }
                         });

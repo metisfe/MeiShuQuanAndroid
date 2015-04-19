@@ -20,12 +20,12 @@ import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.model.circle.CUserModel;
 import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.util.ViewUtils;
 import com.metis.meishuquan.view.circle.CircleGridIcon;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
-import com.metis.meishuquan.view.shared.ExpandableHeightGridView;
 import com.metis.meishuquan.view.shared.SwitchButton;
 
 import java.util.ArrayList;
@@ -87,14 +87,19 @@ public class ChatConfigActivity extends Activity {
         if (type == RongIMClient.ConversationType.DISCUSSION && MainApplication.rongClient != null) {
             MainApplication.rongClient.getDiscussion(targetId, new RongIMClient.GetDiscussionCallback() {
                 @Override
-                public void onSuccess(RongIMClient.Discussion discussion) {
-                    ChatManager.normalizeDiscussion(discussion);
-                    ChatManager.discussionCache.put(discussion.getId(), discussion);
-                    if (adapter != null) {
-                        adapter.discussion = discussion;
-                        setGridViewHeight(adapter.getCount());
-                        adapter.notifyDataSetChanged();
-                    }
+                public void onSuccess(final RongIMClient.Discussion discussion) {
+                    ChatManager.putDiscussion(discussion.getId(), discussion);
+                    ChatManager.getUserInfoFromApi(discussion.getMemberIdList(), new ChatManager.OnUserInfoDataReceived() {
+                        @Override
+                        public void onReceive(List<CUserModel> models) {
+                            ChatManager.putUserInfos(models);
+                            if (adapter != null) {
+                                adapter.discussion = discussion;
+                                setGridViewHeight(adapter.getCount());
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+                    });
                 }
 
                 @Override
@@ -103,7 +108,6 @@ public class ChatConfigActivity extends Activity {
                 }
             });
         }
-
     }
 
     @Override
@@ -260,7 +264,7 @@ public class ChatConfigActivity extends Activity {
                         Intent intent = new Intent(ChatConfigActivity.this, ChatFriendSelectionActivity.class);
                         ArrayList<String> excludeList = new ArrayList<String>();
                         if (adapter.isPrivate) {
-                            excludeList.add(adapter.userInfo.getUserId());
+                            excludeList.add(adapter.userInfo.rongCloud);
                             intent.putExtra("fromtype", "privateconfig");
                             intent.putExtra("targetid", targetId);
                         } else {
@@ -300,7 +304,7 @@ public class ChatConfigActivity extends Activity {
 
     class FriendGridViewAdapter extends BaseAdapter {
         public RongIMClient.Discussion discussion;
-        public RongIMClient.UserInfo userInfo;
+        public CUserModel userInfo;
         public boolean isPrivate;
         public boolean isEditMode;
 
@@ -338,7 +342,7 @@ public class ChatConfigActivity extends Activity {
             if (isPrivate) {
                 //if this is a private page
                 if (position == 0) {
-                    icon.setData(userInfo.getPortraitUri(), userInfo.getName(), userInfo.getUserId());
+                    icon.setData(userInfo.avatar, userInfo.name, userInfo.rongCloud);
                     icon.setEditMode(false);
                 } else {
                     icon.setPlusMinus(true);
@@ -347,8 +351,8 @@ public class ChatConfigActivity extends Activity {
             } else {
                 //if this is a group chat page
                 if (position < discussion.getMemberIdList().size()) {
-                    RongIMClient.UserInfo info = ChatManager.getUserInfo(discussion.getMemberIdList().get(position));
-                    icon.setData(info.getPortraitUri(), info.getName(), info.getUserId());
+                    CUserModel info = ChatManager.getUserInfo(discussion.getMemberIdList().get(position));
+                    icon.setData(info.avatar, info.name, info.rongCloud);
                     icon.setEditMode(isEditMode && position > 0);
                 } else if (position == discussion.getMemberIdList().size()) {
                     icon.setPlusMinus(true);
@@ -375,7 +379,7 @@ public class ChatConfigActivity extends Activity {
         private String getName() {
             if (isPrivate) {
                 if (userInfo != null) {
-                    return userInfo.getName();
+                    return userInfo.name;
                 }
             } else {
                 if (discussion != null) {
