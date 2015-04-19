@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.MultiFormatReader;
@@ -29,8 +30,11 @@ import com.google.zxing.common.HybridBinarizer;
 import com.metis.meishuquan.R;
 
 import java.io.IOException;
+import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class QrScanActivity extends BaseActivity implements
         SurfaceHolder.Callback,
@@ -198,6 +202,8 @@ public class QrScanActivity extends BaseActivity implements
 
     }
 
+    static final Set<BarcodeFormat> QR_CODE_FORMATS = EnumSet.of(BarcodeFormat.QR_CODE);
+
     /**
      * Decode the data within the viewfinder rectangle, and time how long it took. For efficiency,
      * reuse the same reader objects from one decode to the next.
@@ -209,9 +215,11 @@ public class QrScanActivity extends BaseActivity implements
     private String decode(byte[] data, int width, int height) {
         long start = System.currentTimeMillis();
         MultiFormatReader multiFormatReader = new MultiFormatReader();
-        Map<DecodeHintType, String> hints = new HashMap<DecodeHintType, String>();
-        hints.put(DecodeHintType.CHARACTER_SET, "utf-8");
-        multiFormatReader.setHints(hints);
+        Map<DecodeHintType,Object> basicHint = new EnumMap<DecodeHintType, Object>(DecodeHintType.class);
+        basicHint.put(DecodeHintType.POSSIBLE_FORMATS, QR_CODE_FORMATS);
+        //Map<DecodeHintType, String> hints = new HashMap<DecodeHintType, String>();
+        //hints.put(DecodeHintType.CHARACTER_SET, "utf-8");
+        multiFormatReader.setHints(basicHint);
         Result rawResult = null;
         PlanarYUVLuminanceSource source = buildLuminanceSource(data, width, height);
         if (source != null) {
