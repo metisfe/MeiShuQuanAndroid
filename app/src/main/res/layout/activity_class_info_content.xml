@@ -20,7 +20,6 @@
                 android:id="@+id/id_tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="男青年 立体意识"
                 android:textColor="#424242"
                 android:textSize="18sp" />
 
@@ -30,7 +29,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/id_tv_title"
                 android:layout_marginTop="10dp"
-                android:text="2013-12-12"
                 android:textColor="#7e7e7e"
                 android:textSize="10sp" />
 
@@ -42,7 +40,6 @@
                 android:layout_below="@+id/id_tv_title"
                 android:layout_marginTop="10dp"
                 android:layout_toLeftOf="@+id/id_tv_comment_count"
-                android:text="阅读(100)"
                 android:textColor="#7e7e7e"
                 android:textSize="12sp" />
 
@@ -63,7 +60,7 @@
             android:layout_marginTop="20dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -75,8 +72,41 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
+            <RelativeLayout
+                android:id="@+id/id_rl_support"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_margin="10dp"
+                android:background="#f0f0f0"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_centerInParent="true"
+                    android:clickable="false"
+                    android:src="@drawable/icon_unsupport" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/id_rl_step"
+                android:layout_width="0dp"
+                android:layout_margin="10dp"
+                android:layout_height="40dp"
+                android:background="#f0f0f0"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:clickable="false"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/icon_unstep" />
+            </RelativeLayout>
         </LinearLayout>
 
     </LinearLayout>
