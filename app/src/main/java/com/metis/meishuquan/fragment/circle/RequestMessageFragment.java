@@ -47,7 +47,7 @@ public class RequestMessageFragment extends Fragment {
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });
-
+        titleBar.setText("好友验证");
         titleBar.setRightButton("完成", 0, new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -66,7 +66,7 @@ public class StartFriendPickFragment extends Fragment {
         fromType = getArguments().getString("fromtype");
         targetId = getArguments().getString("targetid");
         title = getArguments().getString("title");
-        fromActivity = getArguments().getBoolean("fromactivity",false);
+        fromActivity = getArguments().getBoolean("fromactivity", false);
         if (excludeList != null) {
             for (String id : excludeList) {
                 excludeSet.add(id);
@@ -85,6 +85,18 @@ public class StartFriendPickFragment extends Fragment {
                     createDiscussion();
                 } else if ("discussionconfig".equals(fromType)) {
                     addMemberToDiscussion();
+                } else if ("friendpickfragment".equals(fromType)) {
+                    if (selectedSet.size() == 1) {
+                        String id = (new ArrayList<String>(selectedSet)).get(0);
+                        Intent intent = new Intent(getActivity(), ChatActivity.class);
+                        intent.putExtra("title", ChatManager.getUserInfo(id).getName());
+                        intent.putExtra("targetId", id);
+                        intent.putExtra("type", RongIMClient.ConversationType.PRIVATE.toString());
+                        getActivity().startActivity(intent);
+                        getActivity().getSupportFragmentManager().popBackStack();
+                    } else {
+                        createDiscussion();
+                    }
                 } else {
                     finish();
                 }
@@ -113,7 +125,7 @@ public class StartFriendPickFragment extends Fragment {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 String uid = ((UserAdvanceInfo) adapter.getChild(groupPosition, childPosition)).getUserId();
-                if (excludeSet!=null && excludeSet.contains(uid))
+                if (excludeSet != null && excludeSet.contains(uid))
                     return true;
                 if (selectedSet.contains(uid)) selectedSet.remove(uid);
                 else selectedSet.add(uid);
@@ -169,7 +181,8 @@ public class StartFriendPickFragment extends Fragment {
         if (MainApplication.rongClient == null) return;
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.show();
-        MainApplication.rongClient.createDiscussion("Not Set", ulist, new RongIMClient.CreateDiscussionCallback() {
+        final String dname = createDiscussionName(ulist);
+        MainApplication.rongClient.createDiscussion(dname, ulist, new RongIMClient.CreateDiscussionCallback() {
             @Override
             public void onSuccess(String s) {
                 Log.d("circle", "discussion created, id: " + s);
@@ -181,7 +194,7 @@ public class StartFriendPickFragment extends Fragment {
                 intent.putExtra("type", RongIMClient.ConversationType.DISCUSSION.toString());
                 startActivity(intent);
 
-                ChatManager.discussionCache.put(s, new RongIMClient.Discussion(s, "Not Set", ChatManager.userId, true, ulist));
+                ChatManager.discussionCache.put(s, new RongIMClient.Discussion(s, dname, ChatManager.userId, true, ulist));
                 //TODO: should also save to DB
                 finish();
             }
@@ -194,14 +207,34 @@ public class StartFriendPickFragment extends Fragment {
         });
     }
 
-    private void finish()
-    {
-        if (fromActivity)
-        {
-            getActivity().finish();
+    private String createDiscussionName(List<String> ids) {
+        String ret = MainApplication.userInfo.getName();
+        List<String> toAdd = new ArrayList<>();
+        if (ids != null && ids.size() > 1) {
+            for (int i = 1; i < ids.size(); i++) {
+                if (ChatManager.contactCache != null && ChatManager.contactCache.containsKey(ids.get(i))) {
+                    ret += "," + ChatManager.contactCache.get(ids.get(i)).getName();
+                    if (ret.length() >= 30) break;
+                } else {
+                    toAdd.add(ids.get(i));
+                }
+            }
         }
-        else
-        {
+
+        if (ret.length() < 30) {
+            for (String id : toAdd) {
+                ret += "," + id;
+                if (ret.length() >= 30) break;
+            }
+        }
+
+        return ret;
+    }
+
+    private void finish() {
+        if (fromActivity) {
+            getActivity().finish();
+        } else {
             getActivity().getSupportFragmentManager().popBackStack();
         }
     }
@@ -209,7 +242,7 @@ public class StartFriendPickFragment extends Fragment {
     private void addMemberToDiscussion() {
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.show();
-        if (MainApplication.rongClient==null) return;
+        if (MainApplication.rongClient == null) return;
         //first we need to check the existing member list to prevent crash
         MainApplication.rongClient.getDiscussion(targetId, new RongIMClient.GetDiscussionCallback() {
             @Override

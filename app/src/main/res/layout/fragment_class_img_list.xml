@@ -49,11 +49,42 @@
         android:layout_below="@+id/id_ll_tab"
         android:background="#cccccc" />
 
-    <com.metis.meishuquan.view.shared.DragListView
-        android:id="@+id/id_listview_course_img"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/fragment_shared_classfragment_tab_bar"
         android:layout_below="@+id/id_horizontal_line"
-        android:background="#f0f0f0" />
+        android:background="#f0f0f0"
+        android:id="@+id/scrollview">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/id_ll_one"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:padding="2.5dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"></LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/id_ll_two"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:padding="2.5dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"></LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/id_ll_three"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:padding="2.5dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"></LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

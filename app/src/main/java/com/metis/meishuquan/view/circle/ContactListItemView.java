@@ -89,10 +89,12 @@ public class ContactListItemView extends LinearLayout {
                         ViewUtils.delayExecute(new Runnable() {
                             @Override
                             public void run() {
-                                if (!TextUtils.isEmpty(userInfo.getPortraitUri())) {
-                                    smartImageView.setImageUrl(userInfo.getPortraitUri());
-                                } else {
-                                    smartImageView.setImageResource(R.drawable.view_circle_defaulticon);
+                                if (smartImageView != null) {
+                                    if (!TextUtils.isEmpty(userInfo.getPortraitUri())) {
+                                        smartImageView.setImageUrl(userInfo.getPortraitUri());
+                                    } else {
+                                        smartImageView.setImageResource(R.drawable.view_circle_defaulticon);
+                                    }
                                 }
                             }
                         }, 50);
@@ -103,7 +105,9 @@ public class ContactListItemView extends LinearLayout {
                         ViewUtils.delayExecute(new Runnable() {
                             @Override
                             public void run() {
-                                smartImageView.setImageResource(R.drawable.view_circle_defaulticon);
+                                if (smartImageView != null) {
+                                    smartImageView.setImageResource(R.drawable.view_circle_defaulticon);
+                                }
                             }
                         }, 50);
                         Log.d("circle", "fail to get user info id: " + uid);
@@ -112,7 +116,6 @@ public class ContactListItemView extends LinearLayout {
             } else {
                 smartImageView.setImageUrl(url);
             }
-
 
             this.smartImageView.setImageUrl(url);
         }

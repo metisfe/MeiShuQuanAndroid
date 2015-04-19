@@ -72,7 +72,7 @@ public class ChatListFragment extends CircleBaseFragment {
                         //select friend
                         StartFriendPickFragment startFriendPickFragment = new StartFriendPickFragment();
                         Bundle args = new Bundle();
-                        args.putString("fromtype", "privateconfig");
+                        args.putString("fromtype", "friendpickfragment");
                         args.putString("title", "消息");
                         startFriendPickFragment.setArguments(args);
 
@@ -112,6 +112,12 @@ public class ChatListFragment extends CircleBaseFragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshList();
+    }
+
     private void refreshList() {
         if (this.listView != null && adapter != null && MainApplication.rongClient != null) {
             List<RongIMClient.Conversation> clist = MainApplication.rongClient.getConversationList();
@@ -142,12 +148,9 @@ public class ChatListFragment extends CircleBaseFragment {
             }
         });
 
-        if (MainApplication.rongClient!=null)
-        {
+        if (MainApplication.rongClient != null) {
             adapter.data = MainApplication.rongClient.getConversationList();
-        }
-        else
-        {
+        } else {
             //TODO: tell user to login
         }
 

@@ -2,22 +2,13 @@ package com.metis.meishuquan.activity.info;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.ImageFormat;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.YuvImage;
-import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceHolder;
@@ -28,34 +19,23 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.zxing.BinaryBitmap;
-import com.google.zxing.ChecksumException;
 import com.google.zxing.DecodeHintType;
-import com.google.zxing.FormatException;
 import com.google.zxing.MultiFormatReader;
-import com.google.zxing.NotFoundException;
 import com.google.zxing.PlanarYUVLuminanceSource;
-import com.google.zxing.RGBLuminanceSource;
 import com.google.zxing.ReaderException;
 import com.google.zxing.Result;
 import com.google.zxing.client.android.camera.CameraConfigurationUtils;
 import com.google.zxing.common.HybridBinarizer;
-import com.google.zxing.qrcode.QRCodeReader;
 import com.metis.meishuquan.R;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 public class QrScanActivity extends BaseActivity implements
         SurfaceHolder.Callback,
         Camera.PreviewCallback,
-        View.OnClickListener,
-        Camera.AutoFocusCallback{
+        View.OnClickListener{
 
     private static final int MIN_FRAME_WIDTH = 240;
     private static final int MIN_FRAME_HEIGHT = 240;
@@ -67,10 +47,9 @@ public class QrScanActivity extends BaseActivity implements
     public static final String BARCODE_BITMAP = "barcode_bitmap";
     public static final String BARCODE_SCALED_FACTOR = "barcode_scaled_factor";
 
-    private static final int STATE_SCANNING = 0,
-                            STATE_DECODING = 1,
+    private static final int STATE_DECODING = 1,
                             STATE_DECODE_FAILED = 2,
-                            STATE_DECODE_SUCESS = 3;
+                            STATE_DECODE_SUCCESS = 3;
 
     private SurfaceView mSurfaceView = null;
     private SurfaceHolder mHolder = null;
@@ -81,7 +60,7 @@ public class QrScanActivity extends BaseActivity implements
 
     private ScanCoverView mCoverView = null;
 
-    private int mState = STATE_SCANNING;
+    private int mState = STATE_DECODE_FAILED;
 
     private int mDisplayWidth, mDisplayHeight;
 
@@ -109,6 +88,12 @@ public class QrScanActivity extends BaseActivity implements
         mDisplayWidth = getWindowManager().getDefaultDisplay().getWidth();
         mDisplayHeight = getWindowManager().getDefaultDisplay().getHeight();
         Log.v(TAG, "onCreate " + mDisplayWidth + " " + mDisplayHeight);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
     }
 
     @Override
@@ -144,7 +129,7 @@ public class QrScanActivity extends BaseActivity implements
             Point point = new Point();
             getWindowManager().getDefaultDisplay().getSize(point);
             mCamera.setPreviewDisplay(holder);
-            mCamera.setDisplayOrientation(90);
+            //mCamera.setDisplayOrientation(90);
             Log.v(TAG, "point.x=" + point.x + " point.y=" + point.y);
             mCamera.getParameters().setPictureSize(point.x, point.y);
             //mCamera.autoFocus(this);
@@ -159,20 +144,23 @@ public class QrScanActivity extends BaseActivity implements
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         Log.v(TAG, TAG + " surfaceChanged ");
-        try {
-            mCamera.stopPreview();
-        } catch (Exception e){
-            // ignore: tried to stop a non-existent preview
+        if (mState == STATE_DECODE_FAILED) {
+            try {
+                mCamera.stopPreview();
+            } catch (Exception e){
+                // ignore: tried to stop a non-existent preview
+            }
+
+            try {
+                mCamera.setPreviewCallback(this);
+                mCamera.setPreviewDisplay(mHolder);
+                mCamera.startPreview();
+
+            } catch (Exception e){
+                Log.d(TAG, "Error starting camera preview: " + e.getMessage());
+            }
         }
 
-        try {
-            mCamera.setPreviewCallback(this);
-            mCamera.setPreviewDisplay(mHolder);
-            mCamera.startPreview();
-
-        } catch (Exception e){
-            Log.d(TAG, "Error starting camera preview: " + e.getMessage());
-        }
     }
 
     @Override
@@ -197,7 +185,7 @@ public class QrScanActivity extends BaseActivity implements
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
 
-        if (mState != STATE_DECODING) {
+        if (mState == STATE_DECODE_FAILED) {
             Log.v(TAG, TAG + " onPreviewFrame " + data.length);
             new DecodeTask().execute(data);
             /*String result = scanningImage(data);
@@ -207,11 +195,6 @@ public class QrScanActivity extends BaseActivity implements
 
     @Override
     public void onClick(View v) {
-
-    }
-
-    @Override
-    public void onAutoFocus(boolean success, Camera camera) {
 
     }
 
@@ -260,6 +243,8 @@ public class QrScanActivity extends BaseActivity implements
                 + rect.top + " "
                 + rect.right + " "
                 + rect.bottom);
+        //359 334 1559 744
+        //359 202 1559 877
         return new PlanarYUVLuminanceSource(data, width, height, rect.left, rect.top,
                 rect.width(), rect.height(), false);
     }
@@ -325,6 +310,7 @@ public class QrScanActivity extends BaseActivity implements
         Display display = manager.getDefaultDisplay();
         theScreenResolution = new Point();
         display.getSize(theScreenResolution);
+        Log.v(TAG, "initFromCameraParameters " + theScreenResolution);
         //screenResolution = theScreenResolution;
         cameraResolution = CameraConfigurationUtils.findBestPreviewSizeValue(parameters, theScreenResolution);
     }
@@ -334,15 +320,10 @@ public class QrScanActivity extends BaseActivity implements
         @Override
         protected String doInBackground(byte[]... params) {
             mState = STATE_DECODING;
-            int bmpWidth = mCamera.getParameters().getPictureSize().width;
-            int bmpHeight = mCamera.getParameters().getPictureSize().height;
             byte[] data = params[0];
-            final int qrWidth = getResources().getDimensionPixelSize(R.dimen.qr_code_size);
-            final int qrHeight = getResources().getDimensionPixelSize(R.dimen.qr_code_size);
 
-            Log.v(TAG, TAG + " decoding ... " + data.length + " " + bmpWidth + " " + bmpHeight);
             if (cameraResolution != null) {
-                decode(data, cameraResolution.x, cameraResolution.y);
+                return decode(data, cameraResolution.x, cameraResolution.y);
             }
             return null;
         }
@@ -355,7 +336,7 @@ public class QrScanActivity extends BaseActivity implements
             if (s == null) {
                 mState = STATE_DECODE_FAILED;
             } else {
-                mState = STATE_DECODE_SUCESS;
+                mState = STATE_DECODE_SUCCESS;
             }
         }
     }

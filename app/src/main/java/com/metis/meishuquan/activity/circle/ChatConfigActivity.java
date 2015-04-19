@@ -61,7 +61,6 @@ public class ChatConfigActivity extends Activity {
         clearGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: looks like rong's bug
                 if (MainApplication.rongIM != null)
                     MainApplication.rongIM.clearMessages(ChatConfigActivity.this, type, targetId);
             }

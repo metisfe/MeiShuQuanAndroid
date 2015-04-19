@@ -3,17 +3,13 @@ package com.metis.meishuquan.activity.course;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -21,20 +17,19 @@ import android.widget.TextView;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.model.BLL.CourseOperator;
-import com.metis.meishuquan.model.contract.ReturnInfo;
-import com.metis.meishuquan.model.course.Course;
 import com.metis.meishuquan.model.course.CourseChannel;
 import com.metis.meishuquan.model.course.CourseChannelData;
 import com.metis.meishuquan.model.course.CourseChannelItem;
-import com.metis.meishuquan.model.topline.ChannelItem;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.course.FlowLayout;
-import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
-import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ChooseCourseActivity extends FragmentActivity {
@@ -69,6 +64,9 @@ public class ChooseCourseActivity extends FragmentActivity {
         this.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.putExtra("tags", (java.io.Serializable) adapter.getSelectedChannels());
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
@@ -77,8 +75,8 @@ public class ChooseCourseActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
-                intent.putExtra("tags", adapter.getSelectedChannels());
-                ChooseCourseActivity.this.setResult(RESULT_OK, intent);
+                intent.putExtra("tags", (java.io.Serializable) adapter.getSelectedChannels());
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
@@ -86,6 +84,9 @@ public class ChooseCourseActivity extends FragmentActivity {
         this.rlAllChannel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.putExtra("tags", (java.io.Serializable) adapter.getSelectedChannels());
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
@@ -103,22 +104,25 @@ public class ChooseCourseActivity extends FragmentActivity {
 
         private List<CourseChannel> mData;
         private List<CourseChannelItem> mCheckedItems = new ArrayList<CourseChannelItem>();
+        private List<CourseChannelItem> mOldCheckedItems = new ArrayList<CourseChannelItem>();
         private Context mContext;
 
         CourseAdapter(Context context, List<CourseChannel> mData) {
             this.mContext = context;
             this.mData = mData;
+            getOldChannels();
         }
 
-        public String[] getSelectedChannels() {
-            if (mCheckedItems.size() == 0) {
-                return null;
+        private void getOldChannels() {
+            final String json = SharedPreferencesUtil.getInstanse(mContext).getStringByKey(SharedPreferencesUtil.CHECKED_CHANNEL_ITEMS + MainApplication.userInfo.getUserId());
+            if (!json.isEmpty()) {
+                mOldCheckedItems = new Gson().fromJson(json, new TypeToken<List<CourseChannelItem>>() {
+                }.getType());
             }
-            String[] str = new String[mCheckedItems.size()];
-            for (int i = 0; i < mCheckedItems.size(); i++) {
-                str[i] = mCheckedItems.get(i).getChannelId();
-            }
-            return str;
+        }
+
+        public List<CourseChannelItem> getSelectedChannels() {
+            return mCheckedItems;
         }
 
         @Override
@@ -166,8 +170,18 @@ public class ChooseCourseActivity extends FragmentActivity {
         private void addCourseChannelItem(FlowLayout flowLayout, List<CourseChannelItem> courseChannelItems) {
             for (final CourseChannelItem item : courseChannelItems) {
                 final Button button = (Button) getLayoutInflater().inflate(R.layout.choose_course_button, null).findViewById(R.id.id_btn_choose_course);
-                button.setText(item.getChannelName());
-                button.setTag(item);
+                if (mOldCheckedItems.contains(item)) {
+                    button.setText(item.getChannelName());
+                    item.setChecked(true);
+                    button.setTag(item);
+                    button.setTextColor(Color.rgb(251, 109, 109));//选中颜色
+                    mCheckedItems.add(item);
+                } else {
+                    button.setText(item.getChannelName());
+                    item.setChecked(false);
+                    button.setTag(item);
+                    button.setTextColor(Color.rgb(126, 126, 126));//未选中颜色
+                }
 
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
