@@ -20,8 +20,10 @@ public class PlayerManager implements MediaPlayer.OnPreparedListener, MediaPlaye
     private Context mContext = null;
     private AudioManager mAudioManager = null;
     private MediaPlayer mPlayer = null;
+    private OnPlayerListener mPlayerListener = null;
+    private String mDataSourcePath = null;
 
-    private PlayerManager () {
+    private PlayerManager() {
 
     }
 
@@ -36,6 +38,7 @@ public class PlayerManager implements MediaPlayer.OnPreparedListener, MediaPlaye
         mPlayer.setOnCompletionListener(this);
         try {
             mPlayer.setDataSource(path);
+            mDataSourcePath = path;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -46,15 +49,33 @@ public class PlayerManager implements MediaPlayer.OnPreparedListener, MediaPlaye
         mPlayer.stop();
         mPlayer.release();
         mPlayer = null;
+        if (mPlayerListener != null) {
+            mPlayerListener.onStopped(mDataSourcePath);
+        }
     }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
         mPlayer.start();
+        if (mPlayerListener != null) {
+            mPlayerListener.onStarted(mDataSourcePath);
+        }
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
+        if (mPlayerListener != null) {
+            mPlayerListener.onCompleted(mDataSourcePath);
+        }
+    }
 
+    public void setOnPlayerListener (OnPlayerListener listener) {
+        mPlayerListener = listener;
+    }
+
+    public static interface OnPlayerListener {
+        public void onStarted(String path);
+        public void onCompleted(String path);
+        public void onStopped(String path);
     }
 }
