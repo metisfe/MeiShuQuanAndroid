@@ -54,6 +54,7 @@ import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.view.circle.moment.MomentActionBar;
 import com.metis.meishuquan.view.circle.moment.MomentPageListView;
+import com.metis.meishuquan.view.circle.moment.comment.EmotionTextView;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.metis.meishuquan.view.shared.DragListView;
 import com.metis.meishuquan.view.topline.CommentInputView;
@@ -269,7 +270,7 @@ public class MomentDetailFragment extends Fragment {
                     @Override
                     public void onCompleted(CircleMomentDetail result, Exception exception, ServiceFilterResponse response) {
 
-                        if (result != null || !result.isSuccess())
+                        if (result == null || !result.isSuccess())
                         {
                             return;
                         }
@@ -317,12 +318,41 @@ public class MomentDetailFragment extends Fragment {
 
         @Override
         public View getView(final int i, View convertView, ViewGroup view) {
-            convertView = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_circle_moment_detail_comment_list_item, null);
+            ViewHolder viewHolder = new ViewHolder();
+            if (convertView == null)
+            {
+                convertView = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_circle_moment_detail_comment_list_item, null);
+
+                viewHolder.avatar = (SmartImageView) convertView.findViewById(R.id.comment_list_item_avatar);
+                viewHolder.name = (TextView) convertView.findViewById(R.id.comment_list_item_username);
+                viewHolder.grade = (TextView) convertView.findViewById(R.id.comment_list_item_grade);
+                viewHolder.time = (TextView) convertView.findViewById(R.id.comment_list_item_time);
+                viewHolder.content = (EmotionTextView) convertView.findViewById(R.id.comment_list_item_content);
+                viewHolder.likeCount = (TextView) convertView.findViewById(R.id.comment_list_item_like_count);
+
+                convertView.setTag(viewHolder);
+            }
+            else{
+                viewHolder = (ViewHolder)convertView.getTag();
+            }
+
+            CCircleCommentModel comment = commentList.get(i);
+            viewHolder.avatar.setImageUrl(comment.user.avatar);
+            viewHolder.name.setText(comment.user.name);
+            viewHolder.grade.setText(comment.user.grade);
+            viewHolder.time.setText(Utils.getDisplayTime(comment.createTime));
+            viewHolder.content.setText(comment.content);
+            viewHolder.likeCount.setText(comment.supportCount > 0 ? "" + comment.supportCount : "");
             return convertView;
         }
 
         private class ViewHolder {
-            //TODO
+            SmartImageView avatar;
+            TextView name;
+            TextView grade;
+            TextView time;
+            EmotionTextView content;
+            TextView likeCount;
         }
     }
 }

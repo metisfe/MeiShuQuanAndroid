@@ -27,11 +27,18 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.main.CircleFragment;
+import com.metis.meishuquan.model.circle.CCircleCommentModel;
+import com.metis.meishuquan.model.circle.CCircleTabModel;
+import com.metis.meishuquan.model.circle.CircleMomentDetail;
+import com.metis.meishuquan.model.circle.CirclePushCommentResult;
+import com.metis.meishuquan.model.provider.ApiDataProvider;
+import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.util.ViewUtils;
@@ -40,6 +47,10 @@ import com.metis.meishuquan.view.circle.moment.MomentPageListView;
 import com.metis.meishuquan.view.circle.moment.comment.EmotionEditText;
 import com.metis.meishuquan.view.circle.moment.comment.EmotionSelectView;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
+import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+
+import org.apache.http.client.methods.HttpGet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +72,7 @@ public class MomentCommentFragment extends Fragment {
     private ViewGroup rootView;
 
     private FragmentManager fm;
-    private TextView cancelButton;
+    private TextView cancelButton, publishButton;
 
     private Button buttonPublish;
     private ProgressDialog progressDialog;
@@ -94,6 +105,38 @@ public class MomentCommentFragment extends Fragment {
                 ft.replace(R.id.content_container, momentDetailFragment);
                 ft.commit();
                 hideKeyBoard();
+            }
+        });
+
+        publishButton = (TextView) rootView.findViewById(R.id.moment_comment_publish);
+        publishButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainApplication.UIContext, "正在发送，请稍候", Toast.LENGTH_SHORT).show();
+                String url = String.format("v1.1/Circle/PushComment?id=%s&content=%s&session=%s", GlobalData.moment.id, editText.getText().toString(), MainApplication.userInfo.getCookie());
+                publishButton.setClickable(false);
+                ApiDataProvider.getmClient().invokeApi(url, null,
+                        HttpGet.METHOD_NAME, null,  CirclePushCommentResult.class,
+                        new ApiOperationCallback<CirclePushCommentResult>() {
+                            @Override
+                            public void onCompleted(CirclePushCommentResult result, Exception exception, ServiceFilterResponse response) {
+                                publishButton.setClickable(true);
+                                if (result == null || !result.isSuccess())
+                                {
+                                    Toast.makeText(MainApplication.UIContext, "发送失败，请检查网络后重试", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+
+                                Toast.makeText(MainApplication.UIContext, "发送成功！", Toast.LENGTH_SHORT).show();
+                                MomentDetailFragment momentDetailFragment = new MomentDetailFragment();
+                                FragmentManager fm = getActivity().getSupportFragmentManager();
+                                FragmentTransaction ft = fm.beginTransaction();
+                                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                                ft.replace(R.id.content_container, momentDetailFragment);
+                                ft.commit();
+                                hideKeyBoard();
+                            }
+                        });
             }
         });
 

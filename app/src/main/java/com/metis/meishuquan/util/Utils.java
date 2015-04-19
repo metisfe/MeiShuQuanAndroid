@@ -76,6 +76,11 @@ public class Utils {
     public static final int MIN_SELECTED_FOLLOWEE = 3;
 
     public static SimpleDateFormat DateFormatter = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss.SSS", Locale.US);
+    public static String getDisplayTime(String timeString)
+    {
+        return getDateFromNow(getDate(timeString, null));
+    }
+
     public static Date getDate(String dateString, Date defaultValue)
     {
         Date result = defaultValue;
