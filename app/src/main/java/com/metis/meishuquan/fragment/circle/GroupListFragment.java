@@ -2,6 +2,7 @@ package com.metis.meishuquan.fragment.circle;
 
 import android.app.ActionBar;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,12 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.circle.ChatActivity;
 import com.metis.meishuquan.model.circle.CDiscussion;
 import com.metis.meishuquan.model.circle.CPhoneFriend;
 import com.metis.meishuquan.model.circle.MyGroupList;
@@ -67,6 +70,17 @@ public class GroupListFragment extends Fragment {
         this.list.addFooterView(footerView);
         list.setFooterDividersEnabled(false);
         list.setDivider(null);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), ChatActivity.class);
+                CDiscussion dis = (CDiscussion) adapter.getItem(position);
+                intent.putExtra("title", dis.name);
+                intent.putExtra("targetId", dis.discussionId);
+                intent.putExtra("type", RongIMClient.ConversationType.DISCUSSION.toString());
+                getActivity().startActivity(intent);
+            }
+        });
 
         adapter = new CircleFriendListAdapter();
         List<String> ids = ChatManager.getMyWatchGroup();
@@ -125,7 +139,7 @@ public class GroupListFragment extends Fragment {
 
         @Override
         public Object getItem(int position) {
-            return null;
+            return discussions.get(position);
         }
 
         @Override

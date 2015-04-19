@@ -19,8 +19,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.framework.util.ThreadPool;
 import com.metis.meishuquan.model.circle.CUserModel;
 import com.metis.meishuquan.model.circle.MyFriendList;
 import com.metis.meishuquan.model.circle.ReturnOnlyInfo;
@@ -156,6 +158,65 @@ public class ChatConfigActivity extends Activity {
             this.titleBar.setText(adapter.getName());
         } else {
             this.leaveGroup.setVisibility(View.VISIBLE);
+            this.leaveGroup.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (MainApplication.rongClient != null) {
+                        final ProgressDialog dialog = new ProgressDialog(ChatConfigActivity.this);
+                        dialog.show();
+                        MainApplication.rongClient.quitDiscussion(targetId, new RongIMClient.OperationCallback() {
+                            @Override
+                            public void onSuccess() {
+                                MainApplication.Handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        dialog.cancel();
+                                        Toast.makeText(ChatConfigActivity.this, "success quite the discussion", Toast.LENGTH_LONG).show();
+
+                                        // this is also dup code
+                                        if (ChatManager.getMyWatchGroup().contains(targetId)) {
+                                            ChatManager.getMyWatchGroup().remove(targetId);
+                                            StringBuilder PATH = new StringBuilder("v1.1/Message/AddDiscussion");
+                                            PATH.append("?session=");
+                                            PATH.append(MainApplication.userInfo.getCookie());
+                                            PATH.append("&userId=");
+                                            PATH.append(MainApplication.userInfo.getUserId());
+                                            PATH.append("&discussionId=");
+                                            PATH.append(targetId);
+                                            PATH.append("&type=1");
+
+                                            ApiDataProvider.getmClient().invokeApi(PATH.toString(), null,
+                                                    HttpGet.METHOD_NAME, null, ReturnOnlyInfo.class,
+                                                    new ApiOperationCallback<ReturnOnlyInfo>() {
+                                                        @Override
+                                                        public void onCompleted(ReturnOnlyInfo result, Exception exception, ServiceFilterResponse response) {
+                                                        }
+                                                    });
+                                        }
+
+                                        Intent intent = new Intent(ChatConfigActivity.this, MainActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        startActivity(intent);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onError(ErrorCode errorCode) {
+                                MainApplication.Handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        dialog.cancel();
+                                        Toast.makeText(ChatConfigActivity.this, "fail quite the discussion", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
+                        });
+                    }
+
+                }
+            });
+
             this.nameGroup.setVisibility(View.VISIBLE);
             this.nameGroup.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -237,6 +298,7 @@ public class ChatConfigActivity extends Activity {
                     final ProgressDialog dialog = new ProgressDialog(ChatConfigActivity.this);
                     dialog.show();
 
+                    //below code is dup code
                     StringBuilder PATH = new StringBuilder("v1.1/Message/AddDiscussion");
                     PATH.append("?session=");
                     PATH.append(MainApplication.userInfo.getCookie());
@@ -256,7 +318,7 @@ public class ChatConfigActivity extends Activity {
 
                                     if (result != null && result.option != null && result.option.isSuccess()) {
                                         Toast.makeText(ChatConfigActivity.this, "success", Toast.LENGTH_SHORT).show();
-                                        Log.d("circle","success watch group id:" +targetId + "Status:" + state);
+                                        Log.d("circle", "success watch group id:" + targetId + "Status:" + state);
                                         if (state && !ChatManager.getMyWatchGroup().contains(targetId))
                                             ChatManager.getMyWatchGroup().add(targetId);
                                         else if (!state && ChatManager.getMyWatchGroup().contains(targetId))
