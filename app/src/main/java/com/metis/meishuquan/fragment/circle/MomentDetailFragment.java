@@ -46,6 +46,7 @@ import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CCircleTabModel;
 import com.metis.meishuquan.model.circle.CircleMomentDetail;
 import com.metis.meishuquan.model.circle.CircleMoments;
+import com.metis.meishuquan.model.circle.CirclePushCommentResult;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
@@ -205,8 +206,22 @@ public class MomentDetailFragment extends Fragment {
 
         this.btnLike.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {//收藏
-                Utils.alertMessageDialog("提示", "点赞成功！");//TODO:
+            public void onClick(View view) {
+                String url = String.format("v1.1/Comment/Support?userid=%s&id=%s&type=7&result=1&session=%s", MainApplication.userInfo.getUserId(), moment.id, MainApplication.userInfo.getCookie());
+
+                ApiDataProvider.getmClient().invokeApi(url, null,
+                        HttpGet.METHOD_NAME, null, CirclePushCommentResult.class,
+                        new ApiOperationCallback<CirclePushCommentResult>() {
+                            @Override
+                            public void onCompleted(CirclePushCommentResult result, Exception exception, ServiceFilterResponse response) {
+                                if (result == null || !result.isSuccess()) {
+                                    return;
+                                }
+
+                                btnLike.setClickable(false);
+                                Toast.makeText(MainApplication.UIContext, "点赞成功！", Toast.LENGTH_LONG).show();
+                            }
+                        });
             }
         });
 

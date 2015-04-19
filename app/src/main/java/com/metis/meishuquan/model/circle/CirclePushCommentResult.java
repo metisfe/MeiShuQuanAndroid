@@ -15,7 +15,7 @@ public class CirclePushCommentResult {
 
     public boolean isSuccess()
     {
-        return option != null && "0".equals(option.status) && data != null;
+        return option != null && option.isSuccess();
     }
 
     public String getInfo() {
