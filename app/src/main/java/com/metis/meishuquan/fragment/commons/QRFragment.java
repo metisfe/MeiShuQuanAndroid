@@ -34,7 +34,7 @@ public class QRFragment extends Fragment {
 
         @Override
         protected Bitmap doInBackground(String... params) {
-            return makeQRCode(params[0].toString(), mWidth, mHeight);
+            return makeQRCode(params[0], mWidth, mHeight);
         }
 
         @Override
@@ -42,11 +42,15 @@ public class QRFragment extends Fragment {
             super.onPostExecute(bitmap);
             if (bitmap != null) {
                 mQrIv.setImageBitmap(bitmap);
+                mQrBmp = bitmap;
             }
         }
     };
 
     private int mWidth, mHeight;
+
+    private Bitmap mQrBmp = null;
+    private View.OnClickListener mQrClickListener = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,6 +68,14 @@ public class QRFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mQrIv = (ImageView)view.findViewById(R.id.qr_image);
+        setOnImageClickListener(mQrClickListener);
+    }
+
+    public void setOnImageClickListener (View.OnClickListener listener) {
+        if (mQrIv != null) {
+            mQrIv.setOnClickListener(listener);
+        }
+        mQrClickListener = listener;
     }
 
     public void showQrCodeWith (String str) {
@@ -71,8 +83,7 @@ public class QRFragment extends Fragment {
     }
 
     private Bitmap makeQRCode (String str, int width, int height) {
-        if (str == null
-                ) {
+        if (str == null) {
             return null;
         }
 

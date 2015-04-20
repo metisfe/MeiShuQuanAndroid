@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.metis.meishuquan.activity.info.QrActivity">
+    tools:context="com.metis.meishuquan.activity.info.NameCardQrActivity">
     <com.metis.meishuquan.view.shared.TitleView
         xmlns:bs="http://schemas.android.com/apk/res-auto"
         android:id="@+id/title"
@@ -11,12 +11,56 @@
         bs:titleText="@string/my_info_name_card"
         bs:titleTextRight="扫描"
         />
+    <RelativeLayout
+        android:id="@+id/qr_user_info"
+        android:layout_width="fill_parent"
+        android:layout_height="75dp"
+        android:layout_below="@+id/title"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="20dp"
+        >
+        <ImageView
+            android:id="@+id/qr_profile"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginRight="10dp"/>
+        <TextView
+            android:id="@+id/qr_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#424242"
+            android:layout_toRightOf="@+id/qr_profile"
+            android:layout_alignTop="@+id/qr_profile"
+            />
+        <TextView
+            android:id="@+id/qr_grade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#7c7c7c"
+            android:layout_toRightOf="@+id/qr_name"
+            android:layout_alignBaseline="@+id/qr_name"
+            />
+        <TextView
+            android:id="@+id/qr_self_introduce"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_toRightOf="@+id/qr_profile"
+            android:layout_below="@+id/qr_name"
+            android:textSize="12sp"
+            android:textColor="#7c7c7c"
+            android:maxLines="2"
+            />
+    </RelativeLayout>
     <fragment
         android:id="@+id/qr_fragment"
         android:name="com.metis.meishuquan.fragment.commons.QRFragment"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/title"
+        android:layout_below="@+id/qr_user_info"
         />
 
 </RelativeLayout>

@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
+import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.PlanarYUVLuminanceSource;
 import com.google.zxing.ReaderException;
@@ -34,6 +35,7 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class QrScanActivity extends BaseActivity implements
@@ -97,7 +99,8 @@ public class QrScanActivity extends BaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
     }
 
     @Override
@@ -133,7 +136,7 @@ public class QrScanActivity extends BaseActivity implements
             Point point = new Point();
             getWindowManager().getDefaultDisplay().getSize(point);
             mCamera.setPreviewDisplay(holder);
-            //mCamera.setDisplayOrientation(90);
+            mCamera.setDisplayOrientation(90);
             Log.v(TAG, "point.x=" + point.x + " point.y=" + point.y);
             mCamera.getParameters().setPictureSize(point.x, point.y);
             //mCamera.autoFocus(this);
@@ -217,6 +220,8 @@ public class QrScanActivity extends BaseActivity implements
         MultiFormatReader multiFormatReader = new MultiFormatReader();
         Map<DecodeHintType,Object> basicHint = new EnumMap<DecodeHintType, Object>(DecodeHintType.class);
         basicHint.put(DecodeHintType.POSSIBLE_FORMATS, QR_CODE_FORMATS);
+        basicHint.put(DecodeHintType.CHARACTER_SET, "utf-8");
+        //basicHint.put(EncodeHintType.CHARACTER_SET, "utf-8");
         //Map<DecodeHintType, String> hints = new HashMap<DecodeHintType, String>();
         //hints.put(DecodeHintType.CHARACTER_SET, "utf-8");
         multiFormatReader.setHints(basicHint);

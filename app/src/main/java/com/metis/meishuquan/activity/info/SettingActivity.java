@@ -13,6 +13,9 @@ import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.shared.MyInfoBtn;
+import com.nostra13.universalimageloader.cache.disc.DiscCacheAware;
+
+import java.text.DecimalFormat;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
@@ -40,9 +43,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         mLogoutBtn = (Button) findViewById(R.id.setting_logout);
         mLogoutBtn.setOnClickListener(this);
 
-        int size = ImageLoaderUtils.getImageLoader(this).getDiscCache().getCurrentSize();
-        float sizeFloat = size / (1024 * 1024);
-        mClearCacheView.setSecondaryText(sizeFloat + "m");
+        mClearCacheView.setSecondaryText(formatSize(b2m(getCacheSize())));
     }
 
     @Override
@@ -71,12 +72,34 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 this.finish();
                 break;
             case R.id.setting_clear_cache:
-                ImageLoaderUtils.getImageLoader(this).getDiscCache().clear();
-                int size = ImageLoaderUtils.getImageLoader(this).getDiscCache().getCurrentSize();
-                float sizeFloat = size / (1024 * 1024);
-                mClearCacheView.setSecondaryText(sizeFloat + "m");
+                final int sizeBefore = getCacheSize();
+                clear();
+                mClearCacheView.setSecondaryText(formatSize(b2m(getCacheSize())));
+                Toast.makeText(this, getString(R.string.setting_cleared, formatSize(b2m(sizeBefore - getCacheSize()))), Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    private int getCacheSize () {
+        DiscCacheAware cache = ImageLoaderUtils.getImageLoader(this).getDiscCache();
+        return cache.getCurrentSize();
+    }
+
+    private float b2m (int size) {
+        return (float)size / (1024 * 1024);
+    }
+
+    private int clear () {
+        DiscCacheAware cache = ImageLoaderUtils.getImageLoader(this).getDiscCache();
+        cache.clear();
+        return cache.getCurrentSize();
+    }
+
+    private String formatSize (float size) {
+        float floatSize = size * 100;
+        int left = (int)floatSize / 100;
+        int right = (int)floatSize % 100;
+        return left + "." + right + "m";
     }
 
 }

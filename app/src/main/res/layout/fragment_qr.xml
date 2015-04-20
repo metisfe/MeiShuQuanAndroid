@@ -7,7 +7,7 @@
         android:layout_width="@dimen/qr_code_size"
         android:layout_height="@dimen/qr_code_size"
         android:scaleType="centerInside"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
         />
     <!--<ImageView
         android:layout_width="30dp"

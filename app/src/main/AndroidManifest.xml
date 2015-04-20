@@ -288,7 +288,7 @@
             android:label="@string/title_activity_constellation"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.info.QrActivity"
+            android:name=".activity.info.NameCardQrActivity"
             android:label="@string/title_activity_qr"
             android:screenOrientation="portrait"></activity>
         <activity

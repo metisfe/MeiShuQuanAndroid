@@ -2,7 +2,6 @@ package com.metis.meishuquan.fragment.main;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,12 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.gson.JsonObject;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.AdvanceActivity;
@@ -27,20 +23,14 @@ import com.metis.meishuquan.activity.info.InfoActivity;
 import com.metis.meishuquan.activity.info.MyCommentsActivity;
 import com.metis.meishuquan.activity.info.MyCourseActivity;
 import com.metis.meishuquan.activity.info.MyFavoritesActivity;
-import com.metis.meishuquan.activity.info.QrActivity;
+import com.metis.meishuquan.activity.info.NameCardQrActivity;
 import com.metis.meishuquan.activity.info.SettingActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.login.LoginFragment;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.User;
-import com.metis.meishuquan.ui.display.SquareRoundDisplayer;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.view.shared.TabBar;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-
-import java.util.Hashtable;
 
 /**
  * Created by wudi on 3/15/2015.
@@ -110,8 +100,8 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        Log.v(TAG, "onResume " + MainApplication.userInfo);
-        if (MainApplication.userInfo != null && MainApplication.userInfo.getUserId() != -1) {
+        Log.v(TAG, "onResume " + MainApplication.userInfo + " " + MainApplication.isLogin());
+        if (MainApplication.isLogin()) {
             getUserInfo(MainApplication.userInfo.getUserId());
             fillUserInfo(MainApplication.userInfo);
         } else {
@@ -169,7 +159,11 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 startActivity(new Intent (getActivity(), LoginActivity.class));
                 break;
             case R.id.my_info_collections:
-                startActivity(new Intent(getActivity(), MyFavoritesActivity.class));
+                if (MainApplication.isLogin()) {
+                    startActivity(new Intent(getActivity(), MyFavoritesActivity.class));
+                } else {
+                    Toast.makeText(getActivity(), R.string.my_info_toast_not_login, Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.my_info_comments:
                 startActivity(new Intent(getActivity(), MyCommentsActivity.class));
@@ -178,9 +172,12 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 startActivity(new Intent(getActivity(), MyCourseActivity.class));
                 break;
             case R.id.my_info_name_card:
-                Intent it = new Intent (getActivity(), QrActivity.class);
-                it.putExtra(QrActivity.KEY_DATA_STR, "小朋友最好了");
-                startActivity(it);
+                if (MainApplication.isLogin()) {
+                    Intent it = new Intent (getActivity(), NameCardQrActivity.class);
+                    startActivity(it);
+                } else {
+                    Toast.makeText(getActivity(), R.string.my_info_toast_not_login, Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.my_info_advances:
                 startActivity(new Intent(getActivity(), AdvanceActivity.class));

@@ -186,6 +186,7 @@ public class UserInfoOperator {
             StringBuilder sb = new StringBuilder(URL_FAVORITE);
             sb.append(KEY_USER_ID + "=" + uid);
             sb.append("&" + KEY_INDEX + "=" + index);
+            sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
             Log.v(TAG, "before request " + sb);
             ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
 

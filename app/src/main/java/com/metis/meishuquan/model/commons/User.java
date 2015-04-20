@@ -26,8 +26,8 @@ public class User implements Serializable {
             KEY_LOCATION = "Location",
             KEY_LOCATIONADDRESS = "LocationAddress",
             KEY_GOODSUBJECTS = "GoodSubjects",
-            KEY_ACHIEVEMENT = "Achievement"
-                    ;
+            KEY_ACHIEVEMENT = "Achievement",
+            KEY_USER_ID = "userId";
 
     @SerializedName("userId")
     private int userId = -1;

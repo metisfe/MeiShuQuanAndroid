@@ -15,12 +15,15 @@
     <string name="my_info_advaces">意见反馈</string>
     <string name="my_info_settings">设置</string>
 
+    <string name="my_info_toast_not_login">您还未登录,请登录后再试</string>
+
     <string name="advance_send">发送</string>
 
     <string name="setting_modify_pwd">修改密码</string>
     <string name="setting_clear_cache">清理缓存</string>
     <string name="setting_about_us">关于我们</string>
     <string name="setting_logout">退出登录</string>
+    <string name="setting_cleared">成功清理了%1$s缓存</string>
 
     <string name="info_modify_nick">更改昵称</string>
     <string name="info_title">个人信息</string>
@@ -83,4 +86,5 @@
         <item>天蝎座</item>
         <item>射手座</item>
     </string-array>
+
 </resources>

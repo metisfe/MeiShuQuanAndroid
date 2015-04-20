@@ -34,7 +34,7 @@ public class ImagePreviewActivity extends BaseActivity {
         mPreviewFragment = (ImagePreviewFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.image_preview_fragment);
 
-        //mUrlArray = getIntent().getStringArrayExtra(KEY_IMAGE_URL_ARRAY);
+        mUrlArray = getIntent().getStringArrayExtra(KEY_IMAGE_URL_ARRAY);
         mThumbArray = getIntent().getStringArrayExtra(KEY_THUMB_URL_ARRAY);
 
         mPreviewFragment.setUrlArray(mUrlArray);
