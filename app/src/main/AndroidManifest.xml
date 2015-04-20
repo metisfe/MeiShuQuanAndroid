@@ -294,8 +294,8 @@
         <activity
             android:name=".activity.info.QrScanActivity"
             android:label="@string/title_activity_qr_scan"
-            android:theme="@style/QrScanTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/QrScanTheme" >
             <activity
                 android:name=".activity.topline.NewsInfoActity"
                 android:label="@string/title_activity_news_info_actity"
@@ -311,7 +311,11 @@
         <activity
             android:name=".activity.course.CourseInfoActivity"
             android:label="@string/title_activity_course_info"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.info.TextActivity"
+            android:label="@string/title_activity_text" >
+        </activity>
     </application>
 
 </manifest>

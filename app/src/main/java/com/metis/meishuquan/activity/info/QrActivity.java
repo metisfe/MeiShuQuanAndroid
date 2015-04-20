@@ -38,7 +38,8 @@ public class QrActivity extends BaseActivity {
         mTitleView.setRightListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(QrActivity.this, QrScanActivity.class));
+                startActivity(new Intent (QrActivity.this, ImagePreviewActivity.class));
+                //startActivity(new Intent(QrActivity.this, QrScanActivity.class));
             }
         });
 

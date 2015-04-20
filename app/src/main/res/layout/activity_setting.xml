@@ -45,7 +45,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         bs:text="@string/setting_clear_cache"
-        bs:secondaryTextVisible="false"
+        bs:secondaryTextVisible="true"
         bs:imageVisible="false"
         android:layout_marginTop="@dimen/px_to_dip_10"
         />

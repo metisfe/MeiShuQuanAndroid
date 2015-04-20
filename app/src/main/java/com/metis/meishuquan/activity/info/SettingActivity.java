@@ -10,11 +10,13 @@ import android.widget.Toast;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.commons.User;
+import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
+import com.metis.meishuquan.view.shared.MyInfoBtn;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
-    private View mModifyPwdView, mClearCacheView, mAboutUsView;
+    private MyInfoBtn mModifyPwdView, mClearCacheView, mAboutUsView;
 
     private Button mLogoutBtn = null;
 
@@ -23,8 +25,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-        mAboutUsView = this.findViewById(R.id.setting_about_us);
+        mAboutUsView = (MyInfoBtn)this.findViewById(R.id.setting_about_us);
         mAboutUsView.setOnClickListener(this);
+        mClearCacheView = (MyInfoBtn)this.findViewById(R.id.setting_clear_cache);
+        mClearCacheView.setOnClickListener(this);
 
         this.findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,6 +39,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
         mLogoutBtn = (Button) findViewById(R.id.setting_logout);
         mLogoutBtn.setOnClickListener(this);
+
+        int size = ImageLoaderUtils.getImageLoader(this).getDiscCache().getCurrentSize();
+        float sizeFloat = size / (1024 * 1024);
+        mClearCacheView.setSecondaryText(sizeFloat + "m");
     }
 
     @Override
@@ -61,6 +69,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 //tip
                 //Toast.makeText(this, "���˳�", Toast.LENGTH_SHORT).show();
                 this.finish();
+                break;
+            case R.id.setting_clear_cache:
+                ImageLoaderUtils.getImageLoader(this).getDiscCache().clear();
+                int size = ImageLoaderUtils.getImageLoader(this).getDiscCache().getCurrentSize();
+                float sizeFloat = size / (1024 * 1024);
+                mClearCacheView.setSecondaryText(sizeFloat + "m");
                 break;
         }
     }

@@ -6,30 +6,13 @@
     android:orientation="vertical"
     android:background="#cccccc"
     tools:context="com.metis.meishuquan.activity.info.AboutActivity">
-    <RelativeLayout
+    <com.metis.meishuquan.view.shared.TitleView
+        xmlns:bs="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/title"
         android:layout_width="fill_parent"
-        android:layout_height="44dp"
-        android:background="@color/bg_topline_topbar"
-        >
-        <ImageView
-            android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/btn_back"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_centerInParent="true"
-            android:text="@string/setting_about_us"
-            android:gravity="center"
-            android:textColor="@color/tv_title_bar"
-            android:textSize="20sp"
-            />
-    </RelativeLayout>
+        android:layout_height="wrap_content"
+        bs:titleText="@string/setting_about_us"
+        />
     <com.metis.meishuquan.view.shared.MyInfoBtn
         android:id="@+id/about_score"
         android:layout_width="fill_parent"
@@ -40,6 +23,7 @@
         android:layout_marginTop="10dp"
         ></com.metis.meishuquan.view.shared.MyInfoBtn>
     <com.metis.meishuquan.view.shared.MyInfoBtn
+        android:id="@+id/about_version"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         bs:imageVisible="false"
@@ -48,6 +32,7 @@
         android:layout_marginTop="10dp"
         ></com.metis.meishuquan.view.shared.MyInfoBtn>
     <com.metis.meishuquan.view.shared.MyInfoBtn
+        android:id="@+id/about_meishuquan"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         bs:imageVisible="false"
@@ -56,6 +41,7 @@
         android:layout_marginTop="10dp"
         ></com.metis.meishuquan.view.shared.MyInfoBtn>
     <com.metis.meishuquan.view.shared.MyInfoBtn
+        android:id="@+id/about_statement"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         bs:imageVisible="false"
