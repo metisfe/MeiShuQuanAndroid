@@ -7,7 +7,7 @@
         android:id="@+id/qr_scan_surface"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
-    <com.metis.meishuquan.activity.info.ScanCoverView
+    <com.metis.meishuquan.view.shared.ClipView
         android:id="@+id/qr_scan_cover"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />

@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
-import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.PlanarYUVLuminanceSource;
 import com.google.zxing.ReaderException;
@@ -29,13 +28,12 @@ import com.google.zxing.Result;
 import com.google.zxing.client.android.camera.CameraConfigurationUtils;
 import com.google.zxing.common.HybridBinarizer;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.view.shared.ClipView;
 
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 public class QrScanActivity extends BaseActivity implements
@@ -45,8 +43,8 @@ public class QrScanActivity extends BaseActivity implements
 
     private static final int MIN_FRAME_WIDTH = 240;
     private static final int MIN_FRAME_HEIGHT = 240;
-    private static final int MAX_FRAME_WIDTH = 1200; // = 5/8 * 1920
-    private static final int MAX_FRAME_HEIGHT = 675; // = 5/8 * 1080
+    private static final int MAX_FRAME_WIDTH = 675/*1200*/; // = 5/8 * 1920
+    private static final int MAX_FRAME_HEIGHT = 1200/*675*/; // = 5/8 * 1080
 
     private static final String TAG = QrScanActivity.class.getSimpleName();
 
@@ -64,7 +62,7 @@ public class QrScanActivity extends BaseActivity implements
 
     private Button reScanBtn = null;
 
-    private ScanCoverView mCoverView = null;
+    private ClipView mCoverView = null;
 
     private int mState = STATE_DECODE_FAILED;
 
@@ -89,7 +87,7 @@ public class QrScanActivity extends BaseActivity implements
             }
         });
 
-        mCoverView = (ScanCoverView)this.findViewById(R.id.qr_scan_cover);
+        mCoverView = (ClipView)this.findViewById(R.id.qr_scan_cover);
 
         mDisplayWidth = getWindowManager().getDefaultDisplay().getWidth();
         mDisplayHeight = getWindowManager().getDefaultDisplay().getHeight();
@@ -256,6 +254,12 @@ public class QrScanActivity extends BaseActivity implements
                 + rect.top + " "
                 + rect.right + " "
                 + rect.bottom);
+        if (mCoverView.getRect() == null) {
+            Rect rotatedRect = new Rect(rect.top, rect.left, rect.bottom, rect.right);
+            mCoverView.setRect(rotatedRect);
+            mCoverView.postInvalidate();
+        }
+
         //359 334 1559 744
         //359 202 1559 877
         return new PlanarYUVLuminanceSource(data, width, height, rect.left, rect.top,
