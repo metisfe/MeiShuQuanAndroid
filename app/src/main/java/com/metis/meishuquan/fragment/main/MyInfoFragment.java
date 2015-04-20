@@ -139,7 +139,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     }
 
     private void fillUserInfo (User user) {
-        final int profilePix = getResources().getDimensionPixelSize(R.dimen.my_info_profile_size);
+        final int profilePix = mMainApplication.getResources().getDimensionPixelSize(R.dimen.my_info_profile_size);
         mInfoName.setText(user.getName());
         mAttentionCountTv.setText(getString(R.string.my_info_count, user.getAttCount()));
         mFollowersCountTv.setText(getString(R.string.my_info_count, user.getFollowsCount()));
@@ -166,10 +166,20 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
             case R.id.my_info_comments:
-                startActivity(new Intent(getActivity(), MyCommentsActivity.class));
+                if (MainApplication.isLogin()) {
+                    startActivity(new Intent(getActivity(), MyCommentsActivity.class));
+                } else {
+                    Toast.makeText(getActivity(), R.string.my_info_toast_not_login, Toast.LENGTH_SHORT).show();
+                }
+
                 break;
             case R.id.my_info_classes:
-                startActivity(new Intent(getActivity(), MyCourseActivity.class));
+                if (MainApplication.isLogin()) {
+                    startActivity(new Intent(getActivity(), MyCourseActivity.class));
+                } else {
+                    Toast.makeText(getActivity(), R.string.my_info_toast_not_login, Toast.LENGTH_SHORT).show();
+                }
+
                 break;
             case R.id.my_info_name_card:
                 if (MainApplication.isLogin()) {

@@ -26,7 +26,7 @@
     <string name="setting_cleared">成功清理了%1$s缓存</string>
 
     <string name="info_modify_nick">更改昵称</string>
-    <string name="info_title">个人信息</string>
+    <string name="info_title">详细资料</string>
     <string name="info_profile">头像</string>
     <string name="info_nick">昵称</string>
     <string name="info_meishuquan_id">美术圈号</string>
@@ -86,5 +86,9 @@
         <item>天蝎座</item>
         <item>射手座</item>
     </string-array>
+
+    <string name="name_card_save">保存</string>
+    <string name="name_card_share">分享</string>
+    <string name="name_card_send_to">分享到:</string>
 
 </resources>

@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.ImageFormat;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 
 import com.metis.meishuquan.R;
@@ -14,6 +16,10 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Created by WJ on 2015/4/13.
@@ -53,5 +59,22 @@ public class ImageLoaderUtils {
         bmp.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] byteArray = stream.toByteArray();
         return byteArray;
+    }
+
+    public static String saveBitmapAtMediaDir (String name, Bitmap bmp) {
+        File pictures = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File locationFile = new File(pictures, name);
+        try {
+            FileOutputStream fos = new FileOutputStream(locationFile);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+            return locationFile.getAbsolutePath();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

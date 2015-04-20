@@ -72,10 +72,14 @@ public class QRFragment extends Fragment {
     }
 
     public void setOnImageClickListener (View.OnClickListener listener) {
+        mQrClickListener = listener;
         if (mQrIv != null) {
             mQrIv.setOnClickListener(listener);
         }
-        mQrClickListener = listener;
+    }
+
+    public Bitmap getQrBitmap () {
+        return mQrBmp;
     }
 
     public void showQrCodeWith (String str) {
