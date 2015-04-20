@@ -41,6 +41,7 @@ import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.BlockTypeEnum;
 import com.metis.meishuquan.model.enums.LoginStateEnum;
 import com.metis.meishuquan.model.enums.PrivateResultEnum;
+import com.metis.meishuquan.model.enums.PrivateTypeEnum;
 import com.metis.meishuquan.model.topline.ContentInfo;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
 import com.metis.meishuquan.model.topline.Urls;
@@ -317,7 +318,7 @@ public class ItemInfoFragment extends Fragment {
                 if (MainApplication.isLogin()) {
                     if (!isPrivate) {
                         //收藏
-                        TopLineOperator.getInstance().newsPrivate(MainApplication.userInfo.getUserId(), newsId, 0, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
+                        CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), newsId, PrivateTypeEnum.NEWS, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
@@ -329,7 +330,7 @@ public class ItemInfoFragment extends Fragment {
                         });
                     } else {
                         //取消收藏
-                        TopLineOperator.getInstance().newsPrivate(MainApplication.userInfo.getUserId(), newsId, 0, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
+                        CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), newsId, PrivateTypeEnum.NEWS, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {

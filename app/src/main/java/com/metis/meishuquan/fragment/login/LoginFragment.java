@@ -79,7 +79,7 @@ public class LoginFragment extends Fragment {
         btnLogin.setOnClickListener(new View.OnClickListener() {//登录
             @Override
             public void onClick(View view) {
-                if (isPressLogin) {
+                if (!isPressLogin) {
                     return;
                 }
                 String accout = etUserName.getText().toString().trim();

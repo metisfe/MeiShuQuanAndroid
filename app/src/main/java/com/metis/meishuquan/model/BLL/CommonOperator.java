@@ -3,6 +3,8 @@ package com.metis.meishuquan.model.BLL;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.BlockTypeEnum;
+import com.metis.meishuquan.model.enums.PrivateResultEnum;
+import com.metis.meishuquan.model.enums.PrivateTypeEnum;
 import com.metis.meishuquan.model.enums.SupportStepTypeEnum;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.SystemUtil;
@@ -17,6 +19,7 @@ public class CommonOperator {
     private static final String URL_SUPPORTORSTEP = "v1.1/Comment/Support";
     private static CommonOperator operator = null;
     private final String PUBLISHCOMMENT = "v1.1/Comment/PublishComment";//发表评论
+    private final String PRIVATE = "v1.1/Comment/Favorite";
     private final String SESSION = MainApplication.userInfo.getCookie();
     private boolean flag;
 
@@ -73,6 +76,21 @@ public class CommonOperator {
                 path.append("&content=" + content);
                 path.append("&replyCid=" + replyCid);
                 path.append("&blockType=" + blockType.getVal());
+                path.append("&session=" + SESSION);
+                ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+            }
+        }
+    }
+
+    public void favorite(int userid, int id, PrivateTypeEnum type, PrivateResultEnum result, ApiOperationCallback<ReturnInfo<String>> callback) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuffer path = new StringBuffer(PRIVATE);
+                path.append("?userid=" + userid);
+                path.append("&id=" + id);
+                path.append("&type=" + type.getVal());
+                path.append("&result=" + result.getVal());
                 path.append("&session=" + SESSION);
                 ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);

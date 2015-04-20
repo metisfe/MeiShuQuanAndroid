@@ -229,27 +229,27 @@ public class TopLineOperator {
         }
     }
 
-    /**
-     * 收藏news
-     *
-     * @param userid
-     * @param id
-     * @param type
-     * @param result   1收藏，2取消
-     * @param callback
-     */
-    public void newsPrivate(int userid, int id, int type, PrivateResultEnum result, ApiOperationCallback<ReturnInfo<String>> callback) {
-        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
-            if (flag) {
-                StringBuffer PATH = new StringBuffer(FAVORITE);
-                PATH.append("userid=" + userid);
-                PATH.append("&id=" + id);
-                PATH.append("&type=" + type);
-                PATH.append("&result=" + result.getVal());
-                PATH.append("&session=" + SESSION);
-                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
-                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
-            }
-        }
-    }
+//    /**
+//     * 收藏news
+//     *
+//     * @param userid
+//     * @param id
+//     * @param type
+//     * @param result   1收藏，2取消
+//     * @param callback
+//     */
+//    public void newsPrivate(int userid, int id, int type, PrivateResultEnum result, ApiOperationCallback<ReturnInfo<String>> callback) {
+//        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+//            if (flag) {
+//                StringBuffer PATH = new StringBuffer(FAVORITE);
+//                PATH.append("userid=" + userid);
+//                PATH.append("&id=" + id);
+//                PATH.append("&type=" + type);
+//                PATH.append("&result=" + result.getVal());
+//                PATH.append("&session=" + SESSION);
+//                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
+//                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+//            }
+//        }
+//    }
 }

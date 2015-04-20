@@ -1,5 +1,6 @@
 package com.metis.meishuquan.fragment.Topline;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -38,6 +39,7 @@ import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.BlockTypeEnum;
 import com.metis.meishuquan.model.enums.LoginStateEnum;
 import com.metis.meishuquan.model.enums.PrivateResultEnum;
+import com.metis.meishuquan.model.enums.PrivateTypeEnum;
 import com.metis.meishuquan.model.enums.SupportStepTypeEnum;
 import com.metis.meishuquan.model.topline.AllComments;
 import com.metis.meishuquan.model.topline.Comment;
@@ -66,7 +68,6 @@ public class CommentListFragment extends Fragment {
     private RelativeLayout rlSend, rlInput;//发送
 
 
-    private int userId = MainApplication.userInfo.getUserId();
     private int newsId = 0;
     private int totalCommentCount = 0;
     private int childCommentId = -1;
@@ -195,7 +196,7 @@ public class CommentListFragment extends Fragment {
                 if (MainApplication.userInfo.getAppLoginState() == LoginStateEnum.YES) {
                     if (!isPrivate) {
                         //收藏
-                        TopLineOperator.getInstance().newsPrivate(userId, newsId, 0, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
+                        CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), newsId, PrivateTypeEnum.NEWS, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
@@ -207,7 +208,7 @@ public class CommentListFragment extends Fragment {
                         });
                     } else {
                         //取消收藏
-                        TopLineOperator.getInstance().newsPrivate(userId, newsId, 0, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
+                        CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), newsId, PrivateTypeEnum.NEWS, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
@@ -402,6 +403,7 @@ public class CommentListFragment extends Fragment {
         private void initEvent(final Comment comment, final ViewHolder holder) {
             //赞
             holder.rl_support.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("NewApi")
                 @Override
                 public void onClick(View view) {
                     int count = comment.getSupportCount();
@@ -428,7 +430,7 @@ public class CommentListFragment extends Fragment {
 
                     //后台提交赞加1
                     CommonOperator operator = CommonOperator.getInstance();
-                    operator.supportOrStep(userId, comment.getId(), SupportStepTypeEnum.NewsComment, 1, new ApiOperationCallback<ReturnInfo<String>>() {
+                    operator.supportOrStep(MainApplication.userInfo.getUserId(), comment.getId(), SupportStepTypeEnum.NewsComment, 1, new ApiOperationCallback<ReturnInfo<String>>() {
                         @Override
                         public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                             if (result != null && result.getInfo().equals(String.valueOf(0))) {
@@ -443,7 +445,7 @@ public class CommentListFragment extends Fragment {
             holder.rl_reply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (MainApplication.userInfo.getAppLoginState() == LoginStateEnum.YES) {
+                    if (MainApplication.isLogin()) {
                         childCommentId = comment.getId();
                         showInputView();
                     } else {
@@ -476,6 +478,7 @@ public class CommentListFragment extends Fragment {
         imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
 
         rlInput.setVisibility(View.VISIBLE);
+
         editText.setText("");
         editText.setFocusableInTouchMode(true);
         editText.requestFocus();

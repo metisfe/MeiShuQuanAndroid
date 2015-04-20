@@ -1,10 +1,16 @@
 package com.metis.meishuquan.fragment.main;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -28,14 +34,19 @@ import com.metis.meishuquan.model.BLL.AssessOperator;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.assess.AllAssess;
 import com.metis.meishuquan.model.assess.Assess;
+import com.metis.meishuquan.model.assess.Bimp;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.AssessStateEnum;
 import com.metis.meishuquan.model.enums.QueryTypeEnum;
+import com.metis.meishuquan.view.popup.ChoosePhotoPopupWindow;
 import com.metis.meishuquan.view.shared.DragListView;
 import com.metis.meishuquan.view.shared.TabBar;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,6 +62,7 @@ public class AssessFragment extends Fragment {
 
     private final String HOT = "热门点评";
     private final String NEW = "最新点评";
+    private ViewGroup rootView;
     private TabBar tabBar;
     private FragmentManager fm;
 
@@ -58,7 +70,11 @@ public class AssessFragment extends Fragment {
     private Button btnRegion, btnFilter, btnPublishComment;
     private List<Assess> lstAllAssess = new ArrayList<Assess>();
     private AssessAdapter adapter;
+    private Bimp bimp;
+    private static final int TAKE_PHOTO = 1;
+    private static final int PICK_PICTURE = 2;
     private int index = 1;
+    private String photoPath = "";
 
 
     private Handler handler = new Handler() {
@@ -94,10 +110,63 @@ public class AssessFragment extends Fragment {
         //加载列表数据
         getData(DragListView.REFRESH, true, AssessStateEnum.ALL, null, null, index, QueryTypeEnum.ALL);
 
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_commentfragment, container, false);
+        rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_commentfragment, container, false);
         initView(rootView);
         initEvent();
         return rootView;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == FragmentActivity.RESULT_OK) {
+            switch (requestCode) {
+                case TAKE_PHOTO://拍照
+                    openAssessPublishFragment(photoPath);
+                    break;
+                case PICK_PICTURE://相册
+                    Uri uri = data.getData();
+                    try {
+                        //根据URL得到Bitmap
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(MainApplication.UIContext.getContentResolver(), uri);
+                        //将返回的图片存入指定路径，以便上传至服务器
+                        File dir = new File(Environment.getExternalStorageDirectory()
+                                + "/myimage/");
+                        if (!dir.exists()) {
+                            dir.mkdir();
+                        } else {
+                            File[] files = dir.listFiles();
+                            for (int i = 0; i < files.length; i++) {
+                                if (files[i].isFile()) {
+                                    files[i].delete();
+                                }
+                            }
+                        }
+                        File file = new File(dir, String.valueOf(System.currentTimeMillis()) + ".jpg");
+                        photoPath = file.getPath();
+
+                        FileOutputStream out = new FileOutputStream(file);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                        out.flush();
+                        out.close();
+
+                        openAssessPublishFragment(photoPath);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void openAssessPublishFragment(String photoPath) {
+        AssessPublishFragment assessPublishFragment = new AssessPublishFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("photoPath", photoPath);
+        assessPublishFragment.setArguments(bundle);
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.add(R.id.content_container, assessPublishFragment);
+        ft.commit();
     }
 
     private void initView(ViewGroup rootView) {
@@ -111,6 +180,8 @@ public class AssessFragment extends Fragment {
 
         this.adapter = new AssessAdapter(this.lstAllAssess);
         this.listView.setAdapter(adapter);
+
+        this.bimp = new Bimp();
     }
 
     private void initEvent() {
@@ -152,7 +223,8 @@ public class AssessFragment extends Fragment {
             }
         });
 
-        this.btnFilter.setOnClickListener(new View.OnClickListener() {//过滤条件
+        //过滤条件
+        this.btnFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FilterConditionForAssessListFragment filterConditionForAssessListFragment = new FilterConditionForAssessListFragment();
@@ -163,13 +235,22 @@ public class AssessFragment extends Fragment {
             }
         });
 
-        this.btnPublishComment.setOnClickListener(new View.OnClickListener() {//发表评论
+        //提问
+        this.btnPublishComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AssessPublishFragment assessPublishFragment = new AssessPublishFragment();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.add(R.id.content_container, assessPublishFragment);
-                ft.commit();
+
+                ChoosePhotoPopupWindow choosePhotoPopupWindow = new ChoosePhotoPopupWindow(MainApplication.UIContext, AssessFragment.this, rootView);
+                choosePhotoPopupWindow.getPath(new OnPathChannedListner() {
+                    @Override
+                    public void setPath(String path) {
+                        photoPath = path;
+                    }
+                });
+//                AssessPublishFragment assessPublishFragment = new AssessPublishFragment();
+//                FragmentTransaction ft = fm.beginTransaction();
+//                ft.add(R.id.content_container, assessPublishFragment);
+//                ft.commit();
             }
         });
     }
@@ -237,6 +318,10 @@ public class AssessFragment extends Fragment {
                 }
             }
         });
+    }
+
+    public interface OnPathChannedListner {
+        void setPath(String path);
     }
 
     /**
