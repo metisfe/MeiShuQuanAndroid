@@ -33,7 +33,7 @@ public class UserOperator {
     private final String REQUESTCODE = "v1.1/UserCenter/RegisterCode?";//获取验证码
     private final String RESETPWD = "";//重围密码
     private final String USERROLE = "v1.1/UserCenter/UserRole?";
-    private final String SESSION = MainApplication.userInfo.getCookie();
+    private static final String SESSION = MainApplication.userInfo.getCookie();
 
     private UserOperator() {
         flag = ApiDataProvider.initProvider();

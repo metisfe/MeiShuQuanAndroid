@@ -63,12 +63,50 @@
             android:textSize="17sp" />
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/id_ll_tab"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_below="@+id/rl_title_bar"
+        android:background="#f0f0f0">
+
+        <Button
+            android:id="@+id/id_btn_recommend"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:text="精选推荐"
+            android:textColor="#Fb6d6d"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/id_btn_new_publish"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:text="最新发布"
+            android:textColor="#7e7e7e"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/id_btn_hot_course"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:text="最热评论"
+            android:textColor="#7e7e7e"
+            android:textSize="15sp" />
+    </LinearLayout>
+
     <com.metis.meishuquan.view.shared.DragListView
         android:id="@+id/id_fragment_comment_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/fragment_shared_commentfragment_tab_bar"
-        android:layout_below="@+id/rl_title_bar"
+        android:layout_below="@+id/id_ll_tab"
         android:background="#cccccc"
         android:paddingLeft="10dp"
         android:paddingRight="10dp" />

@@ -85,8 +85,8 @@ public class ApiDataProvider extends DataProvider {
     {
         try {
             mClient= new MobileServiceClient(
-                "https://metisapi.azure-mobile.net/",
-                "DBmEiVOmIckySlUzxBHZtoDqwBMUXQ94",
+                "https://metisapi.azure-mobile.cn",
+                "JhSUSARkPDywIlrCKJKQzOJIttIYWU24",
                 MainApplication.UIContext);
             return true;
         } catch (MalformedURLException e) {

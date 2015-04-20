@@ -2,23 +2,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#CCCCCC">
+    android:background="#CCCCCC"
+    android:clickable="true">
 
     <RelativeLayout
         android:id="@+id/rl_title_bar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="44dp"
         android:background="#2d2a40">
 
         <Button
             android:id="@+id/id_btn_cancel"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/id_btn_commentlist_filter"
+            android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
             android:background="#2d2a40"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:text="取消"
             android:textColor="#CFD3ED"
             android:textSize="17sp" />
@@ -27,23 +28,21 @@
             android:id="@+id/id_btn_commentlist_filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"
             android:background="#2d2a40"
             android:text="发布新作品"
-            android:textColor="#FF5363"
+            android:textColor="#fb6d6d"
             android:textSize="20sp" />
 
         <Button
             android:id="@+id/id_btn_assess_comment"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/id_btn_commentlist_filter"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_gravity="right"
-            android:layout_marginRight="20dp"
             android:background="#2d2a40"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:text="发布"
             android:textColor="#CFD3ED"
             android:textSize="17sp" />
@@ -53,48 +52,76 @@
     <Button
         android:id="@+id/id_btn_choose_type"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="45dp"
         android:layout_below="@+id/rl_title_bar"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
         android:background="#F0F0F0"
         android:text="选择类别∨"
-        android:textSize="20sp" />
+        android:textColor="#424242"
+        android:textSize="16sp" />
 
     <LinearLayout
         android:id="@+id/ll_image"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/id_btn_choose_type"
-        android:layout_marginTop="20dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
         android:background="#F0F0F0"
-        android:orientation="horizontal">
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/id_edt_desc"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:background="@null"
+                android:gravity="top"
+                android:hint="请简述描述下你的作品吧..."
+                android:inputType="text"
+                android:maxHeight="100dp"
+                android:padding="5dp"
+                android:textColorHint="#cccccc" />
+
+            <TextView
+                android:id="@+id/id_tv_word_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/id_edt_desc"
+                android:layout_alignParentRight="true"
+                android:layout_margin="5dp"
+                android:text="0/100"
+                android:textColor="#cccccc" />
+
+        </RelativeLayout>
+
 
         <ImageView
             android:id="@+id/id_add_image"
             android:layout_width="100dp"
-            android:layout_height="match_parent"
+            android:layout_height="75dp"
+            android:layout_margin="10dp"
             android:background="@drawable/icon_addpic_unfocused"
-            android:scaleType="fitCenter" />
+            android:scaleType="centerCrop" />
 
-        <EditText
-            android:id="@+id/id_edt_desc"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@null"
-            android:gravity="top"
-            android:hint="请简述描述下你的作品吧..."
-            android:inputType="text"
-            android:padding="5dp" />
     </LinearLayout>
 
     <Button
         android:id="@+id/id_btn_request_teacher_assess"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="45dp"
         android:layout_below="@+id/ll_image"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:background="#F0F0F0"
         android:text="邀请老师点评"
-        android:textSize="20sp" />
+        android:textColor="#424242"
+        android:textSize="16sp" />
 
 </RelativeLayout>

@@ -39,7 +39,7 @@ public class AssessOperator {
 
     private final String AssessList = "v1.1/Assess/AssessList";//点评列表
     private final String AssessChannelList = "v1.1/Channel/AssessChannelList";//所有标签
-    private final String UploadAssess = "";//上传作品
+    private final String UploadAssess = "v1.1/Assess/UploadAssess";//上传作品
     private final String Assess_Comment_Share = "v1.1/Assess/Share";//作品分享
     private final String Comment_Favorite = "v1.1/Comment/Favorite";//收藏(暂无此功能)
     private final String AttentionUser = "";//关注用户(暂无此功能)
@@ -69,9 +69,10 @@ public class AssessOperator {
      * @param channelIds 标签
      * @param index      index=1取最新数据，排序先按照默认时间排序
      * @param queryType  0为全部，1为热点，2为最新
+     * @param region     0为全国
      * @param callback
      */
-    public void getAssessList(boolean isAll, AssessStateEnum type, List<Integer> grades, List<Integer> channelIds, int index, QueryTypeEnum queryType,
+    public void getAssessList(int region, boolean isAll, AssessStateEnum type, List<Integer> grades, List<Integer> channelIds, int index, QueryTypeEnum queryType,
                               ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
@@ -82,6 +83,7 @@ public class AssessOperator {
                 PATH.append("&channelIds=" + channelIds);
                 PATH.append("&index=" + index);
                 PATH.append("&queryType=" + queryType.getVal());
+                PATH.append("&region=" + region);
                 PATH.append("&session=" + SESSION);
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
@@ -161,7 +163,7 @@ public class AssessOperator {
      * @param friendUserId
      * @param callback
      */
-    public void uploadAssess(int userId, String desc, int channelId, int friendUserId, String file, String fileObjectStr, ApiOperationCallback<ReturnInfo<String>> callback) {
+    public void uploadAssess(int userId, String desc, int channelId, int friendUserId, String fileStr, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 //获得文件上传后服务器发送来的Json串，再上传Assess
@@ -170,9 +172,24 @@ public class AssessOperator {
                 PATH.append("&desc=" + desc);
                 PATH.append("&channelId=" + channelId);
                 PATH.append("&friendUserId=" + friendUserId);
-                PATH.append("&file=" + fileObjectStr);
+                PATH.append("&file=" + fileStr);
                 PATH.append("&session=" + SESSION);
-                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpPost.METHOD_NAME, null,
+
+                List<Pair<String, String>> pram = new ArrayList<>();
+                Pair<String, String> pair1 = new Pair<>("userId", String.valueOf(userId));
+                Pair<String, String> pair2 = new Pair<>("desc", desc);
+                Pair<String, String> pair3 = new Pair<>("channelId", String.valueOf(channelId));
+                Pair<String, String> pair4 = new Pair<>("friendUserId", String.valueOf(friendUserId));
+                Pair<String, String> pair5 = new Pair<>("file", fileStr);
+                Pair<String, String> pair6 = new Pair<>("session", MainApplication.userInfo.getCookie());
+                Log.e("session", MainApplication.userInfo.getCookie());
+                pram.add(pair1);
+                pram.add(pair2);
+                pram.add(pair3);
+                pram.add(pair4);
+                pram.add(pair5);
+                pram.add(pair6);
+                ApiDataProvider.getmClient().invokeApi(UploadAssess, null, HttpPost.METHOD_NAME, pram,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
 
@@ -224,18 +241,6 @@ public class AssessOperator {
         }
     }
 
-    public byte[] getBitmapByte(Bitmap bitmap) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-        try {
-            out.flush();
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return out.toByteArray();
-    }
-
     /**
      * 获取地区
      */
@@ -261,9 +266,5 @@ public class AssessOperator {
                         });
             }
         }
-    }
-
-    public void publishComment() {
-
     }
 }
