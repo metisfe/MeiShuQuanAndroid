@@ -2,15 +2,15 @@ package com.metis.meishuquan.model.assess;
 
 /**
  * POJO:缩略图
- *
+ * <p/>
  * Created by WJ on 2015/3/31.
  */
 public class Thumbnails {
-    private String url;
+    private String url = "";
 
-    private int width;
+    private int width = 0;
 
-    private int heigth;
+    private int heigth = 0;
 
     public String getUrl() {
         return url;

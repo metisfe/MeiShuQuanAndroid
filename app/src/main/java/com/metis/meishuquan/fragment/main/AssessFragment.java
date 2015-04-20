@@ -18,6 +18,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -67,8 +70,12 @@ public class AssessFragment extends Fragment {
     private Button btnRegion, btnFilter, btnPublishComment;
     private Button btnRecommend, btnNewPublish, btnHotComment;
     private List<Assess> lstAllAssess = new ArrayList<Assess>();
+    private List<Integer> gradeIds, channelIds;
+    private int regionId;
     private AssessAdapter adapter;
     private QueryTypeEnum type = QueryTypeEnum.RECOMMEND;
+    private AssessStateEnum assessState = AssessStateEnum.ALL;
+
 
     private int index = 1;
     private String photoPath = "";
@@ -82,7 +89,7 @@ public class AssessFragment extends Fragment {
         assessOperator = AssessOperator.getInstance();
         assessOperator.addAssessChannelListToCache();//将过滤条件（年级、标签）加载至缓存
         //加载列表数据
-        getData(DragListView.REFRESH, 0, true, AssessStateEnum.ALL, null, null, QueryTypeEnum.NEW, index);
+        getData(DragListView.REFRESH, regionId, true, assessState, gradeIds, channelIds, QueryTypeEnum.RECOMMEND, index);
 
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_commentfragment, container, false);
         initView(rootView);
@@ -165,23 +172,29 @@ public class AssessFragment extends Fragment {
         this.listView.setOnRefreshListener(new DragListView.OnRefreshListener() {//列表刷新
             @Override
             public void onRefresh() {
-                //getData(DragListView.REFRESH, true, AssessStateEnum.ALL, null, null, index, QueryTypeEnum.RECOMMEND);
+                getData(DragListView.REFRESH, regionId, true, assessState, gradeIds, channelIds, type, 1);
             }
         });
 
         this.listView.setOnLoadListener(new DragListView.OnLoadListener() {//列表加载更多
             @Override
             public void onLoad() {
+                getData(DragListView.LOAD, regionId, true, assessState, gradeIds, channelIds, type, index);
                 index++;
-                //loadNewAssessList(DragListView.LOAD, true, AssessStateEnum.ALL, null, null, index, QueryTypeEnum.NEW);
             }
         });
 
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {//列表项点击
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                if (position >= lstAllAssess.size() + 1) return;
                 AssessInfoFragment assessInfoFragment = new AssessInfoFragment();
+                Bundle bundle = new Bundle();
+//                bundle.putInt("assessId", lstAllAssess.get(position).getId());
+                bundle.putSerializable("assess", (java.io.Serializable) lstAllAssess.get(position));
+                assessInfoFragment.setArguments(bundle);
                 FragmentTransaction ft = fm.beginTransaction();
+                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
                 ft.add(R.id.content_container, assessInfoFragment);
                 ft.addToBackStack(null);
                 ft.commit();
@@ -232,21 +245,39 @@ public class AssessFragment extends Fragment {
                 setButtonChecked(btnRecommend);
                 setButtonUnChecked(new Button[]{btnNewPublish, btnHotComment});
                 type = QueryTypeEnum.RECOMMEND;
-                //getData(tags, 1, type, DragListView.REFRESH);
+                if (regionId == 0 && gradeIds == null && channelIds == null) {
+                    getData(DragListView.REFRESH, regionId, true, assessState, gradeIds, channelIds, type, index);
+                } else {
+                    getData(DragListView.REFRESH, regionId, false, assessState, gradeIds, channelIds, type, index);
+                }
             }
         });
 
         this.btnNewPublish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                setButtonChecked(btnNewPublish);
+                setButtonUnChecked(new Button[]{btnRecommend, btnHotComment});
+                type = QueryTypeEnum.NEW;
+                if (regionId == 0 && gradeIds == null && channelIds == null) {
+                    getData(DragListView.REFRESH, regionId, true, assessState, gradeIds, channelIds, type, index);
+                } else {
+                    getData(DragListView.REFRESH, regionId, false, assessState, gradeIds, channelIds, type, index);
+                }
             }
         });
 
         this.btnHotComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                setButtonChecked(btnHotComment);
+                setButtonUnChecked(new Button[]{btnNewPublish, btnRecommend});
+                type = QueryTypeEnum.HOT;
+                if (regionId == 0 && gradeIds == null && channelIds == null) {
+                    getData(DragListView.REFRESH, regionId, true, assessState, gradeIds, channelIds, type, index);
+                } else {
+                    getData(DragListView.REFRESH, regionId, false, assessState, gradeIds, channelIds, type, index);
+                }
             }
         });
     }
@@ -261,7 +292,7 @@ public class AssessFragment extends Fragment {
         }
     }
 
-    private void getData(int loadingType, int region, boolean isAll, AssessStateEnum mType, List<Integer> grades, List<Integer> channelIds, QueryTypeEnum queryTypeEnum, int index) {
+    private void getData(final int loadingType, int region, boolean isAll, AssessStateEnum mType, List<Integer> grades, List<Integer> channelIds, final QueryTypeEnum queryTypeEnum, final int index) {
         AssessOperator assessOperator = AssessOperator.getInstance();
         assessOperator.getAssessList(region, isAll, mType, grades, channelIds, index, queryTypeEnum, new ApiOperationCallback<ReturnInfo<String>>() {
             @Override
@@ -272,12 +303,31 @@ public class AssessFragment extends Fragment {
                     String json = gson.toJson(result);
                     allAssess = gson.fromJson(json, new TypeToken<AllAssess>() {
                     }.getType());
-                    List<Assess> data = new ArrayList<Assess>();
-
-                    if (allAssess != null && allAssess.getData() != null) {
-                        List<Assess> lastAssessLists = allAssess.getData().getLastAssessLists();//最新点评
-                        List<Assess> hotAssessLists = allAssess.getData().getHotAssessLists();//热门点评
+                    List<Assess> assessList = null;
+                    if (loadingType == listView.REFRESH) {
+                        if (queryTypeEnum == QueryTypeEnum.RECOMMEND) {
+                            assessList = allAssess.getData().getSelectAssessList();//推荐点评
+                        } else if (queryTypeEnum == QueryTypeEnum.HOT) {
+                            assessList = allAssess.getData().getHotAssessList();//热门点评
+                        } else if (queryTypeEnum == QueryTypeEnum.NEW) {
+                            assessList = allAssess.getData().getLastAssessList();//最新点评
+                        }
+                        listView.onRefreshComplete();
+                        lstAllAssess.clear();
+                        lstAllAssess.addAll(assessList);
+                    } else if (loadingType == listView.LOAD) {
+                        if (queryTypeEnum == QueryTypeEnum.RECOMMEND) {
+                            assessList = allAssess.getData().getSelectAssessList();//推荐点评
+                        } else if (queryTypeEnum == QueryTypeEnum.HOT) {
+                            assessList = allAssess.getData().getHotAssessList();//热门点评
+                        } else if (queryTypeEnum == QueryTypeEnum.NEW) {
+                            assessList = allAssess.getData().getLastAssessList();//最新点评
+                        }
+                        listView.onLoadComplete();
+                        lstAllAssess.addAll(assessList);
                     }
+                    listView.setResultSize(assessList.size());
+                    adapter.notifyDataSetChanged();
                 }
             }
         });
@@ -332,7 +382,7 @@ public class AssessFragment extends Fragment {
                 holder = new ViewHolder();
                 Assess assess = lstAssess.get(i);
                 viewGroup = (ViewGroup) LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_assess_list_item, null);
-                //holder.portrait= (SmartImageView) view.findViewById(R.id.id_img_portrait);
+                holder.portrait = (SmartImageView) viewGroup.findViewById(R.id.id_img_portrait);
                 holder.userName = (TextView) viewGroup.findViewById(R.id.id_username);
                 holder.grade = (TextView) viewGroup.findViewById(R.id.id_tv_grade);
                 holder.createTime = (TextView) viewGroup.findViewById(R.id.id_createtime);
@@ -341,35 +391,53 @@ public class AssessFragment extends Fragment {
                 holder.tvSupportCount = (TextView) viewGroup.findViewById(R.id.id_tv_support_count);
                 holder.tvCommentCount = (TextView) viewGroup.findViewById(R.id.id_tv_comment_count);
                 holder.tvContentType = (TextView) viewGroup.findViewById(R.id.id_tv_content_type);
-                holder.tvSupportCount.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        TopLineOperator operator = TopLineOperator.getInstance();
-                        //operator.commentSurpot(0, newsId, lstAllComments.get(i).getId(), 0, 1);
-                    }
-                });
 
-                holder.userName.setText(assess.getUser().getName());//用户名
+                //用户名
+                holder.userName.setText(assess.getUser().getName());
+
+                //用户头像
+                if (!assess.getUser().getAvatar().isEmpty()) {
+                    holder.portrait.setImageUrl(assess.getUser().getAvatar());
+                }
+
                 //holder.grade.setText(assess());
-                SimpleDateFormat sFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                //创建时间
+                SimpleDateFormat sFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 try {
                     Date date = sFormat.parse(assess.getCreateTime());
                     String dataStr = sFormat.format(date);
-                    holder.createTime.setText(dataStr);//创建时间
+                    holder.createTime.setText(dataStr);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
+                //内容描述
                 if (assess.getDesc().length() > 0) {
-                    holder.content.setText(assess.getDesc());//内容描述
+                    holder.content.setText(assess.getDesc());
                 } else {
                     holder.content.setHeight(0);
                 }
 
-                holder.img_content.setImageUrl(assess.getThumbnails().getUrl());//内容图片
+                //内容图片
+                holder.img_content.setMinimumWidth(assess.getThumbnails().getWidth() * 2);
+                holder.img_content.setMinimumHeight(assess.getThumbnails().getHeigth() * 2);
+                holder.img_content.setImageUrl(assess.getThumbnails().getUrl());
+
+                //预览大图
+                holder.img_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //TODO:
+                    }
+                });
+
                 holder.tvSupportCount.setText("赞(" + assess.getSupportCount() + ")");//赞数量
                 holder.tvCommentCount.setText("评论(" + assess.getCommentCount() + ")");//评论数量
                 holder.tvContentType.setText(assess.getAssessChannel().getChannelName());//内容类型
-                //TODO:点评状态
+                //设置点评状态
+                if (assess.getCommentCount() > 0) {
+                    holder.tvCommentState.setText("已点评");
+                }
             }
             holder = (ViewHolder) viewGroup.getTag();
             return viewGroup;

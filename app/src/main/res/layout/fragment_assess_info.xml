@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="问题详情"
-            android:textColor="@color/red"
+            android:textColor="#fb6d6d"
             android:textSize="20sp" />
 
     </RelativeLayout>
@@ -53,7 +53,7 @@
             android:layout_toRightOf="@+id/id_img_portrait"
             android:singleLine="true"
             android:text="张三"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/id_tv_grade"
@@ -87,7 +87,7 @@
             android:layout_marginTop="10dp"
             android:maxLines="10"
             android:text="本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情"
-            android:textColor="#909090" />
+            android:textColor="#7e7e7e" />
 
         <com.loopj.android.image.SmartImageView
             android:id="@+id/id_img_content"
@@ -97,7 +97,7 @@
             android:layout_marginTop="10dp"
             android:src="@drawable/icon" />
 
-        <Button
+        <TextView
             android:id="@+id/id_tv_comment_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
             android:text="评论(123)"
             android:textColor="#909090" />
 
-        <Button
+        <TextView
             android:id="@+id/id_tv_support_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -139,7 +139,7 @@
             android:layout_alignRight="@+id/id_tv_content"
             android:text="已点评"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/red" />
+            android:textColor="#fb6d6d" />
     </RelativeLayout>
 
 </RelativeLayout>

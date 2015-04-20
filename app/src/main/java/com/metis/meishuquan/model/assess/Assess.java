@@ -2,6 +2,7 @@ package com.metis.meishuquan.model.assess;
 
 import com.metis.meishuquan.model.commons.User;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * <p/>
  * Created by WJ on 2015/3/31.
  */
-public class Assess {
+public class Assess implements Serializable {
     private int id;
 
     private User user;
@@ -70,6 +71,9 @@ public class Assess {
     }
 
     public Thumbnails getThumbnails() {
+        if (thumbnails == null) {
+            thumbnails = new Thumbnails();
+        }
         return thumbnails;
     }
 

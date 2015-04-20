@@ -14,6 +14,7 @@
             android:id="@+id/id_img_portrait"
             android:layout_width="45dp"
             android:layout_height="45dp"
+            android:scaleType="centerCrop"
             android:background="@drawable/default_user_dynamic" />
 
         <TextView
@@ -59,14 +60,16 @@
             android:layout_alignStart="@+id/id_img_portrait"
             android:layout_below="@+id/id_img_portrait"
             android:layout_marginTop="10dp"
-            android:maxLines="10"
             android:text="本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情"
             android:textColor="#7e7e7e" />
 
         <com.loopj.android.image.SmartImageView
             android:id="@+id/id_img_content"
-            android:layout_width="110dp"
-            android:layout_height="75dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="50dp"
+            android:minWidth="50dp"
+            android:scaleType="centerCrop"
             android:layout_below="@+id/id_tv_content"
             android:layout_marginTop="10dp"
             android:src="@drawable/img_topline_default" />
@@ -134,7 +137,7 @@
             android:layout_alignBottom="@+id/id_createtime"
             android:layout_alignEnd="@+id/id_tv_content"
             android:layout_alignRight="@+id/id_tv_content"
-            android:text="已点评"
+            android:text="未点评"
             android:textColor="@color/red"
             android:textSize="13sp" />
     </RelativeLayout>

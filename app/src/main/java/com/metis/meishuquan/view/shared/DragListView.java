@@ -20,7 +20,7 @@ import com.metis.meishuquan.util.Utils;
 /**
  * Created by wj on 15/3/25.
  */
-public class DragListView extends ListView implements AbsListView.OnScrollListener{
+public class DragListView extends ListView implements AbsListView.OnScrollListener {
     // 区分当前操作是刷新还是加载
     public static final int REFRESH = 0;
     public static final int LOAD = 1;
@@ -63,7 +63,7 @@ public class DragListView extends ListView implements AbsListView.OnScrollListen
     private boolean isLoading;// 判断是否正在加载
     private boolean loadEnable = true;// 开启或者关闭加载更多功能
     private boolean isLoadFull;
-    private int pageSize = 40;
+    private int pageSize = 30;
 
     private OnRefreshListener onRefreshListener;
     private OnLoadListener onLoadListener;
@@ -301,17 +301,17 @@ public class DragListView extends ListView implements AbsListView.OnScrollListen
             loadFull.setVisibility(View.GONE);
             loading.setVisibility(View.GONE);
             more.setVisibility(View.GONE);
-            noData.setVisibility(View.VISIBLE);
+            noData.setVisibility(View.VISIBLE);//已全部加载
         } else if (resultSize > 0 && resultSize < pageSize) {
             isLoadFull = true;
-            loadFull.setVisibility(View.VISIBLE);
+            loadFull.setVisibility(View.VISIBLE);//暂无数据
             loading.setVisibility(View.GONE);
             more.setVisibility(View.GONE);
             noData.setVisibility(View.GONE);
         } else if (resultSize == pageSize) {
             isLoadFull = false;
             loadFull.setVisibility(View.GONE);
-            loading.setVisibility(View.VISIBLE);
+            loading.setVisibility(View.VISIBLE);//加载中
             more.setVisibility(View.VISIBLE);
             noData.setVisibility(View.GONE);
         }

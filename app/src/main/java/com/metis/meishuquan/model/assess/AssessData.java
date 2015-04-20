@@ -13,25 +13,38 @@ public class AssessData {
 
     private List<Assess> hotAssessList;//热门点评
 
-    public List<Assess> getLastAssessLists() {
+    private List<Assess> selectAssessList;//精选推荐
+
+    public List<Assess> getLastAssessList() {
         if (lastAssessList == null) {
             lastAssessList = new ArrayList<Assess>();
         }
         return lastAssessList;
     }
 
-    public void setLastAssessLists(List<Assess> lastAssessLists) {
-        this.lastAssessList = lastAssessLists;
+    public void setLastAssessList(List<Assess> lastAssessList) {
+        this.lastAssessList = lastAssessList;
     }
 
-    public List<Assess> getHotAssessLists() {
+    public List<Assess> getHotAssessList() {
         if (hotAssessList == null) {
             hotAssessList = new ArrayList<Assess>();
         }
         return hotAssessList;
     }
 
-    public void setHotAssessLists(List<Assess> hotAssessLists) {
-        this.hotAssessList = hotAssessLists;
+    public void setHotAssessList(List<Assess> hotAssessList) {
+        this.hotAssessList = hotAssessList;
+    }
+
+    public List<Assess> getSelectAssessList() {
+        if (selectAssessList == null) {
+            selectAssessList = new ArrayList<Assess>();
+        }
+        return selectAssessList;
+    }
+
+    public void setSelectAssessList(List<Assess> selectAssessList) {
+        this.selectAssessList = selectAssessList;
     }
 }

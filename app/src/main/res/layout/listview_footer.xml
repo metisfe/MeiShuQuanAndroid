@@ -6,6 +6,7 @@
     android:gravity="center"
     android:orientation="horizontal">
 
+    <!--已加载全部-->
     <TextView
         android:id="@+id/loadFull"
         android:layout_width="wrap_content"
@@ -16,6 +17,7 @@
         android:text="@string/load_full"
         android:visibility="gone" />
 
+    <!--暂无数据-->
     <TextView
         android:id="@+id/noData"
         android:layout_width="wrap_content"
@@ -25,7 +27,8 @@
         android:padding="5dp"
         android:text="@string/no_data"
         android:visibility="gone" />
-
+    
+    <!--加载中-->
     <TextView
         android:id="@+id/more"
         android:layout_width="wrap_content"

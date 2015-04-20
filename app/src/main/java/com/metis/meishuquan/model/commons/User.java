@@ -56,6 +56,9 @@ public class User implements Serializable {
     @SerializedName("userAvatar")
     private String userAvatar = "";
 
+    @SerializedName("avatar")
+    private String avatar = "";
+
     @SerializedName("userRole")
     private String userRole = "";
 
@@ -176,6 +179,14 @@ public class User implements Serializable {
     public void setUserAvatar(String userAvatar) {
         Log.v(TAG, "setUserAvatar " + userAvatar);
         this.userAvatar = userAvatar;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getUserRole() {
