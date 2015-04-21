@@ -91,4 +91,12 @@
     <string name="name_card_share">分享</string>
     <string name="name_card_send_to">分享到:</string>
 
+    <string name="change_pwd_old">原密码</string>
+    <string name="change_pwd_new">新密码</string>
+    <string name="change_pwd_confirm">确认密码</string>
+    <string name="change_pwd_positive">确定</string>
+    <string name="change_pwd_not_new">新密码与原密码一致</string>
+    <string name="change_pwd_not_match">确认密码不匹配</string>
+    <string name="change_pwd_success">操作成功</string>
+    <string name="change_pwd_failed">操作失败</string>
 </resources>

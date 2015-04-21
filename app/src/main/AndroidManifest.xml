@@ -316,6 +316,10 @@
             android:name=".activity.info.TextActivity"
             android:label="@string/title_activity_text" >
         </activity>
+        <activity
+            android:name=".activity.info.ChangePwdActivity"
+            android:label="@string/title_activity_change_pwd" >
+        </activity>
     </application>
 
 </manifest>

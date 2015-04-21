@@ -105,6 +105,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
             getUserInfo(MainApplication.userInfo.getUserId());
             fillUserInfo(MainApplication.userInfo);
         } else {
+            mProfileIv.setImageResource(R.drawable.ic_launcher);
             mLoginView.setVisibility(View.VISIBLE);
             mInfoDetailsContainer.setVisibility(View.INVISIBLE);
         }

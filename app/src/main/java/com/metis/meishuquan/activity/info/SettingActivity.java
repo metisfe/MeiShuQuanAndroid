@@ -28,6 +28,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
+        mModifyPwdView = (MyInfoBtn)this.findViewById(R.id.setting_modify_pwd);
+        mModifyPwdView.setOnClickListener(this);
         mAboutUsView = (MyInfoBtn)this.findViewById(R.id.setting_about_us);
         mAboutUsView.setOnClickListener(this);
         mClearCacheView = (MyInfoBtn)this.findViewById(R.id.setting_clear_cache);
@@ -49,6 +51,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.setting_modify_pwd:
+                startActivity(new Intent (this, ChangePwdActivity.class));
+                break;
             case R.id.setting_about_us:
                 startActivity(new Intent(this, AboutActivity.class));
                 break;
