@@ -2,6 +2,7 @@ package com.metis.meishuquan.model.BLL;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -9,6 +10,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.metis.meishuquan.MainApplication;
+import com.metis.meishuquan.model.commons.Comment;
 import com.metis.meishuquan.model.commons.Item;
 import com.metis.meishuquan.model.commons.Option;
 import com.metis.meishuquan.model.commons.Profile;
@@ -19,6 +21,7 @@ import com.metis.meishuquan.model.enums.FileUploadTypeEnum;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SystemUtil;
+import com.metis.meishuquan.util.Utils;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
@@ -30,6 +33,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,15 +50,25 @@ public class UserInfoOperator {
 
     private static String URL_CENTER = "v1.1/UserCenter/GetUser?",
                             URL_FAVORITE = "v1.1/UserCenter/MyFavorites?",
-                            URL_QUESTION = "v1.1/UserCenter/MyQuestion?userId={userId}&index={index}&type={type}",
+                            URL_QUESTION = "v1.1/UserCenter/MyQuestion?",
                             URL_UPDATE_USER_INFO = "v1.1/UserCenter/UpdateUserInfo?param=",
-                            URL_CHANGE_PWD = "v1.1/UserCenter/ChangePassword?";
+                            URL_CHANGE_PWD = "v1.1/UserCenter/ChangePassword?",
+                            URL_FEEDBACK = "v1.1/Instrument/FeedBack?param=";
 
     private static String KEY_USER_ID = "userId",
                         KEY_INDEX = "index",
                         KEY_SESSION = "session",
                         KEY_OLD_PWD = "oldPwd",
-                        KEY_NEW_PWD = "newPwd";
+                        KEY_NEW_PWD = "newPwd",
+                        KEY_TYPE = "type",
+                        KEY_APPVERSION = "AppVersion",
+                        KEY_PHONE_VERSION = "PhoneVersion",
+                        KEY_CURRENT_IP = "CurrentIP",
+                        KEY_CURRENT_REGION = "CurrentRegion",
+                        KEY_NET_WORK = "NetWork",
+                        KEY_FEED_MESSAGE = "FeedMessage",
+                        KEY_FEED_IMAGE = "FeedImage",
+                        KEY_CREATE_TIME = "Createtime";
 
     public static UserInfoOperator getInstance () {
         return sOperator;
@@ -251,15 +265,62 @@ public class UserInfoOperator {
 
     }
 
-    /*public void getQuestionList (String uid, int index, int type, OnGetListener<>) {
+    public void getQuestionList (long uid, int index, int type, final OnGetListener<List<Comment>> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            StringBuilder sb = new StringBuilder(URL_QUESTION);
+            sb.append(KEY_USER_ID + "=" + uid);
+            sb.append("&" + KEY_INDEX + "=" + index);
+            sb.append("&" + KEY_TYPE + "=" + type);
+            sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+            Log.v(TAG, "getQuestionList request=" + sb.toString());
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
 
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String json = gson.toJson(result);
+                        Log.v(TAG, "getQuestionList result=" + json);
+                        Result<List<Comment>> listResult = gson.fromJson(json, new TypeToken<Result<List<Comment>>>(){}.getType());
+                        if (listResult.getOption().getStatus() == 0) {
+                            listener.onGet(true, listResult.getData());
+                        } else {
+                            listener.onGet(false, null);
+                        }
+
+                    } else {
+                        listener.onGet(false, null);
+                    }
+
+                }
+            });
         }
-    }*/
+    }
 
     /*public void getCourseList (String uid, int index, int type, OnGetListener<>) {
 
     }*/
+
+    public void feedback (String message, String imageUrl) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty(KEY_APPVERSION, Utils.getVersion(MainApplication.UIContext));
+            jsonObject.addProperty(KEY_PHONE_VERSION, Build.MODEL + "-" + Build.MANUFACTURER + "-" + Build.VERSION.RELEASE + "-" + Build.VERSION.SDK);
+            //jsonObject.addProperty(KEY_CURRENT_REGION, Build.);
+            jsonObject.addProperty(KEY_CURRENT_IP, Utils.getIpAddress(MainApplication.UIContext));
+            jsonObject.addProperty(KEY_CREATE_TIME, new Date().toString());
+            StringBuilder sb = new StringBuilder(URL_FEEDBACK);
+            sb.append(jsonObject.toString());
+            sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+
+                }
+            });
+        }
+    }
 
     public interface OnGetListener<T> {
         public void onGet (boolean succeed, T t);

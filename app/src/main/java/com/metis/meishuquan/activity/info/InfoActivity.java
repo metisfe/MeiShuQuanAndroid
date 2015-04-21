@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -276,6 +277,10 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
         mRecentsContentTv.setText(user.getSelfSignature());
         mDepartmentAddrView.setSecondaryText(user.getLocationAddress());
         mAchievementView.setSecondaryText(user.getAchievement());
+        String birthday = user.getBirthday();
+        if (TextUtils.isEmpty(birthday)) {
+            mAgeView.setSecondaryText(0 + "");
+        }
     }
 
     private Dialog mDialog = null;

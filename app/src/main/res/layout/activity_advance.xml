@@ -31,9 +31,15 @@
             android:gravity="top|left"
             android:hint="@string/advance_hint"
             />
-        <!--<GridView
-            android:layout_width=""
-            android:layout_height=""></GridView>-->
+        <ImageView
+            android:id="@+id/advance_image"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@drawable/advance_add_pic"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:scaleType="centerCrop"
+            />
     </LinearLayout>
     <TextView
         android:id="@+id/advance_tip"

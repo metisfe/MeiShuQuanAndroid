@@ -61,7 +61,7 @@ public class MyFavoritesActivity extends DataListActivity {
     @Override
     public void onLoadMore() {
         loadData(mIndex);
-        Toast.makeText(this, "onLoadMore ", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "onLoadMore ", Toast.LENGTH_SHORT).show();
     }
 
     @Override

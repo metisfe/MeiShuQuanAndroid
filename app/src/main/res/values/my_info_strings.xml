@@ -99,4 +99,6 @@
     <string name="change_pwd_not_match">确认密码不匹配</string>
     <string name="change_pwd_success">操作成功</string>
     <string name="change_pwd_failed">操作失败</string>
+
+    <string name="common_load_faild">加载失败</string>
 </resources>
