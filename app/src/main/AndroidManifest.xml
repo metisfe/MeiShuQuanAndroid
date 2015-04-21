@@ -317,8 +317,13 @@
             android:label="@string/title_activity_text" >
         </activity>
         <activity
+<<<<<<< HEAD
             android:name=".activity.assess.AssessInfoActivity"
             android:label="@string/title_activity_assess_info" >
+=======
+            android:name=".activity.info.ChangePwdActivity"
+            android:label="@string/title_activity_change_pwd" >
+>>>>>>> origin/master
         </activity>
     </application>
 

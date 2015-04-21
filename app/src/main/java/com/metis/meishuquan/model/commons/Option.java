@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class Option implements Serializable {
 
     @SerializedName("status")
-    private String status;
+    private int status;
 
     @SerializedName("message")
     private String message;
@@ -18,11 +18,11 @@ public class Option implements Serializable {
     @SerializedName("errorCode")
     private String errorCode;
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 

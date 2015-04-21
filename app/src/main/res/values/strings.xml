@@ -45,7 +45,11 @@
     <string name="title_activity_choose_course">ChooseCourseActivity</string>
     <string name="title_activity_course_info">CourseInfoActivity</string>
     <string name="title_activity_text">TextActivity</string>
+<<<<<<< HEAD
     <string name="title_activity_assess_info">AssessInfoActivity</string>
+=======
+    <string name="title_activity_change_pwd">ChangePwdActivity</string>
+>>>>>>> origin/master
 
 
 </resources>

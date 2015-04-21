@@ -39,11 +39,12 @@ import java.util.Set;
 public class QrScanActivity extends BaseActivity implements
         SurfaceHolder.Callback,
         Camera.PreviewCallback,
-        View.OnClickListener{
+        View.OnClickListener,
+        Camera.AutoFocusCallback{
 
-    private static final int MIN_FRAME_WIDTH = 240;
-    private static final int MIN_FRAME_HEIGHT = 240;
-    private static final int MAX_FRAME_WIDTH = 675/*1200*/; // = 5/8 * 1920
+    private static final int MIN_FRAME_WIDTH = 100;/*240*/
+    private static final int MIN_FRAME_HEIGHT = 600;/*240*/
+    private static final int MAX_FRAME_WIDTH = 400/*1200*/; // = 5/8 * 1920
     private static final int MAX_FRAME_HEIGHT = 1200/*675*/; // = 5/8 * 1080
 
     private static final String TAG = QrScanActivity.class.getSimpleName();
@@ -72,6 +73,8 @@ public class QrScanActivity extends BaseActivity implements
     private Point theScreenResolution = null;
     private Rect framingRectInPreview = null;
     private Rect framingRect = null;
+
+    private boolean focusing = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +132,16 @@ public class QrScanActivity extends BaseActivity implements
     }
 
     @Override
+    public void onAutoFocus(boolean success, Camera camera) {
+        focusing = false;
+        if (success) {
+
+        } else {
+            startFocus();
+        }
+    }
+
+    @Override
     public void surfaceCreated(SurfaceHolder holder) {
         try {
             Point point = new Point();
@@ -160,7 +173,7 @@ public class QrScanActivity extends BaseActivity implements
                 mCamera.setPreviewCallback(this);
                 mCamera.setPreviewDisplay(mHolder);
                 mCamera.startPreview();
-
+                startFocus();
             } catch (Exception e){
                 Log.d(TAG, "Error starting camera preview: " + e.getMessage());
             }
@@ -171,6 +184,7 @@ public class QrScanActivity extends BaseActivity implements
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         Log.v(TAG, TAG + " surfaceDestroyed ");
+        mCamera.stopPreview();
         mCamera.setPreviewCallback(null);
         mCamera.setOneShotPreviewCallback(null);
         try {
@@ -181,9 +195,18 @@ public class QrScanActivity extends BaseActivity implements
 
     }
 
+    private void startFocus () {
+        if (!focusing) {
+            mCamera.autoFocus(this);
+            focusing = true;
+        }
+
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mCamera.stopPreview();
         mCamera.release();
     }
 

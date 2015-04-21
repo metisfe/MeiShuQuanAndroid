@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Region;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -44,8 +45,10 @@ public class ClipView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (mRect != null) {
-            canvas.clipRect(mRect);
-            canvas.drawColor(0x90909090);
+            canvas.save();
+            canvas.clipRect(mRect, Region.Op.XOR);
+            canvas.drawColor(0x90ffffff);
+            canvas.restore();
         }
 
     }
