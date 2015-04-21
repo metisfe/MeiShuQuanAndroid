@@ -1,17 +1,23 @@
 package com.metis.meishuquan.activity.assess;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,8 +40,8 @@ public class AssessInfoActivity extends FragmentActivity {
     private SmartImageView imgPortrait, imgContent;
     private LinearLayout llSupport, llComment;
     private ImageView imgSupport;
-    private boolean isPressSupport = false;
-    private boolean isPressComment = false;
+    private ListView listView;
+    private View headerView;
 
     private Assess assess;
 
@@ -49,38 +55,46 @@ public class AssessInfoActivity extends FragmentActivity {
             assess = (Assess) bundle.getSerializable("assess");
         }
         initView();
+        addHeaderView();
+        initHeaderView();
         bindData(assess);
+        initHeaderEvent();
         initEvent();
+
+        String[] strs = new String[10];
+
+        for (int i = 0; i < 20; i++) {
+            strs[i] = "data-----" + i;
+        }
+        listView.setAdapter(new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, strs));
     }
 
-    private void initView() {
-        this.btnBack = (Button) this.findViewById(R.id.id_btn_assess_info_back);
-        this.tvName = (TextView) this.findViewById(R.id.id_username);
-        this.tvGrade = (TextView) this.findViewById(R.id.id_tv_grade);
-        this.tvType = (TextView) this.findViewById(R.id.id_tv_content_type);
-        this.tvPublishTime = (TextView) this.findViewById(R.id.id_createtime);
-        this.tvAssessState = (TextView) this.findViewById(R.id.id_tv_comment_state);
-        this.tvContent = (TextView) this.findViewById(R.id.id_tv_content);
-        this.tvSupportCount = (TextView) this.findViewById(R.id.id_tv_support_count);
-        this.tvCommentCount = (TextView) this.findViewById(R.id.id_tv_comment_count);
-        this.imgPortrait = (SmartImageView) this.findViewById(R.id.id_img_portrait);
-        this.imgContent = (SmartImageView) this.findViewById(R.id.id_img_content);
-        this.tvAddOne = (TextView) this.findViewById(R.id.id_tv_add_one);
-
-        this.llSupport = (LinearLayout) this.findViewById(R.id.id_ll_support);
-        this.llComment = (LinearLayout) this.findViewById(R.id.id_ll_comment_count);
-        this.imgSupport = (ImageView) this.findViewById(R.id.id_img_assess_support);
+    private void addHeaderView() {
+        headerView = View.inflate(this, R.layout.view_assess_info_header, null);
+//        headerView = this.getLayoutInflater().inflate(R.layout.view_assess_info_header, null);
+        listView.addHeaderView(headerView);
     }
 
-    private void initEvent() {
-        //返回
-        this.btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+    private void initHeaderView() {
+        this.tvName = (TextView) headerView.findViewById(R.id.id_username);
+        this.tvGrade = (TextView) headerView.findViewById(R.id.id_tv_grade);
+        this.tvType = (TextView) headerView.findViewById(R.id.id_tv_content_type);
+        this.tvPublishTime = (TextView) headerView.findViewById(R.id.id_createtime);
+        this.tvAssessState = (TextView) headerView.findViewById(R.id.id_tv_comment_state);
+        this.tvContent = (TextView) headerView.findViewById(R.id.id_tv_content);
+        this.tvSupportCount = (TextView) headerView.findViewById(R.id.id_tv_support_count);
+        this.tvCommentCount = (TextView) headerView.findViewById(R.id.id_tv_comment_count);
+        this.imgPortrait = (SmartImageView) headerView.findViewById(R.id.id_img_portrait);
+        this.imgContent = (SmartImageView) headerView.findViewById(R.id.id_img_content);
+        this.tvAddOne = (TextView) headerView.findViewById(R.id.id_tv_add_one);
 
+        this.llSupport = (LinearLayout) headerView.findViewById(R.id.id_ll_support);
+        this.llComment = (LinearLayout) headerView.findViewById(R.id.id_ll_comment_count);
+        this.imgSupport = (ImageView) headerView.findViewById(R.id.id_img_assess_support);
+    }
+
+    private void initHeaderEvent() {
         //赞
         this.llSupport.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +110,22 @@ public class AssessInfoActivity extends FragmentActivity {
 
             }
         });
+    }
+
+    private void initView() {
+        this.btnBack = (Button) this.findViewById(R.id.id_btn_assess_info_back);
+        this.listView = (ListView) this.findViewById(R.id.id_list_assess_info_comment);
+    }
+
+    private void initEvent() {
+        //返回
+        this.btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
     }
 
     private void support() {
@@ -117,7 +147,7 @@ public class AssessInfoActivity extends FragmentActivity {
         tvAddOne.setVisibility(View.VISIBLE);
         tvAddOne.startAnimation(animation);
         int addCount = count + 1;
-        tvSupportCount.setText("(" + addCount + ")");
+        tvSupportCount.setText("赞(" + addCount + ")");
         tvSupportCount.setTag(count + 1);
         tvSupportCount.setTextColor(Color.RED);
         imgSupport.setImageDrawable(getResources().getDrawable(R.drawable.icon_support));
@@ -172,5 +202,44 @@ public class AssessInfoActivity extends FragmentActivity {
         //赞数量和评论数量
         this.tvSupportCount.setText("赞(" + assess.getSupportCount() + ")");
         this.tvCommentCount.setText("评论(" + assess.getCommentCount() + ")");
+    }
+
+    class AssessInfoAdapter extends BaseAdapter {
+        private int WORD_TYPE = 1;
+        private int PIC_TYPE = 2;
+        private int VOICE_TYPE = 3;
+
+
+        @Override
+        public int getViewTypeCount() {
+            return super.getViewTypeCount();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return super.getItemViewType(position);
+        }
+
+
+
+        @Override
+        public int getCount() {
+            return 0;
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            return null;
+        }
     }
 }
