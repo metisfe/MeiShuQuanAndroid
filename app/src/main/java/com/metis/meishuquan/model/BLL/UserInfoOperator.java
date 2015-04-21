@@ -3,12 +3,14 @@ package com.metis.meishuquan.model.BLL;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.commons.Item;
+import com.metis.meishuquan.model.commons.Option;
 import com.metis.meishuquan.model.commons.Profile;
 import com.metis.meishuquan.model.commons.Result;
 import com.metis.meishuquan.model.commons.User;
@@ -45,11 +47,14 @@ public class UserInfoOperator {
     private static String URL_CENTER = "v1.1/UserCenter/GetUser?",
                             URL_FAVORITE = "v1.1/UserCenter/MyFavorites?",
                             URL_QUESTION = "v1.1/UserCenter/MyQuestion?userId={userId}&index={index}&type={type}",
-                            URL_UPDATE_USER_INFO = "v1.1/UserCenter/UpdateUserInfo?param=";
+                            URL_UPDATE_USER_INFO = "v1.1/UserCenter/UpdateUserInfo?param=",
+                            URL_CHANGE_PWD = "v1.1/UserCenter/ChangePassword?";
 
     private static String KEY_USER_ID = "userId",
                         KEY_INDEX = "index",
-                        KEY_SESSION = "session";
+                        KEY_SESSION = "session",
+                        KEY_OLD_PWD = "oldPwd",
+                        KEY_NEW_PWD = "newPwd";
 
     public static UserInfoOperator getInstance () {
         return sOperator;
@@ -219,6 +224,31 @@ public class UserInfoOperator {
                 }
             });
         }
+    }
+
+    public void changePwd (String old, String newPwd, final OnGetListener<Option> listener) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            StringBuilder sb = new StringBuilder(URL_CHANGE_PWD);
+            sb.append(KEY_OLD_PWD + "=" + old);
+            sb.append("&" + KEY_NEW_PWD + "=" + newPwd);
+            sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+            Log.v(TAG, "changePwd request " + sb.toString());
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String json = gson.toJson(result);
+                        Result r = gson.fromJson(json, Result.class);
+                        listener.onGet(true, r.getOption());
+                        Toast.makeText(MainApplication.UIContext, "changePwd status=" + r.getOption().getStatus(), Toast.LENGTH_SHORT).show();
+                        Log.v(TAG, "changePwd result " + json + " statusCode=" + response.getStatus().getStatusCode() + " option.status=" + r.getOption().getStatus());
+                    }
+                }
+            });
+        }
+
     }
 
     /*public void getQuestionList (String uid, int index, int type, OnGetListener<>) {
