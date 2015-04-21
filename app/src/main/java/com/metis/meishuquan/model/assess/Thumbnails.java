@@ -1,11 +1,13 @@
 package com.metis.meishuquan.model.assess;
 
+import java.io.Serializable;
+
 /**
  * POJO:缩略图
  * <p/>
  * Created by WJ on 2015/3/31.
  */
-public class Thumbnails {
+public class Thumbnails implements Serializable {
     private String url = "";
 
     private int width = 0;

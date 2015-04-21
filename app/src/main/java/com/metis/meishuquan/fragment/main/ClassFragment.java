@@ -166,11 +166,10 @@ public class ClassFragment extends Fragment {
         if (!json.isEmpty()) {
             lstCheckedCourseChannelItems = new Gson().fromJson(json, new TypeToken<List<CourseChannelItem>>() {
             }.getType());
-
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < lstCheckedCourseChannelItems.size(); i++) {
                 sb.append(lstCheckedCourseChannelItems.get(i).getChannelName().trim());
-                if (i < 1) {
+                if (i < lstCheckedCourseChannelItems.size() - 1) {
                     sb.append(",");
                 }
             }

@@ -85,6 +85,7 @@ public class ChooseCourseActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
+                adapter.getSelectedChannels().clear();
                 intent.putExtra("tags", (java.io.Serializable) adapter.getSelectedChannels());
                 setResult(RESULT_OK, intent);
                 finish();

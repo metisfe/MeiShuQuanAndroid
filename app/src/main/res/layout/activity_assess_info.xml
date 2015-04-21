@@ -1,0 +1,208 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#cccccc">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/id_rl_topbar"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="#2d2a40">
+
+                <Button
+                    android:id="@+id/id_btn_assess_info_back"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/bg_btn_arrow_left" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="问题详情"
+                    android:textColor="#fb6d6d"
+                    android:textSize="20sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/id_rl_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/id_rl_topbar"
+                android:layout_margin="5dp"
+                android:background="#F1F1F1"
+                android:padding="10dp">
+
+                <com.loopj.android.image.SmartImageView
+                    android:id="@+id/id_img_portrait"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:background="@drawable/default_user_dynamic"
+                    android:scaleType="centerCrop" />
+
+                <TextView
+                    android:id="@+id/id_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/id_img_portrait"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toEndOf="@+id/id_img_portrait"
+                    android:layout_toRightOf="@+id/id_img_portrait"
+                    android:singleLine="true"
+                    android:text="张三"
+                    android:textColor="#424242" />
+
+                <TextView
+                    android:id="@+id/id_tv_grade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/id_username"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toEndOf="@+id/id_username"
+                    android:layout_toRightOf="@+id/id_username"
+                    android:singleLine="true"
+                    android:text="高三"
+                    android:textColor="#7e7e7e" />
+
+                <TextView
+                    android:id="@+id/id_createtime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/id_username"
+                    android:layout_below="@+id/id_username"
+                    android:layout_marginTop="10dp"
+                    android:singleLine="true"
+                    android:text="45分钟前"
+                    android:textColor="#909090" />
+
+                <TextView
+                    android:id="@+id/id_tv_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/id_img_portrait"
+                    android:layout_alignStart="@+id/id_img_portrait"
+                    android:layout_below="@+id/id_img_portrait"
+                    android:layout_marginTop="10dp"
+                    android:text="本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情"
+                    android:textColor="#7e7e7e" />
+
+                <com.loopj.android.image.SmartImageView
+                    android:id="@+id/id_img_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/id_tv_content"
+                    android:layout_marginTop="10dp"
+                    android:minHeight="50dp"
+                    android:minWidth="50dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/img_topline_default" />
+
+                <LinearLayout
+                    android:id="@+id/id_ll_comment_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_alignBottom="@+id/id_img_content"
+                    android:layout_alignParentRight="true">
+
+                    <TextView
+                        android:id="@+id/id_tv_comment_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="1.5dp"
+                        android:text="评论(123)"
+                        android:textColor="#7e7e7e"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/id_ll_support"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_alignTop="@+id/id_ll_comment_count"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@+id/id_ll_comment_count"
+                    android:layout_toStartOf="@+id/id_ll_comment_count">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="bottom"
+                        android:src="@drawable/icon_unsupport" />
+
+                    <TextView
+                        android:id="@+id/id_tv_support_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="1.5dp"
+                        android:text="(123)"
+                        android:textColor="#7e7e7e"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/id_tv_content_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/id_grade"
+                    android:layout_alignEnd="@+id/id_tv_content"
+                    android:layout_alignRight="@+id/id_tv_content"
+                    android:text="素描"
+                    android:textColor="#7e7e7e"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/id_tv_comment_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/id_createtime"
+                    android:layout_alignEnd="@+id/id_tv_content"
+                    android:layout_alignRight="@+id/id_tv_content"
+                    android:text="未点评"
+                    android:textColor="@color/red"
+                    android:textSize="13sp" />
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:id="@+id/id_ll_triangle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/id_rl_content">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginLeft="50dp"
+                    android:src="@drawable/icon_triangle_up" />
+            </LinearLayout>
+
+            <com.metis.meishuquan.view.course.FlowLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@+id/id_ll_triangle"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="-2dp"
+                android:background="#e3e0e0" />
+        </RelativeLayout>
+
+    </ScrollView>
+
+
+</RelativeLayout>

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.R;
@@ -67,7 +68,9 @@ public class AssessInfoFragment extends Fragment {
         });
     }
 
-    private void getData() {
-//        AssessOperator.getInstance().
+    private void bindData(Assess assess) {
+//        if (assess==null){
+//            Toast.makeText()
+//        }
     }
 }

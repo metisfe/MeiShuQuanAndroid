@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import com.google.gson.reflect.TypeToken;
 import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.assess.AssessInfoActivity;
 import com.metis.meishuquan.fragment.assess.AssessInfoFragment;
 import com.metis.meishuquan.fragment.assess.AssessPublishFragment;
 import com.metis.meishuquan.fragment.assess.ChooseCityFragment;
@@ -48,6 +50,7 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -188,16 +191,9 @@ public class AssessFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 if (position >= lstAllAssess.size() + 1) return;
-                AssessInfoFragment assessInfoFragment = new AssessInfoFragment();
-                Bundle bundle = new Bundle();
-//                bundle.putInt("assessId", lstAllAssess.get(position).getId());
-                bundle.putSerializable("assess", (java.io.Serializable) lstAllAssess.get(position));
-                assessInfoFragment.setArguments(bundle);
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
-                ft.add(R.id.content_container, assessInfoFragment);
-                ft.addToBackStack(null);
-                ft.commit();
+                Intent intent = new Intent(getActivity(), AssessInfoActivity.class);
+                intent.putExtra("assess", (Serializable) lstAllAssess.get(position - 1));
+                startActivity(intent);
             }
         });
 
@@ -301,6 +297,7 @@ public class AssessFragment extends Fragment {
                 if (result != null) {
                     Gson gson = new Gson();
                     String json = gson.toJson(result);
+                    Log.i("assesslist", json);
                     allAssess = gson.fromJson(json, new TypeToken<AllAssess>() {
                     }.getType());
                     List<Assess> assessList = null;
@@ -350,7 +347,7 @@ public class AssessFragment extends Fragment {
 
         private class ViewHolder {
             SmartImageView portrait, img_content;
-            TextView userName, grade, createTime, content, tag;
+            TextView userName, grade, createTime, content;
             TextView tvSupportCount, tvCommentCount, tvContentType, tvCommentState;
 
         }
@@ -378,9 +375,10 @@ public class AssessFragment extends Fragment {
         @Override
         public View getView(final int i, View convertView, ViewGroup view) {
             ViewGroup viewGroup = null;
+            Assess assess = null;
             if (viewGroup == null) {
                 holder = new ViewHolder();
-                Assess assess = lstAssess.get(i);
+                assess = lstAssess.get(i);
                 viewGroup = (ViewGroup) LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_assess_list_item, null);
                 holder.portrait = (SmartImageView) viewGroup.findViewById(R.id.id_img_portrait);
                 holder.userName = (TextView) viewGroup.findViewById(R.id.id_username);
@@ -391,55 +389,64 @@ public class AssessFragment extends Fragment {
                 holder.tvSupportCount = (TextView) viewGroup.findViewById(R.id.id_tv_support_count);
                 holder.tvCommentCount = (TextView) viewGroup.findViewById(R.id.id_tv_comment_count);
                 holder.tvContentType = (TextView) viewGroup.findViewById(R.id.id_tv_content_type);
-
-                //用户名
-                holder.userName.setText(assess.getUser().getName());
-
-                //用户头像
-                if (!assess.getUser().getAvatar().isEmpty()) {
-                    holder.portrait.setImageUrl(assess.getUser().getAvatar());
-                }
-
-                //holder.grade.setText(assess());
-
-                //创建时间
-                SimpleDateFormat sFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                try {
-                    Date date = sFormat.parse(assess.getCreateTime());
-                    String dataStr = sFormat.format(date);
-                    holder.createTime.setText(dataStr);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                //内容描述
-                if (assess.getDesc().length() > 0) {
-                    holder.content.setText(assess.getDesc());
-                } else {
-                    holder.content.setHeight(0);
-                }
-
-                //内容图片
-                holder.img_content.setMinimumWidth(assess.getThumbnails().getWidth() * 2);
-                holder.img_content.setMinimumHeight(assess.getThumbnails().getHeigth() * 2);
-                holder.img_content.setImageUrl(assess.getThumbnails().getUrl());
-
-                //预览大图
-                holder.img_content.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //TODO:
-                    }
-                });
-
-                holder.tvSupportCount.setText("赞(" + assess.getSupportCount() + ")");//赞数量
-                holder.tvCommentCount.setText("评论(" + assess.getCommentCount() + ")");//评论数量
-                holder.tvContentType.setText(assess.getAssessChannel().getChannelName());//内容类型
-                //设置点评状态
-                if (assess.getCommentCount() > 0) {
-                    holder.tvCommentState.setText("已点评");
-                }
+                viewGroup.setTag(holder);
+            } else {
+                holder = (ViewHolder) viewGroup.getTag();
             }
-            holder = (ViewHolder) viewGroup.getTag();
+
+            //用户名
+            holder.userName.setText(assess.getUser().getName());
+
+            //用户头像
+            if (!assess.getUser().getAvatar().isEmpty()) {
+                holder.portrait.setImageUrl(assess.getUser().getAvatar());
+            }
+
+            //年级
+            //holder.grade.setText(assess());
+
+            //创建时间
+            SimpleDateFormat sFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            try {
+                Date date = sFormat.parse(assess.getCreateTime());
+                String dataStr = sFormat.format(date);
+                holder.createTime.setText(dataStr);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            //内容描述
+            if (assess.getDesc().length() > 0) {
+                holder.content.setText(assess.getDesc());
+            } else {
+                holder.content.setHeight(0);
+            }
+
+            //内容图片
+            holder.img_content.setMinimumWidth(assess.getThumbnails().getWidth() * 2);
+            holder.img_content.setMinimumHeight(assess.getThumbnails().getHeigth() * 2);
+            holder.img_content.setImageUrl(assess.getThumbnails().getUrl());
+            holder.img_content.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //TODO:大图浏览
+                }
+            });
+
+            //预览大图
+            holder.img_content.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //TODO:
+                }
+            });
+
+            holder.tvSupportCount.setText("赞(" + assess.getSupportCount() + ")");//赞数量
+            holder.tvCommentCount.setText("评论(" + assess.getCommentCount() + ")");//评论数量
+            holder.tvContentType.setText(assess.getAssessChannel().getChannelName());//内容类型
+            //设置点评状态
+            if (assess.getCommentCount() > 0) {
+                holder.tvCommentState.setText("已点评");
+            }
             return viewGroup;
         }
     }

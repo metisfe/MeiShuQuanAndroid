@@ -91,7 +91,6 @@ public class LoginFragment extends Fragment {
                     @Override
                     public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                         if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                            isPressLogin = false;
                             Gson gson = new Gson();
                             String json = gson.toJson(result);
                             Log.e("userInfo", json);
@@ -120,9 +119,10 @@ public class LoginFragment extends Fragment {
                             Utils.hideInputMethod(getActivity(), etUserName);
                             Toast.makeText(MainApplication.UIContext, "登录成功", Toast.LENGTH_SHORT).show();
                             getActivity().finish();
+                            isPressLogin = false;
                         } else {
                             Toast.makeText(MainApplication.UIContext, "账号与密码不匹配，请重新输入", Toast.LENGTH_SHORT).show();
-                            isPressLogin = false;
+                            isPressLogin = true;
                         }
                     }
                 });
