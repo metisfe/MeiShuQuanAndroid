@@ -41,7 +41,7 @@ public class LoginFragment extends Fragment {
     private FragmentManager fragmentManager;
     private UserOperator userOperator;
 
-    private boolean isPressLogin = true;
+    private boolean isPressLogin = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -79,9 +79,10 @@ public class LoginFragment extends Fragment {
         btnLogin.setOnClickListener(new View.OnClickListener() {//登录
             @Override
             public void onClick(View view) {
-                if (!isPressLogin) {
+                if (isPressLogin) {
                     return;
                 }
+                isPressLogin = true;
                 String accout = etUserName.getText().toString().trim();
                 String pwd = etPwd.getText().toString().trim();
                 if (!verify()) {
@@ -122,7 +123,7 @@ public class LoginFragment extends Fragment {
                             isPressLogin = false;
                         } else {
                             Toast.makeText(MainApplication.UIContext, "账号与密码不匹配，请重新输入", Toast.LENGTH_SHORT).show();
-                            isPressLogin = true;
+                            isPressLogin = false;
                         }
                     }
                 });

@@ -41,6 +41,7 @@ import com.metis.meishuquan.model.assess.Assess;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.AssessStateEnum;
 import com.metis.meishuquan.model.enums.QueryTypeEnum;
+import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.view.popup.ChoosePhotoPopupWindow;
 import com.metis.meishuquan.view.shared.DragListView;
 import com.metis.meishuquan.view.shared.TabBar;
@@ -425,12 +426,6 @@ public class AssessFragment extends Fragment {
             holder.img_content.setMinimumWidth(assess.getThumbnails().getWidth() * 2);
             holder.img_content.setMinimumHeight(assess.getThumbnails().getHeigth() * 2);
             holder.img_content.setImageUrl(assess.getThumbnails().getUrl());
-            holder.img_content.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //TODO:大图浏览
-                }
-            });
 
             //预览大图
             holder.img_content.setOnClickListener(new View.OnClickListener() {

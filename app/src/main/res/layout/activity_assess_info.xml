@@ -6,6 +6,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/id_rl_input"
         android:scrollbars="none">
 
         <RelativeLayout
@@ -112,7 +113,7 @@
                 <LinearLayout
                     android:id="@+id/id_ll_comment_count"
                     android:layout_width="wrap_content"
-                    android:layout_height="30dp"
+                    android:layout_height="40dp"
                     android:layout_alignBottom="@+id/id_img_content"
                     android:layout_alignParentRight="true">
 
@@ -131,17 +132,34 @@
                 <LinearLayout
                     android:id="@+id/id_ll_support"
                     android:layout_width="wrap_content"
-                    android:layout_height="30dp"
+                    android:layout_height="40dp"
                     android:layout_alignTop="@+id/id_ll_comment_count"
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@+id/id_ll_comment_count"
                     android:layout_toStartOf="@+id/id_ll_comment_count">
 
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="bottom"
-                        android:src="@drawable/icon_unsupport" />
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom">
+
+                        <ImageView
+                            android:id="@+id/id_img_assess_support"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="bottom"
+                            android:src="@drawable/icon_unsupport" />
+
+                        <TextView
+                            android:id="@+id/id_tv_add_one"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text=" + 1"
+                            android:textColor="@color/red"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+
 
                     <TextView
                         android:id="@+id/id_tv_support_count"
@@ -178,31 +196,90 @@
                     android:textSize="13sp" />
             </RelativeLayout>
 
-
             <LinearLayout
-                android:id="@+id/id_ll_triangle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/id_rl_content">
+                android:layout_height="match_parent"
+                android:layout_below="@+id/id_rl_content"
+                android:orientation="vertical"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:visibility="visible">
 
-                <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_marginLeft="50dp"
-                    android:src="@drawable/icon_triangle_up" />
+                <LinearLayout
+                    android:id="@+id/id_ll_triangle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginLeft="50dp"
+                        android:src="@drawable/icon_triangle_up" />
+                </LinearLayout>
+
+                <com.metis.meishuquan.view.course.FlowLayout
+                    android:id="@+id/id_fl_support_user_portraits_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="-2dp"
+                    android:background="#e3e0e0" />
+
+                <LinearLayout
+                    android:id="@+id/id_ll_replay_comment_list_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#e3e0e0"
+                    android:orientation="vertical" />
             </LinearLayout>
 
-            <com.metis.meishuquan.view.course.FlowLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@+id/id_ll_triangle"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="-2dp"
-                android:background="#e3e0e0" />
         </RelativeLayout>
 
     </ScrollView>
 
+    <RelativeLayout
+        android:id="@+id/id_rl_input"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
+        android:background="#f0f0f0"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+        <ImageView
+            android:id="@+id/id_img_voice"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_btn_voice" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_toLeftOf="@+id/id_img_emotion"
+            android:layout_toRightOf="@+id/id_img_voice"
+            android:background="@drawable/bg_assess_info_comment_input"
+            android:hint="我来说两句..."
+            android:padding="5dp"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/id_img_emotion"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/id_btn_more"
+            android:src="@drawable/bg_btn_emotion" />
+
+        <ImageView
+            android:id="@+id/id_btn_more"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_btn_more" />
+
+    </RelativeLayout>
 
 </RelativeLayout>
