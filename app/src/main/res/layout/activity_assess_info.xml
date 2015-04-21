@@ -1,0 +1,85 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#cccccc">
+
+    <RelativeLayout
+        android:id="@+id/id_rl_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="#2d2a40">
+
+        <Button
+            android:id="@+id/id_btn_assess_info_back"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_btn_arrow_left" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="问题详情"
+            android:textColor="#fb6d6d"
+            android:textSize="20sp" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/id_list_assess_info_comment"
+        android:layout_below="@+id/id_rl_topbar"
+        android:padding="5dp"
+        android:background="#cccccc"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/id_rl_input" />
+
+    <RelativeLayout
+        android:id="@+id/id_rl_input"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
+        android:background="#f0f0f0"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+        <ImageView
+            android:id="@+id/id_img_voice"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_btn_voice" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_toLeftOf="@+id/id_img_emotion"
+            android:layout_toRightOf="@+id/id_img_voice"
+            android:background="@drawable/bg_assess_info_comment_input"
+            android:hint="我来说两句..."
+            android:padding="5dp"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/id_img_emotion"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/id_btn_more"
+            android:src="@drawable/bg_btn_emotion" />
+
+        <ImageView
+            android:id="@+id/id_btn_more"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_btn_more" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
