@@ -25,11 +25,7 @@ import com.metis.meishuquan.model.course.CourseChannelItem;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.course.FlowLayout;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class ChooseCourseActivity extends FragmentActivity {
@@ -38,13 +34,18 @@ public class ChooseCourseActivity extends FragmentActivity {
     private RelativeLayout rlAllChannel;
     private ListView listView;
     private CourseAdapter adapter;
-    private List<CourseChannel> lstCourseChannel = new ArrayList<CourseChannel>();
+    private List<CourseChannel> lstSelectedCourseChannel = new ArrayList<CourseChannel>();
+    private List<CourseChannelItem> lstOldSelectedCourseChannelItems = new ArrayList<CourseChannelItem>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getData();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_course);
+
+        if (getIntent().getExtras() != null) {
+            lstOldSelectedCourseChannelItems = (List<CourseChannelItem>) getIntent().getExtras().getSerializable("OldSelectedCourseChannelItems");
+        }
 
         initView();
         initEvent();
@@ -56,7 +57,7 @@ public class ChooseCourseActivity extends FragmentActivity {
         this.rlAllChannel = (RelativeLayout) this.findViewById(R.id.id_rl_all_channel);
         this.listView = (ListView) this.findViewById(R.id.id_course_listview);
 
-        adapter = new CourseAdapter(ChooseCourseActivity.this, lstCourseChannel);
+        adapter = new CourseAdapter(ChooseCourseActivity.this, lstSelectedCourseChannel, lstOldSelectedCourseChannelItems);
         listView.setAdapter(adapter);
     }
 
@@ -98,7 +99,7 @@ public class ChooseCourseActivity extends FragmentActivity {
         Gson gson = new Gson();
         CourseChannelData data = gson.fromJson(json, new TypeToken<CourseChannelData>() {
         }.getType());
-        lstCourseChannel = data.getData();
+        lstSelectedCourseChannel = data.getData();
     }
 
     class CourseAdapter extends BaseAdapter {
@@ -108,18 +109,10 @@ public class ChooseCourseActivity extends FragmentActivity {
         private List<CourseChannelItem> mOldCheckedItems = new ArrayList<CourseChannelItem>();
         private Context mContext;
 
-        CourseAdapter(Context context, List<CourseChannel> mData) {
+        CourseAdapter(Context context, List<CourseChannel> mData, List<CourseChannelItem> mOldCheckedItems) {
             this.mContext = context;
             this.mData = mData;
-            getOldChannels();
-        }
-
-        private void getOldChannels() {
-            final String json = SharedPreferencesUtil.getInstanse(mContext).getStringByKey(SharedPreferencesUtil.CHECKED_CHANNEL_ITEMS + MainApplication.userInfo.getUserId());
-            if (!json.isEmpty()) {
-                mOldCheckedItems = new Gson().fromJson(json, new TypeToken<List<CourseChannelItem>>() {
-                }.getType());
-            }
+            this.mOldCheckedItems = mOldCheckedItems;
         }
 
         public List<CourseChannelItem> getSelectedChannels() {

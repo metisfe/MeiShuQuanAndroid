@@ -121,6 +121,9 @@ public class LoginFragment extends Fragment {
                             Toast.makeText(MainApplication.UIContext, "登录成功", Toast.LENGTH_SHORT).show();
                             getActivity().finish();
                             isPressLogin = false;
+                        } else if (result != null || exception != null) {
+                            Log.e("**LoginFragment", result.getMessage() + "error:" + exception.getCause());
+                            isPressLogin = false;
                         } else {
                             Toast.makeText(MainApplication.UIContext, "账号与密码不匹配，请重新输入", Toast.LENGTH_SHORT).show();
                             isPressLogin = false;

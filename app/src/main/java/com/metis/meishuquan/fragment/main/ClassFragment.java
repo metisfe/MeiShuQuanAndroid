@@ -67,6 +67,16 @@ public class ClassFragment extends Fragment {
 
     }
 
+    private List<CourseChannelItem> getOldChannels() {
+        final String json = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey(SharedPreferencesUtil.CHECKED_CHANNEL_ITEMS + MainApplication.userInfo.getUserId());
+        List<CourseChannelItem> mOldCheckedItems = null;
+        if (!json.isEmpty()) {
+            mOldCheckedItems = new Gson().fromJson(json, new TypeToken<List<CourseChannelItem>>() {
+            }.getType());
+        }
+        return mOldCheckedItems;
+    }
+
     private void updateListView(List<CourseChannelItem> lstCheckedCourseChannelItems) {
         if (lstCheckedCourseChannelItems == null) return;
         StringBuilder sb = new StringBuilder();
@@ -135,7 +145,9 @@ public class ClassFragment extends Fragment {
         btnChooseClass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivityForResult(new Intent(getActivity(), ChooseCourseActivity.class), 101);
+                Intent intent = new Intent(getActivity(), ChooseCourseActivity.class);
+                intent.putExtra("OldSelectedCourseChannelItems", (java.io.Serializable) getOldChannels());
+                startActivityForResult(intent, 101);
             }
         });
 

@@ -6,6 +6,7 @@ import android.util.Pair;
 
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
+import com.metis.meishuquan.model.assess.AssessSupportAndComment;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.AssessStateEnum;
 import com.metis.meishuquan.model.enums.FileUploadTypeEnum;
@@ -47,6 +48,7 @@ public class AssessOperator {
     private final String Friend = "";//获取好友/老师
     private final String FileUpload = "v1.1/File/Upload";//文件上传
     private final String Region = "v1.1/UserCenter/Region";
+    private final String AssessSupportAndComment = "v1.1/AssessComment/AssessCommentAndSupportUserList";
     private final String SESSION = MainApplication.userInfo.getCookie();
 
     private AssessOperator() {
@@ -237,6 +239,17 @@ public class AssessOperator {
                 PATH.append("&session=" + SESSION);
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+            }
+        }
+    }
+
+    public void getSupportAndComment(int assessId, ApiOperationCallback<ReturnInfo<AssessSupportAndComment>> callback) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuilder PATH = new StringBuilder(AssessSupportAndComment);
+                PATH.append("?assessId=" + assessId);
+                PATH.append("&session=" + SESSION);
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<AssessSupportAndComment>>) new ReturnInfo<AssessSupportAndComment>().getClass(), callback);
             }
         }
     }

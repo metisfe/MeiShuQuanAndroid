@@ -21,19 +21,28 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.login.LoginActivity;
+import com.metis.meishuquan.model.BLL.AssessOperator;
 import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.assess.Assess;
+import com.metis.meishuquan.model.assess.AssessComment;
+import com.metis.meishuquan.model.assess.AssessSupportAndComment;
+import com.metis.meishuquan.model.commons.SimpleUser;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.SupportStepTypeEnum;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AssessInfoActivity extends FragmentActivity {
 
+    private String TAG = "getAssessSupportAndComment";
     private Button btnBack;
 
     private TextView tvName, tvGrade, tvType, tvPublishTime, tvAssessState, tvContent, tvSupportCount, tvCommentCount, tvAddOne;
@@ -44,6 +53,7 @@ public class AssessInfoActivity extends FragmentActivity {
     private View headerView;
 
     private Assess assess;
+    private AssessSupportAndComment assessSupportAndComment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +63,7 @@ public class AssessInfoActivity extends FragmentActivity {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             assess = (Assess) bundle.getSerializable("assess");
+            assessSupportAndComment = (AssessSupportAndComment) bundle.getSerializable("assessSupportAndComment");
         }
         initView();
         addHeaderView();
@@ -63,7 +74,7 @@ public class AssessInfoActivity extends FragmentActivity {
 
         String[] strs = new String[10];
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 10; i++) {
             strs[i] = "data-----" + i;
         }
         listView.setAdapter(new ArrayAdapter<String>(this,
@@ -72,7 +83,6 @@ public class AssessInfoActivity extends FragmentActivity {
 
     private void addHeaderView() {
         headerView = View.inflate(this, R.layout.view_assess_info_header, null);
-//        headerView = this.getLayoutInflater().inflate(R.layout.view_assess_info_header, null);
         listView.addHeaderView(headerView);
     }
 
@@ -125,7 +135,6 @@ public class AssessInfoActivity extends FragmentActivity {
                 finish();
             }
         });
-
     }
 
     private void support() {
@@ -204,22 +213,36 @@ public class AssessInfoActivity extends FragmentActivity {
         this.tvCommentCount.setText("评论(" + assess.getCommentCount() + ")");
     }
 
-    class AssessInfoAdapter extends BaseAdapter {
+    private class AssessInfoAdapter extends BaseAdapter {
         private int WORD_TYPE = 1;
         private int PIC_TYPE = 2;
         private int VOICE_TYPE = 3;
+        private int Portrait_TYPE = 4;
+        private int TYPE_COUNT = 4;
 
+        private Context mContext;
+        private AssessSupportAndComment assessSupportAndComment;
+        private List<SimpleUser> lstSupportUser = new ArrayList<SimpleUser>();
+        private List<AssessComment> lstAssessComment = new ArrayList<AssessComment>();
+
+        public AssessInfoAdapter(Context mContext, AssessSupportAndComment assessSupportAndComment) {
+            this.mContext = mContext;
+            this.assessSupportAndComment = assessSupportAndComment;
+            if (assessSupportAndComment != null) {
+                lstSupportUser = assessSupportAndComment.getSupportUserList();
+                lstAssessComment = assessSupportAndComment.getAssessCommentList();
+            }
+        }
 
         @Override
         public int getViewTypeCount() {
-            return super.getViewTypeCount();
+            return TYPE_COUNT;
         }
 
         @Override
         public int getItemViewType(int position) {
             return super.getItemViewType(position);
         }
-
 
 
         @Override

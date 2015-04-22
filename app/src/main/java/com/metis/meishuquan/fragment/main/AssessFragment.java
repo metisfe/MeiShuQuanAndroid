@@ -33,6 +33,7 @@ import com.metis.meishuquan.fragment.assess.FilterConditionForAssessListFragment
 import com.metis.meishuquan.model.BLL.AssessOperator;
 import com.metis.meishuquan.model.assess.AllAssess;
 import com.metis.meishuquan.model.assess.Assess;
+import com.metis.meishuquan.model.assess.AssessSupportAndComment;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.AssessStateEnum;
 import com.metis.meishuquan.model.enums.QueryTypeEnum;
@@ -58,6 +59,7 @@ import java.util.List;
  * Created by wj on 3/15/2015.
  */
 public class AssessFragment extends Fragment {
+    private static final String TAG = "getAssessComment";
     private static final int TAKE_PHOTO = 1;
     private static final int PICK_PICTURE = 2;
     private ViewGroup rootView;
@@ -186,9 +188,25 @@ public class AssessFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 if (position >= lstAllAssess.size() + 1) return;
-                Intent intent = new Intent(getActivity(), AssessInfoActivity.class);
-                intent.putExtra("assess", (Serializable) lstAllAssess.get(position - 1));
-                startActivity(intent);
+                final Assess assess = lstAllAssess.get(position - 1);
+                AssessOperator.getInstance().getSupportAndComment(assess.getId(), new ApiOperationCallback<ReturnInfo<AssessSupportAndComment>>() {
+                    @Override
+                    public void onCompleted(ReturnInfo<AssessSupportAndComment> result, Exception exception, ServiceFilterResponse response) {
+                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                            Gson gson = new Gson();
+                            String json = gson.toJson(result);
+                            Log.i(TAG, json);
+                            ReturnInfo returnInfo = gson.fromJson(json, new TypeToken<ReturnInfo<AssessSupportAndComment>>() {
+                            }.getType());
+                            AssessSupportAndComment assessSupportAndComment = (AssessSupportAndComment) returnInfo.getData();
+
+                            Intent intent = new Intent(getActivity(), AssessInfoActivity.class);
+                            intent.putExtra("assess", (Serializable) assess);
+                            intent.putExtra("assessSupportAndComment", (Serializable) assessSupportAndComment);
+                            startActivity(intent);
+                        }
+                    }
+                });
             }
         });
 
