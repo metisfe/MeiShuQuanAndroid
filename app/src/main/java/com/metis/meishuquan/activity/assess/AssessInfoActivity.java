@@ -296,18 +296,19 @@ public class AssessInfoActivity extends FragmentActivity {
         }
 
 
-        class ViewHolder {
+        class PortraitViewHolder {
             LinearLayout ll_portrait = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.layout_assess_reply_comment_type_pic, null);
 
         }
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-//            current_type = getItemViewType(i);
-//            if (current_type ==)
-//                if (view == null) {
-//
-//                }
+            current_type = getItemViewType(i);
+
+            if (current_type ==CommentTypeEnum.Portrait.getVal())
+                if (view == null) {
+
+                }
 
             return null;
         }
