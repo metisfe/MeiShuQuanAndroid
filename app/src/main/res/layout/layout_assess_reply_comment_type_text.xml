@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="#e3e0e0"
+        android:padding="10dp">
+
+        <com.loopj.android.image.SmartImageView
+            android:id="@+id/id_img_comment_user_portrait"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/default_user_dynamic" />
+
+        <TextView
+            android:id="@+id/id_tv_comment_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/id_img_comment_user_portrait"
+            android:layout_marginRight="5dp"
+            android:layout_toRightOf="@+id/id_img_comment_user_portrait"
+            android:text="张三"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/id_tv_comment_user_name"
+            android:layout_alignParentRight="true"
+            android:text="10分钟前"
+            android:textColor="#7e7e7e"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/id_tv_reply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_toRightOf="@+id/id_tv_comment_user_name"
+            android:text="回复"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/id_tv_reply_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/id_tv_reply"
+            android:text="王老师" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/id_tv_comment_user_name"
+            android:layout_below="@+id/id_tv_comment_user_name"
+            android:layout_marginTop="8dp"
+            android:text="不错不错!!!!不错不错!!!!不错不错!!!!不错不错!!!!不错不错!!!!不错不错!!!!不错不错!!!!不错不错!!!!不错不错!!!!不错不错!!!!不错不错!!!!不错不错!!!!不错不错!!!!不错不错!!!!"
+            android:textColor="#424242"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

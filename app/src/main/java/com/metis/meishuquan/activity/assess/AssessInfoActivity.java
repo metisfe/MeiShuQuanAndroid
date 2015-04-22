@@ -33,6 +33,7 @@ import com.metis.meishuquan.model.assess.AssessComment;
 import com.metis.meishuquan.model.assess.AssessSupportAndComment;
 import com.metis.meishuquan.model.commons.SimpleUser;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.enums.CommentTypeEnum;
 import com.metis.meishuquan.model.enums.SupportStepTypeEnum;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
@@ -214,11 +215,11 @@ public class AssessInfoActivity extends FragmentActivity {
     }
 
     private class AssessInfoAdapter extends BaseAdapter {
-        private int WORD_TYPE = 1;
-        private int PIC_TYPE = 2;
-        private int VOICE_TYPE = 3;
-        private int Portrait_TYPE = 4;
+        private int PORTRAIT_MAX_COUNT = 7;
         private int TYPE_COUNT = 4;
+        private int portraitLines;
+        private int current_type;
+        private List<CommentTypeEnum> commentTypes;
 
         private Context mContext;
         private AssessSupportAndComment assessSupportAndComment;
@@ -234,6 +235,31 @@ public class AssessInfoActivity extends FragmentActivity {
             }
         }
 
+        public List<CommentTypeEnum> getCommentTypes() {
+            commentTypes = new ArrayList<CommentTypeEnum>();
+            int supportCount = lstSupportUser.size();
+            portraitLines = supportCount % PORTRAIT_MAX_COUNT == 0 ? supportCount / PORTRAIT_MAX_COUNT : supportCount / PORTRAIT_MAX_COUNT + 1;
+
+            //添加赞类型列表（行数）
+            for (int i = 0; i < portraitLines; i++) {
+                commentTypes.add(CommentTypeEnum.Portrait);
+            }
+
+            //添加回复类型
+            for (int i = 0; i < lstAssessComment.size(); i++) {
+                int type = lstAssessComment.get(i).getCommentType();
+                if (type == CommentTypeEnum.Text.getVal()) {
+                    commentTypes.add(CommentTypeEnum.Text);
+                } else if (type == CommentTypeEnum.Image.getVal()) {
+                    commentTypes.add(CommentTypeEnum.Image);
+                } else if (type == CommentTypeEnum.Voice.getVal()) {
+                    commentTypes.add(CommentTypeEnum.Voice);
+                }
+            }
+            return commentTypes;
+        }
+
+
         @Override
         public int getViewTypeCount() {
             return TYPE_COUNT;
@@ -241,13 +267,22 @@ public class AssessInfoActivity extends FragmentActivity {
 
         @Override
         public int getItemViewType(int position) {
-            return super.getItemViewType(position);
+            commentTypes = getCommentTypes();
+            if (commentTypes.get(position) == CommentTypeEnum.Portrait) {
+                return CommentTypeEnum.Portrait.getVal();
+            } else if (commentTypes.get(position) == CommentTypeEnum.Text) {
+                return CommentTypeEnum.Text.getVal();
+            } else if (commentTypes.get(position) == CommentTypeEnum.Image) {
+                return CommentTypeEnum.Image.getVal();
+            } else if (commentTypes.get(position) == CommentTypeEnum.Voice) {
+                return CommentTypeEnum.Text.getVal();
+            }
+            return 0;
         }
-
 
         @Override
         public int getCount() {
-            return 0;
+            return portraitLines + lstAssessComment.size();
         }
 
         @Override
@@ -260,8 +295,20 @@ public class AssessInfoActivity extends FragmentActivity {
             return 0;
         }
 
+
+        class ViewHolder {
+            LinearLayout ll_portrait = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.layout_assess_reply_comment_type_pic, null);
+
+        }
+
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
+//            current_type = getItemViewType(i);
+//            if (current_type ==)
+//                if (view == null) {
+//
+//                }
+
             return null;
         }
     }

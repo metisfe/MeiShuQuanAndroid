@@ -30,6 +30,7 @@ import java.util.List;
 
 public class ChooseCourseActivity extends FragmentActivity {
 
+    private final String OLDSELECTEDCHANNELITEMS = "OldSelectedCourseChannelItems";
     private Button btnBack, btnConfirm;
     private RelativeLayout rlAllChannel;
     private ListView listView;
@@ -44,7 +45,7 @@ public class ChooseCourseActivity extends FragmentActivity {
         setContentView(R.layout.activity_choose_course);
 
         if (getIntent().getExtras() != null) {
-            lstOldSelectedCourseChannelItems = (List<CourseChannelItem>) getIntent().getExtras().getSerializable("OldSelectedCourseChannelItems");
+            lstOldSelectedCourseChannelItems = (List<CourseChannelItem>) getIntent().getExtras().getSerializable(OLDSELECTEDCHANNELITEMS);
         }
 
         initView();
