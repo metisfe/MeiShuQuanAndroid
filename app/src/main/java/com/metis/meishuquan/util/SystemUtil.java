@@ -91,6 +91,17 @@ public class SystemUtil
         return false;
     }
 
+    /**
+     * Check if there is any connectivity to a mobile network
+     * @param context
+     * @return
+     */
+    public static boolean isConnectedMobile(Context context){
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        return (info != null && info.isConnected() && info.getType() == ConnectivityManager.TYPE_MOBILE);
+    }
+
     public static boolean isWiFiConnected(Context context)
     {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

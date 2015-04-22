@@ -3,12 +3,14 @@ package com.metis.meishuquan.model.BLL;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.lidroid.xutils.util.IOUtils;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.commons.Comment;
 import com.metis.meishuquan.model.commons.Item;
@@ -29,10 +31,16 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
 import org.apache.http.Header;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +61,7 @@ public class UserInfoOperator {
                             URL_QUESTION = "v1.1/UserCenter/MyQuestion?",
                             URL_UPDATE_USER_INFO = "v1.1/UserCenter/UpdateUserInfo?param=",
                             URL_CHANGE_PWD = "v1.1/UserCenter/ChangePassword?",
-                            URL_FEEDBACK = "v1.1/Instrument/FeedBack?param=";
+                            URL_FEEDBACK = "v1.1/Instrument/FeedBack";
 
     private static String KEY_USER_ID = "userId",
                         KEY_INDEX = "index",
@@ -301,22 +309,81 @@ public class UserInfoOperator {
 
     }*/
 
-    public void feedback (String message, String imageUrl) {
+    public void feedback (final String message, String imagePath) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (TextUtils.isEmpty(imagePath)) {
+                feedbackWithUrl(message, null);
+                return;
+            }
+            Log.v(TAG, "feedback upload image start ... " + imagePath);
+            File file = new File (imagePath);
+            String defineStr = file.length() + "," + 1 + "," + file.length();
+            byte[] bytes = new byte[(int)file.length()];
+            try {
+                FileInputStream fis = new FileInputStream(file);
+                fis.read(bytes);
+                fis.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (bytes.length > 0) {
+                AssessOperator.getInstance().fileUpload(FileUploadTypeEnum.IMG, defineStr, bytes, new ServiceFilterResponseCallback () {
+
+                    @Override
+                    public void onResponse(ServiceFilterResponse response, Exception exception) {
+                        Log.v(TAG, "feedback upload image end ... success ? " + (response != null));
+                        if (response != null) {
+                            String result = response.getContent();
+                            Log.v(TAG, "feedback result=" + result);
+                            Gson gson = new Gson();
+                            Result<List<Profile>> profileResult = gson.fromJson(result, new TypeToken<Result<List<Profile>>>(){}.getType());
+                            feedbackWithUrl(message, profileResult.getData().get(0).getOriginalImage());
+                    /*if (listener != null) {
+                        listener.onGet(true, profileResult.getData());
+                    }*/
+                        }
+                        Log.v(TAG, "onResponse " + response.getContent());
+                    }
+                });
+            }
+
+        }
+
+    }
+
+    public void feedbackWithUrl (String message, String imageUrl) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty(KEY_APPVERSION, Utils.getVersion(MainApplication.UIContext));
             jsonObject.addProperty(KEY_PHONE_VERSION, Build.MODEL + "-" + Build.MANUFACTURER + "-" + Build.VERSION.RELEASE + "-" + Build.VERSION.SDK);
+            jsonObject.addProperty(KEY_FEED_MESSAGE, message);
+            if (!TextUtils.isEmpty(imageUrl)) {
+                jsonObject.addProperty(KEY_FEED_IMAGE, imageUrl);
+            }
+            if (SystemUtil.isConnectedMobile(MainApplication.UIContext)) {
+                jsonObject.addProperty(KEY_NET_WORK, "mobile_net_work");
+            } else {
+                jsonObject.addProperty(KEY_NET_WORK, "wifi_net_work");
+            }
+
             //jsonObject.addProperty(KEY_CURRENT_REGION, Build.);
             jsonObject.addProperty(KEY_CURRENT_IP, Utils.getIpAddress(MainApplication.UIContext));
-            jsonObject.addProperty(KEY_CREATE_TIME, new Date().toString());
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            jsonObject.addProperty(KEY_CREATE_TIME, format.format(new Date()));
             StringBuilder sb = new StringBuilder(URL_FEEDBACK);
-            sb.append(jsonObject.toString());
-            sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
-            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+            sb.append("?" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+            Log.v(TAG, "feedback request=" + sb.toString() + " and params=" + jsonObject);
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), jsonObject.toString(), HttpPost.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String json = gson.toJson(result);
+                        Log.v(TAG, "feedback result=" + json);
+                    }
                 }
             });
         }
