@@ -16,6 +16,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,24 +27,37 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.InputActivity;
+import com.metis.meishuquan.activity.course.ChooseCourseActivity;
 import com.metis.meishuquan.fragment.assess.ChooseCityFragment;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.BLL.UserOperator;
 import com.metis.meishuquan.model.assess.City;
 import com.metis.meishuquan.model.commons.User;
+import com.metis.meishuquan.model.course.Course;
+import com.metis.meishuquan.model.course.CourseChannel;
+import com.metis.meishuquan.model.course.CourseChannelItem;
 import com.metis.meishuquan.util.ImageLoaderUtils;
+import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.shared.BaseDialog;
 import com.metis.meishuquan.view.shared.MyInfoBtn;
 import com.metis.meishuquan.view.shared.TitleView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
+import org.json.JSONArray;
+
 import java.io.File;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.rong.imkit.view.SwitchGroup;
@@ -52,13 +66,15 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = InfoActivity.class.getSimpleName();
 
+    public static final int REQUEST_CODE_CHOOSE_COURSE = 500;
+
     private View mParentView = null;
     private View mProfileContainer = null;
     private TitleView mTitleView = null;
     private ImageView mProfile = null;
 
     private MyInfoBtn mNickView, mGenderView, mConstellationView, mGradeView, mProvienceView,
-            mAgeView, mCvView, mDepartmentView, mDepartmentAddrView,
+            mAgeView, mCvView, mDepartmentView, mDepartmentAddrView, mGoodAtView,
             mAchievementView;
 
     private View mRecentsContainer = null;
@@ -67,6 +83,8 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
     private PopupWindow mPopupWindow = null;
 
     private String mCameraOutputPath = null;
+
+    private List<CourseChannelItem> mCourseItems = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +112,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
         mAgeView = (MyInfoBtn)findViewById(R.id.info_age);
         mDepartmentView = (MyInfoBtn)findViewById(R.id.info_department);
         mDepartmentAddrView = (MyInfoBtn)findViewById(R.id.info_department_address);
+        mGoodAtView = (MyInfoBtn)findViewById(R.id.info_good_at);
         mCvView = (MyInfoBtn)findViewById(R.id.info_cv);
         mAchievementView = (MyInfoBtn)findViewById(R.id.info_achievement);
 
@@ -109,6 +128,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
         mAgeView.setOnClickListener(this);
         mDepartmentView.setOnClickListener(this);
         mDepartmentAddrView.setOnClickListener(this);
+        mGoodAtView.setOnClickListener(this);
         mCvView.setOnClickListener(this);
         mAchievementView.setOnClickListener(this);
     }
@@ -160,6 +180,10 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
             case R.id.info_department_address:
                 startInputActivityForResult(getString(R.string.info_department_address), mDepartmentAddrView.getSecondaryText(), false, InputActivity.REQUEST_CODE_DEPARTMENT_ADDRESS);
                 break;
+            case R.id.info_good_at:
+                it = new Intent (this, ChooseCourseActivity.class);
+                startActivityForResult(it, REQUEST_CODE_CHOOSE_COURSE);
+                break;
             case R.id.info_cv:
                 startInputActivityForResult(mCvView.getText().toString(), mCvView.getSecondaryText(), false, InputActivity.REQUEST_CODE_CV);
                 break;
@@ -206,6 +230,26 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                     CharSequence content = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR);
                     mDepartmentAddrView.setSecondaryText(content);
                     updateInfo(User.KEY_LOCATIONADDRESS, content.toString());
+                }
+                break;
+            case REQUEST_CODE_CHOOSE_COURSE:
+                if (resultCode == RESULT_OK) {
+                    List<CourseChannelItem> list = (List<CourseChannelItem>)data.getExtras().getSerializable("tags");
+                    /*JsonArray array = new JsonArray();
+                    for (CourseChannelItem item : list) {
+                        JsonObject object = new JsonObject();
+                        object.addProperty(CourseChannelItem.KEY_CHANNEL_ID, item.getChannelId());
+                        object.addProperty(CourseChannelItem.KEY_CHANNEL_NAME, item.getChannelName());
+                        array.add(object);
+                    }
+                    String json = array.toString().replaceAll("\\{", "\\(");
+                    json = json.replaceAll("\\}", "\\)");*/
+                    StringBuilder builder = new StringBuilder();
+                    for (CourseChannelItem item : list) {
+                        builder.append(item.getChannelId() + ",");
+                    }
+                    updateInfo(User.KEY_GOODSUBJECTS, builder.toString());
+                    Log.v(TAG, "REQUEST_CODE_CHOOSE_COURSE " + builder);
                 }
                 break;
             case InputActivity.REQUEST_CODE_ACHIEVEMENT:
@@ -264,6 +308,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void fillUserInfo (User user) {
+
         mNickView.setSecondaryText(user.getName());
         mGenderView.setSecondaryText(user.getGender());
         mGradeView.setSecondaryText(user.getGrade());
@@ -281,6 +326,38 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
         if (TextUtils.isEmpty(birthday)) {
             mAgeView.setSecondaryText(0 + "");
         }
+        String subjectsId = user.getGoodSubjects();
+        if (!TextUtils.isEmpty(subjectsId)) {
+            String allCourse = SharedPreferencesUtil.getInstanse(this).getStringByKey(SharedPreferencesUtil.COURSECHANNELLIST);
+            Log.v(TAG, "fillUserInfo allCourse=" + allCourse);
+            if (TextUtils.isEmpty(allCourse)) {
+                return;
+            }
+            mCourseItems = new ArrayList<CourseChannelItem>();
+            Gson gson = new Gson();
+            CourseChannel courseChannel = gson.fromJson(allCourse, CourseChannel.class);
+            String[] ids = subjectsId.split(",");
+            StringBuilder builder = new StringBuilder();
+            for (String id : ids) {
+                if (TextUtils.isEmpty(id)) {
+                    continue;
+                }
+                Log.v(TAG, "fillUserInfo id=" + id);
+                Integer idInt = Integer.valueOf(id);
+                CourseChannelItem it = courseChannel.getItemById(idInt);
+                if (it != null) {
+                    Log.v(TAG, "fillUserInfo it=" + it.getChannelName());
+                    mCourseItems.add(it);
+                    builder.append(it.getChannelName() + " ");
+                }
+            }
+            mGoodAtView.setSecondaryText(builder.toString());
+        }
+        /*List<CourseChannelItem> list = user.getGoodSubjectsList();
+        StringBuilder sb = new StringBuilder();
+        for (CourseChannelItem item : list) {
+            sb.append(item.getChannelName() + " ");
+        }*/
     }
 
     private Dialog mDialog = null;

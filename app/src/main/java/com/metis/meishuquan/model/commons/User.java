@@ -2,10 +2,15 @@ package com.metis.meishuquan.model.commons;
 
 import android.util.Log;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import com.metis.meishuquan.model.course.CourseChannelItem;
 import com.metis.meishuquan.model.enums.LoginStateEnum;
+import com.metis.meishuquan.util.SharedPreferencesUtil;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by WJ on 2015/4/9.
@@ -82,6 +87,9 @@ public class User implements Serializable {
 
     @SerializedName("token")
     private String token = "";
+
+    @SerializedName("goodSubjects")
+    private String goodSubjects;
 
     @SerializedName("selfSignature")
     private String selfSignature;
@@ -277,6 +285,14 @@ public class User implements Serializable {
         this.locationAddress = locationAddress;
     }
 
+    public String getGoodSubjects() {
+        return goodSubjects;
+    }
+
+    public void setGoodSubjects(String goodSubjects) {
+        this.goodSubjects = goodSubjects;
+    }
+
     public String getAchievement() {
         return achievement;
     }
@@ -284,6 +300,14 @@ public class User implements Serializable {
     public void setAchievement(String achievement) {
         this.achievement = achievement;
     }
+
+    /*public List<CourseChannelItem> getGoodSubjectsList () {
+        String subjects = getGoodSubjects();
+        subjects = subjects.replace("\\(", "\\{").replaceAll("\\)", "\\}");
+        Log.v(TAG, "getGoodSubjectsList subjects=" + subjects);
+        Gson gson = new Gson();
+        return gson.fromJson(subjects, new TypeToken<List<CourseChannelItem>>(){}.getType());
+    }*/
 
     public int getAttCount() {
         //TODO

@@ -3,6 +3,7 @@ package com.metis.meishuquan.manager.common;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaRecorder;
+import android.os.SystemClock;
 
 import java.io.IOException;
 
@@ -24,7 +25,7 @@ public class RecorderManager implements MediaRecorder.OnInfoListener,
 
     private int mOutputFormat, mEncoder, mEncodingBitRate, mSimpleRate;
     private int mDuration;
-
+    private long mStartTime;
 
 
     private static RecorderManager sManager = new RecorderManager();
@@ -66,6 +67,7 @@ public class RecorderManager implements MediaRecorder.OnInfoListener,
             mManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
             mRecorder.prepare();
             mRecorder.start();
+            mStartTime = SystemClock.elapsedRealtime();
             isRecording = true;
             if (mRecorderListener != null) {
                 mRecorderListener.onStarted(path);
@@ -86,8 +88,9 @@ public class RecorderManager implements MediaRecorder.OnInfoListener,
         if (isRecording()) {
             isRecording = false;
             mRecorder.stop();
+            long duration = SystemClock.elapsedRealtime() - mStartTime;
             if (mRecorderListener != null) {
-                mRecorderListener.onStopped(mPath, userDone);
+                mRecorderListener.onStopped(mPath, userDone, duration);
             }
             mManager.abandonAudioFocus(this);
         }
@@ -178,7 +181,7 @@ public class RecorderManager implements MediaRecorder.OnInfoListener,
     public static interface OnRecorderListener {
         public void onStarted(String path);
         public void onRecording();
-        public void onStopped(String path, boolean userDone);
+        public void onStopped(String path, boolean userDone, long duration);
         public void onException(String errorMsg);
     }
 

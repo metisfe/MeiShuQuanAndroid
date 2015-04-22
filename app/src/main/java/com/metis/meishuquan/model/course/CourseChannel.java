@@ -1,5 +1,7 @@
 package com.metis.meishuquan.model.course;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,7 @@ public class CourseChannel {
 
     private String channelName;
 
+    @SerializedName("data")
     private List<CourseChannelItem> childChannelList;
 
     public int getChannelId() {
@@ -38,5 +41,14 @@ public class CourseChannel {
 
     public void setChildChannelLists(List<CourseChannelItem> childChannelLists) {
         this.childChannelList = childChannelLists;
+    }
+
+    public CourseChannelItem getItemById (int id) {
+        for (CourseChannelItem item : childChannelList) {
+            if (item.getChannelId() == id) {
+                return item;
+            }
+        }
+        return null;
     }
 }

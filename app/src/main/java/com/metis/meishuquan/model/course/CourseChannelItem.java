@@ -6,6 +6,11 @@ import java.io.Serializable;
  * Created by wangjin on 15/4/18.
  */
 public class CourseChannelItem implements Serializable {
+
+    public static final String
+            KEY_CHANNEL_ID = "channelId",
+            KEY_CHANNEL_NAME = "channelName";
+
     private int channelId;
 
     private String channelName;
