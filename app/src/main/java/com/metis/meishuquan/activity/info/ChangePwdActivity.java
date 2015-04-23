@@ -16,8 +16,6 @@ import com.metis.meishuquan.view.shared.TitleView;
 
 public class ChangePwdActivity extends BaseActivity implements View.OnClickListener{
 
-    private TitleView mTitleView = null;
-
     private EditText mOldEt, mNewEt, mConfirmEt;
     private Button mOkBtn;
 
@@ -26,20 +24,17 @@ public class ChangePwdActivity extends BaseActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_pwd);
 
-        mTitleView = (TitleView)findViewById(R.id.title);
-        mTitleView.setBackListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
         mOldEt = (EditText)findViewById(R.id.change_pwd_old);
         mNewEt = (EditText)findViewById(R.id.change_pwd_new);
         mConfirmEt = (EditText)findViewById(R.id.change_pwd_confirm);
         mOkBtn = (Button)findViewById(R.id.change_pwd_ok);
 
         mOkBtn.setOnClickListener(this);
+    }
+
+    @Override
+    public String getTitleCenter() {
+        return getString(R.string.setting_modify_pwd);
     }
 
     @Override

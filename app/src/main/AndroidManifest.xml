@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.metis.meishuquan">
+    package="com.metis.meishuquan" >
 
     <!-- App Required -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -27,11 +27,11 @@
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:theme="@style/StyledIndicators">
+        android:theme="@style/StyledIndicators" >
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -103,7 +103,7 @@
 
         <activity
             android:name="io.rong.imkit.RongActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -148,7 +148,7 @@
         <activity
             android:name="io.rong.imkit.RongSingleActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -163,7 +163,7 @@
         <activity
             android:name="io.rong.imkit.RongSecActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -221,7 +221,7 @@
         <activity
             android:name="io.rong.voipkit.activity.CalledSideActivity"
             android:excludeFromRecents="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="io.rong.voipkit.calledSideActivity.action" />
 
@@ -241,7 +241,7 @@
             android:priority="1000" />
         <service
             android:name="io.rong.imlib.push.PushService"
-            android:process="io.rong.push">
+            android:process="io.rong.push" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -250,7 +250,7 @@
         </service>
         <service
             android:name="io.rong.imlib.push.CommandService"
-            android:process="io.rong.push">
+            android:process="io.rong.push" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -260,7 +260,7 @@
 
         <receiver
             android:name="io.rong.imlib.push.PushReceiver"
-            android:process="io.rong.push">
+            android:process="io.rong.push" >
             <intent-filter>
                 <action android:name="io.rong.imlib.action.push.heartbeat" />
             </intent-filter>
@@ -271,7 +271,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name="io.rong.imlib.push.PushMessageReceiver">
+        <receiver android:name="io.rong.imlib.push.PushMessageReceiver" >
             <intent-filter>
                 <action android:name="io.rong.push.message" />
             </intent-filter>
@@ -295,7 +295,7 @@
             android:name=".activity.info.QrScanActivity"
             android:label="@string/title_activity_qr_scan"
             android:screenOrientation="portrait"
-            android:theme="@style/QrScanTheme">
+            android:theme="@style/QrScanTheme" >
             <activity
                 android:name=".activity.topline.NewsInfoActity"
                 android:label="@string/title_activity_news_info_actity"
@@ -315,14 +315,42 @@
         <activity
             android:name=".activity.info.TextActivity"
             android:label="@string/title_activity_text"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.assess.AssessInfoActivity"
             android:label="@string/title_activity_assess_info"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.info.ChangePwdActivity"
-            android:label="@string/title_activity_change_pwd"></activity>
+            android:label="@string/title_activity_change_pwd" />
+        <activity
+            android:name=".activity.info.homepage.StudioActivity"
+            android:label="@string/title_activity_studio" >
+        </activity>
+        <activity
+            android:name=".activity.info.homepage.StudioAlbumActivity"
+            android:label="@string/title_activity_studio_album" >
+        </activity>
+        <activity
+            android:name=".activity.info.homepage.VideoListActivity"
+            android:label="@string/title_activity_video_list" >
+        </activity>
+        <activity
+            android:name=".activity.info.homepage.CourseArrangementActivity"
+            android:label="@string/title_activity_course_arrangement" >
+        </activity>
+        <activity
+            android:name=".activity.info.homepage.TeacherTeamActivity"
+            android:label="@string/title_activity_teacher_team" >
+        </activity>
+        <activity
+            android:name=".activity.info.homepage.ChargeActivity"
+            android:label="@string/title_activity_charge" >
+        </activity>
+        <activity
+            android:name=".activity.info.homepage.BookListActivity"
+            android:label="@string/title_activity_book_list" >
+        </activity>
     </application>
 
 </manifest>

@@ -22,8 +22,6 @@ public class ConstellationActivity extends BaseActivity implements RadioGroup.On
 
     public static final String KEY_CONSTELLATION = "Constellation";
 
-    private TitleView mTitleView = null;
-
     private String[] mConstellationArr = null;
     private RadioGroup mGroup = null;
 
@@ -35,14 +33,6 @@ public class ConstellationActivity extends BaseActivity implements RadioGroup.On
         mConstellationArr = getResources().getStringArray(R.array.constellation);
 
         String con = getIntent().getStringExtra(KEY_CONSTELLATION);
-
-        mTitleView = (TitleView)findViewById(R.id.title);
-        mTitleView.setBackListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
         mGroup = (RadioGroup)findViewById(R.id.constellation_radio_group);
 
@@ -62,6 +52,11 @@ public class ConstellationActivity extends BaseActivity implements RadioGroup.On
             mGroup.addView(button);
         }
         mGroup.setOnCheckedChangeListener(this);
+    }
+
+    @Override
+    public String getTitleCenter() {
+        return getString(R.string.info_constellation);
     }
 
     @Override

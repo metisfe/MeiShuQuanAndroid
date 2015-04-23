@@ -3,14 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.metis.meishuquan.activity.info.NameCardQrActivity">
-    <com.metis.meishuquan.view.shared.TitleView
-        xmlns:bs="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        bs:titleText="@string/my_info_name_card"
-        bs:titleTextRight="扫描"
-        />
     <RelativeLayout
         android:id="@+id/qr_user_info"
         android:layout_width="fill_parent"

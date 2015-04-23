@@ -41,6 +41,7 @@
     <string name="info_workspace">所在画室</string>
     <string name="info_school">所在学校</string>
     <string name="info_department">所在机构</string>
+    <string name="info_school_address">学校地址</string>
     <string name="info_department_address">机构地址</string>
     <string name="info_good_at">擅长科目</string>
     <string name="info_cv">个人简历</string>
@@ -103,4 +104,8 @@
     <string name="change_pwd_failed">操作失败</string>
 
     <string name="common_load_faild">加载失败</string>
+
+    <string name="name_card_scan">扫描</string>
+
+    <string name="studio_send_msg">私信</string>
 </resources>

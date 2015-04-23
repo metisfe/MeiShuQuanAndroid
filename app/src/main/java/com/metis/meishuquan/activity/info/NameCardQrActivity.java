@@ -33,7 +33,6 @@ public class NameCardQrActivity extends BaseActivity {
 
     private QRFragment mQrFragment = null;
 
-    private TitleView mTitleView = null;
     private ImageView mProfileIv = null;
     private TextView mNameTv, mGradeTv, mIntroduceTv;
 
@@ -49,21 +48,6 @@ public class NameCardQrActivity extends BaseActivity {
         mActionList.add(new ActionDelegate(1, getString(R.string.name_card_share)));
 
         //final String string = getIntent().getStringExtra(KEY_DATA_STR);
-
-        mTitleView = (TitleView)findViewById(R.id.title);
-        mTitleView.setBackListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        mTitleView.setRightListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //startActivity(new Intent (QrActivity.this, ImagePreviewActivity.class));
-                startActivity(new Intent(NameCardQrActivity.this, QrScanActivity.class));
-            }
-        });
 
         JsonObject json = new JsonObject();
         User user = MainApplication.userInfo;
@@ -94,6 +78,22 @@ public class NameCardQrActivity extends BaseActivity {
         mNameTv.setText(user.getName());
         mGradeTv.setText(user.getGrade());
         mIntroduceTv.setText(user.getSelfIntroduce());
+    }
+
+    @Override
+    public String getTitleCenter() {
+        return getString(R.string.my_info_name_card);
+    }
+
+    @Override
+    public String getTitleRight() {
+        return getString(R.string.name_card_scan);
+    }
+
+    @Override
+    public void onTitleRightPressed() {
+        //startActivity(new Intent (QrActivity.this, ImagePreviewActivity.class));
+        startActivity(new Intent(NameCardQrActivity.this, QrScanActivity.class));
     }
 
     private class ActionAdapter extends BaseAdapter {

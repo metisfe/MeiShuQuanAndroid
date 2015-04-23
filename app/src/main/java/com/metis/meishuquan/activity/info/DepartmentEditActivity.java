@@ -30,8 +30,6 @@ public class DepartmentEditActivity extends BaseActivity implements View.OnClick
                                 KEY_DURATION_START = "duration_start",
                                 KEY_DURATION_END = "duration_end";
 
-    private TitleView mTitleView = null;
-
     private EditText mInputEt = null;
     private TextView mDurationStartTv, mDurationEndTv;
     private String mName = null;
@@ -49,30 +47,6 @@ public class DepartmentEditActivity extends BaseActivity implements View.OnClick
 
         mInputEt = (EditText)findViewById(R.id.department_edit_name);
 
-        mTitleView = (TitleView)findViewById(R.id.title);
-        mTitleView.setBackListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        mTitleView.setRightListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final int error = canInfoAccess();
-                if (error != 0) {
-                    Toast.makeText(DepartmentEditActivity.this, "error happened " + error, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                String str = mInputEt.getText().toString();
-                Intent it = new Intent();
-                it.putExtra(KEY_NAME, str);
-                it.putExtra(KEY_DURATION_START, makeTimeStr(mStartYear, mStartMonth));
-                it.putExtra(KEY_DURATION_END, makeTimeStr(mEndYear,mEndMonth));
-                setResult(RESULT_OK, it);
-                finish();
-            }
-        });
         mDurationStartTv = (TextView)findViewById(R.id.department_edit_duration_start);
         mDurationEndTv = (TextView)findViewById(R.id.department_edit_duration_end);
 
@@ -82,6 +56,32 @@ public class DepartmentEditActivity extends BaseActivity implements View.OnClick
         mDurationStartTv.setOnClickListener(this);
         mDurationEndTv.setOnClickListener(this);
 
+    }
+
+    @Override
+    public String getTitleCenter() {
+        return getString(R.string.info_department);
+    }
+
+    @Override
+    public String getTitleRight() {
+        return getString(R.string.department_complete);
+    }
+
+    @Override
+    public void onTitleRightPressed() {
+        final int error = canInfoAccess();
+        if (error != 0) {
+            Toast.makeText(DepartmentEditActivity.this, "error happened " + error, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String str = mInputEt.getText().toString();
+        Intent it = new Intent();
+        it.putExtra(KEY_NAME, str);
+        it.putExtra(KEY_DURATION_START, makeTimeStr(mStartYear, mStartMonth));
+        it.putExtra(KEY_DURATION_END, makeTimeStr(mEndYear,mEndMonth));
+        setResult(RESULT_OK, it);
+        finish();
     }
 
     @Override

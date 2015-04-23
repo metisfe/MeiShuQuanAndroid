@@ -27,8 +27,6 @@ import java.io.InputStreamReader;
 
 public class AboutActivity extends BaseActivity implements View.OnClickListener {
 
-    private TitleView mTitleView = null;
-
     private MyInfoBtn mScoreBtn = null, mVersionBtn = null,
             mAboutMeishuquanBtn = null, mStatementBtn = null;
 
@@ -36,13 +34,6 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        mTitleView = (TitleView)findViewById(R.id.title);
-        mTitleView.setBackListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
         mScoreBtn = (MyInfoBtn)this.findViewById(R.id.about_score);
         mVersionBtn = (MyInfoBtn)findViewById(R.id.about_version);
@@ -53,6 +44,11 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         mVersionBtn.setOnClickListener(this);
         mAboutMeishuquanBtn.setOnClickListener(this);
         mStatementBtn.setOnClickListener(this);
+    }
+
+    @Override
+    public String getTitleCenter() {
+        return getString(R.string.setting_about_us);
     }
 
     @Override

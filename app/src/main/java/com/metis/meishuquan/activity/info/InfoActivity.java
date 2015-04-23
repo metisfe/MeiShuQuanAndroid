@@ -73,7 +73,6 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
 
     private View mParentView = null;
     private View mProfileContainer = null;
-    private TitleView mTitleView = null;
     private ImageView mProfile = null;
 
     private MyInfoBtn mNickView, mGenderView, mConstellationView, mGradeView, mProvienceView,
@@ -89,20 +88,15 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
 
     private List<CourseChannelItem> mCourseItems = null;
 
+    private boolean isStudent = true;
+    private boolean isTeacher = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
 
         mParentView = findViewById(R.id.info_parent);
-
-        mTitleView = (TitleView)findViewById(R.id.info_title);
-        mTitleView.setBackListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
         mProfileContainer = findViewById(R.id.info_profile_container);
         mProfile = (ImageView)findViewById(R.id.info_profile);
@@ -134,6 +128,14 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
         mGoodAtView.setOnClickListener(this);
         mCvView.setOnClickListener(this);
         mAchievementView.setOnClickListener(this);
+
+        if (isStudent) {
+            mDepartmentView.setText(R.string.info_school);
+            mDepartmentAddrView.setText(R.string.info_school_address);
+            mGoodAtView.setVisibility(View.GONE);
+            mCvView.setVisibility(View.GONE);
+            mAchievementView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -147,6 +149,11 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                 }
             }
         });
+    }
+
+    @Override
+    public String getTitleCenter() {
+        return getString(R.string.info_title);
     }
 
     @Override

@@ -5,13 +5,6 @@
     android:background="#cccccc"
     android:orientation="vertical"
     tools:context="com.metis.meishuquan.activity.info.ChangePwdActivity">
-    <com.metis.meishuquan.view.shared.TitleView
-        xmlns:bs="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        bs:titleText="@string/setting_modify_pwd"
-        />
     <EditText
         android:id="@+id/change_pwd_old"
         android:layout_width="match_parent"

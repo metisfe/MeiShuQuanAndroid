@@ -5,28 +5,39 @@
     android:background="@color/bg_topline_topbar">
     <ImageView
         android:id="@+id/back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="56dp"
+        android:layout_height="fill_parent"
         android:src="@drawable/btn_back"
         android:layout_centerVertical="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginRight="10dp"
         />
     <TextView
         android:id="@+id/title_tv"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_centerInParent="true"
         android:text="@string/setting_about_us"
         android:gravity="center"
         android:textColor="@color/tv_title_bar"
         android:textSize="20sp"
+        android:layout_centerInParent="true"
+        android:layout_toLeftOf="@+id/title_right"
+        android:layout_toRightOf="@+id/back"
         />
+    <FrameLayout
+        android:id="@+id/title_container"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_toLeftOf="@+id/title_right"
+        android:layout_toRightOf="@+id/back"
+        >
+    </FrameLayout>
     <TextView
         android:id="@+id/title_right"
-        android:layout_width="wrap_content"
+        android:layout_width="56dp"
         android:layout_height="fill_parent"
-        android:gravity="center_vertical"
+        android:gravity="center_vertical|right"
         android:textSize="16sp"
         android:textColor="@android:color/white"
         android:layout_alignParentRight="true"

@@ -72,6 +72,15 @@ public class MyInfoBtn extends RelativeLayout {
         mArrowIv.setVisibility(mArrowVisible ? View.VISIBLE : View.INVISIBLE);
     }
 
+    public void setText (int stringId) {
+        setText(getContext().getString(stringId));
+    }
+
+    public void setText (String text) {
+        mText = text;
+        mTv.setText(mText);
+    }
+
     public void setSecondaryText (CharSequence txt) {
         mSecondaryText = txt;
         mSecondaryTv.setText(txt);

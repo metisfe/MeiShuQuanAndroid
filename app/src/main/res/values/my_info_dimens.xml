@@ -5,4 +5,6 @@
     <dimen name="info_profile_size">50dp</dimen>
 
     <dimen name="qr_code_size">290dp</dimen>
+
+    <dimen name="studio_profile_size">40dp</dimen>
 </resources>

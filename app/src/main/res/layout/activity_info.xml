@@ -6,12 +6,6 @@
     android:layout_height="match_parent"
     android:background="#cccccc"
     tools:context="com.metis.meishuquan.activity.info.InfoActivity">
-    <com.metis.meishuquan.view.shared.TitleView
-        android:id="@+id/info_title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        bs:titleText="@string/info_title"
-        />
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

@@ -81,6 +81,8 @@ public class QrScanActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_scan);
 
+        hideTitleBar();
+
         reScanBtn = (Button)findViewById(R.id.qr_scan_redo);
         reScanBtn.setOnClickListener(this);
         reScanBtn.setOnClickListener(new View.OnClickListener() {

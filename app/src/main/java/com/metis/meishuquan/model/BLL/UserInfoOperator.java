@@ -359,6 +359,7 @@ public class UserInfoOperator {
             jsonObject.addProperty(KEY_APPVERSION, Utils.getVersion(MainApplication.UIContext));
             jsonObject.addProperty(KEY_PHONE_VERSION, Build.MODEL + "-" + Build.MANUFACTURER + "-" + Build.VERSION.RELEASE + "-" + Build.VERSION.SDK);
             jsonObject.addProperty(KEY_FEED_MESSAGE, message);
+            //jsonObject.addProperty(KEY_);
             if (!TextUtils.isEmpty(imageUrl)) {
                 jsonObject.addProperty(KEY_FEED_IMAGE, imageUrl);
             }

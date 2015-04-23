@@ -31,6 +31,7 @@ public class ImagePreviewActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_preview);
 
+        hideTitleBar();
         mPreviewFragment = (ImagePreviewFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.image_preview_fragment);
 

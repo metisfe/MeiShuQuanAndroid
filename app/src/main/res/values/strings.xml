@@ -47,4 +47,11 @@
     <string name="title_activity_text">TextActivity</string>
     <string name="title_activity_assess_info">AssessInfoActivity</string>
     <string name="title_activity_change_pwd">ChangePwdActivity</string>
+    <string name="title_activity_studio">StudioActivity</string>
+    <string name="title_activity_studio_album">StudioAlbumActivity</string>
+    <string name="title_activity_video_list">VideoListActivity</string>
+    <string name="title_activity_course_arrangement">CourseArrangementActivity</string>
+    <string name="title_activity_teacher_team">TeacherTeamActivity</string>
+    <string name="title_activity_charge">ChargeActivity</string>
+    <string name="title_activity_book_list">BookListActivity</string>
 </resources>

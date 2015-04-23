@@ -20,17 +20,13 @@ public abstract class DataListActivity extends BaseActivity implements DataListF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_list);
 
-        mTitleView = (TitleView)this.findViewById(R.id.title);
-        mTitleView.setBackListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        mTitleView.setTitleText(getTitleText());
-
         mDataListFragment = (DataListFragment)getSupportFragmentManager().findFragmentById(R.id.my_favorites_fragment);
         mDataListFragment.setOnDragListener(this);
+    }
+
+    @Override
+    public String getTitleCenter() {
+        return getTitleText();
     }
 
     public String getTitleText () {

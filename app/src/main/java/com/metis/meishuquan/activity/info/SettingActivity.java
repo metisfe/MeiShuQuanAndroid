@@ -1,23 +1,28 @@
 package com.metis.meishuquan.activity.info;
 
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.info.homepage.StudioActivity;
+import com.metis.meishuquan.manager.common.PlayerManager;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.shared.MyInfoBtn;
 import com.nostra13.universalimageloader.cache.disc.DiscCacheAware;
 
-import java.text.DecimalFormat;
+import java.io.File;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
+
+    private static final String TAG = SettingActivity.class.getSimpleName();
 
     private MyInfoBtn mModifyPwdView, mClearCacheView, mAboutUsView;
 
@@ -35,17 +40,25 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         mClearCacheView = (MyInfoBtn)this.findViewById(R.id.setting_clear_cache);
         mClearCacheView.setOnClickListener(this);
 
-        this.findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
         mLogoutBtn = (Button) findViewById(R.id.setting_logout);
         mLogoutBtn.setOnClickListener(this);
 
         mClearCacheView.setSecondaryText(formatSize(b2m(getCacheSize())));
+    }
+
+    @Override
+    public String getTitleCenter() {
+        return getString(R.string.my_info_settings);
+    }
+
+    @Override
+    public void onTitleRightPressed() {
+        super.onTitleRightPressed();
+        startActivity(new Intent(this, StudioActivity.class));
+        /*Log.v(TAG, Environment.getExternalStorageDirectory() + File.separator +
+                "0" + File.separator + "sound.mp3");
+        PlayerManager.getInstance(this).start(Environment.getExternalStorageDirectory() + File.separator +
+        "0" + File.separator + "sound.mp3");*/
     }
 
     @Override

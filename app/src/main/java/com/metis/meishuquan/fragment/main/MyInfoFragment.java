@@ -144,9 +144,14 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         mInfoName.setText(user.getName());
         mAttentionCountTv.setText(getString(R.string.my_info_count, user.getAttCount()));
         mFollowersCountTv.setText(getString(R.string.my_info_count, user.getFollowsCount()));
-        ImageLoaderUtils.getImageLoader(getActivity()).displayImage(user.getUserAvatar(),
-                mProfileIv,
-                ImageLoaderUtils.getRoundDisplayOptions(profilePix));
+        if (MainApplication.isLogin()) {
+            ImageLoaderUtils.getImageLoader(getActivity()).displayImage(user.getUserAvatar(),
+                    mProfileIv,
+                    ImageLoaderUtils.getRoundDisplayOptions(profilePix));
+        } else {
+            mProfileIv.setImageResource(R.drawable.ic_launcher);
+        }
+
     }
 
     @Override

@@ -25,8 +25,6 @@ public class AdvanceActivity extends BaseActivity {
 
     private static final int REQUEST_CODE_PICK_IMAGE = 400;
 
-    private TitleView mTitleView = null;
-
     private EditText mAdvanceEt, mContactEt;
 
     private ImageView mImage = null;
@@ -42,27 +40,6 @@ public class AdvanceActivity extends BaseActivity {
         mContactEt = (EditText)findViewById(R.id.advance_contact);
         mImage = (ImageView)findViewById(R.id.advance_image);
 
-        mTitleView = (TitleView)findViewById(R.id.title);
-        mTitleView.setBackListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        mTitleView.setRightListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String feedbackMsg = mAdvanceEt.getText().toString();
-                if (TextUtils.isEmpty(feedbackMsg)) {
-                    Toast.makeText(AdvanceActivity.this, R.string.advance_not_empty, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                UserInfoOperator.getInstance().feedback(feedbackMsg, mPath);
-                finish();
-                Toast.makeText(AdvanceActivity.this, R.string.advance_thanks, Toast.LENGTH_SHORT).show();
-            }
-        });
-
         mImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,6 +48,28 @@ public class AdvanceActivity extends BaseActivity {
         });
 
 
+    }
+
+    @Override
+    public String getTitleCenter() {
+        return getString(R.string.my_info_advaces);
+    }
+
+    @Override
+    public String getTitleRight() {
+        return getString(R.string.advance_send);
+    }
+
+    @Override
+    public void onTitleRightPressed() {
+        String feedbackMsg = mAdvanceEt.getText().toString();
+        if (TextUtils.isEmpty(feedbackMsg)) {
+            Toast.makeText(AdvanceActivity.this, R.string.advance_not_empty, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        UserInfoOperator.getInstance().feedback(feedbackMsg, mPath);
+        finish();
+        Toast.makeText(AdvanceActivity.this, R.string.advance_thanks, Toast.LENGTH_SHORT).show();
     }
 
     @Override
