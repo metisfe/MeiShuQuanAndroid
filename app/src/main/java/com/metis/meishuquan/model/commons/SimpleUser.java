@@ -8,21 +8,21 @@ import java.io.Serializable;
 public class SimpleUser implements Serializable {
     private int userId;
 
-    private String name;
+    private String name = "";
 
-    private String remarkName;
+    private String remarkName = "";
 
-    private String avatar;
+    private String avatar = "";
 
-    private String grade;
+    private String grade = "";
 
     private int identity;
 
-    private String relation;
+    private String relation = "";
 
-    private String account;
+    private String account = "";
 
-    private String rongCloud;
+    private String rongCloud = "";
 
     public int getUserId() {
         return userId;

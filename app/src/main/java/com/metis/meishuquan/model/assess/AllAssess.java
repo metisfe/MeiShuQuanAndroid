@@ -7,6 +7,9 @@ public class AllAssess {
     private AssessData data;
 
     public AssessData getData() {
+        if (data == null) {
+            data = new AssessData();
+        }
         return data;
     }
 

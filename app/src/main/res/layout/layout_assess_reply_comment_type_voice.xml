@@ -13,7 +13,7 @@
         android:background="#e3e0e0"
         android:padding="10dp">
 
-        <com.loopj.android.image.SmartImageView
+        <ImageView
             android:id="@+id/id_img_comment_user_portrait"
             android:layout_width="30dp"
             android:layout_height="30dp"

@@ -295,12 +295,20 @@
             android:name=".activity.info.QrScanActivity"
             android:label="@string/title_activity_qr_scan"
             android:screenOrientation="portrait"
+<<<<<<< Updated upstream
             android:theme="@style/QrScanTheme" >
             <activity
                 android:name=".activity.topline.NewsInfoActity"
                 android:label="@string/title_activity_news_info_actity"
                 android:screenOrientation="portrait" />
         </activity>
+=======
+            android:theme="@style/QrScanTheme"></activity>
+        <activity
+            android:name=".activity.topline.NewsInfoActity"
+            android:label="@string/title_activity_news_info_actity"
+            android:screenOrientation="portrait" />
+>>>>>>> Stashed changes
         <activity
             android:name=".activity.info.ImagePreviewActivity"
             android:label="@string/title_activity_image_preview" />

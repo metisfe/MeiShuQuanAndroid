@@ -3,6 +3,7 @@ package com.metis.meishuquan.model.assess;
 import com.metis.meishuquan.model.commons.User;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,19 +12,19 @@ import java.util.List;
 public class AssessComment implements Serializable {
     private int id;
 
-    private User user;
+    private User user = null;
 
     private int supportCount;
 
-    private String content;
+    private String content = "";
 
-    private String commentDateTime;
+    private String commentDateTime = "";
 
     private int replyCount;
 
-    private User replyUser;
+    private User replyUser = null;
 
-    private List<ImgOrVoiceUrl> imgOrVoiceUrls;
+    private List<ImgOrVoiceUrl> imgOrVoiceUrl;
 
     private int commentType;
 
@@ -36,6 +37,9 @@ public class AssessComment implements Serializable {
     }
 
     public User getUser() {
+        if (user == null) {
+            user = new User();
+        }
         return user;
     }
 
@@ -76,6 +80,9 @@ public class AssessComment implements Serializable {
     }
 
     public User getReplyUser() {
+        if (replyUser == null) {
+            replyUser = new User();
+        }
         return replyUser;
     }
 
@@ -83,12 +90,15 @@ public class AssessComment implements Serializable {
         this.replyUser = replyUser;
     }
 
-    public List<ImgOrVoiceUrl> getImgOrVoiceUrls() {
-        return imgOrVoiceUrls;
+    public List<ImgOrVoiceUrl> getImgOrVoiceUrl() {
+        if (imgOrVoiceUrl == null) {
+            imgOrVoiceUrl = new ArrayList<ImgOrVoiceUrl>();
+        }
+        return imgOrVoiceUrl;
     }
 
-    public void setImgOrVoiceUrls(List<ImgOrVoiceUrl> imgOrVoiceUrls) {
-        this.imgOrVoiceUrls = imgOrVoiceUrls;
+    public void setImgOrVoiceUrl(List<ImgOrVoiceUrl> imgOrVoiceUrl) {
+        this.imgOrVoiceUrl = imgOrVoiceUrl;
     }
 
     public int getCommentType() {

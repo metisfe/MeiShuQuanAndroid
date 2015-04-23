@@ -13,7 +13,7 @@
         android:background="#e3e0e0"
         android:padding="10dp">
 
-        <com.loopj.android.image.SmartImageView
+        <ImageView
             android:id="@+id/id_img_comment_user_portrait"
             android:layout_width="30dp"
             android:layout_height="30dp"
@@ -33,6 +33,7 @@
             android:textSize="12sp" />
 
         <TextView
+            android:id="@+id/id_tv_comment_createtime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/id_tv_comment_user_name"
@@ -58,6 +59,7 @@
             android:text="王老师" />
 
         <TextView
+            android:id="@+id/id_tv_comment_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/id_tv_comment_user_name"

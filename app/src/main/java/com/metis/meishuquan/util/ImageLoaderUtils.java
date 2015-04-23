@@ -25,7 +25,7 @@ import java.io.IOException;
  * Created by WJ on 2015/4/13.
  */
 public class ImageLoaderUtils {
-    public static ImageLoader getImageLoader (Context context) {
+    public static ImageLoader getImageLoader(Context context) {
         ImageLoader loader = ImageLoader.getInstance();
         if (!loader.isInited()) {
             loader.init(ImageLoaderConfiguration.createDefault(context));
@@ -33,20 +33,35 @@ public class ImageLoaderUtils {
         return loader;
     }
 
-    public static DisplayImageOptions getRoundDisplayOptions (int size) {
+    public static DisplayImageOptions getRoundDisplayOptions(int size) {
+        return getRoundDisplayOptions(size, R.drawable.ic_launcher);
+    }
+
+    public static DisplayImageOptions getRoundDisplayOptions(int size, int resousceId) {
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
                 .displayer(new SquareRoundDisplayer(size))
-                .showImageForEmptyUri(R.drawable.ic_launcher)
-                .showImageOnFail(R.drawable.ic_launcher)
-                .showImageOnLoading(R.drawable.ic_launcher)
+                .showImageForEmptyUri(resousceId)
+                .showImageOnFail(resousceId)
+                .showImageOnLoading(resousceId)
                 .build();
         return options;
     }
 
-    public static String getFilePathFromUri (Activity activity, Uri uri) {
-        String[] projection = { MediaStore.Images.Media.DATA };
+    public static DisplayImageOptions getNormalDisplayOptions(int resousceId) {
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
+                .showImageForEmptyUri(resousceId)
+                .showImageOnFail(resousceId)
+                .showImageOnLoading(resousceId)
+                .build();
+        return options;
+    }
+
+    public static String getFilePathFromUri(Activity activity, Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
         Cursor cursor = activity.managedQuery(uri, projection, null, null, null);
         activity.startManagingCursor(cursor);
         int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -54,14 +69,14 @@ public class ImageLoaderUtils {
         return cursor.getString(column_index);
     }
 
-    public static byte[] BitmapToByteArray (Bitmap bmp) {
+    public static byte[] BitmapToByteArray(Bitmap bmp) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] byteArray = stream.toByteArray();
         return byteArray;
     }
 
-    public static String saveBitmapAtMediaDir (String name, Bitmap bmp) {
+    public static String saveBitmapAtMediaDir(String name, Bitmap bmp) {
         File pictures = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File locationFile = new File(pictures, name);
         try {

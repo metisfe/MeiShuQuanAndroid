@@ -89,19 +89,19 @@ public class User implements Serializable {
     private String token = "";
 
     @SerializedName("goodSubjects")
-    private String goodSubjects;
+    private String goodSubjects = "";
 
     @SerializedName("selfSignature")
-    private String selfSignature;
+    private String selfSignature = "";
 
     @SerializedName("horoscope")
-    private String horoscope;
+    private String horoscope = "";
 
     @SerializedName("locationAddress")
-    private String locationAddress;
+    private String locationAddress = "";
 
     @SerializedName("achievement")
-    private String achievement;
+    private String achievement = "";
 
     private LoginStateEnum appLoginState = LoginStateEnum.NO;
 

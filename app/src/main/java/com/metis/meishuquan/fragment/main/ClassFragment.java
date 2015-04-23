@@ -55,6 +55,7 @@ public class ClassFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data.getExtras() == null) return;
         List<CourseChannelItem> items = (List<CourseChannelItem>) data.getExtras().getSerializable("tags");
         if (items != null && items.size() >= 0) {
             lstCheckedCourseChannelItems = items;
@@ -78,7 +79,9 @@ public class ClassFragment extends Fragment {
     }
 
     private void updateListView(List<CourseChannelItem> lstCheckedCourseChannelItems) {
-        if (lstCheckedCourseChannelItems == null) return;
+        if (lstCheckedCourseChannelItems == null || lstCheckedCourseChannelItems.size() == 0) {
+            return;
+        }
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < lstCheckedCourseChannelItems.size(); i++) {

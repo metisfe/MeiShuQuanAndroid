@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,12 @@ import com.metis.meishuquan.model.commons.SimpleUser;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.CommentTypeEnum;
 import com.metis.meishuquan.model.enums.SupportStepTypeEnum;
+import com.metis.meishuquan.util.ImageLoaderUtils;
+import com.metis.meishuquan.view.assess.CommentTypePicView;
+import com.metis.meishuquan.view.assess.CommentTypePortraitView;
+import com.metis.meishuquan.view.assess.CommentTypeTextView;
+import com.metis.meishuquan.view.assess.CommentTypeVoiceView;
+import com.metis.meishuquan.view.course.FlowLayout;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
@@ -49,12 +56,15 @@ public class AssessInfoActivity extends FragmentActivity {
     private TextView tvName, tvGrade, tvType, tvPublishTime, tvAssessState, tvContent, tvSupportCount, tvCommentCount, tvAddOne;
     private SmartImageView imgPortrait, imgContent;
     private LinearLayout llSupport, llComment;
+    private FlowLayout flImgs;
     private ImageView imgSupport;
     private ListView listView;
     private View headerView;
 
     private Assess assess;
     private AssessSupportAndComment assessSupportAndComment;
+    private AssessInfoAdapter adapter;
+    private List<ImageView> lstImageViews;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,13 +83,8 @@ public class AssessInfoActivity extends FragmentActivity {
         initHeaderEvent();
         initEvent();
 
-        String[] strs = new String[10];
-
-        for (int i = 0; i < 10; i++) {
-            strs[i] = "data-----" + i;
-        }
-        listView.setAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, strs));
+        adapter = new AssessInfoAdapter(AssessInfoActivity.this, assessSupportAndComment);
+        listView.setAdapter(adapter);
     }
 
     private void addHeaderView() {
@@ -102,6 +107,7 @@ public class AssessInfoActivity extends FragmentActivity {
 
         this.llSupport = (LinearLayout) headerView.findViewById(R.id.id_ll_support);
         this.llComment = (LinearLayout) headerView.findViewById(R.id.id_ll_comment_count);
+        this.flImgs = (FlowLayout) headerView.findViewById(R.id.id_flow_user_portrait);
         this.imgSupport = (ImageView) headerView.findViewById(R.id.id_img_assess_support);
     }
 
@@ -212,39 +218,48 @@ public class AssessInfoActivity extends FragmentActivity {
         //赞数量和评论数量
         this.tvSupportCount.setText("赞(" + assess.getSupportCount() + ")");
         this.tvCommentCount.setText("评论(" + assess.getCommentCount() + ")");
+
+        //添加赞头像
+        lstImageViews = new ArrayList<ImageView>();
+        for (int i = 0; i < assessSupportAndComment.getSupportUserList().size(); i++) {
+            final SimpleUser supportUser = assessSupportAndComment.getSupportUserList().get(i);
+            ImageView imageView = (ImageView) LayoutInflater.from(this).inflate(R.layout.layout_imageview_user_portrait, null).findViewById(R.id.id_img_user_portrait);
+            imageView.setMaxWidth(30);
+            imageView.setMaxHeight(30);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            ImageLoaderUtils.getImageLoader(this).displayImage(assessSupportAndComment.getSupportUserList().get(i).getAvatar(), imageView);
+
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(AssessInfoActivity.this, "进入" + supportUser.getName() + "的个人主页", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            this.flImgs.addView(imageView);
+            this.lstImageViews.add(imageView);
+        }
+
     }
 
     private class AssessInfoAdapter extends BaseAdapter {
-        private int PORTRAIT_MAX_COUNT = 7;
-        private int TYPE_COUNT = 4;
-        private int portraitLines;
+        private int TYPE_COUNT = 3;
         private int current_type;
-        private List<CommentTypeEnum> commentTypes;
+        private List<CommentTypeEnum> commentTypes = new ArrayList<CommentTypeEnum>();
+        private ViewHolder holder;
 
         private Context mContext;
-        private AssessSupportAndComment assessSupportAndComment;
-        private List<SimpleUser> lstSupportUser = new ArrayList<SimpleUser>();
         private List<AssessComment> lstAssessComment = new ArrayList<AssessComment>();
 
         public AssessInfoAdapter(Context mContext, AssessSupportAndComment assessSupportAndComment) {
             this.mContext = mContext;
-            this.assessSupportAndComment = assessSupportAndComment;
             if (assessSupportAndComment != null) {
-                lstSupportUser = assessSupportAndComment.getSupportUserList();
                 lstAssessComment = assessSupportAndComment.getAssessCommentList();
             }
+            commentTypes = getCommentTypes();
         }
 
         public List<CommentTypeEnum> getCommentTypes() {
-            commentTypes = new ArrayList<CommentTypeEnum>();
-            int supportCount = lstSupportUser.size();
-            portraitLines = supportCount % PORTRAIT_MAX_COUNT == 0 ? supportCount / PORTRAIT_MAX_COUNT : supportCount / PORTRAIT_MAX_COUNT + 1;
-
-            //添加赞类型列表（行数）
-            for (int i = 0; i < portraitLines; i++) {
-                commentTypes.add(CommentTypeEnum.Portrait);
-            }
-
             //添加回复类型
             for (int i = 0; i < lstAssessComment.size(); i++) {
                 int type = lstAssessComment.get(i).getCommentType();
@@ -267,10 +282,7 @@ public class AssessInfoActivity extends FragmentActivity {
 
         @Override
         public int getItemViewType(int position) {
-            commentTypes = getCommentTypes();
-            if (commentTypes.get(position) == CommentTypeEnum.Portrait) {
-                return CommentTypeEnum.Portrait.getVal();
-            } else if (commentTypes.get(position) == CommentTypeEnum.Text) {
+            if (commentTypes.get(position) == CommentTypeEnum.Text) {
                 return CommentTypeEnum.Text.getVal();
             } else if (commentTypes.get(position) == CommentTypeEnum.Image) {
                 return CommentTypeEnum.Image.getVal();
@@ -282,7 +294,7 @@ public class AssessInfoActivity extends FragmentActivity {
 
         @Override
         public int getCount() {
-            return portraitLines + lstAssessComment.size();
+            return lstAssessComment.size();
         }
 
         @Override
@@ -295,22 +307,49 @@ public class AssessInfoActivity extends FragmentActivity {
             return 0;
         }
 
-
-        class PortraitViewHolder {
-            LinearLayout ll_portrait = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.layout_assess_reply_comment_type_pic, null);
-
+        class ViewHolder {
+            CommentTypeTextView textView;
+            CommentTypeVoiceView voiceView;
+            CommentTypePicView picView;
         }
 
         @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
+        public View getView(int i, View convertView, ViewGroup viewGroup) {
+            int xxx = i;
             current_type = getItemViewType(i);
-
-            if (current_type ==CommentTypeEnum.Portrait.getVal())
-                if (view == null) {
-
+            if (convertView == null) {
+                holder = new ViewHolder();
+                if (current_type == CommentTypeEnum.Text.getVal()) {
+                    if (holder.textView == null) {
+                        holder.textView = new CommentTypeTextView(mContext);
+                        holder.textView.setAssessComment(lstAssessComment.get(i));
+                        convertView = holder.textView;
+                        convertView.setTag(R.id.msq_assess_info_commenttype_text, holder.textView);
+                    } else {
+                        holder.textView = (CommentTypeTextView) convertView.getTag(R.id.msq_assess_info_commenttype_text);
+                    }
+                } else if (current_type == CommentTypeEnum.Image.getVal()) {
+                    if (holder.voiceView == null) {
+                        holder.picView = new CommentTypePicView(mContext);
+                        holder.picView.setAssessComment(lstAssessComment.get(i));
+                        convertView = holder.picView;
+                        convertView.setTag(R.id.msq_assess_info_commenttype_img, holder.picView);
+                    } else {
+                        holder.picView = (CommentTypePicView) convertView.getTag(R.id.msq_assess_info_commenttype_img);
+                    }
+                } else if (current_type == CommentTypeEnum.Voice.getVal()) {
+                    if (holder.voiceView == null) {
+                        holder.voiceView = new CommentTypeVoiceView(mContext);
+                        holder.voiceView.setAssessComment(lstAssessComment.get(i));
+                        convertView = holder.textView;
+                        convertView.setTag(R.id.msq_assess_info_commenttype_voice, holder.voiceView);
+                    } else {
+                        holder.voiceView = (CommentTypeVoiceView) convertView.getTag(R.id.msq_assess_info_commenttype_voice);
+                    }
                 }
+            }
+            return convertView;
 
-            return null;
         }
     }
 }
