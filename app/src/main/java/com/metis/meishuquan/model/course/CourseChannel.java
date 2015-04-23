@@ -9,11 +9,13 @@ import java.util.List;
  * Created by wangjin on 15/4/18.
  */
 public class CourseChannel {
+
+    private static final String TAG = CourseChannel.class.getSimpleName();
+
     private int channelId;
 
     private String channelName;
 
-    @SerializedName("data")
     private List<CourseChannelItem> childChannelList;
 
     public int getChannelId() {
@@ -50,5 +52,18 @@ public class CourseChannel {
             }
         }
         return null;
+    }
+
+    public CourseChannelItem getFirstItem () {
+        if (childChannelList == null || childChannelList.isEmpty()) {
+            return null;
+        }
+        return childChannelList.get(0);
+    }
+    public CourseChannelItem getLastItem () {
+        if (childChannelList == null || childChannelList.isEmpty()) {
+            return null;
+        }
+        return childChannelList.get(childChannelList.size() - 1);
     }
 }

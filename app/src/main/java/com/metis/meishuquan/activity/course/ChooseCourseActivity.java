@@ -30,7 +30,7 @@ import java.util.List;
 
 public class ChooseCourseActivity extends FragmentActivity {
 
-    private final String OLDSELECTEDCHANNELITEMS = "OldSelectedCourseChannelItems";
+    public static final String OLDSELECTEDCHANNELITEMS = "OldSelectedCourseChannelItems";
     private Button btnBack, btnConfirm;
     private RelativeLayout rlAllChannel;
     private ListView listView;

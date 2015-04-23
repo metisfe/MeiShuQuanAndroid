@@ -31,6 +31,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.InputActivity;
@@ -39,6 +40,7 @@ import com.metis.meishuquan.fragment.assess.ChooseCityFragment;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.BLL.UserOperator;
 import com.metis.meishuquan.model.assess.City;
+import com.metis.meishuquan.model.commons.Result;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.course.Course;
 import com.metis.meishuquan.model.course.CourseChannel;
@@ -54,6 +56,7 @@ import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import org.json.JSONArray;
 
 import java.io.File;
+import java.io.Serializable;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -182,6 +185,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.info_good_at:
                 it = new Intent (this, ChooseCourseActivity.class);
+                it.putExtra(ChooseCourseActivity.OLDSELECTEDCHANNELITEMS, (Serializable)mCourseItems);
                 startActivityForResult(it, REQUEST_CODE_CHOOSE_COURSE);
                 break;
             case R.id.info_cv:
@@ -245,9 +249,12 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                     String json = array.toString().replaceAll("\\{", "\\(");
                     json = json.replaceAll("\\}", "\\)");*/
                     StringBuilder builder = new StringBuilder();
+                    StringBuilder nameBuilder = new StringBuilder();
                     for (CourseChannelItem item : list) {
                         builder.append(item.getChannelId() + ",");
+                        nameBuilder.append(item.getChannelName() + " ");
                     }
+                    mGoodAtView.setSecondaryText(nameBuilder.toString());
                     updateInfo(User.KEY_GOODSUBJECTS, builder.toString());
                     Log.v(TAG, "REQUEST_CODE_CHOOSE_COURSE " + builder);
                 }
@@ -322,6 +329,10 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
         mRecentsContentTv.setText(user.getSelfSignature());
         mDepartmentAddrView.setSecondaryText(user.getLocationAddress());
         mAchievementView.setSecondaryText(user.getAchievement());
+        Log.v(TAG, "fillUserInfo userRole=" + user.getUserRole());
+        /*if (user.getUserRole()) {
+
+        }*/
         String birthday = user.getBirthday();
         if (TextUtils.isEmpty(birthday)) {
             mAgeView.setSecondaryText(0 + "");
@@ -335,7 +346,8 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
             }
             mCourseItems = new ArrayList<CourseChannelItem>();
             Gson gson = new Gson();
-            CourseChannel courseChannel = gson.fromJson(allCourse, CourseChannel.class);
+            Result<List<CourseChannel>> courseChannel = gson.fromJson(allCourse, new TypeToken<Result<List<CourseChannel>>>(){}.getType());
+            List<CourseChannel> channelList = courseChannel.getData();
             String[] ids = subjectsId.split(",");
             StringBuilder builder = new StringBuilder();
             for (String id : ids) {
@@ -343,8 +355,13 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                     continue;
                 }
                 Log.v(TAG, "fillUserInfo id=" + id);
-                Integer idInt = Integer.valueOf(id);
-                CourseChannelItem it = courseChannel.getItemById(idInt);
+                Integer idInt = -1;
+                try{
+                    idInt = Integer.valueOf(id);
+                } catch (Exception e) {
+                    continue;
+                }
+                CourseChannelItem it = getCourseChannelItem(channelList, idInt);
                 if (it != null) {
                     Log.v(TAG, "fillUserInfo it=" + it.getChannelName());
                     mCourseItems.add(it);
@@ -358,6 +375,21 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
         for (CourseChannelItem item : list) {
             sb.append(item.getChannelName() + " ");
         }*/
+    }
+
+    private CourseChannelItem getCourseChannelItem (List<CourseChannel> channelsList, int channelId) {
+        for (CourseChannel channel : channelsList) {
+            CourseChannelItem first = channel.getFirstItem();
+            CourseChannelItem last = channel.getLastItem();
+            if (first != null && last != null && channelId >= first.getChannelId() && channelId <= last.getChannelId()) {
+                for (CourseChannelItem item : channel.getChildChannelLists()) {
+                    if (item.getChannelId() == channelId) {
+                        return item;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     private Dialog mDialog = null;
