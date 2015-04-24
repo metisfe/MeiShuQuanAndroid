@@ -256,7 +256,7 @@ public class AssessOperator {
         }
     }
 
-    public void pushComment(PushCommentParam param, ApiOperationCallback<ReturnInfo<String>> callback) {
+    public void pushComment(PushCommentParam param, ApiOperationCallback<ReturnInfo<AssessComment>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuilder PATH = new StringBuilder(PushComment);
@@ -268,7 +268,7 @@ public class AssessOperator {
                 Pair<String, String> pair2 = new Pair<String, String>("session", SESSION);
                 pram.add(pair1);
                 pram.add(pair2);
-                ApiDataProvider.getmClient().invokeApi(PushComment, null, HttpPost.METHOD_NAME, pram, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+                ApiDataProvider.getmClient().invokeApi(PushComment, null, HttpPost.METHOD_NAME, pram, (Class<ReturnInfo<AssessComment>>) new ReturnInfo<AssessComment>().getClass(), callback);
             }
         }
     }

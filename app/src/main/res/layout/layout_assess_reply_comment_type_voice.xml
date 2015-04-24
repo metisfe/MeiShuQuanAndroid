@@ -7,6 +7,7 @@
     android:paddingRight="10dp">
 
     <RelativeLayout
+        android:id="@+id/id_rl_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -68,8 +69,12 @@
             android:text="9”"
             android:textColor="#424242"
             android:textSize="12sp" />
-
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/id_rl_content"
+        android:background="#cccccc" />
 
 </RelativeLayout>

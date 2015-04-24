@@ -10,6 +10,6 @@
     <dimen name="emotion_input_height">274dp</dimen>
     <dimen name="switch_emotion_container_height">43dp</dimen>
 
-    <dimen name="user_portrait_height">30dp</dimen>
-    <dimen name="user_portrait_width">30dp</dimen>
+    <dimen name="user_portrait_height">40dp</dimen>
+    <dimen name="user_portrait_width">40dp</dimen>
 </resources>

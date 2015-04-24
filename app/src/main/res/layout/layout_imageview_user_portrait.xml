@@ -3,7 +3,8 @@
     android:id="@+id/id_img_user_portrait"
     android:layout_width="@dimen/user_portrait_width"
     android:layout_height="@dimen/user_portrait_height"
-    android:layout_margin="5dp"
+    android:layout_margin="10dp"
+    android:scaleType="fitXY"
     android:src="@drawable/default_user_dynamic">
 
 </ImageView>

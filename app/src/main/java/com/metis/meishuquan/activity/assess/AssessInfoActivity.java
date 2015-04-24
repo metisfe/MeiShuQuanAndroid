@@ -12,8 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -185,6 +187,27 @@ public class AssessInfoActivity extends FragmentActivity {
             }
         });
 
+        this.listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+                switch (scrollState) {
+                    case SCROLL_STATE_FLING:
+                        //隐藏输入法，清空回复对象
+                        if (getWindow().getAttributes().softInputMode == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED) {
+                            Utils.hideInputMethod(AssessInfoActivity.this, etInput);
+                        }
+                        selectedAssessComment = null;
+                        clearEditText();
+                        break;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int i, int i2, int i3) {
+
+            }
+        });
+
         this.imgCommentMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -221,7 +244,7 @@ public class AssessInfoActivity extends FragmentActivity {
         this.btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Utils.hideInputMethod(AssessInfoActivity.this, etInput);
+                Utils.hideInputMethod(AssessInfoActivity.this, etInput);//隐藏输入框
                 PushCommentParam param = new PushCommentParam();
                 param.setUserId(MainApplication.userInfo.getUserId());
                 param.setAssessId(assess.getId());
@@ -231,20 +254,21 @@ public class AssessInfoActivity extends FragmentActivity {
                     param.setReplyUserId(selectedAssessComment.getUser().getUserId());
                 }
 
-                AssessOperator.getInstance().pushComment(param, new ApiOperationCallback<ReturnInfo<String>>() {
+                AssessOperator.getInstance().pushComment(param, new ApiOperationCallback<ReturnInfo<AssessComment>>() {
                     @Override
-                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    public void onCompleted(ReturnInfo<AssessComment> result, Exception exception, ServiceFilterResponse response) {
                         if (result != null && result.getInfo().equals(String.valueOf(0))) {
                             Gson gson = new Gson();
                             String json = gson.toJson(result);
-                            //TODO:刷新列表
-                            AssessComment assessComment = gson.fromJson(json, AssessComment.class);
+                            //刷新列表
+                            ReturnInfo returnInfo = gson.fromJson(json, new TypeToken<ReturnInfo<AssessComment>>() {
+                            }.getType());
+                            AssessComment assessComment = (AssessComment) returnInfo.getData();
                             if (assessComment != null) {
                                 assessSupportAndComment.getAssessCommentList().add(assessComment);
                                 adapter.notifyDataSetChanged();
                                 btnSend.setVisibility(View.GONE);
-                                etInput.setText("");
-                                etInput.setHint("我来说两句");
+                                clearEditText();
                             }
                             Toast.makeText(AssessInfoActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
                         }
@@ -276,6 +300,11 @@ public class AssessInfoActivity extends FragmentActivity {
                 }
             }
         });
+    }
+
+    private void clearEditText() {
+        etInput.setText("");
+        etInput.setHint("我来说两句");
     }
 
     private void support() {
@@ -358,8 +387,8 @@ public class AssessInfoActivity extends FragmentActivity {
         for (int i = 0; i < assessSupportAndComment.getSupportUserList().size(); i++) {
             final SimpleUser supportUser = assessSupportAndComment.getSupportUserList().get(i);
             ImageView imageView = (ImageView) LayoutInflater.from(this).inflate(R.layout.layout_imageview_user_portrait, null).findViewById(R.id.id_img_user_portrait);
-            imageView.setMaxWidth(30);
-            imageView.setMaxHeight(30);
+            imageView.setMaxWidth(40);
+            imageView.setMaxHeight(40);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             ImageLoaderUtils.getImageLoader(this).displayImage(assessSupportAndComment.getSupportUserList().get(i).getAvatar(), imageView, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height), R.drawable.default_user_dynamic));
 
