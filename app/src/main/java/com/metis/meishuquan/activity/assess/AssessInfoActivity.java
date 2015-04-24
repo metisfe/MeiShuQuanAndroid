@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.tts.Voice;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,22 +13,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.login.LoginActivity;
-import com.metis.meishuquan.model.BLL.AssessOperator;
 import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.assess.Assess;
 import com.metis.meishuquan.model.assess.AssessComment;
@@ -38,7 +35,6 @@ import com.metis.meishuquan.model.enums.CommentTypeEnum;
 import com.metis.meishuquan.model.enums.SupportStepTypeEnum;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.view.assess.CommentTypePicView;
-import com.metis.meishuquan.view.assess.CommentTypePortraitView;
 import com.metis.meishuquan.view.assess.CommentTypeTextView;
 import com.metis.meishuquan.view.assess.CommentTypeVoiceView;
 import com.metis.meishuquan.view.course.FlowLayout;
@@ -227,7 +223,7 @@ public class AssessInfoActivity extends FragmentActivity {
             imageView.setMaxWidth(30);
             imageView.setMaxHeight(30);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            ImageLoaderUtils.getImageLoader(this).displayImage(assessSupportAndComment.getSupportUserList().get(i).getAvatar(), imageView);
+            ImageLoaderUtils.getImageLoader(this).displayImage(assessSupportAndComment.getSupportUserList().get(i).getAvatar(), imageView, ImageLoaderUtils.getRoundDisplayOptions(R.dimen.user_portrait_height, R.drawable.default_user_dynamic));
 
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -243,51 +239,33 @@ public class AssessInfoActivity extends FragmentActivity {
     }
 
     private class AssessInfoAdapter extends BaseAdapter {
-        private int TYPE_COUNT = 3;
-        private int current_type;
-        private List<CommentTypeEnum> commentTypes = new ArrayList<CommentTypeEnum>();
-        private ViewHolder holder;
 
+        private static final int TEXT = 0;
+        private static final int VOICE = 1;
+        private static final int PIC = 2;
         private Context mContext;
-        private List<AssessComment> lstAssessComment = new ArrayList<AssessComment>();
+        private List<AssessComment> lstAssessComment;
 
         public AssessInfoAdapter(Context mContext, AssessSupportAndComment assessSupportAndComment) {
             this.mContext = mContext;
             if (assessSupportAndComment != null) {
                 lstAssessComment = assessSupportAndComment.getAssessCommentList();
             }
-            commentTypes = getCommentTypes();
         }
-
-        public List<CommentTypeEnum> getCommentTypes() {
-            //添加回复类型
-            for (int i = 0; i < lstAssessComment.size(); i++) {
-                int type = lstAssessComment.get(i).getCommentType();
-                if (type == CommentTypeEnum.Text.getVal()) {
-                    commentTypes.add(CommentTypeEnum.Text);
-                } else if (type == CommentTypeEnum.Image.getVal()) {
-                    commentTypes.add(CommentTypeEnum.Image);
-                } else if (type == CommentTypeEnum.Voice.getVal()) {
-                    commentTypes.add(CommentTypeEnum.Voice);
-                }
-            }
-            return commentTypes;
-        }
-
 
         @Override
         public int getViewTypeCount() {
-            return TYPE_COUNT;
+            return 3;
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (commentTypes.get(position) == CommentTypeEnum.Text) {
-                return CommentTypeEnum.Text.getVal();
-            } else if (commentTypes.get(position) == CommentTypeEnum.Image) {
-                return CommentTypeEnum.Image.getVal();
-            } else if (commentTypes.get(position) == CommentTypeEnum.Voice) {
-                return CommentTypeEnum.Text.getVal();
+            if (lstAssessComment.get(position).getCommentType() == CommentTypeEnum.Text.getVal()) {
+                return TEXT;
+            } else if (lstAssessComment.get(position).getCommentType() == CommentTypeEnum.Image.getVal()) {
+                return PIC;
+            } else if (lstAssessComment.get(position).getCommentType() == CommentTypeEnum.Voice.getVal()) {
+                return VOICE;
             }
             return 0;
         }
@@ -307,45 +285,55 @@ public class AssessInfoActivity extends FragmentActivity {
             return 0;
         }
 
-        class ViewHolder {
+        class TextViewHolder {
             CommentTypeTextView textView;
+        }
+
+        class VoiceViewHolder {
             CommentTypeVoiceView voiceView;
+        }
+
+        class PicViewHolder {
             CommentTypePicView picView;
         }
 
         @Override
         public View getView(int i, View convertView, ViewGroup viewGroup) {
-            int xxx = i;
-            current_type = getItemViewType(i);
+            int current_type = getItemViewType(i);
+
+            TextViewHolder textViewHolder = null;
+            VoiceViewHolder voiceViewHolder = null;
+            PicViewHolder picViewHolder = null;
             if (convertView == null) {
-                holder = new ViewHolder();
-                if (current_type == CommentTypeEnum.Text.getVal()) {
-                    if (holder.textView == null) {
-                        holder.textView = new CommentTypeTextView(mContext);
-                        holder.textView.setAssessComment(lstAssessComment.get(i));
-                        convertView = holder.textView;
-                        convertView.setTag(R.id.msq_assess_info_commenttype_text, holder.textView);
-                    } else {
-                        holder.textView = (CommentTypeTextView) convertView.getTag(R.id.msq_assess_info_commenttype_text);
-                    }
-                } else if (current_type == CommentTypeEnum.Image.getVal()) {
-                    if (holder.voiceView == null) {
-                        holder.picView = new CommentTypePicView(mContext);
-                        holder.picView.setAssessComment(lstAssessComment.get(i));
-                        convertView = holder.picView;
-                        convertView.setTag(R.id.msq_assess_info_commenttype_img, holder.picView);
-                    } else {
-                        holder.picView = (CommentTypePicView) convertView.getTag(R.id.msq_assess_info_commenttype_img);
-                    }
-                } else if (current_type == CommentTypeEnum.Voice.getVal()) {
-                    if (holder.voiceView == null) {
-                        holder.voiceView = new CommentTypeVoiceView(mContext);
-                        holder.voiceView.setAssessComment(lstAssessComment.get(i));
-                        convertView = holder.textView;
-                        convertView.setTag(R.id.msq_assess_info_commenttype_voice, holder.voiceView);
-                    } else {
-                        holder.voiceView = (CommentTypeVoiceView) convertView.getTag(R.id.msq_assess_info_commenttype_voice);
-                    }
+                if (current_type == TEXT) {
+                    textViewHolder = new TextViewHolder();
+                    textViewHolder.textView = new CommentTypeTextView(mContext);
+                    textViewHolder.textView.setAssessComment(lstAssessComment.get(i));
+                    convertView = textViewHolder.textView;
+                    convertView.setTag(textViewHolder);
+                } else if (current_type == PIC) {
+                    picViewHolder = new PicViewHolder();
+                    picViewHolder.picView = new CommentTypePicView(mContext);
+                    picViewHolder.picView.setAssessComment(lstAssessComment.get(i));
+                    convertView = picViewHolder.picView;
+                    convertView.setTag(picViewHolder);
+                } else if (current_type == VOICE) {
+                    voiceViewHolder = new VoiceViewHolder();
+                    voiceViewHolder.voiceView = new CommentTypeVoiceView(mContext);
+                    voiceViewHolder.voiceView.setAssessComment(lstAssessComment.get(i));
+                    convertView = voiceViewHolder.voiceView;
+                    convertView.setTag(voiceViewHolder);
+                }
+            } else {
+                if (current_type == TEXT) {
+                    textViewHolder = (TextViewHolder) convertView.getTag();
+                    textViewHolder.textView.setAssessComment(lstAssessComment.get(i));
+                } else if (current_type == PIC) {
+                    picViewHolder = (PicViewHolder) convertView.getTag();
+                    picViewHolder.picView.setAssessComment(lstAssessComment.get(i));
+                } else if (current_type == VOICE) {
+                    voiceViewHolder = (VoiceViewHolder) convertView.getTag();
+                    voiceViewHolder.voiceView.setAssessComment(lstAssessComment.get(i));
                 }
             }
             return convertView;
