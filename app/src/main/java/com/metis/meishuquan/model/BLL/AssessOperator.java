@@ -6,7 +6,9 @@ import android.util.Pair;
 
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
+import com.metis.meishuquan.model.assess.AssessComment;
 import com.metis.meishuquan.model.assess.AssessSupportAndComment;
+import com.metis.meishuquan.model.assess.PushCommentParam;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.AssessStateEnum;
 import com.metis.meishuquan.model.enums.FileUploadTypeEnum;
@@ -44,7 +46,7 @@ public class AssessOperator {
     private final String Assess_Comment_Share = "v1.1/Assess/Share";//作品分享
     private final String Comment_Favorite = "v1.1/Comment/Favorite";//收藏(暂无此功能)
     private final String AttentionUser = "";//关注用户(暂无此功能)
-    private final String PushComment = "v1.1/AssessComment/PushComment";//发表评价
+    private final String PushComment = "v1.1/AssessComment/PushComment?";//发表评价
     private final String Friend = "";//获取好友/老师
     private final String FileUpload = "v1.1/File/Upload";//文件上传
     private final String Region = "v1.1/UserCenter/Region";
@@ -250,6 +252,23 @@ public class AssessOperator {
                 PATH.append("?assessId=" + assessId);
                 PATH.append("&session=" + SESSION);
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<AssessSupportAndComment>>) new ReturnInfo<AssessSupportAndComment>().getClass(), callback);
+            }
+        }
+    }
+
+    public void pushComment(PushCommentParam param, ApiOperationCallback<ReturnInfo<String>> callback) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuilder PATH = new StringBuilder(PushComment);
+                PATH.append("&session=" + SESSION);
+                List<Pair<String, String>> pram = new ArrayList<>();
+                Gson gson = new Gson();
+                String json = gson.toJson(param);
+                Pair<String, String> pair1 = new Pair<String, String>("param", json);
+                Pair<String, String> pair2 = new Pair<String, String>("session", SESSION);
+                pram.add(pair1);
+                pram.add(pair2);
+                ApiDataProvider.getmClient().invokeApi(PushComment, null, HttpPost.METHOD_NAME, pram, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
         }
     }

@@ -181,10 +181,12 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
+                    android:id="@+id/id_img_triangle"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:layout_marginLeft="50dp"
-                    android:src="@drawable/icon_triangle_up" />
+                    android:src="@drawable/icon_triangle_up"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <com.metis.meishuquan.view.course.FlowLayout

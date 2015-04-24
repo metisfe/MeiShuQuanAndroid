@@ -48,39 +48,78 @@
         android:paddingRight="5dp">
 
         <ImageView
-            android:id="@+id/id_img_voice"
+            android:id="@+id/id_img_comment_mode"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:src="@drawable/icon_btn_voice" />
 
         <EditText
+            android:id="@+id/id_et_input_comment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_toLeftOf="@+id/id_img_emotion"
-            android:layout_toRightOf="@+id/id_img_voice"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toLeftOf="@+id/id_rl_send"
+            android:layout_toRightOf="@+id/id_img_comment_mode"
             android:background="@drawable/bg_assess_info_comment_input"
             android:hint="我来说两句..."
             android:padding="5dp"
             android:textSize="12sp" />
 
-        <ImageView
-            android:id="@+id/id_img_emotion"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/id_btn_more"
-            android:src="@drawable/bg_btn_emotion" />
+        <Button
+            android:id="@+id/id_btn_voice_record"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_toLeftOf="@+id/id_rl_send"
+            android:layout_toRightOf="@+id/id_img_comment_mode"
+            android:background="@drawable/bg_assess_info_comment_input"
+            android:padding="5dp"
+            android:text="按住 说话"
+            android:textColor="#424242"
+            android:textSize="15sp"
+            android:visibility="gone" />
 
-        <ImageView
-            android:id="@+id/id_btn_more"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/icon_btn_more" />
+        <!--<ImageView-->
+        <!--android:id="@+id/id_img_emotion"-->
+        <!--android:layout_width="30dp"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginRight="5dp"-->
+        <!--android:layout_toLeftOf="@+id/id_btn_more"-->
+        <!--android:src="@drawable/bg_btn_emotion"-->
+        <!--android:visibility="gone" />-->
+
+
+        <RelativeLayout
+            android:id="@+id/id_rl_send"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true">
+
+            <ImageView
+                android:id="@+id/id_btn_more"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="2dp"
+                android:src="@drawable/icon_btn_more" />
+
+            <Button
+                android:id="@+id/id_btn_send"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/icon_btn_more"
+                android:text="发送"
+                android:textColor="#424242"
+                android:textSize="12sp"
+                android:visibility="gone" />
+        </RelativeLayout>
+
 
     </RelativeLayout>
 

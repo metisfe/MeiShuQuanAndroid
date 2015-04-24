@@ -42,6 +42,7 @@ import com.metis.meishuquan.model.commons.Result;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.FileUploadTypeEnum;
 import com.metis.meishuquan.util.ImageLoaderUtils;
+import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.view.popup.ChoosePhotoPopupWindow;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
@@ -136,6 +137,7 @@ public class AssessPublishFragment extends Fragment {
         this.btnAssessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Utils.hideInputMethod(MainApplication.UIContext, etDesc);
                 if (selectedChannel == null || selectedChannel.getChannelId() == 0) {
                     Toast.makeText(MainApplication.UIContext, "请选择类型", Toast.LENGTH_SHORT).show();
                     return;

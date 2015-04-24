@@ -1,5 +1,6 @@
 package com.metis.meishuquan.model.assess;
 
+import com.google.gson.annotations.SerializedName;
 import com.metis.meishuquan.model.commons.User;
 
 import java.io.Serializable;
@@ -10,22 +11,31 @@ import java.util.List;
  * Created by wangjin on 15/4/22.
  */
 public class AssessComment implements Serializable {
+    @SerializedName("id")
     private int id;
 
+    @SerializedName("user")
     private User user = null;
 
+    @SerializedName("supportCount")
     private int supportCount;
 
+    @SerializedName("content")
     private String content = "";
 
+    @SerializedName("commentDateTime")
     private String commentDateTime = "";
 
+    @SerializedName("replyCount")
     private int replyCount;
 
+    @SerializedName("replyUser")
     private User replyUser = null;
 
+    @SerializedName("imgOrVoiceUrl")
     private List<ImgOrVoiceUrl> imgOrVoiceUrl;
 
+    @SerializedName("commentType")
     private int commentType;
 
     public int getId() {

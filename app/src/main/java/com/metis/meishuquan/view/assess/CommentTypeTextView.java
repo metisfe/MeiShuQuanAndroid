@@ -54,7 +54,7 @@ public class CommentTypeTextView extends RelativeLayout {
                 ImageLoaderUtils.getImageLoader(this.context).
                         displayImage(assessComment.getUser().getAvatar(),
                                 this.imgPortrait,
-                                ImageLoaderUtils.getRoundDisplayOptions(R.dimen.user_portrait_height, R.drawable.default_user_dynamic));
+                                ImageLoaderUtils.getRoundDisplayOptions(this.context.getResources().getDimensionPixelSize(R.dimen.user_portrait_height), R.drawable.default_user_dynamic));
             }
             //评论人昵称
             this.tvCommentUser.setText(assessComment.getUser().getName());

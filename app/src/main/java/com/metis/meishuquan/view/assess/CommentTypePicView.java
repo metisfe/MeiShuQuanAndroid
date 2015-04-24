@@ -80,7 +80,7 @@ public class CommentTypePicView extends RelativeLayout {
             ImageLoaderUtils.getImageLoader(this.context).
                     displayImage(assessComment.getUser().getAvatar(),
                             this.imgPortrait,
-                            ImageLoaderUtils.getRoundDisplayOptions(R.dimen.user_portrait_height, R.drawable.default_user_dynamic));
+                            ImageLoaderUtils.getRoundDisplayOptions(this.context.getResources().getDimensionPixelSize(R.dimen.user_portrait_height), R.drawable.default_user_dynamic));
 
             this.tvCommentUser.setText(assessComment.getUser().getName());//评论人
             if (assessComment.getReplyUser() == null || assessComment.getReplyUser().getName().isEmpty()) {

@@ -24,9 +24,11 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.image.SmartImageView;
+import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.assess.AssessInfoActivity;
+import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.assess.AssessPublishFragment;
 import com.metis.meishuquan.fragment.assess.ChooseCityFragment;
 import com.metis.meishuquan.fragment.assess.FilterConditionForAssessListFragment;
@@ -238,13 +240,17 @@ public class AssessFragment extends Fragment {
         this.btnPublishComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ChoosePhotoPopupWindow choosePhotoPopupWindow = new ChoosePhotoPopupWindow(MainApplication.UIContext, AssessFragment.this, rootView);
-                choosePhotoPopupWindow.getPath(new OnPathChannedListner() {
-                    @Override
-                    public void setPath(String path) {
-                        photoPath = path;
-                    }
-                });
+                if (MainApplication.isLogin()) {
+                    ChoosePhotoPopupWindow choosePhotoPopupWindow = new ChoosePhotoPopupWindow(MainApplication.UIContext, AssessFragment.this, rootView);
+                    choosePhotoPopupWindow.getPath(new OnPathChannedListner() {
+                        @Override
+                        public void setPath(String path) {
+                            photoPath = path;
+                        }
+                    });
+                } else {
+                    startActivity(new Intent(MainApplication.UIContext, LoginActivity.class));
+                }
             }
         });
 

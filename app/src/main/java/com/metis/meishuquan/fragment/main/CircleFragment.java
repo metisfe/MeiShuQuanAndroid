@@ -142,11 +142,11 @@ public class CircleFragment extends Fragment {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Moments";
+                    return "首页";
                 case 1:
-                    return "Chats";
+                    return "消息";
                 case 2:
-                    return "Contacts";
+                    return "通讯录";
             }
             return "";
         }

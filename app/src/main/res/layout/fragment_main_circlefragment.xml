@@ -14,26 +14,27 @@
         android:id="@+id/fragment_shared_circlefragment_topbar_indicator"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@id/fragment_shared_circlefragment_title_bar" />
+        android:layout_below="@id/fragment_shared_circlefragment_title_bar"
+        android:background="#e2e2e2" />
 
     <com.metis.meishuquan.view.shared.TabBar
         android:id="@+id/fragment_shared_circlefragment_tab_bar"
-        bs:tabbarType="circle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        bs:tabbarType="circle" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/fragment_shared_circlefragment_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/fragment_shared_circlefragment_topbar_indicator"
-        android:layout_above="@id/fragment_shared_circlefragment_tab_bar" />
+        android:layout_above="@id/fragment_shared_circlefragment_tab_bar"
+        android:layout_below="@id/fragment_shared_circlefragment_topbar_indicator" />
 
     <!--<com.metis.meishuquan.view.shared.TabBar-->
-        <!--android:id="@+id/fragment_shared_circlefragment_tab_bar1"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="44dp"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--bs:tabbarType="circle" />-->
+    <!--android:id="@+id/fragment_shared_circlefragment_tab_bar1"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="44dp"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--bs:tabbarType="circle" />-->
 </RelativeLayout>

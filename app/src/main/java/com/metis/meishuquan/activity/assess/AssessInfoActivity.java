@@ -5,35 +5,43 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.speech.tts.Voice;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.login.LoginActivity;
+import com.metis.meishuquan.model.BLL.AssessOperator;
 import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.assess.Assess;
 import com.metis.meishuquan.model.assess.AssessComment;
 import com.metis.meishuquan.model.assess.AssessSupportAndComment;
+import com.metis.meishuquan.model.assess.PushCommentParam;
 import com.metis.meishuquan.model.commons.SimpleUser;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.CommentTypeEnum;
 import com.metis.meishuquan.model.enums.SupportStepTypeEnum;
 import com.metis.meishuquan.util.ImageLoaderUtils;
+import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.view.assess.CommentTypePicView;
 import com.metis.meishuquan.view.assess.CommentTypeTextView;
 import com.metis.meishuquan.view.assess.CommentTypeVoiceView;
@@ -51,16 +59,22 @@ public class AssessInfoActivity extends FragmentActivity {
 
     private TextView tvName, tvGrade, tvType, tvPublishTime, tvAssessState, tvContent, tvSupportCount, tvCommentCount, tvAddOne;
     private SmartImageView imgPortrait, imgContent;
+    private ImageView imgCommentMode, imgMore, imgTriangle;
+    private Button btnRecord, btnSend;
+    private EditText etInput;
     private LinearLayout llSupport, llComment;
     private FlowLayout flImgs;
     private ImageView imgSupport;
     private ListView listView;
     private View headerView;
 
+    private boolean isVoiceMode;
     private Assess assess;
+    private AssessComment selectedAssessComment;
     private AssessSupportAndComment assessSupportAndComment;
     private AssessInfoAdapter adapter;
     private List<ImageView> lstImageViews;
+    private List<AssessComment> lstAssessComment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +83,9 @@ public class AssessInfoActivity extends FragmentActivity {
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            assess = (Assess) bundle.getSerializable("assess");
-            assessSupportAndComment = (AssessSupportAndComment) bundle.getSerializable("assessSupportAndComment");
+            this.assess = (Assess) bundle.getSerializable("assess");
+            this.assessSupportAndComment = (AssessSupportAndComment) bundle.getSerializable("assessSupportAndComment");
+            this.lstAssessComment = assessSupportAndComment.getAssessCommentList();
         }
         initView();
         addHeaderView();
@@ -85,7 +100,7 @@ public class AssessInfoActivity extends FragmentActivity {
 
     private void addHeaderView() {
         headerView = View.inflate(this, R.layout.view_assess_info_header, null);
-        listView.addHeaderView(headerView);
+        listView.addHeaderView(headerView, null, false);
     }
 
     private void initHeaderView() {
@@ -99,11 +114,17 @@ public class AssessInfoActivity extends FragmentActivity {
         this.tvCommentCount = (TextView) headerView.findViewById(R.id.id_tv_comment_count);
         this.imgPortrait = (SmartImageView) headerView.findViewById(R.id.id_img_portrait);
         this.imgContent = (SmartImageView) headerView.findViewById(R.id.id_img_content);
+        this.imgTriangle = (ImageView) headerView.findViewById(R.id.id_img_triangle);
         this.tvAddOne = (TextView) headerView.findViewById(R.id.id_tv_add_one);
 
         this.llSupport = (LinearLayout) headerView.findViewById(R.id.id_ll_support);
         this.llComment = (LinearLayout) headerView.findViewById(R.id.id_ll_comment_count);
         this.flImgs = (FlowLayout) headerView.findViewById(R.id.id_flow_user_portrait);
+        if (assessSupportAndComment.getSupportUserList().size() == 0 && assessSupportAndComment.getAssessCommentList().size() == 0) {
+            this.imgTriangle.setVisibility(View.GONE);
+        } else {
+            this.imgTriangle.setVisibility(View.VISIBLE);
+        }
         this.imgSupport = (ImageView) headerView.findViewById(R.id.id_img_assess_support);
     }
 
@@ -128,6 +149,12 @@ public class AssessInfoActivity extends FragmentActivity {
     private void initView() {
         this.btnBack = (Button) this.findViewById(R.id.id_btn_assess_info_back);
         this.listView = (ListView) this.findViewById(R.id.id_list_assess_info_comment);
+        //评论
+        this.imgCommentMode = (ImageView) this.findViewById(R.id.id_img_comment_mode);//语音或文字切换
+        this.imgMore = (ImageView) this.findViewById(R.id.id_btn_more);//更多（图片）
+        this.btnRecord = (Button) this.findViewById(R.id.id_btn_voice_record);//录音
+        this.etInput = (EditText) this.findViewById(R.id.id_et_input_comment);//输入框
+        this.btnSend = (Button) this.findViewById(R.id.id_btn_send);//发送文字
     }
 
     private void initEvent() {
@@ -136,6 +163,117 @@ public class AssessInfoActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+
+        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (lstAssessComment.size() == 0) {
+                    return;
+                }
+                selectedAssessComment = lstAssessComment.get(i - 1);
+                if (selectedAssessComment == null) {
+                    return;
+                }
+                if (selectedAssessComment.getUser().getUserId() != -1) {
+                    etInput.requestFocus();
+                    etInput.setFocusableInTouchMode(true);
+                    Utils.showInputMethod(AssessInfoActivity.this, etInput);
+                    etInput.setHint("回复" + selectedAssessComment.getUser().getName() + ":");
+                }
+            }
+        });
+
+        this.imgCommentMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!isVoiceMode) {//语音模式 显示语音按钮 隐藏输入框
+                    btnRecord.setVisibility(View.VISIBLE);
+                    etInput.setVisibility(View.GONE);
+                    etInput.clearFocus();
+                    etInput.setFocusableInTouchMode(false);
+                    isVoiceMode = true;
+                } else {//文字模式 隐藏语音按钮，显示输入框
+                    btnRecord.setVisibility(View.GONE);
+                    etInput.setVisibility(View.VISIBLE);
+                    etInput.requestFocus();
+                    etInput.setFocusableInTouchMode(true);
+                    isVoiceMode = false;
+                }
+            }
+        });
+
+        this.imgMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        this.btnRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        this.btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utils.hideInputMethod(AssessInfoActivity.this, etInput);
+                PushCommentParam param = new PushCommentParam();
+                param.setUserId(MainApplication.userInfo.getUserId());
+                param.setAssessId(assess.getId());
+                param.setCommentType(CommentTypeEnum.Text.getVal());
+                param.setContent(etInput.getText().toString());
+                if (selectedAssessComment != null) {
+                    param.setReplyUserId(selectedAssessComment.getUser().getUserId());
+                }
+
+                AssessOperator.getInstance().pushComment(param, new ApiOperationCallback<ReturnInfo<String>>() {
+                    @Override
+                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                            Gson gson = new Gson();
+                            String json = gson.toJson(result);
+                            //TODO:刷新列表
+                            AssessComment assessComment = gson.fromJson(json, AssessComment.class);
+                            if (assessComment != null) {
+                                assessSupportAndComment.getAssessCommentList().add(assessComment);
+                                adapter.notifyDataSetChanged();
+                                btnSend.setVisibility(View.GONE);
+                                etInput.setText("");
+                                etInput.setHint("我来说两句");
+                            }
+                            Toast.makeText(AssessInfoActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+
+        this.etInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String content = etInput.getText().toString();
+                if (content.length() > 0) {
+                    imgMore.setVisibility(View.GONE);
+                    btnSend.setVisibility(View.VISIBLE);
+                } else {
+                    imgMore.setVisibility(View.VISIBLE);
+                    btnSend.setVisibility(View.GONE);
+                }
             }
         });
     }
@@ -223,7 +361,7 @@ public class AssessInfoActivity extends FragmentActivity {
             imageView.setMaxWidth(30);
             imageView.setMaxHeight(30);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            ImageLoaderUtils.getImageLoader(this).displayImage(assessSupportAndComment.getSupportUserList().get(i).getAvatar(), imageView, ImageLoaderUtils.getRoundDisplayOptions(R.dimen.user_portrait_height, R.drawable.default_user_dynamic));
+            ImageLoaderUtils.getImageLoader(this).displayImage(assessSupportAndComment.getSupportUserList().get(i).getAvatar(), imageView, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height), R.drawable.default_user_dynamic));
 
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
