@@ -5,14 +5,13 @@
     android:background="@color/bg_listview"
     android:padding="7.5dp">
 
-    <com.loopj.android.image.SmartImageView
+    <ImageView
         android:id="@+id/img_thumbnail"
         android:layout_width="100dp"
         android:layout_height="75dp"
         android:layout_centerVertical="true"
         android:src="@drawable/img_topline_default"
-        android:scaleType="centerCrop"
-        />
+        android:scaleType="centerCrop" />
 
     <RelativeLayout
         android:id="@+id/rl_title"

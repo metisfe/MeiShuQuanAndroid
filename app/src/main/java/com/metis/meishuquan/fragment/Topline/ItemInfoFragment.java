@@ -45,6 +45,7 @@ import com.metis.meishuquan.model.enums.PrivateTypeEnum;
 import com.metis.meishuquan.model.topline.ContentInfo;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
 import com.metis.meishuquan.model.topline.Urls;
+import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
@@ -73,7 +74,7 @@ public class ItemInfoFragment extends Fragment {
     private EditText editText;
     private RelativeLayout rlSend;
     private boolean isPrivate = false;
-    private List<SmartImageView> imageGroup = new ArrayList<>();
+    private List<ImageView> imageGroup = new ArrayList<ImageView>();
     private boolean windowAttached;
 
     private int newsId = 0;
@@ -173,8 +174,8 @@ public class ItemInfoFragment extends Fragment {
             ll_content = (LinearLayout) rootView.findViewById(R.id.id_ll_news_content);//内容父布局
         }
 
-        SmartImageView imageView = new SmartImageView(getActivity());
-        imageView.setImageUrl(url.trim());
+        ImageView imageView = new ImageView(getActivity());
+        ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(url.trim(), imageView, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.img_topline_default));
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width * 2, height * 2);

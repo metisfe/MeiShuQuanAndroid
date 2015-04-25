@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -39,6 +40,7 @@ import com.metis.meishuquan.model.assess.AssessSupportAndComment;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.AssessStateEnum;
 import com.metis.meishuquan.model.enums.QueryTypeEnum;
+import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.view.popup.ChoosePhotoPopupWindow;
 import com.metis.meishuquan.view.shared.DragListView;
 import com.metis.meishuquan.view.shared.TabBar;
@@ -365,7 +367,7 @@ public class AssessFragment extends Fragment {
         }
 
         private class ViewHolder {
-            SmartImageView portrait, img_content;
+            ImageView portrait, img_content;
             TextView userName, grade, createTime, content;
             TextView tvSupportCount, tvCommentCount, tvContentType, tvCommentState;
 
@@ -393,24 +395,22 @@ public class AssessFragment extends Fragment {
 
         @Override
         public View getView(final int i, View convertView, ViewGroup view) {
-            ViewGroup viewGroup = null;
-            Assess assess = null;
-            if (viewGroup == null) {
+            Assess assess = lstAssess.get(i);
+            if (convertView == null) {
                 holder = new ViewHolder();
-                assess = lstAssess.get(i);
-                viewGroup = (ViewGroup) LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_assess_list_item, null);
-                holder.portrait = (SmartImageView) viewGroup.findViewById(R.id.id_img_portrait);
-                holder.userName = (TextView) viewGroup.findViewById(R.id.id_username);
-                holder.grade = (TextView) viewGroup.findViewById(R.id.id_tv_grade);
-                holder.createTime = (TextView) viewGroup.findViewById(R.id.id_createtime);
-                holder.content = (TextView) viewGroup.findViewById(R.id.id_tv_content);
-                holder.img_content = (SmartImageView) viewGroup.findViewById(R.id.id_img_content);
-                holder.tvSupportCount = (TextView) viewGroup.findViewById(R.id.id_tv_support_count);
-                holder.tvCommentCount = (TextView) viewGroup.findViewById(R.id.id_tv_comment_count);
-                holder.tvContentType = (TextView) viewGroup.findViewById(R.id.id_tv_content_type);
-                viewGroup.setTag(holder);
+                convertView = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_assess_list_item, null);
+                holder.portrait = (ImageView) convertView.findViewById(R.id.id_img_portrait);
+                holder.userName = (TextView) convertView.findViewById(R.id.id_username);
+                holder.grade = (TextView) convertView.findViewById(R.id.id_tv_grade);
+                holder.createTime = (TextView) convertView.findViewById(R.id.id_createtime);
+                holder.content = (TextView) convertView.findViewById(R.id.id_tv_content);
+                holder.img_content = (ImageView) convertView.findViewById(R.id.id_img_content);
+                holder.tvSupportCount = (TextView) convertView.findViewById(R.id.id_tv_support_count);
+                holder.tvCommentCount = (TextView) convertView.findViewById(R.id.id_tv_comment_count);
+                holder.tvContentType = (TextView) convertView.findViewById(R.id.id_tv_content_type);
+                convertView.setTag(holder);
             } else {
-                holder = (ViewHolder) viewGroup.getTag();
+                holder = (ViewHolder) convertView.getTag();
             }
 
             //用户名
@@ -418,7 +418,7 @@ public class AssessFragment extends Fragment {
 
             //用户头像
             if (!assess.getUser().getAvatar().isEmpty()) {
-                holder.portrait.setImageUrl(assess.getUser().getAvatar());
+                ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(assess.getUser().getAvatar(), holder.portrait, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height), R.drawable.default_user_dynamic));
             }
 
             //年级
@@ -443,8 +443,7 @@ public class AssessFragment extends Fragment {
             //内容图片
             holder.img_content.setMinimumWidth(assess.getThumbnails().getWidth() * 2);
             holder.img_content.setMinimumHeight(assess.getThumbnails().getHeigth() * 2);
-            holder.img_content.setImageUrl(assess.getThumbnails().getUrl());
-
+            ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(assess.getThumbnails().getUrl(), holder.img_content, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.img_topline_default));
             //预览大图
             holder.img_content.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -460,7 +459,7 @@ public class AssessFragment extends Fragment {
             if (assess.getCommentCount() > 0) {
                 holder.tvCommentState.setText("已点评");
             }
-            return viewGroup;
+            return convertView;
         }
     }
 }

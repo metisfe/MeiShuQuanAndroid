@@ -10,7 +10,7 @@
         android:background="#F1F1F1"
         android:padding="10dp">
 
-        <com.loopj.android.image.SmartImageView
+        <ImageView
             android:id="@+id/id_img_portrait"
             android:layout_width="45dp"
             android:layout_height="45dp"
@@ -63,7 +63,7 @@
             android:text="本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情"
             android:textColor="#7e7e7e" />
 
-        <com.loopj.android.image.SmartImageView
+        <ImageView
             android:id="@+id/id_img_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

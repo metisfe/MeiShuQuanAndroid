@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.topline.News;
+import com.metis.meishuquan.util.ImageLoaderUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -74,7 +75,7 @@ public class ToplineCustomAdapter extends ToplineAdapter {
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.fragment_topline_topbar_list_item, null, false);
 
-            holder.img_thumbnail = (SmartImageView) convertView.findViewById(R.id.img_thumbnail);
+            holder.img_thumbnail = (ImageView) convertView.findViewById(R.id.img_thumbnail);
             holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
             holder.tv_source = (TextView) convertView.findViewById(R.id.tv_source);
             holder.tv_readCount = (TextView) convertView.findViewById(R.id.tv_readcount);
@@ -85,7 +86,7 @@ public class ToplineCustomAdapter extends ToplineAdapter {
         }
 
         News news = lstData.get(position);
-        holder.img_thumbnail.setImageUrl(news.getImgUrl().trim());
+        ImageLoaderUtils.getImageLoader(this.context).displayImage(news.getImgUrl().trim(), holder.img_thumbnail, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.img_topline_default));
         holder.tv_title.setText(news.getTitle());
         String source = news.getSource().getTitle().trim();
         holder.tv_source.setText(source);
@@ -96,7 +97,7 @@ public class ToplineCustomAdapter extends ToplineAdapter {
     }
 
     private static class ViewHolder {
-        SmartImageView img_thumbnail;
+        ImageView img_thumbnail;
         TextView tv_title, tv_source, tv_readCount, tv_comment_count;
     }
 }
