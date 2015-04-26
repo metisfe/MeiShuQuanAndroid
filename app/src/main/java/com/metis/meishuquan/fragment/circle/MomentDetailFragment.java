@@ -95,8 +95,7 @@ public class MomentDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_circle_moment_detail, null, false);
-        if (GlobalData.moment != null)
-        {
+        if (GlobalData.moment != null) {
             this.moment = GlobalData.moment;
         }
 
@@ -145,8 +144,7 @@ public class MomentDetailFragment extends Fragment {
         fm = getActivity().getSupportFragmentManager();
     }
 
-    private View getHeaderView(CCircleDetailModel moment)
-    {
+    private View getHeaderView(CCircleDetailModel moment) {
         View headerView = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_circle_moment_list_item, null);
 
         ((SmartImageView) headerView.findViewById(R.id.id_img_portrait)).setImageUrl(moment.user.avatar);
@@ -157,8 +155,7 @@ public class MomentDetailFragment extends Fragment {
         ((TextView) headerView.findViewById(R.id.tv_device)).setText(moment.getDeviceText());
         if (moment.images.size() > 0) {
             ((SmartImageView) headerView.findViewById(R.id.id_img_content)).setImageUrl(moment.images.get(0).thumbnails);
-        }
-        else{
+        } else {
             ((SmartImageView) headerView.findViewById(R.id.id_img_content)).setVisibility(View.GONE);
         }
 
@@ -183,9 +180,10 @@ public class MomentDetailFragment extends Fragment {
         this.rl_writeCommont.setOnClickListener(new View.OnClickListener() {//写评论
             @Override
             public void onClick(View view) {//写评论
-                SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
-                String loginState = spu.getStringByKey(SharedPreferencesUtil.LOGIN_STATE);
-
+                if (!MainApplication.isLogin()) {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    return;
+                }
                 MomentCommentFragment momentCommentFragment = new MomentCommentFragment();
 
                 FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -233,60 +231,16 @@ public class MomentDetailFragment extends Fragment {
         });
     }
 
-    /**
-     * 分享界面
-     */
-    public class PopupWindows extends PopupWindow {
-
-        public PopupWindows(Context mContext, View parent) {
-
-            View view = View.inflate(mContext, R.layout.choose_img_source_popupwindows, null);
-            view.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_ins));
-            LinearLayout ll_popup = (LinearLayout) view.findViewById(R.id.ll_popup);
-            ll_popup.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.push_bottom_in_2));
-
-            setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-            setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
-            setBackgroundDrawable(new BitmapDrawable());
-            setFocusable(true);
-            setOutsideTouchable(true);
-            setContentView(view);
-            showAtLocation(parent, Gravity.BOTTOM, 0, 0);
-            super.update();
-
-            Button btnCamera = (Button) view.findViewById(R.id.item_popupwindows_camera);
-            Button btnPhoto = (Button) view.findViewById(R.id.item_popupwindows_Photo);
-            Button btnCancel = (Button) view.findViewById(R.id.item_popupwindows_cancel);
-
-            btnCamera.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    dismiss();
-                }
-            });
-            btnPhoto.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    dismiss();
-                }
-            });
-            btnCancel.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    dismiss();
-                }
-            });
-        }
-    }
-
     public void getData(int type, final int lastId) {
         String url = String.format("v1.1/Circle/CircleTabList?type=%s&id=%s&lastId=%s&session=%s", type, moment.id, lastId, MainApplication.userInfo.getCookie());
 
         ApiDataProvider.getmClient().invokeApi(url, null,
-                HttpGet.METHOD_NAME, null,  CircleMomentDetail.class,
+                HttpGet.METHOD_NAME, null, CircleMomentDetail.class,
                 new ApiOperationCallback<CircleMomentDetail>() {
                     @Override
                     public void onCompleted(CircleMomentDetail result, Exception exception, ServiceFilterResponse response) {
 
-                        if (result == null || !result.isSuccess())
-                        {
+                        if (result == null || !result.isSuccess()) {
                             return;
                         }
 
@@ -334,8 +288,7 @@ public class MomentDetailFragment extends Fragment {
         @Override
         public View getView(final int i, View convertView, ViewGroup view) {
             ViewHolder viewHolder = new ViewHolder();
-            if (convertView == null)
-            {
+            if (convertView == null) {
                 convertView = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_circle_moment_detail_comment_list_item, null);
 
                 viewHolder.avatar = (SmartImageView) convertView.findViewById(R.id.comment_list_item_avatar);
@@ -346,9 +299,8 @@ public class MomentDetailFragment extends Fragment {
                 viewHolder.likeCount = (TextView) convertView.findViewById(R.id.comment_list_item_like_count);
 
                 convertView.setTag(viewHolder);
-            }
-            else{
-                viewHolder = (ViewHolder)convertView.getTag();
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
             }
 
             CCircleCommentModel comment = commentList.get(i);

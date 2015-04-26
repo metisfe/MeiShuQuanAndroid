@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#F1F1F1"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:padding="10dp">
 
     <com.loopj.android.image.SmartImageView
@@ -12,77 +12,80 @@
         android:layout_height="50dp"
         android:background="@drawable/ic_launcher" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:orientation="vertical">
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/comment_list_item_avatar"
+        android:gravity="center_vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="center_vertical">
+        <TextView
+            android:id="@+id/comment_list_item_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textColor="#424242"
+            android:textSize="16sp"
+            android:text="张三" />
+
+        <TextView
+            android:id="@+id/comment_list_item_grade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/comment_list_item_username"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/comment_list_item_username"
+            android:singleLine="true"
+            android:textColor="#7e7e7e"
+            android:textSize="12sp"
+            android:text="老师" />
+
+        <TextView
+            android:id="@+id/comment_list_item_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/comment_list_item_username"
+            android:layout_below="@+id/comment_list_item_username"
+            android:layout_marginTop="10dp"
+            android:singleLine="true"
+            android:text="45分钟前"
+            android:textColor="#7e7e7e"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:id="@+id/comment_list_item_like_container"
+            android:layout_alignParentRight="true">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="-5dp"
+                android:src="@drawable/icon_unsupport"></ImageView>
 
             <TextView
-                android:id="@+id/comment_list_item_username"
+                android:id="@+id/comment_list_item_like_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:textColor="#000"
-                android:text="张三" />
-
-            <TextView
-                android:id="@+id/comment_list_item_grade"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/comment_list_item_username"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/comment_list_item_username"
-                android:singleLine="true"
-                android:textColor="#000"
-                android:text="老师" />
-
-            <TextView
-                android:id="@+id/comment_list_item_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@id/comment_list_item_username"
-                android:layout_below="@+id/comment_list_item_username"
-                android:layout_marginTop="10dp"
-                android:singleLine="true"
-                android:text="45分钟前"
+                android:layout_gravity="center_vertical"
+                android:text="15"
                 android:textColor="#909090" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/comment_list_item_like_container"
-                android:layout_alignParentRight="true">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/circle_moment_detail_like"></ImageView>
-
-                <TextView
-                    android:id="@+id/comment_list_item_like_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="15"
-                    android:textColor="#909090" />
-            </LinearLayout>
-
-
-        </RelativeLayout>
+        </LinearLayout>
 
         <com.metis.meishuquan.view.circle.moment.comment.EmotionTextView
             android:id="@+id/comment_list_item_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/comment_list_item_time"
             android:layout_marginTop="10dp"
-
             android:maxLines="10"
+            android:textSize="16sp"
             android:text="本人热情、开朗、有责任感、有进取心、团队合作能力强、学习能力强"
-            android:textColor="#909090" />
-    </LinearLayout>
-</LinearLayout>
+            android:textColor="#424242" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

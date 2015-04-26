@@ -41,7 +41,7 @@ import java.util.List;
 public class MomentsFragment extends CircleBaseFragment {
     @Override
     public void timeToSetTitleBar() {
-        getTitleBar().setText("首页");
+        getTitleBar().setText("个人主页");
         getTitleBar().setRightButton("", 0, null);
     }
 
@@ -67,7 +67,7 @@ public class MomentsFragment extends CircleBaseFragment {
         this.listView.setOnLoadListener(new DragListView.OnLoadListener() {
             @Override
             public void onLoad() {
-                int momentLastId = list != null && list.size() > 0 ? list.get(list.size() -1).id : 0;
+                int momentLastId = list != null && list.size() > 0 ? list.get(list.size() - 1).id : 0;
                 getData(0, momentLastId, DragListView.LOAD);
             }
         });
@@ -109,13 +109,12 @@ public class MomentsFragment extends CircleBaseFragment {
         String url = String.format("v1.1/Circle/CircleList?groupId=%s&lastId=%s&session=%s", groupId, lastId, MainApplication.userInfo.getCookie());
 
         ApiDataProvider.getmClient().invokeApi(url, null,
-                HttpGet.METHOD_NAME, null,  CircleMoments.class,
+                HttpGet.METHOD_NAME, null, CircleMoments.class,
                 new ApiOperationCallback<CircleMoments>() {
                     @Override
                     public void onCompleted(CircleMoments result, Exception exception, ServiceFilterResponse response) {
 
-                        if (!result.isSuccess())
-                        {
+                        if (!result.isSuccess()) {
                             switch (mode) {
                                 case DragListView.REFRESH:
                                     listView.onRefreshComplete();
@@ -131,10 +130,8 @@ public class MomentsFragment extends CircleBaseFragment {
                         }
 
                         List<CCircleDetailModel> result_list = result.data;
-                        for (int i = result_list.size() -1 ;i >=0; i--)
-                        {
-                            if (!result_list.get(i).isValid())
-                            {
+                        for (int i = result_list.size() - 1; i >= 0; i--) {
+                            if (!result_list.get(i).isValid()) {
                                 result_list.remove(i);
                             }
                         }

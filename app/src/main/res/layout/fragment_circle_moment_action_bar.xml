@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/circle_moment_action_bar_height"
+    android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:background="#F1F1F1"
+    android:padding="10dp"
+    android:background="#f1f1f1"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -13,18 +14,21 @@
         android:orientation="horizontal"
         android:gravity="center"
         android:layout_height="wrap_content">
+
         <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:gravity="center"
             android:src="@drawable/circle_moment_detail_share" />
+
         <TextView
             android:id="@+id/tv_repost_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="5"
+            android:textSize="14sp"
             android:gravity="center"
-            android:textColor="#ccc" />
+            android:textColor="#7e7e7e" />
     </LinearLayout>
 
     <LinearLayout
@@ -34,18 +38,21 @@
         android:orientation="horizontal"
         android:gravity="center"
         android:layout_height="wrap_content">
+
         <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:gravity="center"
             android:src="@drawable/ic_action_topline_comment_count" />
+
         <TextView
             android:id="@+id/tv_comment_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="12"
+            android:textSize="14sp"
             android:gravity="center"
-            android:textColor="#ccc" />
+            android:textColor="#7e7e7e" />
     </LinearLayout>
 
     <LinearLayout
@@ -55,18 +62,22 @@
         android:orientation="horizontal"
         android:gravity="center"
         android:layout_height="wrap_content">
+
         <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:gravity="center"
-            android:src="@drawable/circle_moment_detail_like" />
+            android:src="@drawable/icon_unsupport" />
+
         <TextView
             android:id="@+id/tv_like_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2.5dp"
             android:text="6"
+            android:textSize="14sp"
             android:gravity="center"
-            android:textColor="#ccc" />
+            android:textColor="#7e7e7e" />
     </LinearLayout>
 
 </LinearLayout>

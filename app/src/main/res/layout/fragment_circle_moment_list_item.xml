@@ -2,19 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
     android:background="#F1F1F1"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp">
+        android:padding="10dp">
 
         <com.loopj.android.image.SmartImageView
             android:id="@+id/id_img_portrait"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/ic_launcher" />
+            android:background="@drawable/default_user_dynamic" />
 
         <TextView
             android:id="@+id/id_username"
@@ -24,6 +25,8 @@
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/id_img_portrait"
             android:singleLine="true"
+            android:textSize="17sp"
+            android:textColor="#424242"
             android:text="张三" />
 
         <TextView
@@ -34,7 +37,18 @@
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/id_username"
             android:singleLine="true"
+            android:textSize="12sp"
+            android:textColor="#7e7e7e"
             android:text="高三" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="阅读(100)"
+            android:textSize="12sp"
+            android:textColor="#424242"
+            android:layout_alignTop="@+id/id_username"
+            android:layout_alignParentRight="true" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -42,15 +56,16 @@
             android:orientation="horizontal"
             android:layout_alignLeft="@+id/id_username"
             android:layout_below="@+id/id_username"
-            android:layout_marginTop="10dp"
-            >
+            android:layout_marginTop="10dp">
+
             <TextView
                 android:id="@+id/id_createtime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:text="45分钟前"
-                android:textColor="#909090" />
+                android:textSize="12sp"
+                android:textColor="#7e7e7e" />
 
             <TextView
                 android:id="@+id/tv_device"
@@ -60,7 +75,8 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="来自"
-                android:textColor="#909090" />
+                android:textSize="12sp"
+                android:textColor="#7e7e7e" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -68,13 +84,12 @@
         android:id="@+id/id_tv_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textSize="15sp"
         android:maxLines="10"
         android:text="本人热情、开朗、有责任感、有进取心、团队合作能力强、学习能力强"
-        android:textColor="#909090" />
+        android:textColor="#7e7e7e" />
 
     <com.loopj.android.image.SmartImageView
         android:id="@+id/id_img_content"
