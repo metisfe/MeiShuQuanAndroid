@@ -73,7 +73,7 @@ public class CoursePicListFragment extends Fragment {
     }
 
     private void initData() {
-        //CourseOperator.getInstance().getCourseImgList(tag, courseType, 0, index);
+        CourseOperator.getInstance().getCourseImgList(tag, courseType, 0, index);
 
         int j = 0;
         for (int i = 0; i < urls.length; i++) {

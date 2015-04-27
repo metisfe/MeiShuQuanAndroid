@@ -61,13 +61,13 @@ public class StudioFragment extends Fragment{
         mHeaderView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_studio_list_header, null);
         setAdapter(mAdapter);
 
-        mRadioGroup = (RadioGroup)view.findViewById(R.id.studio_list_header_tab_container);
-        mBtn1 = (RadioButton)view.findViewById(R.id.studio_list_header_tab1);
-        mBtn2 = (RadioButton)view.findViewById(R.id.studio_list_header_tab2);
-        mBtn3 = (RadioButton)view.findViewById(R.id.studio_list_header_tab3);
-        setTabTitle(mTitle1, mTitle2, mTitle3);
-        setOnCheckedChangeListener(mCheckChangeListener);
-        mRadioGroup.check(R.id.studio_list_header_tab1);
+//        mRadioGroup = (RadioGroup)view.findViewById(R.id.studio_list_header_tab_container);
+//        mBtn1 = (RadioButton)view.findViewById(R.id.studio_list_header_tab1);
+//        mBtn2 = (RadioButton)view.findViewById(R.id.studio_list_header_tab2);
+//        mBtn3 = (RadioButton)view.findViewById(R.id.studio_list_header_tab3);
+//        setTabTitle(mTitle1, mTitle2, mTitle3);
+//        setOnCheckedChangeListener(mCheckChangeListener);
+//        mRadioGroup.check(R.id.studio_list_header_tab1);
         //fillHeader();
         fillHeader(null);
     }

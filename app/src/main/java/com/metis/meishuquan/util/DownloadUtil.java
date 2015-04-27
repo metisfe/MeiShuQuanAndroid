@@ -3,8 +3,10 @@ package com.metis.meishuquan.util;
 import android.os.Environment;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -16,7 +18,7 @@ public class DownloadUtil {
     private URL url = null;
     private InputStream inputStream = null;
     public static final String downloadPath = Environment.getExternalStorageDirectory()
-            + "/msq_download/";
+            + "/";
 
     /**
      * 该函数返回整型     -1：代表下载文件出错     0：代表下载文件成功    1：代表文件已经存在
@@ -34,18 +36,42 @@ public class DownloadUtil {
             if (fileUtil.isFileExist(path + fileName)) {
                 return 1;
             } else {
-                inputStream = getInputStreamFromURL(urlStr);
-                File resultFile = fileUtil.writeToSDFromInput(path, fileName, inputStream);
-                if (resultFile == null) {
-                    return -1;
+                URL url = new URL(urlStr);
+                HttpURLConnection conection = (HttpURLConnection) url
+                        .openConnection();
+                InputStream input = conection.getInputStream();
+                File file = null;
+                OutputStream outputstream = null;
+                File sdDir = new File(downloadPath + path);
+                sdDir.mkdir();
+                file = new File(downloadPath + path + fileName);
+                file.createNewFile();
+
+                outputstream = new FileOutputStream(file);
+                byte data[] = new byte[1024 * 4];
+                while (true) {
+                    int temp = input.read(data);
+                    if (temp == -1) {
+                        break;
+                    }
+                    outputstream.write(data, 0, temp);
                 }
+                outputstream.flush();
+                outputstream.close();
+                input.close();
+
+//                inputStream = getInputStreamFromURL(urlStr);
+//                File resultFile = fileUtil.writeToSDFromInput(path, fileName, inputStream);
+//                if (resultFile == null) {
+//                    return -1;
+//                }
             }
         } catch (Exception e) {
             e.printStackTrace();
             return -1;
         } finally {
             try {
-                inputStream.close();
+                //inputStream.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }

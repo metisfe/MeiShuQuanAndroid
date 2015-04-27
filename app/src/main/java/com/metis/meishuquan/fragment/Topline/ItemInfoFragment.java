@@ -407,7 +407,7 @@ public class ItemInfoFragment extends Fragment {
 
     //为控件绑定数据
     private void bindData() {
-        if (newsInfo != null) {
+        if (newsInfo != null && newsInfo.getData() != null) {
             this.tv_title.setText(newsInfo.getData().getTitle());
             this.tv_createtime.setText(newsInfo.getData().getModifyTime());
             String sourse = newsInfo.getData().getSource().getTitle().trim();

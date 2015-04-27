@@ -71,16 +71,16 @@ public class StudioActivity extends BaseActivity implements
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        switch (checkedId) {
-            case R.id.studio_list_header_tab1:
-                mStudioFragment.setAdapter(new NewAdapter());
-                break;
-            case R.id.studio_list_header_tab2:
-                mStudioFragment.setAdapter(new MyAdapter());
-                break;
-            case R.id.studio_list_header_tab3:
-                break;
-        }
+//        switch (checkedId) {
+//            case R.id.studio_list_header_tab1:
+//                mStudioFragment.setAdapter(new NewAdapter());
+//                break;
+//            case R.id.studio_list_header_tab2:
+//                mStudioFragment.setAdapter(new MyAdapter());
+//                break;
+//            case R.id.studio_list_header_tab3:
+//                break;
+//        }
     }
 
     class MyAdapter extends BaseAdapter {

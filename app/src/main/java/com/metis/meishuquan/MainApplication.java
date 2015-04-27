@@ -135,4 +135,8 @@ public class MainApplication extends Application {
         }
         return true;
     }
+
+    public static String getSession() {
+        return userInfo.getCookie();
+    }
 }

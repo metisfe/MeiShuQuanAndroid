@@ -113,7 +113,9 @@ public class ChooseCourseActivity extends FragmentActivity {
         CourseAdapter(Context context, List<CourseChannel> mData, List<CourseChannelItem> mOldCheckedItems) {
             this.mContext = context;
             this.mData = mData;
-            this.mOldCheckedItems = mOldCheckedItems;
+            if (mOldCheckedItems != null) {
+                this.mOldCheckedItems = mOldCheckedItems;
+            }
         }
 
         public List<CourseChannelItem> getSelectedChannels() {

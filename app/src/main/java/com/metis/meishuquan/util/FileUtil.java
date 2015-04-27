@@ -23,7 +23,7 @@ public class FileUtil {
     //构造方法
     public FileUtil() {
         //得到当前外部存储设备的目录      /SDCARD/...
-        SDPATH = Environment.getExternalStorageDirectory() + "/msq_download/";
+        SDPATH = Environment.getExternalStorageDirectory() + "/";
     }
 
     /**

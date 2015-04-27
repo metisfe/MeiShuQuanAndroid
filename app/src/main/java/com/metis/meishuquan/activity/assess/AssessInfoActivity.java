@@ -288,7 +288,6 @@ public class AssessInfoActivity extends FragmentActivity {
                         //停止录音
                         recorderManager.stop();
                         //上传录音
-                        Log.e("voicePath", voicePath + "&&&&&&");
                         byte[] data = FileUtil.getBytesFromFile(voicePath);
 
                         String define = data.length + "," + 1 + "," + data.length;
@@ -306,6 +305,7 @@ public class AssessInfoActivity extends FragmentActivity {
                                         JSONArray array = object.getJSONArray("data");
                                         JSONObject object1 = (JSONObject) array.get(0);
                                         String voiceUrl = object1.getString("voiceUrl");//获取数组第一个元素的voiceUrl
+                                        Log.i("voiceUrl", voiceUrl);
 
                                         PushCommentParam param = new PushCommentParam();
                                         param.setUserId(MainApplication.userInfo.getUserId());
@@ -324,17 +324,18 @@ public class AssessInfoActivity extends FragmentActivity {
                                                     Gson gson = new Gson();
                                                     String json = gson.toJson(result);
                                                     refreshList(json);
+                                                } else if (result != null && !result.getErrorCode().equals(String.valueOf(4))) {
+                                                    Toast.makeText(AssessInfoActivity.this, "请重新登录", Toast.LENGTH_SHORT).show();
+                                                    startActivity(new Intent(AssessInfoActivity.this, LoginActivity.class));
                                                 }
                                             }
                                         });
-
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
                                 }
                             }
                         });
-
                         break;
                 }
                 return false;

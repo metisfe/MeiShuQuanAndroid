@@ -89,6 +89,7 @@ public class AssessOperator {
                 PATH.append("&queryType=" + queryType.getVal());
                 PATH.append("&region=" + region);
                 PATH.append("&session=" + SESSION);
+                Log.i("assesslisturl", PATH.toString());
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }

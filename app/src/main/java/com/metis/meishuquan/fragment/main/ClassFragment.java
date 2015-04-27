@@ -63,6 +63,8 @@ public class ClassFragment extends Fragment {
             Gson gson = new Gson();
             String json = gson.toJson(items);
             SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(SharedPreferencesUtil.CHECKED_CHANNEL_ITEMS + MainApplication.userInfo.getUserId(), json);
+        } else {
+
         }
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -80,6 +82,8 @@ public class ClassFragment extends Fragment {
 
     private void updateListView(List<CourseChannelItem> lstCheckedCourseChannelItems) {
         if (lstCheckedCourseChannelItems == null || lstCheckedCourseChannelItems.size() == 0) {
+            courseChannelBarText = "全部";
+            this.tvCourseChannelBar.setText(courseChannelBarText);
             return;
         }
         StringBuilder sb = new StringBuilder();
