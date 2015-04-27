@@ -16,4 +16,8 @@ public class StudioAlbumActivity extends BaseActivity {
         setContentView(R.layout.activity_studio_album);
     }
 
+    @Override
+    public String getTitleCenter() {
+        return getString(R.string.studio_album);
+    }
 }

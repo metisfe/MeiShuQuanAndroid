@@ -108,4 +108,21 @@
     <string name="name_card_scan">扫描</string>
 
     <string name="studio_send_msg">私信</string>
+    <string name="studio_introduce">画室简介</string>
+    <string name="studio_album">画室相册</string>
+    <string name="studio_team">名师团队</string>
+    <string name="studio_course_arrangement">课程设置</string>
+    <string name="studio_video">视频教学</string>
+    <string name="studio_charge">收费标准</string>
+    <string name="studio_book_publish">书籍出版</string>
+    <string name="studio_contact_us">联系我们</string>
+    
+    <string name="studio_tab_top_line">画室头条</string>
+    <string name="studio_tab_glory">辉煌成绩</string>
+    <string name="studio_tab_works">画室作品</string>
+
+    <string name="studio_empty_data_set">暂无数据</string>
+
+    <string name="my_course_comment_count">评论(%1$d)</string>
+    <string name="my_course_read_count">阅读(%1$d)</string>
 </resources>

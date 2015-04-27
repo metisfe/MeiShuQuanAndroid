@@ -13,4 +13,8 @@ public class BookListActivity extends BaseActivity {
         setContentView(R.layout.activity_book_list);
     }
 
+    @Override
+    public String getTitleCenter() {
+        return getString(R.string.studio_book_publish);
+    }
 }

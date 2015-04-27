@@ -21,6 +21,15 @@ public class Item implements Serializable {
     @SerializedName("type")
     private int type;
 
+    @SerializedName("source")
+    private String source;
+
+    @SerializedName("pageViewCount")
+    private int pageViewCount;
+
+    @SerializedName("commentCount")
+    private int commentCount;
+
     public int getId() {
         return id;
     }
@@ -53,17 +62,27 @@ public class Item implements Serializable {
         this.type = type;
     }
 
-    public int getReadCount () {
-        //TODO
-        return 0;
+    public String getSource() {
+        return source;
     }
 
-    public int getCommentCount () {
-        //TODO
-        return 0;
+    public void setSource(String source) {
+        this.source = source;
     }
 
-    public String getSource () {
-        return "unknown";
+    public int getPageViewCount() {
+        return pageViewCount;
+    }
+
+    public void setPageViewCount(int pageViewCount) {
+        this.pageViewCount = pageViewCount;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
     }
 }

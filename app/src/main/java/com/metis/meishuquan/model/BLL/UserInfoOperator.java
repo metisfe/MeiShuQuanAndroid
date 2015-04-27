@@ -10,7 +10,6 @@ import android.widget.Toast;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.lidroid.xutils.util.IOUtils;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.commons.Comment;
 import com.metis.meishuquan.model.commons.Item;
@@ -28,13 +27,9 @@ import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
 
-import org.apache.http.Header;
-import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.json.JSONObject;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -208,13 +203,20 @@ public class UserInfoOperator {
         }
     }
 
+    /*0:news 1:comment 2：点评 3：点评评论  4：课程  5：课程评论 6:圈子*/
+
     public void getFavoriteList (String uid, final int index, final OnGetListener<List<Item>> listener) {
+        getFavoriteList(uid, index, 0, listener);
+    }
+
+    public void getCourseList (String uid, final int index, final OnGetListener<List<Item>> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_FAVORITE);
             sb.append(KEY_USER_ID + "=" + uid);
             sb.append("&" + KEY_INDEX + "=" + index);
+            sb.append("&sourcetype" + "=" + 4);
             sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
-            Log.v(TAG, "before request " + sb);
+            Log.v(TAG, "getFavoriteList request " + sb);
             ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
 
                 @Override
@@ -223,6 +225,88 @@ public class UserInfoOperator {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
                         Log.v(TAG, index + " getFavoriteList json=" + json);
+                        Result<List<Item>> resultData = gson.fromJson(json, new TypeToken<Result<List<Item>>>() {
+                        }.getType());
+                        if (resultData != null) {
+                            List<Item> list = resultData.getData();
+                            if (listener != null) {
+                                listener.onGet(true, list);
+                            }
+
+                        } else {
+                            if (listener != null) {
+                                listener.onGet(false, null);
+                            }
+
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onGet(false, null);
+                        }
+
+                    }
+                }
+            });
+        }
+    }
+
+    public void getFavoriteList (String uid, final int index, int type, final OnGetListener<List<Item>> listener) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            StringBuilder sb = new StringBuilder(URL_FAVORITE);
+            sb.append(KEY_USER_ID + "=" + uid);
+            sb.append("&" + KEY_INDEX + "=" + index);
+            sb.append("&sourcetype" + "=" + type);
+            sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+            Log.v(TAG, "getFavoriteList request " + sb);
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String json = gson.toJson(result);
+                        Log.v(TAG, index + " getFavoriteList json=" + json);
+                        Result<List<Item>> resultData = gson.fromJson(json, new TypeToken<Result<List<Item>>>() {
+                        }.getType());
+                        if (resultData != null) {
+                            List<Item> list = resultData.getData();
+                            if (listener != null) {
+                                listener.onGet(true, list);
+                            }
+
+                        } else {
+                            if (listener != null) {
+                                listener.onGet(false, null);
+                            }
+
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onGet(false, null);
+                        }
+
+                    }
+                }
+            });
+        }
+    }
+
+    public void getCommentsList (String uid, final int index, final OnGetListener<List<Item>> listener) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            StringBuilder sb = new StringBuilder(URL_FAVORITE);
+            sb.append(KEY_USER_ID + "=" + uid);
+            sb.append("&" + KEY_INDEX + "=" + index);
+            sb.append("&sourcetype" + "=" + 1);
+            sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+            Log.v(TAG, "getCommentsList request " + sb);
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String json = gson.toJson(result);
+                        Log.v(TAG, index + " getCommentsList json=" + json);
                         Result<List<Item>> resultData = gson.fromJson(json, new TypeToken<Result<List<Item>>>() {
                         }.getType());
                         if (resultData != null) {

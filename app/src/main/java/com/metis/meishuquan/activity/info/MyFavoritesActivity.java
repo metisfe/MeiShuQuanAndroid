@@ -1,20 +1,18 @@
 package com.metis.meishuquan.activity.info;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
 
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.adapter.commons.DataListAdapter;
+import com.metis.meishuquan.fragment.Topline.ItemInfoFragment;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.Item;
 
 import java.util.List;
 
-public class MyFavoritesActivity extends DataListActivity {
+public class MyFavoritesActivity extends DataListActivity implements DataListAdapter.OnItemClickListener{
 
     private static final String TAG = MyFavoritesActivity.class.getSimpleName();
 
@@ -29,13 +27,14 @@ public class MyFavoritesActivity extends DataListActivity {
 
     @Override
     public void loadData(final int index) {
-        UserInfoOperator.getInstance().getFavoriteList("100001", index, new UserInfoOperator.OnGetListener<List<Item>>() {
+        UserInfoOperator.getInstance().getFavoriteList(MainApplication.userInfo.getUserId() + "", index, new UserInfoOperator.OnGetListener<List<Item>>() {
             @Override
             public void onGet(boolean succeed, List<Item> items) {
                 if (succeed) {
                     if (mAdapter == null) {
                         mDataList = items;
                         mAdapter = new DataListAdapter(MyFavoritesActivity.this, mDataList);
+                        mAdapter.setOnItemClickListener(MyFavoritesActivity.this);
                         setAdapter(mAdapter);
                     } else {
                         if (index == 1) {
@@ -51,9 +50,8 @@ public class MyFavoritesActivity extends DataListActivity {
                 }
                 if (index == 1) {
                     onRefreshComplete();
-                } else {
-                    onLoadMoreComplete();
                 }
+                onLoadMoreComplete();
             }
         });
     }
@@ -68,5 +66,14 @@ public class MyFavoritesActivity extends DataListActivity {
     public void onRefresh() {
         mIndex = 1;
         loadData(mIndex);
+    }
+
+    @Override
+    public void onItemClick(View view, int position, Item item) {
+        ItemInfoFragment fragment = new ItemInfoFragment();
+        Bundle args = new Bundle();
+        args.putInt("newsId", item.getId());
+        fragment.setArguments(args);
+        addFragment(fragment);
     }
 }

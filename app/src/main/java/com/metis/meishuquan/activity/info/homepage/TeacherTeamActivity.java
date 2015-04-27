@@ -16,4 +16,8 @@ public class TeacherTeamActivity extends BaseActivity {
         setContentView(R.layout.activity_teacher_team);
     }
 
+    @Override
+    public String getTitleCenter() {
+        return getString(R.string.studio_team);
+    }
 }

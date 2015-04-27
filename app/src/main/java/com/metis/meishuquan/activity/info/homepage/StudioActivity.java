@@ -1,15 +1,26 @@
 package com.metis.meishuquan.activity.info.homepage;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.BaseActivity;
+import com.metis.meishuquan.activity.info.TextActivity;
+import com.metis.meishuquan.fragment.commons.StudioFragment;
 
-public class StudioActivity extends BaseActivity {
+public class StudioActivity extends BaseActivity implements
+        StudioFragment.OnMenuItemClickListener,
+        RadioGroup.OnCheckedChangeListener{
 
     private View mTitleView = null;
+
+    private StudioFragment mStudioFragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +30,118 @@ public class StudioActivity extends BaseActivity {
         mTitleView = LayoutInflater.from(this).inflate(R.layout.layout_studio_title, null);
         getTitleView().setCenterView(mTitleView);
 
+        mStudioFragment = (StudioFragment)getSupportFragmentManager().findFragmentById(R.id.studio_fragment);
+        mStudioFragment.setOnMenuItemClickListener(this);
+        mStudioFragment.setTabTitle(
+                R.string.studio_tab_top_line,
+                R.string.studio_tab_glory,
+                R.string.studio_tab_works);
+        mStudioFragment.setOnCheckedChangeListener(this);
     }
 
+    @Override
+    public void onMenuItemClick(StudioFragment.MenuItem item, int position) {
+        switch (item.id) {
+            case R.id.studio_menu_introduce:
+                break;
+            case R.id.studio_menu_album:
+                startActivity(new Intent(this, StudioAlbumActivity.class));
+                break;
+            case R.id.studio_menu_team:
+                startActivity(new Intent(this, TeacherTeamActivity.class));
+                break;
+            case R.id.studio_menu_course_arrangement:
+                startActivity(new Intent(this, CourseArrangementActivity.class));
+                break;
+            case R.id.studio_menu_video:
+                startActivity(new Intent(this, VideoListActivity.class));
+                break;
+            case R.id.studio_menu_charge:
+                startActivity(new Intent(this, ChargeActivity.class));
+                break;
+            case R.id.studio_menu_book_publish:
+                startActivity(new Intent(this, BookListActivity.class));
+                break;
+            case R.id.studio_menu_contact_us:
+                //TODO
+                startActivity(new Intent(this, TextActivity.class));
+                break;
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        switch (checkedId) {
+            case R.id.studio_list_header_tab1:
+                mStudioFragment.setAdapter(new NewAdapter());
+                break;
+            case R.id.studio_list_header_tab2:
+                mStudioFragment.setAdapter(new MyAdapter());
+                break;
+            case R.id.studio_list_header_tab3:
+                break;
+        }
+    }
+
+    class MyAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return 200;
+        }
+
+        @Override
+        public String getItem(int position) {
+            return position + "";
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            TextView tv = new TextView(StudioActivity.this);
+            tv.setText(getItem(position));
+            tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+            return tv;
+        }
+    }
+
+    class NewAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return 200;
+        }
+
+        @Override
+        public String getItem(int position) {
+            return position + " new";
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            TextView tv = new TextView(StudioActivity.this);
+            tv.setText(getItem(position));
+            tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+            return tv;
+        }
+    }
 }

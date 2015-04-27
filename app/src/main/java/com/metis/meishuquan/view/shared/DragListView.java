@@ -181,6 +181,9 @@ public class DragListView extends ListView implements AbsListView.OnScrollListen
     // 用于加载更多结束后的回调
     public void onLoadComplete() {
         isLoading = false;
+        if (footer != null) {
+            footer.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -207,6 +210,7 @@ public class DragListView extends ListView implements AbsListView.OnScrollListen
                     .getPositionForView(footer) && !isLoadFull) {
                 onLoad();
                 isLoading = true;
+                footer.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
         }

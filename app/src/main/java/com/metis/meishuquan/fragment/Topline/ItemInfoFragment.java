@@ -19,6 +19,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -79,6 +81,15 @@ public class ItemInfoFragment extends Fragment {
 
     private int newsId = 0;
     private FragmentManager fm;
+
+    @Override
+    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        int animId = R.anim.right_out;
+        if (enter) {
+            animId = R.anim.right_in;
+        }
+        return AnimationUtils.loadAnimation(getActivity(), animId);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

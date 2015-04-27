@@ -1,10 +1,6 @@
 package com.metis.meishuquan.activity.info;
 
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -36,7 +32,7 @@ public class MyCommentsActivity extends DataListActivity {
 
     @Override
     public void loadData(int index) {
-        UserInfoOperator.getInstance().getQuestionList(MainApplication.userInfo.getUserId(), index, 0, new UserInfoOperator.OnGetListener<List<Comment>>() {
+        /*UserInfoOperator.getInstance().getQuestionList(MainApplication.userInfo.getUserId(), index, 0, new UserInfoOperator.OnGetListener<List<Comment>>() {
             @Override
             public void onGet(boolean succeed, List<Comment> data) {
                 if (succeed) {
@@ -46,6 +42,13 @@ public class MyCommentsActivity extends DataListActivity {
                 } else {
                     Toast.makeText(MyCommentsActivity.this, R.string.common_load_faild, Toast.LENGTH_SHORT).show();
                 }
+            }
+        });*/
+        UserInfoOperator.getInstance().getCommentsList(MainApplication.userInfo.getUserId() + "", index, new UserInfoOperator.OnGetListener(){
+
+            @Override
+            public void onGet(boolean succeed, Object o) {
+
             }
         });
     }

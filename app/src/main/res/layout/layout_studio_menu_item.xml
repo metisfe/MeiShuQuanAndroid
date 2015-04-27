@@ -3,21 +3,26 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     >
-    <ImageView
-        android:id="@+id/menu_item_icon"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@android:color/holo_orange_light"
-        />
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:singleLine="true"
-        android:layout_below="@+id/menu_item_icon"
-        android:textColor="#424242"
-        android:textSize="13sp"
-        android:gravity="center"
-        android:text="内容部分"
-        android:layout_marginTop="5dp"
-        />
+    <RelativeLayout
+        style="@style/studio_menu_item_style"
+        >
+        <ImageView
+            android:id="@+id/menu_item_icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            />
+        <TextView
+            android:id="@+id/menu_item_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:layout_below="@+id/menu_item_icon"
+            android:textColor="#424242"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:text="内容部分"
+            android:layout_marginTop="5dp"
+            />
+    </RelativeLayout>
+
 </RelativeLayout>

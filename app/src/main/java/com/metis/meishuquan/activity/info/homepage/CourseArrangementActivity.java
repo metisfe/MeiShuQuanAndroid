@@ -1,9 +1,6 @@
 package com.metis.meishuquan.activity.info.homepage;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.BaseActivity;
@@ -16,4 +13,8 @@ public class CourseArrangementActivity extends BaseActivity {
         setContentView(R.layout.activity_course_arrangement);
     }
 
+    @Override
+    public String getTitleCenter() {
+        return getString(R.string.studio_course_arrangement);
+    }
 }

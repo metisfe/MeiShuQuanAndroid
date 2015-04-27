@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="studio_menu_introduce" type="id"/>
+    <item name="studio_menu_album" type="id"/>
+    <item name="studio_menu_team" type="id"/>
+    <item name="studio_menu_course_arrangement" type="id"/>
+    <item name="studio_menu_video" type="id"/>
+    <item name="studio_menu_charge" type="id"/>
+    <item name="studio_menu_book_publish" type="id"/>
+    <item name="studio_menu_contact_us" type="id"/>
+</resources>

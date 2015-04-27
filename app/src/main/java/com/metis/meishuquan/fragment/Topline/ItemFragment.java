@@ -130,7 +130,7 @@ public class ItemFragment extends Fragment implements AdapterView.OnItemClickLis
 
             FragmentManager fm = getActivity().getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
-            ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+            //ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
             ft.add(R.id.content_container, itemInfoFragment);
             ft.addToBackStack(null);
             ft.commit();

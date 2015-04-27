@@ -2,8 +2,10 @@ package com.metis.meishuquan.activity.info;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,6 +88,22 @@ public class BaseActivity extends FragmentActivity {
 
     public TitleView getTitleView () {
         return mTitleView;
+    }
+
+    public void addFragment (Fragment fragment) {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction ft = manager.beginTransaction();
+        ft.add(R.id.base_view_container, fragment);
+        ft.addToBackStack(null);
+        ft.commit();
+    }
+
+    public void removeFragment (Fragment fragment) {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction ft = manager.beginTransaction();
+        ft.remove(fragment);
+        manager.popBackStack();
+        ft.commit();
     }
 
     @Override
