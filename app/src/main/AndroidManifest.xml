@@ -25,7 +25,7 @@
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
-        android:icon="@drawable/icon"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/StyledIndicators">
         <activity
@@ -295,7 +295,7 @@
             android:name=".activity.info.QrScanActivity"
             android:label="@string/title_activity_qr_scan"
             android:screenOrientation="portrait"
-            android:theme="@style/QrScanTheme"/>
+            android:theme="@style/QrScanTheme" />
         <activity
             android:name=".activity.topline.NewsInfoActity"
             android:label="@string/title_activity_news_info_actity"

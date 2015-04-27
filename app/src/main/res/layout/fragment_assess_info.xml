@@ -40,7 +40,7 @@
             android:id="@+id/id_img_portrait"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/icon" />
+            android:background="@drawable/ic_launcher" />
 
         <TextView
             android:id="@+id/id_username"
@@ -94,7 +94,7 @@
             android:layout_height="150dp"
             android:layout_below="@+id/id_tv_content"
             android:layout_marginTop="10dp"
-            android:src="@drawable/icon" />
+            android:src="@drawable/ic_launcher" />
 
         <TextView
             android:id="@+id/id_tv_comment_count"

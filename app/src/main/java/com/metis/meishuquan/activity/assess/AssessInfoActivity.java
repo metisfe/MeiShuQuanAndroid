@@ -4,12 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -32,6 +36,8 @@ import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.login.LoginActivity;
+import com.metis.meishuquan.fragment.main.AssessFragment;
+import com.metis.meishuquan.manager.common.RecorderManager;
 import com.metis.meishuquan.model.BLL.AssessOperator;
 import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.assess.Assess;
@@ -41,7 +47,9 @@ import com.metis.meishuquan.model.assess.PushCommentParam;
 import com.metis.meishuquan.model.commons.SimpleUser;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.CommentTypeEnum;
+import com.metis.meishuquan.model.enums.FileUploadTypeEnum;
 import com.metis.meishuquan.model.enums.SupportStepTypeEnum;
+import com.metis.meishuquan.util.FileUtil;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.view.assess.CommentTypePicView;
@@ -50,7 +58,15 @@ import com.metis.meishuquan.view.assess.CommentTypeVoiceView;
 import com.metis.meishuquan.view.course.FlowLayout;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,6 +93,9 @@ public class AssessInfoActivity extends FragmentActivity {
     private AssessInfoAdapter adapter;
     private List<ImageView> lstImageViews;
     private List<AssessComment> lstAssessComment;
+    private String voicePath = "";
+    private RecorderManager recorderManager;
+    private boolean isLongClick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -234,10 +253,91 @@ public class AssessInfoActivity extends FragmentActivity {
             }
         });
 
-        this.btnRecord.setOnClickListener(new View.OnClickListener() {
+        this.btnRecord.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View view) {
+            public boolean onLongClick(View view) {
+                if (!Environment.getExternalStorageDirectory().exists()) {
+                    Toast.makeText(AssessInfoActivity.this, "No SDCard", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                isLongClick = true;
+                //录音
+                Long startVoiceT = SystemClock.currentThreadTimeMillis();
+                String voiceName = startVoiceT + ".amr";
 
+                File dir = new File(Environment.getExternalStorageDirectory()
+                        + "/myVoice/");
+                if (!dir.exists()) {
+                    dir.mkdir();
+                }
+                voicePath = dir.getPath() + "/" + voiceName;
+                Log.e("voicePath", voicePath + "&&&&&&");
+                recorderManager = RecorderManager.getInstance(AssessInfoActivity.this);
+                recorderManager.start(voicePath);
+                Log.e("start", "开始录音" + "&&&&&&");
+                return true;
+            }
+        });
+
+        this.btnRecord.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_UP:
+                        isLongClick = false;
+                        //停止录音
+                        recorderManager.stop();
+                        //上传录音
+                        Log.e("voicePath", voicePath + "&&&&&&");
+                        byte[] data = FileUtil.getBytesFromFile(voicePath);
+
+                        String define = data.length + "," + 1 + "," + data.length;
+
+                        CommonOperator.getInstance().fileUpload(FileUploadTypeEnum.VOINCE, define, data, new ServiceFilterResponseCallback() {
+                            @Override
+                            public void onResponse(ServiceFilterResponse response, Exception exception) {
+                                //上传文件
+                                if (!response.getContent().isEmpty()) {
+                                    String json = response.getContent();
+                                    Log.i("fileUpload", json);
+                                    String fileStr = "";
+                                    try {
+                                        JSONObject object = new JSONObject(json);
+                                        JSONArray array = object.getJSONArray("data");
+                                        JSONObject object1 = (JSONObject) array.get(0);
+                                        String voiceUrl = object1.getString("voiceUrl");//获取数组第一个元素的voiceUrl
+
+                                        PushCommentParam param = new PushCommentParam();
+                                        param.setUserId(MainApplication.userInfo.getUserId());
+                                        param.setAssessId(assess.getId());
+                                        param.setCommentType(CommentTypeEnum.Voice.getVal());
+                                        param.setVoice(voiceUrl);
+                                        if (selectedAssessComment != null) {
+                                            param.setReplyUserId(selectedAssessComment.getUser().getUserId());
+                                        }
+
+                                        //发表评论
+                                        AssessOperator.getInstance().pushComment(param, new ApiOperationCallback<ReturnInfo<AssessComment>>() {
+                                            @Override
+                                            public void onCompleted(ReturnInfo<AssessComment> result, Exception exception, ServiceFilterResponse response) {
+                                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                                    Gson gson = new Gson();
+                                                    String json = gson.toJson(result);
+                                                    refreshList(json);
+                                                }
+                                            }
+                                        });
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        });
+
+                        break;
+                }
+                return false;
             }
         });
 
@@ -260,17 +360,7 @@ public class AssessInfoActivity extends FragmentActivity {
                         if (result != null && result.getInfo().equals(String.valueOf(0))) {
                             Gson gson = new Gson();
                             String json = gson.toJson(result);
-                            //刷新列表
-                            ReturnInfo returnInfo = gson.fromJson(json, new TypeToken<ReturnInfo<AssessComment>>() {
-                            }.getType());
-                            AssessComment assessComment = (AssessComment) returnInfo.getData();
-                            if (assessComment != null) {
-                                assessSupportAndComment.getAssessCommentList().add(assessComment);
-                                adapter.notifyDataSetChanged();
-                                btnSend.setVisibility(View.GONE);
-                                clearEditText();
-                            }
-                            Toast.makeText(AssessInfoActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
+                            refreshList(json);
                         }
                     }
                 });
@@ -300,6 +390,20 @@ public class AssessInfoActivity extends FragmentActivity {
                 }
             }
         });
+    }
+
+    private void refreshList(String json) {
+        //刷新列表
+        ReturnInfo returnInfo = new Gson().fromJson(json, new TypeToken<ReturnInfo<AssessComment>>() {
+        }.getType());
+        AssessComment assessComment = (AssessComment) returnInfo.getData();
+        if (assessComment != null) {
+            assessSupportAndComment.getAssessCommentList().add(assessComment);
+            adapter.notifyDataSetChanged();
+            btnSend.setVisibility(View.GONE);
+            clearEditText();
+        }
+        Toast.makeText(AssessInfoActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
     }
 
     private void clearEditText() {

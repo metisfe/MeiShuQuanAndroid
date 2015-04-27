@@ -24,12 +24,12 @@
 
     <TextView
         android:id="@+id/views_circle_titlebar_text"
-        android:layout_width="50dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:gravity="center_vertical|center_horizontal"
-        android:textColor="#fb6d6d"
         android:text="首页"
+        android:textColor="#fb6d6d"
         android:textSize="20sp" />
 
     <RelativeLayout
