@@ -124,8 +124,14 @@ public class ImagePreviewSingleFragment extends Fragment {
             mPhotoView.setImageDrawable(new BitmapDrawable(mBmp));
             return;
         }
+        File tempFile = new File (mRootPath + File.separator + getName(url));
+        if (tempFile.exists()) {
+            mBmp = BitmapFactory.decodeFile(tempFile.getAbsolutePath());
+            mPhotoView.setImageDrawable(new BitmapDrawable(mBmp));
+            return;
+        }
         HttpUtils httpUtils = new HttpUtils();
-        mHttpHandler = httpUtils.download(url, cacheFile.getAbsolutePath(), true, false, new RequestCallBack<File>() {
+        mHttpHandler = httpUtils.download(url, tempFile.getAbsolutePath(), true, false, new RequestCallBack<File>() {
 
             @Override
             public void onSuccess(ResponseInfo<File> fileResponseInfo) {

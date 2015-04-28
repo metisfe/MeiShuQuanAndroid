@@ -55,11 +55,10 @@ public class NameCardQrActivity extends BaseActivity {
         json.addProperty(User.KEY_NICK_NAME, user.getName());
         json.addProperty(User.KEY_USERAVATAR, user.getUserAvatar());
         mQrFragment = (QRFragment)getSupportFragmentManager().findFragmentById(R.id.qr_fragment);
-        mQrFragment.showQrCodeWith(json.toString());
+        mQrFragment.showQrCodeWith(/*json.toString()*/user.getPhoneNum());
         mQrFragment.setOnImageClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(NameCardQrActivity.this, "onClick", Toast.LENGTH_SHORT).show();
                 mListfragment = ListDialogFragment.getInstance();
                 mListfragment.setAdapter(new ActionAdapter());
                 mListfragment.show(getSupportFragmentManager(), "abc");
