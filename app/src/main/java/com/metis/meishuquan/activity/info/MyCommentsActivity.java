@@ -14,6 +14,7 @@ import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.assess.AssessInfoActivity;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
+import com.metis.meishuquan.model.assess.Assess;
 import com.metis.meishuquan.model.commons.Comment;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.util.ImageLoaderUtils;
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class MyCommentsActivity extends DataListActivity {
 
-    private List<Comment> mData = new ArrayList<Comment>();
+    private List<Assess> mData = new ArrayList<Assess>();
     private int mIndex = 1;
 
     @Override
@@ -34,9 +35,9 @@ public class MyCommentsActivity extends DataListActivity {
 
     @Override
     public void loadData(int index) {
-        UserInfoOperator.getInstance().getQuestionList(MainApplication.userInfo.getUserId(), index, 0, new UserInfoOperator.OnGetListener<List<Comment>>() {
+        UserInfoOperator.getInstance().getQuestionList(MainApplication.userInfo.getUserId(), index, 0, new UserInfoOperator.OnGetListener<List<Assess>>() {
             @Override
-            public void onGet(boolean succeed, List<Comment> data) {
+            public void onGet(boolean succeed, List<Assess> data) {
                 if (succeed) {
                     mIndex = mIndex + 1;
                     mData.addAll(data);
@@ -75,7 +76,7 @@ public class MyCommentsActivity extends DataListActivity {
         }
 
         @Override
-        public Comment getItem(int position) {
+        public Assess getItem(int position) {
             return mData.get(position);
         }
 
@@ -104,7 +105,7 @@ public class MyCommentsActivity extends DataListActivity {
             } else {
                 holder = (ViewHolder)convertView.getTag();
             }
-            final Comment comment = getItem(position);
+            final Assess comment = getItem(position);
             User user = comment.getUser();
             ImageLoader loader = ImageLoaderUtils.getImageLoader(MyCommentsActivity.this);
             loader.displayImage(user.getAvatar(), holder.profileIv,
@@ -115,7 +116,7 @@ public class MyCommentsActivity extends DataListActivity {
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(MyCommentsActivity.this, AssessInfoActivity.class);
-                    it.putExtra(AssessInfoActivity.KEY_ASSESS_ID, comment.getId());
+                    it.putExtra("assess", comment);
                     startActivity(it);
                 }
             });

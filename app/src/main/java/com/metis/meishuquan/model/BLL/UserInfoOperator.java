@@ -11,6 +11,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.metis.meishuquan.MainApplication;
+import com.metis.meishuquan.model.assess.Assess;
 import com.metis.meishuquan.model.commons.Comment;
 import com.metis.meishuquan.model.commons.Item;
 import com.metis.meishuquan.model.commons.Option;
@@ -358,7 +359,7 @@ public class UserInfoOperator {
 
     }
 
-    public void getQuestionList (long uid, int index, int type, final OnGetListener<List<Comment>> listener) {
+    public void getQuestionList (long uid, int index, int type, final OnGetListener<List<Assess>> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_QUESTION);
             sb.append(KEY_USER_ID + "=" + uid);
@@ -374,7 +375,7 @@ public class UserInfoOperator {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
                         Log.v(TAG, "getQuestionList result=" + json);
-                        Result<List<Comment>> listResult = gson.fromJson(json, new TypeToken<Result<List<Comment>>>(){}.getType());
+                        Result<List<Assess>> listResult = gson.fromJson(json, new TypeToken<Result<List<Assess>>>(){}.getType());
                         if (listResult.getOption().getStatus() == 0) {
                             listener.onGet(true, listResult.getData());
                         } else {

@@ -99,15 +99,12 @@ public class AssessInfoActivity extends FragmentActivity {
     private RecorderManager recorderManager;
     private boolean isLongClick;
 
-    private int id = 0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assess_info);
 
         Bundle bundle = getIntent().getExtras();
-        id = bundle.getInt(KEY_ASSESS_ID);
         //TODO by wangjin
         if (bundle != null) {
             this.assess = (Assess) bundle.getSerializable("assess");
