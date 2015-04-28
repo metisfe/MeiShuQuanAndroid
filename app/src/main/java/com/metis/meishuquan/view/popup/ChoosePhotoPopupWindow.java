@@ -112,13 +112,4 @@ public class ChoosePhotoPopupWindow extends PopupWindow {
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);//调用android的图库
         mFragment.startActivityForResult(intent, PICK_PICTURE);
     }
-<<<<<<< HEAD
-
-    public void word() {
-
-    }
-
-
-=======
->>>>>>> origin/master
 }
