@@ -142,7 +142,7 @@ public class CircleFragment extends Fragment {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "首页";
+                    return "微博";
                 case 1:
                     return "消息";
                 case 2:

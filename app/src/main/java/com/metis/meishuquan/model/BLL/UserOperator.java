@@ -4,8 +4,6 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.RequestCodeTypeEnum;
@@ -31,7 +29,7 @@ public class UserOperator {
     private final String LOGIN = "v1.1/UserCenter/Login?";//登录
     private final String REGISTER = "v1.1/UserCenter/Register?";//注册
     private final String REQUESTCODE = "v1.1/UserCenter/RegisterCode?";//获取验证码
-    private final String RESETPWD = "";//重围密码
+    private final String FORGETPWD = "v1.1/UserCenter/ForgetPassword?";//忘记密码
     private final String USERROLE = "v1.1/UserCenter/UserRole?";
     private static final String SESSION = MainApplication.userInfo.getCookie();
 
@@ -104,19 +102,26 @@ public class UserOperator {
         }
     }
 
-    public void forgetPwd(String phone, String newPwd, ApiOperationCallback<ReturnInfo<String>> callback) {
+    public void forgetPwd(String account, String code, String newPwd, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
-                StringBuilder PATH = new StringBuilder(RESETPWD);
-                PATH.append("phone=" + phone);
+                StringBuilder PATH = new StringBuilder(FORGETPWD);
+                PATH.append("account=" + account);
+                PATH.append("&code=" + code);
                 PATH.append("&newPwd=" + newPwd);
+                PATH.append("&type=" + 1);
                 PATH.append("&session=" + SESSION);
                 List<Pair<String, String>> pram = new ArrayList<>();
-                Pair<String, String> pair1 = new Pair<>("phone", phone);
-                Pair<String, String> pair2 = new Pair<>("newPwd", newPwd);
+                Pair<String, String> pair1 = new Pair<>("account", account);
+                Pair<String, String> pair2 = new Pair<>("code", code);
+                Pair<String, String> pair3 = new Pair<>("newPwd", newPwd);
+                Pair<String, String> pair4 = new Pair<>("type", String.valueOf(1));
                 pram.add(pair1);
                 pram.add(pair2);
-                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpPost.METHOD_NAME, pram, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+                pram.add(pair3);
+                pram.add(pair4);
+//                ApiDataProvider.getmClient().invokeApi(FORGETPWD, null, HttpPost.METHOD_NAME, pram, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
         }
     }

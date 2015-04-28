@@ -105,34 +105,24 @@ public class ResetPwdFragment extends Fragment {
                     etNewPwd.requestFocus();
                     return;
                 }
-                if (!verCode.equals("")) {
-                    int i = verCode.compareTo(code);
-                    if (i == 0) {
-                        userOperator.forgetPwd(phone, pwd, new ApiOperationCallback<ReturnInfo<String>>() {
-                            @Override
-                            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                                    //修改本地登录状态
-                                    SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(getActivity());
-                                    spu.update(SharedPreferencesUtil.LOGIN_STATE, String.valueOf(true));
-                                    Toast.makeText(getActivity(), "修改成功,请重新登录", Toast.LENGTH_SHORT).show();
-                                    //getActivity().finish();
-                                    FragmentTransaction ft = fm.beginTransaction();
-                                    ft.remove(ResetPwdFragment.this);
-                                    ft.commit();
-                                } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
-                                    //TODO:根据返回的errorcode判断注册状态
-                                    Toast.makeText(getActivity(), "修改失败", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                    } else {
-                        Toast.makeText(getActivity(), "验证码验证超时，请重新验证", Toast.LENGTH_SHORT).show();
-                        etVerificationCode.setText("");
-                        etVerificationCode.requestFocus();
-                        return;
+                userOperator.forgetPwd(phone, code, pwd, new ApiOperationCallback<ReturnInfo<String>>() {
+                    @Override
+                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                            //修改本地登录状态
+                            SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(getActivity());
+                            spu.update(SharedPreferencesUtil.LOGIN_STATE, String.valueOf(true));
+                            Toast.makeText(getActivity(), "修改成功,请重新登录", Toast.LENGTH_SHORT).show();
+                            //getActivity().finish();
+                            FragmentTransaction ft = fm.beginTransaction();
+                            ft.remove(ResetPwdFragment.this);
+                            ft.commit();
+                        } else {
+                            //TODO:根据返回的errorcode判断注册状态
+                            Toast.makeText(getActivity(), "修改失败", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
+                });
             }
         });
 

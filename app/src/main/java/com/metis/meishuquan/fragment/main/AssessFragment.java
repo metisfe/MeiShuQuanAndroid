@@ -193,24 +193,9 @@ public class AssessFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 if (position >= lstAllAssess.size() + 1) return;
                 final Assess assess = lstAllAssess.get(position - 1);
-                AssessOperator.getInstance().getSupportAndComment(assess.getId(), new ApiOperationCallback<ReturnInfo<AssessSupportAndComment>>() {
-                    @Override
-                    public void onCompleted(ReturnInfo<AssessSupportAndComment> result, Exception exception, ServiceFilterResponse response) {
-                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                            Gson gson = new Gson();
-                            String json = gson.toJson(result);
-                            Log.i(TAG, json);
-                            ReturnInfo returnInfo = gson.fromJson(json, new TypeToken<ReturnInfo<AssessSupportAndComment>>() {
-                            }.getType());
-                            AssessSupportAndComment assessSupportAndComment = (AssessSupportAndComment) returnInfo.getData();
-
-                            Intent intent = new Intent(getActivity(), AssessInfoActivity.class);
-                            intent.putExtra("assess", (Serializable) assess);
-                            intent.putExtra("assessSupportAndComment", (Serializable) assessSupportAndComment);
-                            startActivity(intent);
-                        }
-                    }
-                });
+                Intent intent = new Intent(getActivity(), AssessInfoActivity.class);
+                intent.putExtra("assess", (Serializable) assess);
+                startActivity(intent);
             }
         });
 

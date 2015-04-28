@@ -61,7 +61,7 @@ public class CircleTitleBar extends RelativeLayout {
         this.leftButton.setOnClickListener(leftClick);
     }
 
-    public void setRightButton(String rightText, int resourceId, OnClickListener leftClick) {
+    public void setRightButton(String rightText, int resourceId, OnClickListener rightClick) {
         if (!TextUtils.isEmpty(rightText)) {
             this.rightTextView.setVisibility(VISIBLE);
             this.rightTextView.setText(rightText);
@@ -79,7 +79,7 @@ public class CircleTitleBar extends RelativeLayout {
             this.rightImageView.setVisibility(GONE);
         }
 
-        this.rightButton.setOnClickListener(leftClick);
+        this.rightButton.setOnClickListener(rightClick);
     }
 
     public void hideAll() {

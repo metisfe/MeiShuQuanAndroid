@@ -74,7 +74,7 @@ public class ChoosePhotoPopupWindow extends PopupWindow {
         btnWord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                
+
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -111,6 +111,10 @@ public class ChoosePhotoPopupWindow extends PopupWindow {
         Intent intent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);//调用android的图库
         mFragment.startActivityForResult(intent, PICK_PICTURE);
+    }
+
+    public void word() {
+
     }
 
 

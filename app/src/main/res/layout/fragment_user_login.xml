@@ -12,20 +12,18 @@
 
         <Button
             android:id="@+id/id_btn_user_login_back"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/bg_btn_arrow_left"
-            android:textColor="@color/white"
-            android:textSize="17sp" />
+            android:background="@drawable/bg_btn_arrow_left" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="登录"
-            android:textColor="#FF5363"
+            android:textColor="#fb6d6d"
             android:textSize="20sp" />
 
     </RelativeLayout>
@@ -38,10 +36,10 @@
             android:id="@+id/id_rl_login_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_marginTop="20dp"
-            android:background="#F1F1F1"
+            android:background="#f0f0f0"
             android:padding="10dp">
 
             <EditText
@@ -49,8 +47,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@null"
+                android:hint="请输入手机号"
                 android:inputType="number"
-                android:hint="请输入手机号" />
+                android:textColor="#424242"
+                android:textColorHint="#7e7e7e"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/id_horizontal_line"
@@ -73,7 +74,10 @@
                     android:layout_weight="1"
                     android:background="@null"
                     android:hint="请输入密码"
-                    android:inputType="textPassword" />
+                    android:inputType="textPassword"
+                    android:textColor="#424242"
+                    android:textColorHint="#7e7e7e"
+                    android:textSize="16sp" />
 
                 <Button
                     android:id="@+id/id_btn_login_reset_pwd"
@@ -82,7 +86,8 @@
                     android:layout_gravity="center_vertical"
                     android:background="@color/transparent"
                     android:text="忘记密码？"
-                    android:textColor="#A0A0A0" />
+                    android:textColor="#cccccc"
+                    android:textSize="14sp" />
             </LinearLayout>
 
         </RelativeLayout>
@@ -92,33 +97,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/id_rl_login_input"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/id_btn_user_login"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="45dp"
                 android:layout_weight="1"
                 android:background="#FF5363"
-                android:text="登陆"
-                android:textColor="#F1F1F1"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:text="登录"
+                android:textColor="#f0f0f0"
+                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/id_btn_user_register"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="45dp"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 android:background="#FF5363"
                 android:text="注册"
-                android:textColor="#F1F1F1"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textColor="#f0f0f0"
+                android:textSize="18sp" />
         </LinearLayout>
     </RelativeLayout>
 

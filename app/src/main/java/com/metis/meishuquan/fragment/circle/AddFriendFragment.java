@@ -27,9 +27,11 @@ public class AddFriendFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_circle_addfriendfragment, container, false);
+
         this.titleBar = (CircleTitleBar) rootView.findViewById(R.id.fragment_circle_addfriendfragment_titlebar);
+
         titleBar.setText("增加朋友");
-        titleBar.setLeftButton("back", 0, new View.OnClickListener() {
+        titleBar.setLeftButton("", R.drawable.btn_back, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

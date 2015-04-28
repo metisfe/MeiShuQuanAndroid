@@ -74,6 +74,7 @@ public class TabPageIndicator extends HorizontalScrollView implements PageIndica
 
     private int mMaxTabWidth;
     private int mSelectedTabIndex;
+    private boolean isfromcustom;
 
     private OnTabReselectedListener mTabReselectedListener;
 
@@ -85,7 +86,14 @@ public class TabPageIndicator extends HorizontalScrollView implements PageIndica
         super(context, attrs);
         setHorizontalScrollBarEnabled(false);
 
-        mTabLayout = new IcsLinearLayout(context, R.attr.vpiTabPageIndicatorStyle);
+        if ("mycustom".equals(getContentDescription())) {
+            mTabLayout = new IcsLinearLayout(context, R.attr.vpiCircleTabPageIndicatorStyle);
+            isfromcustom = true;
+
+        } else {
+            mTabLayout = new IcsLinearLayout(context, R.attr.vpiTabPageIndicatorStyle);
+        }
+
         addView(mTabLayout, new ViewGroup.LayoutParams(WRAP_CONTENT, MATCH_PARENT));
     }
 
@@ -153,7 +161,12 @@ public class TabPageIndicator extends HorizontalScrollView implements PageIndica
     }
 
     private void addTab(int index, CharSequence text, int iconResId) {
-        final TabView tabView = new TabView(getContext());
+        TabView tabView = null;
+        if (isfromcustom) {
+            tabView = new TabView(getContext(), null, R.attr.vpiCircleTabPageIndicatorStyle);
+        } else {
+            tabView = new TabView(getContext(), null, R.attr.vpiTabPageIndicatorStyle);
+        }
         tabView.mIndex = index;
         tabView.setFocusable(true);
         tabView.setTextColor(Color.rgb(207, 213, 236));
@@ -163,8 +176,13 @@ public class TabPageIndicator extends HorizontalScrollView implements PageIndica
         if (iconResId != 0) {
             tabView.setCompoundDrawablesWithIntrinsicBounds(iconResId, 0, 0, 0);
         }
-
-        mTabLayout.addView(tabView, new LinearLayout.LayoutParams(WRAP_CONTENT, MATCH_PARENT));
+        if (isfromcustom) {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
+            params.weight = 1;
+            mTabLayout.addView(tabView, params);
+        } else {
+            mTabLayout.addView(tabView, new LinearLayout.LayoutParams(WRAP_CONTENT, MATCH_PARENT));
+        }
     }
 
     @Override
@@ -268,6 +286,10 @@ public class TabPageIndicator extends HorizontalScrollView implements PageIndica
 
         public TabView(Context context) {
             super(context, null, R.attr.vpiTabPageIndicatorStyle);
+        }
+
+        private TabView(Context context, AttributeSet attrs, int defStyleAttr) {
+            super(context, attrs, defStyleAttr);
         }
 
         @Override

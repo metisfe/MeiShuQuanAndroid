@@ -14,6 +14,7 @@
         android:id="@+id/fragment_shared_circlefragment_topbar_indicator"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:contentDescription="mycustom"
         android:layout_below="@id/fragment_shared_circlefragment_title_bar"
         android:background="#e2e2e2" />
 
