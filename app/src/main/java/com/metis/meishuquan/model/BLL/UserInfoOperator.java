@@ -291,12 +291,13 @@ public class UserInfoOperator {
         }
     }
 
+    /*0:news 1:comment 2：点评 3：点评评论  4：课程  5：课程评论 6:圈子*/
     public void getCommentsList (String uid, final int index, final OnGetListener<List<Item>> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_FAVORITE);
             sb.append(KEY_USER_ID + "=" + uid);
             sb.append("&" + KEY_INDEX + "=" + index);
-            sb.append("&sourcetype" + "=" + 1);
+            sb.append("&sourcetype" + "=" + 3);
             sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
             Log.v(TAG, "getCommentsList request " + sb);
             ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {

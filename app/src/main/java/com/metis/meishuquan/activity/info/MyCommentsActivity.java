@@ -1,5 +1,6 @@
 package com.metis.meishuquan.activity.info;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.assess.AssessInfoActivity;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.Comment;
 import com.metis.meishuquan.model.commons.User;
@@ -32,10 +34,11 @@ public class MyCommentsActivity extends DataListActivity {
 
     @Override
     public void loadData(int index) {
-        /*UserInfoOperator.getInstance().getQuestionList(MainApplication.userInfo.getUserId(), index, 0, new UserInfoOperator.OnGetListener<List<Comment>>() {
+        UserInfoOperator.getInstance().getQuestionList(MainApplication.userInfo.getUserId(), index, 0, new UserInfoOperator.OnGetListener<List<Comment>>() {
             @Override
             public void onGet(boolean succeed, List<Comment> data) {
                 if (succeed) {
+                    mIndex = mIndex + 1;
                     mData.addAll(data);
                     setAdapter(new CommentAdapter());
                     notifyDataSetChanged();
@@ -43,19 +46,19 @@ public class MyCommentsActivity extends DataListActivity {
                     Toast.makeText(MyCommentsActivity.this, R.string.common_load_faild, Toast.LENGTH_SHORT).show();
                 }
             }
-        });*/
-        UserInfoOperator.getInstance().getCommentsList(MainApplication.userInfo.getUserId() + "", index, new UserInfoOperator.OnGetListener(){
+        });
+        /*UserInfoOperator.getInstance().getCommentsList(MainApplication.userInfo.getUserId() + "", index, new UserInfoOperator.OnGetListener(){
 
             @Override
             public void onGet(boolean succeed, Object o) {
 
             }
-        });
+        });*/
     }
 
     @Override
     public void onLoadMore() {
-        loadData(++mIndex);
+        loadData(mIndex + 1);
     }
 
     @Override
@@ -101,13 +104,21 @@ public class MyCommentsActivity extends DataListActivity {
             } else {
                 holder = (ViewHolder)convertView.getTag();
             }
-            Comment comment = getItem(position);
+            final Comment comment = getItem(position);
             User user = comment.getUser();
             ImageLoader loader = ImageLoaderUtils.getImageLoader(MyCommentsActivity.this);
             loader.displayImage(user.getAvatar(), holder.profileIv,
                     ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.my_info_profile_size)));
             holder.nameTv.setText(user.getName());
             holder.contentTv.setText(comment.getDesc());
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent it = new Intent(MyCommentsActivity.this, AssessInfoActivity.class);
+                    it.putExtra(AssessInfoActivity.KEY_ASSESS_ID, comment.getId());
+                    startActivity(it);
+                }
+            });
             return convertView;
         }
     }

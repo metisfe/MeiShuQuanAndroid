@@ -324,25 +324,29 @@
             android:label="@string/title_activity_change_pwd" />
         <activity
             android:name=".activity.info.homepage.StudioActivity"
-            android:label="@string/title_activity_studio"></activity>
+            android:label="@string/title_activity_studio" />
         <activity
             android:name=".activity.info.homepage.StudioAlbumActivity"
-            android:label="@string/title_activity_studio_album"></activity>
+            android:label="@string/title_activity_studio_album" />
         <activity
             android:name=".activity.info.homepage.VideoListActivity"
-            android:label="@string/title_activity_video_list"></activity>
+            android:label="@string/title_activity_video_list" />
         <activity
             android:name=".activity.info.homepage.CourseArrangementActivity"
-            android:label="@string/title_activity_course_arrangement"></activity>
+            android:label="@string/title_activity_course_arrangement" />
         <activity
             android:name=".activity.info.homepage.TeacherTeamActivity"
-            android:label="@string/title_activity_teacher_team"></activity>
+            android:label="@string/title_activity_teacher_team" />
         <activity
             android:name=".activity.info.homepage.ChargeActivity"
-            android:label="@string/title_activity_charge"></activity>
+            android:label="@string/title_activity_charge" />
         <activity
             android:name=".activity.info.homepage.BookListActivity"
-            android:label="@string/title_activity_book_list"></activity>
+            android:label="@string/title_activity_book_list" />
+        <activity
+            android:name=".activity.info.MyFavoriteDetailActivity"
+            android:label="@string/title_activity_my_favorite_detail" >
+        </activity>
     </application>
 
 </manifest>

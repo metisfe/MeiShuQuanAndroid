@@ -1,5 +1,6 @@
 package com.metis.meishuquan.activity.info;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -70,10 +71,13 @@ public class MyFavoritesActivity extends DataListActivity implements DataListAda
 
     @Override
     public void onItemClick(View view, int position, Item item) {
-        ItemInfoFragment fragment = new ItemInfoFragment();
+        Intent it = new Intent(this, MyFavoriteDetailActivity.class);
+        it.putExtra(MyFavoriteDetailActivity.KEY_ITEM_ID, item.getId());
+        startActivity(it);
+        /*ItemInfoFragment fragment = new ItemInfoFragment();
         Bundle args = new Bundle();
         args.putInt("newsId", item.getId());
         fragment.setArguments(args);
-        addFragment(fragment);
+        addFragment(fragment);*/
     }
 }

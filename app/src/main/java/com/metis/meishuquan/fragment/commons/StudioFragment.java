@@ -31,14 +31,14 @@ public class StudioFragment extends Fragment{
     private BaseAdapter mAdapter = null;
 
     private MenuItem[] mMenuItems = {
-            new MenuItem(R.id.studio_menu_introduce, R.drawable.ic_launcher, R.string.studio_introduce),
-            new MenuItem(R.id.studio_menu_album, R.drawable.ic_launcher, R.string.studio_album),
-            new MenuItem(R.id.studio_menu_team, R.drawable.ic_launcher, R.string.studio_team),
-            new MenuItem(R.id.studio_menu_course_arrangement, R.drawable.ic_launcher, R.string.studio_course_arrangement),
-            new MenuItem(R.id.studio_menu_video, R.drawable.ic_launcher, R.string.studio_video),
-            new MenuItem(R.id.studio_menu_charge, R.drawable.ic_launcher, R.string.studio_charge),
-            new MenuItem(R.id.studio_menu_book_publish, R.drawable.ic_launcher, R.string.studio_book_publish),
-            new MenuItem(R.id.studio_menu_contact_us, R.drawable.ic_launcher, R.string.studio_contact_us),
+            new MenuItem(R.id.studio_menu_introduce, R.drawable.studio_introduce, R.string.studio_introduce),
+            new MenuItem(R.id.studio_menu_album, R.drawable.studio_album, R.string.studio_album),
+            new MenuItem(R.id.studio_menu_team, R.drawable.studio_teacher_team, R.string.studio_team),
+            new MenuItem(R.id.studio_menu_course_arrangement, R.drawable.studio_course_arrangement, R.string.studio_course_arrangement),
+            new MenuItem(R.id.studio_menu_video, R.drawable.studio_video, R.string.studio_video),
+            new MenuItem(R.id.studio_menu_charge, R.drawable.studio_charge, R.string.studio_charge),
+            new MenuItem(R.id.studio_menu_book_publish, R.drawable.studio_book_publish, R.string.studio_book_publish),
+            new MenuItem(R.id.studio_menu_contact_us, R.drawable.studio_contact_us, R.string.studio_contact_us),
     };
 
     private OnMenuItemClickListener mMenuClick = null;
@@ -61,13 +61,13 @@ public class StudioFragment extends Fragment{
         mHeaderView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_studio_list_header, null);
         setAdapter(mAdapter);
 
-//        mRadioGroup = (RadioGroup)view.findViewById(R.id.studio_list_header_tab_container);
-//        mBtn1 = (RadioButton)view.findViewById(R.id.studio_list_header_tab1);
-//        mBtn2 = (RadioButton)view.findViewById(R.id.studio_list_header_tab2);
-//        mBtn3 = (RadioButton)view.findViewById(R.id.studio_list_header_tab3);
-//        setTabTitle(mTitle1, mTitle2, mTitle3);
-//        setOnCheckedChangeListener(mCheckChangeListener);
-//        mRadioGroup.check(R.id.studio_list_header_tab1);
+        mRadioGroup = (RadioGroup)view.findViewById(R.id.studio_list_header_tab_container);
+        mBtn1 = (RadioButton)view.findViewById(R.id.studio_list_header_tab1);
+        mBtn2 = (RadioButton)view.findViewById(R.id.studio_list_header_tab2);
+        mBtn3 = (RadioButton)view.findViewById(R.id.studio_list_header_tab3);
+        setTabTitle(mTitle1, mTitle2, mTitle3);
+        setOnCheckedChangeListener(mCheckChangeListener);
+        mRadioGroup.check(R.id.studio_list_header_tab1);
         //fillHeader();
         fillHeader(null);
     }

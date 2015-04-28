@@ -54,4 +54,5 @@
     <string name="title_activity_teacher_team">TeacherTeamActivity</string>
     <string name="title_activity_charge">ChargeActivity</string>
     <string name="title_activity_book_list">BookListActivity</string>
+    <string name="title_activity_my_favorite_detail">MyFavoriteDetailActivity</string>
 </resources>

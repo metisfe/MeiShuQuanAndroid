@@ -72,6 +72,8 @@ import java.util.List;
 
 public class AssessInfoActivity extends FragmentActivity {
 
+    public static final String KEY_ASSESS_ID = "assess_id";
+
     private String TAG = "getAssessSupportAndComment";
     private Button btnBack;
 
@@ -97,12 +99,16 @@ public class AssessInfoActivity extends FragmentActivity {
     private RecorderManager recorderManager;
     private boolean isLongClick;
 
+    private int id = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assess_info);
 
         Bundle bundle = getIntent().getExtras();
+        id = bundle.getInt(KEY_ASSESS_ID);
+        //TODO by wangjin
         if (bundle != null) {
             this.assess = (Assess) bundle.getSerializable("assess");
             this.assessSupportAndComment = (AssessSupportAndComment) bundle.getSerializable("assessSupportAndComment");
