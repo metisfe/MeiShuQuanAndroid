@@ -68,6 +68,12 @@ import java.util.List;
 
 public class AssessInfoActivity extends FragmentActivity {
 
+<<<<<<< HEAD
+=======
+    public static final String KEY_ASSESS_ID = "assess_id";
+
+    private String TAG = "getAssessSupportAndComment";
+>>>>>>> origin/master
     private Button btnBack;
     private TextView tvName, tvGrade, tvType, tvPublishTime, tvAssessState, tvContent, tvSupportCount, tvCommentCount, tvAddOne;
     private SmartImageView imgPortrait, imgContent;
@@ -96,6 +102,7 @@ public class AssessInfoActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assess_info);
         Bundle bundle = getIntent().getExtras();
+        //TODO by wangjin
         if (bundle != null) {
             this.assess = (Assess) bundle.getSerializable("assess");
             initSupportAndCommentView(assess.getId());//获得赞列表及评论列表

@@ -1,0 +1,14 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/favorite_detail_fragment_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.metis.meishuquan.activity.info.MyFavoriteDetailActivity">
+    <fragment
+        android:id="@+id/detail_fragment"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:name="com.metis.meishuquan.fragment.Topline.ItemInfoFragment"
+        android:background="@android:color/holo_blue_dark"
+        />
+</RelativeLayout>

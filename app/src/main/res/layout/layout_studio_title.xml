@@ -13,6 +13,7 @@
             android:layout_height="@dimen/studio_profile_size"
             android:layout_marginRight="7.5dp"
             android:layout_centerVertical="true"
+            android:src="@drawable/default_user_dynamic"
             />
         <TextView
             android:id="@+id/studio_title_name"
@@ -21,7 +22,7 @@
             android:textColor="@color/tv_title_bar"
             android:textSize="20sp"
             android:layout_toRightOf="@+id/studio_title_profile"
-            android:text="ABC画室"
+            android:singleLine="true"
             />
         <TextView
             android:id="@+id/studio_title_meishuquan_id"
@@ -31,7 +32,7 @@
             android:textSize="10sp"
             android:layout_below="@+id/studio_title_name"
             android:layout_toRightOf="@+id/studio_title_profile"
-            android:text="美术圈:22"
+            android:singleLine="true"
             />
     </RelativeLayout>
 </RelativeLayout>

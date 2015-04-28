@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
 import android.util.Log;
@@ -39,6 +40,7 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
+import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.BlockTypeEnum;
 import com.metis.meishuquan.model.enums.LoginStateEnum;
@@ -62,12 +64,16 @@ import java.util.StringTokenizer;
  * Created by wj on 15/3/23.
  */
 public class ItemInfoFragment extends Fragment {
+
+    public static final String KEY_TITLE_VISIBLE = "title_visible";
+
     private final int LOGINREQUESTCODE = 1001;
 
     private Button btnBack, btnShare;
     private ViewGroup rootView;
     private LinearLayout ll_content;
     private TopLineNewsInfo newsInfo;
+    private View titleBar = null;
     private TextView tv_title, tv_createtime, tv_sourse, tv_comment_count;
     private RelativeLayout rl_writeCommont, rl_commontList, rl_private, rl_share, rl_main;
     private RelativeLayout rl_Input;
@@ -81,6 +87,8 @@ public class ItemInfoFragment extends Fragment {
 
     private int newsId = 0;
     private FragmentManager fm;
+
+    private boolean titleVisible = true;
 
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
@@ -105,6 +113,20 @@ public class ItemInfoFragment extends Fragment {
         initView(rootView);
         initEvent();
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        titleBar = view.findViewById(R.id.id_topbar);
+        setTitleBarVisible(titleVisible);
+    }
+
+    public void setTitleBarVisible(boolean titleVisible) {
+        this.titleVisible = titleVisible;
+        if (titleBar != null) {
+            titleBar.setVisibility(titleVisible ? View.VISIBLE : View.GONE);
+        }
     }
 
     @Override
@@ -448,8 +470,7 @@ public class ItemInfoFragment extends Fragment {
         imageGroup = null;
     }
 
-    //根据新闻Id获取新闻内容
-    private void getInfoData(final int newsId) {
+    public void getInfoData (final int newsId, final UserInfoOperator.OnGetListener<TopLineNewsInfo> listener) {
         TopLineOperator topLineOperator = TopLineOperator.getInstance();
         topLineOperator.getNewsInfoById(newsId, new ApiOperationCallback<ReturnInfo<String>>() {
             @Override
@@ -460,17 +481,25 @@ public class ItemInfoFragment extends Fragment {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
                         Log.i("newsInfo", json);
-                        if (!json.equals("")) {
+                        if (!TextUtils.isEmpty(json)) {
                             newsInfo = gson.fromJson(json, new TypeToken<TopLineNewsInfo>() {
                             }.getType());
+                            if (listener != null) {
+                                listener.onGet(true, newsInfo);
+                            }
                         }
                     }
                     bindData();
                     addViewByContent();
                 } else {
-                    getInfoData(newsId);
+                    getInfoData(newsId, listener);
                 }
             }
         });
+    }
+
+    //根据新闻Id获取新闻内容
+    public void getInfoData(final int newsId) {
+        this.getInfoData(newsId, null);
     }
 }

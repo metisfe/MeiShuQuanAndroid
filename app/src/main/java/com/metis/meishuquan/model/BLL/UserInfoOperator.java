@@ -11,6 +11,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.metis.meishuquan.MainApplication;
+import com.metis.meishuquan.model.assess.Assess;
 import com.metis.meishuquan.model.commons.Comment;
 import com.metis.meishuquan.model.commons.Item;
 import com.metis.meishuquan.model.commons.Option;
@@ -291,12 +292,13 @@ public class UserInfoOperator {
         }
     }
 
+    /*0:news 1:comment 2：点评 3：点评评论  4：课程  5：课程评论 6:圈子*/
     public void getCommentsList (String uid, final int index, final OnGetListener<List<Item>> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_FAVORITE);
             sb.append(KEY_USER_ID + "=" + uid);
             sb.append("&" + KEY_INDEX + "=" + index);
-            sb.append("&sourcetype" + "=" + 1);
+            sb.append("&sourcetype" + "=" + 3);
             sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
             Log.v(TAG, "getCommentsList request " + sb);
             ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
@@ -357,7 +359,7 @@ public class UserInfoOperator {
 
     }
 
-    public void getQuestionList (long uid, int index, int type, final OnGetListener<List<Comment>> listener) {
+    public void getQuestionList (long uid, int index, int type, final OnGetListener<List<Assess>> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_QUESTION);
             sb.append(KEY_USER_ID + "=" + uid);
@@ -373,7 +375,7 @@ public class UserInfoOperator {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
                         Log.v(TAG, "getQuestionList result=" + json);
-                        Result<List<Comment>> listResult = gson.fromJson(json, new TypeToken<Result<List<Comment>>>(){}.getType());
+                        Result<List<Assess>> listResult = gson.fromJson(json, new TypeToken<Result<List<Assess>>>(){}.getType());
                         if (listResult.getOption().getStatus() == 0) {
                             listener.onGet(true, listResult.getData());
                         } else {
