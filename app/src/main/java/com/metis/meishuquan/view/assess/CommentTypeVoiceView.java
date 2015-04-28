@@ -77,12 +77,12 @@ public class CommentTypeVoiceView extends RelativeLayout {
             this.tvReplyUser.setText(assessComment.getReplyUser().getName());//被回复人
             this.tvCommentTime.setText(assessComment.getCommentDateTime());//评论时间
 
-            String url = assessComment.getImgOrVoiceUrl().get(0).getVoiceUrl();
-            DownloadTask downloadTask = new DownloadTask(context, url);
-            downloadTask.execute();
-            if (!path.isEmpty()) {
-                this.btnPlayVoice.setTag(path);
-            }
+//            String url = assessComment.getImgOrVoiceUrl().get(0).getVoiceUrl();
+//            DownloadTask downloadTask = new DownloadTask(context, url);
+//            downloadTask.execute();
+//            if (!path.isEmpty()) {
+//                this.btnPlayVoice.setTag(path);
+//            }
         }
     }
 
@@ -110,15 +110,9 @@ public class CommentTypeVoiceView extends RelativeLayout {
                     Toast.makeText(context, "播放失败", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (path.isEmpty()) {
-                    String url = assessComment.getImgOrVoiceUrl().get(0).getVoiceUrl();
-                    DownloadTask downloadTask = new DownloadTask(context, url);
-                    downloadTask.execute();
-                } else {
-                    String voicePath = (String) btnPlayVoice.getTag();
-                    PlayerManager.getInstance(context).start(path);
-                }
-//                PlayerManager.getInstance(context).start("/storage/sdcard0/msq_download/123.mp3");
+                String url = assessComment.getImgOrVoiceUrl().get(0).getVoiceUrl();
+                DownloadTask downloadTask = new DownloadTask(context, url);
+                downloadTask.execute();
             }
         });
     }
@@ -146,11 +140,15 @@ public class CommentTypeVoiceView extends RelativeLayout {
         @Override
         protected Integer doInBackground(Void... params) {
             int result = 0;
+            if (path != "") {
+                return result;
+            }
             if (!url.isEmpty()) {
                 DownloadUtil downloadUtil = new DownloadUtil();
-                String fileName = SystemClock.currentThreadTimeMillis() + ".mp3";
+                String fileName = SystemClock.currentThreadTimeMillis() + ".amr";
                 result = downloadUtil.downFile(url, "/msqdownload/", fileName);
                 path = DownloadUtil.downloadPath + fileName;
+                Log.e("path", path);
             }
             return result;
         }
@@ -160,9 +158,10 @@ public class CommentTypeVoiceView extends RelativeLayout {
          */
         @Override
         protected void onPostExecute(Integer integer) {
-            Toast.makeText(context, "下载完毕播放", Toast.LENGTH_SHORT).show();
             Log.i("path", path);
-            //PlayerManager.getInstance(context).start(path);
+            PlayerManager.getInstance(context).start(path);
+//            PlayerManager.getInstance(context).start("/storage/emulated/0/326.amr");
+            Toast.makeText(context, "下载完毕播放", Toast.LENGTH_SHORT).show();
         }
 
         /**

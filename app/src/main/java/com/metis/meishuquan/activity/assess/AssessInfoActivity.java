@@ -8,7 +8,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -36,7 +35,6 @@ import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.login.LoginActivity;
-import com.metis.meishuquan.fragment.main.AssessFragment;
 import com.metis.meishuquan.manager.common.RecorderManager;
 import com.metis.meishuquan.model.BLL.AssessOperator;
 import com.metis.meishuquan.model.BLL.CommonOperator;
@@ -64,17 +62,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AssessInfoActivity extends FragmentActivity {
 
-    private String TAG = "getAssessSupportAndComment";
     private Button btnBack;
-
     private TextView tvName, tvGrade, tvType, tvPublishTime, tvAssessState, tvContent, tvSupportCount, tvCommentCount, tvAddOne;
     private SmartImageView imgPortrait, imgContent;
     private ImageView imgCommentMode, imgMore, imgTriangle;
@@ -92,7 +86,7 @@ public class AssessInfoActivity extends FragmentActivity {
     private AssessSupportAndComment assessSupportAndComment;
     private AssessInfoAdapter adapter;
     private List<ImageView> lstImageViews;
-    private List<AssessComment> lstAssessComment;
+    private List<AssessComment> lstAssessComment = new ArrayList<AssessComment>();
     private String voicePath = "";
     private RecorderManager recorderManager;
     private boolean isLongClick;
@@ -101,12 +95,10 @@ public class AssessInfoActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assess_info);
-
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             this.assess = (Assess) bundle.getSerializable("assess");
-            this.assessSupportAndComment = (AssessSupportAndComment) bundle.getSerializable("assessSupportAndComment");
-            this.lstAssessComment = assessSupportAndComment.getAssessCommentList();
+            initSupportAndCommentView(assess.getId());//获得赞列表及评论列表
         }
         initView();
         addHeaderView();
@@ -115,7 +107,7 @@ public class AssessInfoActivity extends FragmentActivity {
         initHeaderEvent();
         initEvent();
 
-        adapter = new AssessInfoAdapter(AssessInfoActivity.this, assessSupportAndComment);
+        adapter = new AssessInfoAdapter(AssessInfoActivity.this, lstAssessComment);
         listView.setAdapter(adapter);
     }
 
@@ -141,11 +133,6 @@ public class AssessInfoActivity extends FragmentActivity {
         this.llSupport = (LinearLayout) headerView.findViewById(R.id.id_ll_support);
         this.llComment = (LinearLayout) headerView.findViewById(R.id.id_ll_comment_count);
         this.flImgs = (FlowLayout) headerView.findViewById(R.id.id_flow_user_portrait);
-        if (assessSupportAndComment.getSupportUserList().size() == 0 && assessSupportAndComment.getAssessCommentList().size() == 0) {
-            this.imgTriangle.setVisibility(View.GONE);
-        } else {
-            this.imgTriangle.setVisibility(View.VISIBLE);
-        }
         this.imgSupport = (ImageView) headerView.findViewById(R.id.id_img_assess_support);
     }
 
@@ -292,7 +279,7 @@ public class AssessInfoActivity extends FragmentActivity {
 
                         String define = data.length + "," + 1 + "," + data.length;
 
-                        CommonOperator.getInstance().fileUpload(FileUploadTypeEnum.VOINCE, define, data, new ServiceFilterResponseCallback() {
+                        CommonOperator.getInstance().fileUpload(FileUploadTypeEnum.AMR, define, data, new ServiceFilterResponseCallback() {
                             @Override
                             public void onResponse(ServiceFilterResponse response, Exception exception) {
                                 //上传文件
@@ -456,6 +443,50 @@ public class AssessInfoActivity extends FragmentActivity {
         });
     }
 
+    private void initSupportAndCommentView(int assessId) {
+        AssessOperator.getInstance().getSupportAndComment(assessId, new ApiOperationCallback<ReturnInfo<AssessSupportAndComment>>() {
+            @Override
+            public void onCompleted(ReturnInfo<AssessSupportAndComment> result, Exception exception, ServiceFilterResponse response) {
+                if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                    Gson gson = new Gson();
+                    String json = gson.toJson(result);
+                    ReturnInfo returnInfo = gson.fromJson(json, new com.google.gson.reflect.TypeToken<ReturnInfo<AssessSupportAndComment>>() {
+                    }.getType());
+                    assessSupportAndComment = (AssessSupportAndComment) returnInfo.getData();
+                    lstAssessComment.addAll(assessSupportAndComment.getAssessCommentList());
+
+                    if (assessSupportAndComment.getSupportUserList().size() == 0 && assessSupportAndComment.getAssessCommentList().size() == 0) {
+                        imgTriangle.setVisibility(View.GONE);
+                    } else {
+                        imgTriangle.setVisibility(View.VISIBLE);
+                    }
+
+                    //添加赞头像
+                    lstImageViews = new ArrayList<ImageView>();
+                    for (int i = 0; i < assessSupportAndComment.getSupportUserList().size(); i++) {
+                        final SimpleUser supportUser = assessSupportAndComment.getSupportUserList().get(i);
+                        ImageView imageView = (ImageView) LayoutInflater.from(AssessInfoActivity.this).inflate(R.layout.layout_imageview_user_portrait, null).findViewById(R.id.id_img_user_portrait);
+                        imageView.setMaxWidth(40);
+                        imageView.setMaxHeight(40);
+                        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        ImageLoaderUtils.getImageLoader(AssessInfoActivity.this).displayImage(assessSupportAndComment.getSupportUserList().get(i).getAvatar(), imageView, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height), R.drawable.default_user_dynamic));
+
+                        imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Toast.makeText(AssessInfoActivity.this, "进入" + supportUser.getName() + "的个人主页", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                        flImgs.addView(imageView);
+                        lstImageViews.add(imageView);
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+    }
+
     private void bindData(Assess assess) {
         if (assess == null) {
             Toast.makeText(this, "加载失败,请重试", Toast.LENGTH_SHORT).show();
@@ -486,28 +517,6 @@ public class AssessInfoActivity extends FragmentActivity {
         //赞数量和评论数量
         this.tvSupportCount.setText("赞(" + assess.getSupportCount() + ")");
         this.tvCommentCount.setText("评论(" + assess.getCommentCount() + ")");
-
-        //添加赞头像
-        lstImageViews = new ArrayList<ImageView>();
-        for (int i = 0; i < assessSupportAndComment.getSupportUserList().size(); i++) {
-            final SimpleUser supportUser = assessSupportAndComment.getSupportUserList().get(i);
-            ImageView imageView = (ImageView) LayoutInflater.from(this).inflate(R.layout.layout_imageview_user_portrait, null).findViewById(R.id.id_img_user_portrait);
-            imageView.setMaxWidth(40);
-            imageView.setMaxHeight(40);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            ImageLoaderUtils.getImageLoader(this).displayImage(assessSupportAndComment.getSupportUserList().get(i).getAvatar(), imageView, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height), R.drawable.default_user_dynamic));
-
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(AssessInfoActivity.this, "进入" + supportUser.getName() + "的个人主页", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            this.flImgs.addView(imageView);
-            this.lstImageViews.add(imageView);
-        }
-
     }
 
     private class AssessInfoAdapter extends BaseAdapter {
@@ -518,11 +527,9 @@ public class AssessInfoActivity extends FragmentActivity {
         private Context mContext;
         private List<AssessComment> lstAssessComment;
 
-        public AssessInfoAdapter(Context mContext, AssessSupportAndComment assessSupportAndComment) {
+        public AssessInfoAdapter(Context mContext, List<AssessComment> lstAssessComment) {
             this.mContext = mContext;
-            if (assessSupportAndComment != null) {
-                lstAssessComment = assessSupportAndComment.getAssessCommentList();
-            }
+            this.lstAssessComment = lstAssessComment;
         }
 
         @Override

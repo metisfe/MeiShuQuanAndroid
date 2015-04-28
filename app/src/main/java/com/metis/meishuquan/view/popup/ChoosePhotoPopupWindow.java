@@ -56,6 +56,7 @@ public class ChoosePhotoPopupWindow extends PopupWindow {
 
         Button btnCamera = (Button) view.findViewById(R.id.item_popupwindows_camera);
         Button btnPhoto = (Button) view.findViewById(R.id.item_popupwindows_Photo);
+        Button btnWord = (Button) view.findViewById(R.id.item_popupwindows_word);
         Button btnCancel = (Button) view.findViewById(R.id.item_popupwindows_cancel);
 
         btnCamera.setOnClickListener(new View.OnClickListener() {
@@ -68,6 +69,12 @@ public class ChoosePhotoPopupWindow extends PopupWindow {
             public void onClick(View v) {
                 pickFromGallery();
                 dismiss();
+            }
+        });
+        btnWord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -105,4 +112,6 @@ public class ChoosePhotoPopupWindow extends PopupWindow {
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);//调用android的图库
         mFragment.startActivityForResult(intent, PICK_PICTURE);
     }
+
+
 }

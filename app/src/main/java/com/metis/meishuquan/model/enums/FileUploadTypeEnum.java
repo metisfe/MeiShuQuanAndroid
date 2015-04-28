@@ -4,7 +4,7 @@ package com.metis.meishuquan.model.enums;
  * Created by wangjin on 15/4/15.
  */
 public enum FileUploadTypeEnum {
-    IMG(1), VOINCE(2);
+    IMG(1), VOINCE(2), AMR(3);
     private final int val;
 
     private FileUploadTypeEnum(int val) {
