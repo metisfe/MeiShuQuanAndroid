@@ -67,13 +67,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AssessInfoActivity extends FragmentActivity {
-
-<<<<<<< HEAD
-=======
     public static final String KEY_ASSESS_ID = "assess_id";
 
     private String TAG = "getAssessSupportAndComment";
->>>>>>> origin/master
     private Button btnBack;
     private TextView tvName, tvGrade, tvType, tvPublishTime, tvAssessState, tvContent, tvSupportCount, tvCommentCount, tvAddOne;
     private SmartImageView imgPortrait, imgContent;
