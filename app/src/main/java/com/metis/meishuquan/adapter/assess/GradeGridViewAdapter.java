@@ -27,6 +27,11 @@ public class GradeGridViewAdapter extends BaseAdapter {
         this.lstGrade = lstGrade;
     }
 
+    public void setData(List<Grade> lstGrade) {
+        this.lstGrade.clear();
+        this.lstGrade = lstGrade;
+    }
+
     @Override
     public int getCount() {
         if (lstGrade != null) {
@@ -36,7 +41,7 @@ public class GradeGridViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int i) {
+    public Grade getItem(int i) {
         if (lstGrade != null) {
             return lstGrade.get(i);
         }
@@ -52,17 +57,19 @@ public class GradeGridViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(int i, View convertView, ViewGroup viewGroup) {
         TextView textView;
-        if (view == null) {
+        if (convertView == null) {
             textView = new TextView(context);
             textView.setLayoutParams(new GridView.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             textView.setTextColor(Color.rgb(126, 126, 126));
-            textView.setTextSize(18);
+            textView.setTextSize(15);
+            convertView = textView;
+            convertView.setTag(textView);
         } else {
-            textView = (TextView) view;
+            textView = (TextView) convertView.getTag();
         }
         textView.setText(lstGrade.get(i).getName());
-        return textView;
+        return convertView;
     }
 }

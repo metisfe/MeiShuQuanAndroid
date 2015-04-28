@@ -166,18 +166,18 @@ public class TabPageIndicator extends HorizontalScrollView implements PageIndica
             tabView = new TabView(getContext(), null, R.attr.vpiCircleTabPageIndicatorStyle);
         } else {
             tabView = new TabView(getContext(), null, R.attr.vpiTabPageIndicatorStyle);
+            tabView.setTextColor(Color.rgb(207, 213, 236));
         }
         tabView.mIndex = index;
         tabView.setFocusable(true);
-        tabView.setTextColor(Color.rgb(207, 213, 236));
         tabView.setOnClickListener(mTabClickListener);
         tabView.setText(text);
-
+        tabView.setTextSize(16);
         if (iconResId != 0) {
             tabView.setCompoundDrawablesWithIntrinsicBounds(iconResId, 0, 0, 0);
         }
         if (isfromcustom) {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(WRAP_CONTENT, MATCH_PARENT);
             params.weight = 1;
             mTabLayout.addView(tabView, params);
         } else {

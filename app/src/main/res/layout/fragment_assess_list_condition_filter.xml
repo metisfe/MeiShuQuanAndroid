@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/rl_title_bar"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="44dp"
         android:background="#2d2a40">
 
         <Button
@@ -18,7 +18,7 @@
             android:layout_centerVertical="true"
             android:background="#2d2a40"
             android:text="类别"
-            android:textColor="#FF5363"
+            android:textColor="#fb6d6d"
             android:textSize="20sp" />
     </RelativeLayout>
 
@@ -38,8 +38,8 @@
             android:layout_gravity="center_vertical"
             android:background="#F0F0F0"
             android:text="全部"
-            android:textColor="#FF5363"
-            android:textSize="18sp" />
+            android:textColor="#fb6d6d"
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/id_btn_state_true"
@@ -50,7 +50,7 @@
             android:background="#F0F0F0"
             android:text="已评价"
             android:textColor="#7E7E7E"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/id_btn_state_false"
@@ -61,7 +61,7 @@
             android:background="#F0F0F0"
             android:text="未评价"
             android:textColor="#7E7E7E"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
     </LinearLayout>
     <!--年级-->
     <LinearLayout
@@ -78,18 +78,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#F0F0F0"
+            android:layout_marginTop="10dp"
             android:text="全部"
-            android:textColor="#FF5363"
-            android:textSize="18sp" />
+            android:textColor="#fb6d6d"
+            android:textSize="15sp" />
 
         <GridView
             android:id="@+id/id_gridview_grade"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="30dp"
+            android:listSelector="@color/transparent"
+            android:verticalSpacing="10dp"
             android:columnWidth="90dp"
             android:stretchMode="columnWidth"
-            android:gravity="top|center_vertical"
+            android:gravity="center_vertical"
             android:numColumns="3" />
     </LinearLayout>
     <!--频道-->
@@ -108,31 +111,34 @@
             android:layout_height="wrap_content"
             android:background="#F0F0F0"
             android:text="全部"
-            android:textColor="#FF5363"
-            android:textSize="18sp" />
+            android:layout_marginTop="10dp"
+            android:textColor="#fb6d6d"
+            android:textSize="15sp" />
 
         <GridView
             android:id="@+id/id_gridview_channels"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="30dp"
             android:columnWidth="90dp"
+            android:listSelector="@color/transparent"
+            android:verticalSpacing="10dp"
             android:stretchMode="columnWidth"
-            android:gravity="top|center_vertical"
-            android:numColumns="3"/>
+            android:gravity="center_vertical"
+            android:numColumns="3" />
     </LinearLayout>
 
     <!--确定-->
     <Button
         android:id="@+id/id_btn_confirm"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
         android:layout_below="@+id/ll_filter_channel"
         android:layout_gravity="center_vertical|center_horizontal"
         android:layout_marginTop="20dp"
         android:background="#F0F0F0"
         android:text="确定"
-        android:padding="20dp"
+        android:textColor="#424242"
         android:textSize="18sp" />
 
 </RelativeLayout>

@@ -37,6 +37,8 @@ import com.metis.meishuquan.model.BLL.AssessOperator;
 import com.metis.meishuquan.model.assess.AllAssess;
 import com.metis.meishuquan.model.assess.Assess;
 import com.metis.meishuquan.model.assess.AssessSupportAndComment;
+import com.metis.meishuquan.model.assess.Channel;
+import com.metis.meishuquan.model.assess.Grade;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.AssessStateEnum;
 import com.metis.meishuquan.model.enums.QueryTypeEnum;
@@ -338,6 +340,10 @@ public class AssessFragment extends Fragment {
 
     public interface OnPathChannedListner {
         void setPath(String path);
+    }
+
+    public interface OnFilterCannedListner {
+        void setFilter(Grade selectedGrad, Channel selectedChannel, int type);
     }
 
     /**

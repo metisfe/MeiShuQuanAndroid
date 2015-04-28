@@ -20,6 +20,7 @@ import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.adapter.assess.ChannelGridViewAdapter;
 import com.metis.meishuquan.adapter.assess.GradeGridViewAdapter;
+import com.metis.meishuquan.fragment.main.AssessFragment;
 import com.metis.meishuquan.model.assess.Channel;
 import com.metis.meishuquan.model.assess.ChannelAndGradeData;
 import com.metis.meishuquan.model.assess.Grade;
@@ -39,13 +40,15 @@ public class FilterConditionForAssessListFragment extends Fragment {
     private GridView gvGrade, gvChannel;
     private ChannelGridViewAdapter channelAdapter;
     private GradeGridViewAdapter gradeAdapter;
-    private List<Grade> lstGrade = new ArrayList<Grade>();
-    private List<Channel> lstChannel = new ArrayList<Channel>();
+    private List<Grade> lstGrade;
+    private List<Channel> lstChannel;
 
     //条件
     private int type;//1最新 2已评价 3未评价
     private Grade selsectedGrade;
-    private Channel selectedGrade;
+    private Channel selectedChannel;
+
+    private AssessFragment.OnFilterCannedListner listner;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -93,6 +96,7 @@ public class FilterConditionForAssessListFragment extends Fragment {
         this.btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                listner.setFilter(selsectedGrade, selectedChannel, type);
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.remove(FilterConditionForAssessListFragment.this);
                 ft.commit();
@@ -121,7 +125,7 @@ public class FilterConditionForAssessListFragment extends Fragment {
             }
         });
 
-        //全部
+        //评论状态 全部
         this.btnAssessStateAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -132,19 +136,77 @@ public class FilterConditionForAssessListFragment extends Fragment {
             }
         });
 
-        this.gvGrade.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        //年级 全部
+        this.btnGradeAll.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                TextView textView = (TextView) view;
-                textView.setTextColor(Color.rgb(55, 83, 99));
-                selsectedGrade = lstGrade.get(position);
+            public void onClick(View view) {
+                setButtonChecked(btnGradeAll);
+                gvGrade.setAdapter(gradeAdapter);
+                gradeAdapter.notifyDataSetChanged();
             }
         });
 
+        //标签 全部
+        this.btnChannelAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setButtonChecked(btnChannelAll);
+                gvChannel.setAdapter(channelAdapter);
+                channelAdapter.notifyDataSetChanged();
+            }
+        });
+
+        this.gvGrade.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                for (int i = 0; i < parent.getCount(); i++) {
+                    View v = parent.getChildAt(i);
+                    TextView textview = (TextView) v;
+                    if (position == i) {//当前选中的Item改变背景颜色
+                        setSelectedColorForTextView(textview);
+                        selsectedGrade = gradeAdapter.getItem(i);
+                        setButtonUnChecked(btnGradeAll);
+                    } else {
+                        setUnselectedColorForTextView(new TextView[]{textview});
+                    }
+                }
+            }
+        });
+
+        this.gvChannel.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
+                for (int i = 0; i < parent.getCount(); i++) {
+                    View v = parent.getChildAt(i);
+                    TextView textview = (TextView) v;
+                    if (position == i) {//当前选中的Item改变背景颜色
+                        setSelectedColorForTextView(textview);
+                        selectedChannel = channelAdapter.getItem(i);
+                        setButtonUnChecked(btnChannelAll);
+                    } else {
+                        setUnselectedColorForTextView(new TextView[]{textview});
+                    }
+                }
+            }
+        });
+    }
+
+    private void getFilterCondition(AssessFragment.OnFilterCannedListner listner) {
+        this.listner = listner;
+    }
+
+    private void setSelectedColorForTextView(TextView tv) {
+        tv.setTextColor(Color.rgb(251, 109, 109));
+    }
+
+    private void setUnselectedColorForTextView(TextView[] tvs) {
+        for (TextView textView : tvs) {
+            textView.setTextColor(Color.rgb(126, 126, 126));
+        }
     }
 
     private void setButtonChecked(Button btn) {
-        btn.setTextColor(Color.rgb(255, 83, 99));
+        btn.setTextColor(Color.rgb(251, 109, 109));
     }
 
     private void setButtonUnChecked(Button btn) {

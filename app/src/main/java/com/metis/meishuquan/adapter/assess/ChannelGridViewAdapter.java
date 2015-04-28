@@ -29,6 +29,11 @@ public class ChannelGridViewAdapter extends BaseAdapter {
         this.lstChannel = lstChannel;
     }
 
+    public void setData(List<Channel> lstChannel) {
+        this.lstChannel.clear();
+        this.lstChannel = lstChannel;
+    }
+
     @Override
     public int getCount() {
         if (lstChannel != null) {
@@ -38,7 +43,7 @@ public class ChannelGridViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int i) {
+    public Channel getItem(int i) {
         if (lstChannel != null) {
             return lstChannel.get(i);
         }
@@ -55,17 +60,18 @@ public class ChannelGridViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        //TextView,显示在GridView里
         TextView textView;
         if (view == null) {
             textView = new TextView(context);
             textView.setLayoutParams(new GridView.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             textView.setTextColor(Color.rgb(126, 126, 126));
-            textView.setTextSize(18);
+            textView.setTextSize(15);
+            view = textView;
+            view.setTag(textView);
         } else {
-            textView = (TextView) view;
+            textView = (TextView) view.getTag();
         }
         textView.setText(lstChannel.get(i).getChannelName());
-        return textView;
+        return view;
     }
 }
