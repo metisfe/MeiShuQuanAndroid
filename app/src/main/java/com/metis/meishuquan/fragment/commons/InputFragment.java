@@ -111,9 +111,9 @@ public class InputFragment extends Fragment {
     public void setText (CharSequence cs) {
         mText = cs;
         if (mInputEt != null) {
-            mInputEt.setText(mText);
-            /*mInputEt.selectAll();
-            mInputEt.selec*/
+            mInputEt.setText(null);
+            mInputEt.append(mText);
+            mInputEt.selectAll();
         }
     }
 
@@ -141,8 +141,9 @@ public class InputFragment extends Fragment {
 
     public void setInputType(int type) {
         mInputType = type;
-        if (mInputEt != null) {
-            mInputEt.setInputType(type);
-        }
+        /*if (mInputEt != null) {
+            mInputEt.setRawInputType(type);
+            //mInputEt.setInputType(type);
+        }*/
     }
 }

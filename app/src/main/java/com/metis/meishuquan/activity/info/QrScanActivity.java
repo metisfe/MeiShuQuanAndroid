@@ -15,7 +15,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
@@ -42,6 +41,8 @@ public class QrScanActivity extends BaseActivity implements
         View.OnClickListener,
         Camera.AutoFocusCallback{
 
+    public static final String KEY_RESULT = "result";
+
     private static final int MIN_FRAME_WIDTH = 100;/*240*/
     private static final int MIN_FRAME_HEIGHT = 600;/*240*/
     private static final int MAX_FRAME_WIDTH = 400/*1200*/; // = 5/8 * 1920
@@ -61,8 +62,6 @@ public class QrScanActivity extends BaseActivity implements
 
     private Camera mCamera = null;
 
-    private Button reScanBtn = null;
-
     private ClipView mCoverView = null;
 
     private int mState = STATE_DECODE_FAILED;
@@ -74,7 +73,8 @@ public class QrScanActivity extends BaseActivity implements
     private Rect framingRectInPreview = null;
     private Rect framingRect = null;
 
-    private boolean focusing = false;
+    private boolean isFocusing = false;
+    private boolean isRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,15 +82,6 @@ public class QrScanActivity extends BaseActivity implements
         setContentView(R.layout.activity_qr_scan);
 
         hideTitleBar();
-
-        reScanBtn = (Button)findViewById(R.id.qr_scan_redo);
-        reScanBtn.setOnClickListener(this);
-        reScanBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(QrScanActivity.this, ImagePreviewActivity.class));
-            }
-        });
 
         mCoverView = (ClipView)this.findViewById(R.id.qr_scan_cover);
 
@@ -135,7 +126,8 @@ public class QrScanActivity extends BaseActivity implements
 
     @Override
     public void onAutoFocus(boolean success, Camera camera) {
-        focusing = false;
+        Log.v(TAG, "onAutoFocus " + success);
+        isFocusing = false;
         if (success) {
 
         } else {
@@ -146,6 +138,7 @@ public class QrScanActivity extends BaseActivity implements
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         try {
+            isRunning = true;
             Point point = new Point();
             getWindowManager().getDefaultDisplay().getSize(point);
             mCamera.setPreviewDisplay(holder);
@@ -155,6 +148,7 @@ public class QrScanActivity extends BaseActivity implements
             //mCamera.autoFocus(this);
             mCamera.setOneShotPreviewCallback(this);
             mCamera.startPreview();
+            startFocus();
             initFromCameraParameters(mCamera);
         } catch (IOException e) {
             e.printStackTrace();
@@ -163,7 +157,7 @@ public class QrScanActivity extends BaseActivity implements
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        Log.v(TAG, TAG + " surfaceChanged ");
+        Log.v(TAG, " surfaceChanged ");
         if (mState == STATE_DECODE_FAILED) {
             try {
                 mCamera.stopPreview();
@@ -186,6 +180,7 @@ public class QrScanActivity extends BaseActivity implements
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         Log.v(TAG, TAG + " surfaceDestroyed ");
+        isRunning = false;
         mCamera.stopPreview();
         mCamera.setPreviewCallback(null);
         mCamera.setOneShotPreviewCallback(null);
@@ -198,9 +193,10 @@ public class QrScanActivity extends BaseActivity implements
     }
 
     private void startFocus () {
-        if (!focusing) {
+        if (!isFocusing && isRunning) {
+            Log.v(TAG, "startFocus ");
             mCamera.autoFocus(this);
-            focusing = true;
+            isFocusing = true;
         }
 
     }
@@ -216,7 +212,6 @@ public class QrScanActivity extends BaseActivity implements
     public void onPreviewFrame(byte[] data, Camera camera) {
 
         if (mState == STATE_DECODE_FAILED) {
-            Log.v(TAG, TAG + " onPreviewFrame " + data.length);
             new DecodeTask().execute(data);
             /*String result = scanningImage(data);
             Toast.makeText(this, "result=" + result, Toast.LENGTH_SHORT).show();*/
@@ -239,7 +234,6 @@ public class QrScanActivity extends BaseActivity implements
      * @param height The height of the preview frame.
      */
     private String decode(byte[] data, int width, int height) {
-        long start = System.currentTimeMillis();
         MultiFormatReader multiFormatReader = new MultiFormatReader();
         Map<DecodeHintType,Object> basicHint = new EnumMap<DecodeHintType, Object>(DecodeHintType.class);
         basicHint.put(DecodeHintType.POSSIBLE_FORMATS, QR_CODE_FORMATS);
@@ -274,11 +268,11 @@ public class QrScanActivity extends BaseActivity implements
         }
         //mCoverView.setRect(rect);
         // Go ahead and assume it's YUV rather than die.
-        Log.v(TAG, "buildLuminanceSource "
+        /*Log.v(TAG, "buildLuminanceSource "
                 + rect.left + " "
                 + rect.top + " "
                 + rect.right + " "
-                + rect.bottom);
+                + rect.bottom);*/
         if (mCoverView.getRect() == null) {
             Rect rotatedRect = new Rect(rect.top, rect.left, rect.bottom, rect.right);
             mCoverView.setRect(rotatedRect);
@@ -330,7 +324,6 @@ public class QrScanActivity extends BaseActivity implements
             int leftOffset = (screenResolution.x - width) / 2;
             int topOffset = (screenResolution.y - height) / 2;
             framingRect = new Rect(leftOffset, topOffset, leftOffset + width, topOffset + height);
-            Log.d(TAG, "Calculated framing rect: " + framingRect);
         }
         return framingRect;
     }
@@ -373,12 +366,17 @@ public class QrScanActivity extends BaseActivity implements
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.v(TAG, TAG + " decode end " + s);
-            reScanBtn.setText("result=" + s);
             if (s == null) {
+                Log.v(TAG, "onPostExecute STATE_DECODE_FAILED " + isFocusing);
+                isFocusing = false;
                 mState = STATE_DECODE_FAILED;
+                startFocus();
             } else {
                 mState = STATE_DECODE_SUCCESS;
+                Intent it = new Intent ();
+                it.putExtra(KEY_RESULT, s);
+                setResult(RESULT_OK, it);
+                finish();
             }
         }
     }

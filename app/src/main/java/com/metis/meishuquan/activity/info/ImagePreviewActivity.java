@@ -5,14 +5,16 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.fragment.commons.ImagePreviewFragment;
+import com.metis.meishuquan.fragment.commons.ImagePreviewSingleFragment;
 import com.uk.co.senab.photoview.PhotoView;
 
 public class ImagePreviewActivity extends BaseActivity {
 
-    private static final String KEY_IMAGE_URL_ARRAY = "image_url_array",
+    public static final String KEY_IMAGE_URL_ARRAY = "image_url_array",
                                 KEY_THUMB_URL_ARRAY = "thumb_url_array";
 
     private ImagePreviewFragment mPreviewFragment = null;
@@ -39,6 +41,12 @@ public class ImagePreviewActivity extends BaseActivity {
         mThumbArray = getIntent().getStringArrayExtra(KEY_THUMB_URL_ARRAY);
 
         mPreviewFragment.setUrlArray(mUrlArray);
+        mPreviewFragment.setOnPhotoClickListener(new ImagePreviewSingleFragment.OnPhotoClickListener() {
+            @Override
+            public void onPhotoClick(View v, String url) {
+                finish();
+            }
+        });
     }
 
 }
