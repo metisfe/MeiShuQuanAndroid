@@ -15,7 +15,6 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.assess.AssessInfoActivity;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.assess.Assess;
-import com.metis.meishuquan.model.commons.Comment;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -90,18 +89,19 @@ public class MyCommentsActivity extends DataListActivity {
             ViewHolder holder = null;
             if (convertView == null) {
                 convertView = LayoutInflater.from(MyCommentsActivity.this)
-                        .inflate(R.layout.fragment_comment_list_item, null);
+                        .inflate(R.layout.fragment_assess_list_item, null);
                 holder = new ViewHolder();
                 convertView.setTag(holder);
                 holder.profileIv = (ImageView)convertView.findViewById(R.id.id_img_portrait);
                 holder.nameTv = (TextView)convertView.findViewById(R.id.id_username);
-                holder.locationTv = (TextView)convertView.findViewById(R.id.textView2);
-                holder.contentTv = (TextView)convertView.findViewById(R.id.id_textview_comment_content);
-                holder.notifyTimeTv = (TextView)convertView.findViewById(R.id.id_notifytime);
-                holder.supportBtn = (Button)convertView.findViewById(R.id.id_btn_support);
+                holder.gradeTv = (TextView)convertView.findViewById(R.id.id_tv_grade);
+                holder.createTimeTv = (TextView)convertView.findViewById(R.id.id_createtime);
+                holder.contentTv = (TextView)convertView.findViewById(R.id.id_tv_content);
+                holder.imageContentIv = (ImageView)convertView.findViewById(R.id.id_img_content);
+                holder.commentCountTv = (TextView)convertView.findViewById(R.id.id_tv_comment_count);
                 holder.supportCountTv = (TextView)convertView.findViewById(R.id.id_tv_support_count);
-                holder.commentBtn = (Button)convertView.findViewById(R.id.id_btn_comment);
-                holder.commentCountTv = (TextView)convertView.findViewById(R.id.id_tv_add_one);
+                holder.contentTypeTv = (TextView)convertView.findViewById(R.id.id_tv_content_type);
+                holder.commentStateTv = (TextView)convertView.findViewById(R.id.id_tv_comment_state);
             } else {
                 holder = (ViewHolder)convertView.getTag();
             }
@@ -112,6 +112,11 @@ public class MyCommentsActivity extends DataListActivity {
                     ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.my_info_profile_size)));
             holder.nameTv.setText(user.getName());
             holder.contentTv.setText(comment.getDesc());
+            ImageLoaderUtils.getImageLoader(MainApplication.UIContext)
+                    .displayImage(
+                            comment.getThumbnails().getUrl(),
+                            holder.imageContentIv,
+                            ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher));
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -120,19 +125,23 @@ public class MyCommentsActivity extends DataListActivity {
                     startActivity(it);
                 }
             });
+            holder.imageContentIv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent it = new Intent (MyCommentsActivity.this, ImagePreviewActivity.class);
+                    String[] array = {comment.getOriginalImage().getUrl()};
+                    it.putExtra(ImagePreviewActivity.KEY_IMAGE_URL_ARRAY, array);
+                    startActivity(it);
+                }
+            });
             return convertView;
         }
     }
 
     private class ViewHolder {
-        public ImageView profileIv;
-        public TextView nameTv;
-        public TextView locationTv;
-        public TextView notifyTimeTv;
-        public TextView contentTv;
-        public Button supportBtn;
-        public TextView supportCountTv;
-        public Button commentBtn;
-        public TextView commentCountTv;
+        public ImageView profileIv, imageContentIv;
+        public TextView nameTv, gradeTv, createTimeTv,
+                        contentTv, commentCountTv,
+                        supportCountTv, contentTypeTv, commentStateTv;
     }
 }

@@ -14,7 +14,7 @@
         android:paddingTop="10dp"
         android:paddingRight="10dp"
         android:gravity="top|left"
-        android:focusableInTouchMode="true"
+        android:textCursorDrawable="@null"
         />
     <TextView
         android:id="@+id/input_count_tip"

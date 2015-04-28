@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lidroid.xutils.HttpUtils;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.manager.common.PlayerManager;
 import com.metis.meishuquan.model.assess.AssessComment;
@@ -147,7 +148,7 @@ public class CommentTypeVoiceView extends RelativeLayout {
                 DownloadUtil downloadUtil = new DownloadUtil();
                 String fileName = SystemClock.currentThreadTimeMillis() + ".amr";
                 result = downloadUtil.downFile(url, "/msqdownload/", fileName);
-                path = DownloadUtil.downloadPath + fileName;
+                path = DownloadUtil.downloadPath + "/msqdownload/" + fileName;
                 Log.e("path", path);
             }
             return result;

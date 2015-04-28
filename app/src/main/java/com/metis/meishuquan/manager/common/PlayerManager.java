@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -33,6 +34,9 @@ public class PlayerManager implements MediaPlayer.OnPreparedListener, MediaPlaye
     }
 
     public void start (String path) {
+        if (!new File(path).exists()) {
+            throw new IllegalArgumentException ("are you fucking kidding me ? " + path + " never exists");
+        }
         mPlayer = new MediaPlayer();
         mPlayer.setOnPreparedListener(this);
         mPlayer.setOnCompletionListener(this);

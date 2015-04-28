@@ -29,6 +29,8 @@ public class ImagePreviewFragment extends Fragment implements ViewPager.OnPageCh
 
     private ImagePreviewAdapter mAdapter = null;
 
+    private ImagePreviewSingleFragment.OnPhotoClickListener mPhotoClickListener = null;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_image_prview, null, false);
@@ -41,6 +43,7 @@ public class ImagePreviewFragment extends Fragment implements ViewPager.OnPageCh
         mViewPager.setOnPageChangeListener(this);
         mAdapter = new ImagePreviewAdapter(getChildFragmentManager());
         mViewPager.setAdapter(mAdapter);
+        setOnPhotoClickListener(mPhotoClickListener);
     }
 
     public void setUrlArray (String[] urlArray) {
@@ -101,6 +104,15 @@ public class ImagePreviewFragment extends Fragment implements ViewPager.OnPageCh
         @Override
         public int getCount() {
             return mUrlArray.length;
+        }
+    }
+
+    public void setOnPhotoClickListener (ImagePreviewSingleFragment.OnPhotoClickListener listener) {
+        mPhotoClickListener = listener;
+        if (mAdapter != null) {
+            for (int i = 0; i < mAdapter.getCount(); i++) {
+                mAdapter.getItem(i).setOnPhotoClickListener(listener);
+            }
         }
     }
 }
