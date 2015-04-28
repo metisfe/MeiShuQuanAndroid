@@ -2,14 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_blue_bright"
     >
     <ImageView
         android:id="@+id/studio_list_header_cover"
         android:layout_width="fill_parent"
         android:layout_height="150dp"
         android:src="@drawable/ic_launcher"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         />
     <TextView
         android:id="@+id/studio_list_header_extras"
@@ -29,67 +28,84 @@
         android:layout_alignRight="@+id/studio_list_header_extras"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="5dp"
+        android:text="@string/studio_send_msg"
+        android:gravity="center"
+        android:textColor="@android:color/white"
         />
-    <GridLayout
-        android:id="@+id/studio_list_header_menu"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/studio_list_header_container"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:columnCount="4"
         android:layout_below="@+id/studio_list_header_cover"
-        android:layout_centerHorizontal="true"
         >
-        <include
-            layout="@layout/layout_studio_menu_item"
-            style="@style/studio_menu_item_style"
+        <TextView
+            android:id="@+id/studio_list_header_self_introduce"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             />
-        <include
-            layout="@layout/layout_studio_menu_item"
-            style="@style/studio_menu_item_style"
-            />
-        <include
-            layout="@layout/layout_studio_menu_item"
-            style="@style/studio_menu_item_style"
-            />
-        <include
-            layout="@layout/layout_studio_menu_item"
-            style="@style/studio_menu_item_style"
-            />
-        <include
-            layout="@layout/layout_studio_menu_item"
-            style="@style/studio_menu_item_style"
-            />
-        <include
-            layout="@layout/layout_studio_menu_item"
-            style="@style/studio_menu_item_style"
-            />
-        <include
-            layout="@layout/layout_studio_menu_item"
-            style="@style/studio_menu_item_style"
-            />
-        <include
-            layout="@layout/layout_studio_menu_item"
-            style="@style/studio_menu_item_style"
-            />
-    </GridLayout>
+        <GridLayout
+            android:id="@+id/studio_list_header_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:columnCount="4"
+            android:layout_centerHorizontal="true"
+            >
+            <!--<include
+                layout="@layout/layout_studio_menu_item"
+                style="@style/studio_menu_item_style"
+                />
+            <include
+                layout="@layout/layout_studio_menu_item"
+                style="@style/studio_menu_item_style"
+                />
+            <include
+                layout="@layout/layout_studio_menu_item"
+                style="@style/studio_menu_item_style"
+                />
+            <include
+                layout="@layout/layout_studio_menu_item"
+                style="@style/studio_menu_item_style"
+                />
+            <include
+                layout="@layout/layout_studio_menu_item"
+                style="@style/studio_menu_item_style"
+                />
+            <include
+                layout="@layout/layout_studio_menu_item"
+                style="@style/studio_menu_item_style"
+                />
+            <include
+                layout="@layout/layout_studio_menu_item"
+                style="@style/studio_menu_item_style"
+                />
+            <include
+                layout="@layout/layout_studio_menu_item"
+                style="@style/studio_menu_item_style"
+                />-->
+        </GridLayout>
+    </RelativeLayout>
     <RadioGroup
+        android:id="@+id/studio_list_header_tab_container"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@+id/studio_list_header_menu"
+        android:layout_below="@+id/studio_list_header_container"
         android:background="#e2e2e2"
         android:minHeight="33dp"
         android:layout_marginTop="10dp"
         >
         <RadioButton
-            style="@style/studio_radio_btn_style"
-            android:text="1"
-            android:checked="true"
-            />
-        <RadioButton
+            android:id="@+id/studio_list_header_tab1"
             style="@style/studio_radio_btn_style"
             android:text="1"
             />
         <RadioButton
+            android:id="@+id/studio_list_header_tab2"
+            style="@style/studio_radio_btn_style"
+            android:text="1"
+            />
+        <RadioButton
+            android:id="@+id/studio_list_header_tab3"
             style="@style/studio_radio_btn_style"
             android:text="1"
             />
