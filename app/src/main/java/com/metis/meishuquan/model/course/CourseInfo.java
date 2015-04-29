@@ -1,9 +1,11 @@
 package com.metis.meishuquan.model.course;
 
+import java.io.Serializable;
+
 /**
  * Created by wangjin on 15/4/17.
  */
-public class CourseInfo {
+public class CourseInfo implements Serializable {
     private Course data;
 
     public Course getData() {

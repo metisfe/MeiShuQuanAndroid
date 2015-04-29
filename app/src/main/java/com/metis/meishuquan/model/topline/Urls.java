@@ -1,9 +1,11 @@
 package com.metis.meishuquan.model.topline;
 
+import java.io.Serializable;
+
 /**
  * Created by xiaoxiao on 15/3/26.
  */
-public class Urls {
+public class Urls implements Serializable {
     private String newsUploadID;
 
     private String upType;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.metis.meishuquan">
+    package="com.metis.meishuquan" >
 
     <!-- App Required -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -23,23 +23,31 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <!-- Don't require camera, as this requires a rear camera. This allows it to work on the Nexus 7 -->
-    <uses-feature android:name="android.hardware.camera" android:required="false"/>
-    <uses-feature android:name="android.hardware.camera.front" android:required="false"/>
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.front"
+        android:required="false" />
     <!-- TODO replace above two with next line after Android 4.2 -->
     <!-- <uses-feature android:name="android.hardware.camera.any"/> -->
-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
-    <uses-feature android:name="android.hardware.camera.flash" android:required="false"/>
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.flash"
+        android:required="false" />
 
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/StyledIndicators">
+        android:theme="@style/StyledIndicators" >
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -111,7 +119,7 @@
 
         <activity
             android:name="io.rong.imkit.RongActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -156,7 +164,7 @@
         <activity
             android:name="io.rong.imkit.RongSingleActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -171,7 +179,7 @@
         <activity
             android:name="io.rong.imkit.RongSecActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -229,7 +237,7 @@
         <activity
             android:name="io.rong.voipkit.activity.CalledSideActivity"
             android:excludeFromRecents="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="io.rong.voipkit.calledSideActivity.action" />
 
@@ -249,7 +257,7 @@
             android:priority="1000" />
         <service
             android:name="io.rong.imlib.push.PushService"
-            android:process="io.rong.push">
+            android:process="io.rong.push" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -258,7 +266,7 @@
         </service>
         <service
             android:name="io.rong.imlib.push.CommandService"
-            android:process="io.rong.push">
+            android:process="io.rong.push" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -268,7 +276,7 @@
 
         <receiver
             android:name="io.rong.imlib.push.PushReceiver"
-            android:process="io.rong.push">
+            android:process="io.rong.push" >
             <intent-filter>
                 <action android:name="io.rong.imlib.action.push.heartbeat" />
             </intent-filter>
@@ -279,7 +287,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name="io.rong.imlib.push.PushMessageReceiver">
+        <receiver android:name="io.rong.imlib.push.PushMessageReceiver" >
             <intent-filter>
                 <action android:name="io.rong.push.message" />
             </intent-filter>
@@ -354,6 +362,10 @@
         <activity
             android:name=".activity.info.MyFavoriteDetailActivity"
             android:label="@string/title_activity_my_favorite_detail" >
+        </activity>
+        <activity
+            android:name=".activity.course.CoursePhotoInfoActivity"
+            android:label="@string/title_activity_course_photo_info" >
         </activity>
     </application>
 

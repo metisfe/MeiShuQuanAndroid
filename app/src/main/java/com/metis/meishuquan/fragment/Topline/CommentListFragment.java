@@ -300,7 +300,7 @@ public class CommentListFragment extends Fragment {
                     }.getType());
                     List<Comment> data = new ArrayList<Comment>();
                     if (commentsData != null) {
-                        List<Comment> lstHostComments = commentsData.getData().getHostComments();
+                        List<Comment> lstHostComments = commentsData.getData().getHotComments();
                         List<Comment> lstNewComments = commentsData.getData().getNewComments();
 
                         if (lstHostComments != null && lstHostComments.size() > 0) {

@@ -66,6 +66,7 @@ import java.util.StringTokenizer;
 public class ItemInfoFragment extends Fragment {
 
     public static final String KEY_TITLE_VISIBLE = "title_visible";
+    public static final String LOG_EXCEPTION = "exception";
 
     private final int LOGINREQUESTCODE = 1001;
 
@@ -168,9 +169,8 @@ public class ItemInfoFragment extends Fragment {
         fm = getActivity().getSupportFragmentManager();
     }
 
-
     private void addViewByContent() {
-        if (newsInfo != null) {
+        if (newsInfo != null && newsInfo.getData() != null) {
             String json = newsInfo.getData().getContent();
             Log.i("content", json);
             Gson gson = new Gson();
@@ -402,6 +402,8 @@ public class ItemInfoFragment extends Fragment {
                             if (result != null && result.getInfo().equals(String.valueOf(0))) {
                                 Toast.makeText(getActivity(), "发送成功", Toast.LENGTH_SHORT).show();
                                 hideInputView();
+                            } else {
+                                Log.e(LOG_EXCEPTION, exception.toString());
                             }
                         }
                     });
@@ -470,7 +472,7 @@ public class ItemInfoFragment extends Fragment {
         imageGroup = null;
     }
 
-    public void getInfoData (final int newsId, final UserInfoOperator.OnGetListener<TopLineNewsInfo> listener) {
+    public void getInfoData(final int newsId, final UserInfoOperator.OnGetListener<TopLineNewsInfo> listener) {
         TopLineOperator topLineOperator = TopLineOperator.getInstance();
         topLineOperator.getNewsInfoById(newsId, new ApiOperationCallback<ReturnInfo<String>>() {
             @Override

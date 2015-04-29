@@ -8,18 +8,18 @@ import java.util.List;
  */
 public class CommentsData {
 
-    private List<Comment> hostComments;
+    private List<Comment> hotComments;
     private List<Comment> newComments;
 
-    public List<Comment> getHostComments() {
-        if (hostComments ==null){
-            hostComments = new ArrayList<Comment>();
+    public List<Comment> getHotComments() {
+        if (hotComments ==null){
+            hotComments = new ArrayList<Comment>();
         }
-        return hostComments;
+        return hotComments;
     }
 
-    public void setHostComments(List<Comment> hostComments) {
-        this.hostComments = hostComments;
+    public void setHotComments(List<Comment> hotComments) {
+        this.hotComments = hotComments;
     }
 
     public List<Comment> getNewComments() {

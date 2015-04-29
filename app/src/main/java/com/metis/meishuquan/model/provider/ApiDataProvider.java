@@ -54,40 +54,16 @@ public class ApiDataProvider extends DataProvider {
     private static final String KEY_COMMENT_POST_TIMESTAMP = "Timestamp";
     private static final String VALUE_TRUE = "true";
 
-    static
-    {
-        String defaultBed = "Prod:Bing-HK2";
-
-        apiBeds = new HashMap<String, String>();
-        apiBeds.put(defaultBed, "http://www.bing.com/yingxiangli/json?mkt=zh-cn&FORM=BSCAPP&p=${EncodedPath}&v=${ApiVersion}");
-        apiBeds.put("INT:Bing-Prod", "http://origin.bing-int.com/yingxiangli/json?bscapi=api.score.binginternal.com/api/v${ApiVersion}/mobile/&mkt=zh-cn&FORM=BSCAPP&p=${EncodedPath}");
-        apiBeds.put("INT:Bing-BJ1", "http://origin.bing-int.com/yingxiangli/json?bscapi=bj1.api.score.binginternal.com/api/v${ApiVersion}/mobile/&mkt=zh-cn&FORM=BSCAPP&p=${EncodedPath}");
-        apiBeds.put("INT:Bing-HK2", "http://origin.bing-int.com/yingxiangli/json?bscapi=hk2.api.score.binginternal.com/api/v${ApiVersion}/mobile/&mkt=zh-cn&FORM=BSCAPP&p=${EncodedPath}");
-        apiBeds.put("INT:Bing-Co3", "http://origin.bing-int.com/yingxiangli/json?bscapi=co3.api.score.binginternal.com/api/v${ApiVersion}/mobile/&mkt=zh-cn&FORM=BSCAPP&p=${EncodedPath}");
-        apiBeds.put("INT:Bing-Ch1d", "http://origin.bing-int.com/yingxiangli/json?bscapi=ch1d.api.score.binginternal.com/api/v${ApiVersion}/mobile/&mkt=zh-cn&FORM=BSCAPP&p=${EncodedPath}");
-        apiBeds.put("API:Prod", "http://api.score.binginternal.com/api/v${ApiVersion}/mobile/${Path}");
-        apiBeds.put("API:BJ1", "http://bj1.api.score.binginternal.com/api/v${ApiVersion}/mobile/${Path}");
-        apiBeds.put("API:HK2", "http://hk2.api.score.binginternal.com/api/v${ApiVersion}/mobile/${Path}");
-        apiBeds.put("API:Co3", "http://co3.api.score.binginternal.com/api/v${ApiVersion}/mobile/${Path}");
-        apiBeds.put("API:Ch1d", "http://ch1d.api.score.binginternal.com/api/v${ApiVersion}/mobile/${Path}");
-
-        // BJ1 value for fail-back
-        apiBeds.put("Custom", "http://www.bing.com/yingxiangli/json?mkt=zh-cn&FORM=BSCAPP&p=${EncodedPath}&v=${ApiVersion}");
-
-        setDefaultBed(defaultBed);
-    }
-
     public static MobileServiceClient getmClient() {
         return mClient;
     }
 
-    public static boolean initProvider()
-    {
+    public static boolean initProvider() {
         try {
-            mClient= new MobileServiceClient(
-                "https://metisapi.azure-mobile.cn",
-                "JhSUSARkPDywIlrCKJKQzOJIttIYWU24",
-                MainApplication.UIContext);
+            mClient = new MobileServiceClient(
+                    "https://metisapi.azure-mobile.cn",
+                    "JhSUSARkPDywIlrCKJKQzOJIttIYWU24",
+                    MainApplication.UIContext);
             return true;
         } catch (MalformedURLException e) {
 
@@ -96,15 +72,12 @@ public class ApiDataProvider extends DataProvider {
         return false;
     }
 
-    public static String getDefautlBed()
-    {
+    public static String getDefautlBed() {
         return currentDefaultBed;
     }
 
-    public static void setDefaultBed(String bedName)
-    {
-        if (apiBeds == null || !apiBeds.containsKey(bedName))
-        {
+    public static void setDefaultBed(String bedName) {
+        if (apiBeds == null || !apiBeds.containsKey(bedName)) {
             return;
         }
 
@@ -114,8 +87,7 @@ public class ApiDataProvider extends DataProvider {
         currentDefaultBed = bedName;
     }
 
-    public static void test()
-    {
+    public static void test() {
         try {
             mClient.invokeApi("v1.1/Channel/ChannelList?userId=1&type=1", null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
                 @Override
@@ -125,7 +97,7 @@ public class ApiDataProvider extends DataProvider {
             });
 
         } catch (Exception e) {
-            Log.e("hello",e.getMessage());
+            Log.e("hello", e.getMessage());
         }
     }
 

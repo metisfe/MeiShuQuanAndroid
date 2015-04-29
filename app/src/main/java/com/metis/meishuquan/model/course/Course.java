@@ -2,12 +2,13 @@ package com.metis.meishuquan.model.course;
 
 import com.metis.meishuquan.model.topline.Urls;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by wangjin on 15/4/17.
  */
-public class Course {
+public class Course implements Serializable {
     private String coursePic;
 
     private int courseId;
@@ -20,9 +21,15 @@ public class Course {
 
     private String createTime;
 
+    private int courseType;
+
     private int viewCount;
 
     private int commentCount;
+
+    private int supportCount;
+
+    private int OppositionCount;
 
     private String desc;
 
@@ -72,6 +79,14 @@ public class Course {
         return viewCount;
     }
 
+    public int getCourseType() {
+        return courseType;
+    }
+
+    public void setCourseType(int courseType) {
+        this.courseType = courseType;
+    }
+
     public void setViewCount(int viewCount) {
         this.viewCount = viewCount;
     }
@@ -84,20 +99,36 @@ public class Course {
         this.commentCount = commentCount;
     }
 
+    public int getSupportCount() {
+        return supportCount;
+    }
+
+    public void setSupportCount(int supportCount) {
+        this.supportCount = supportCount;
+    }
+
+    public int getOppositionCount() {
+        return OppositionCount;
+    }
+
+    public void setOppositionCount(int oppositionCount) {
+        OppositionCount = oppositionCount;
+    }
+
+    public List<Urls> getUrls() {
+        return urls;
+    }
+
+    public void setUrls(List<Urls> urls) {
+        this.urls = urls;
+    }
+
     public String getContent() {
         return content;
     }
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public List<Urls> getUrlss() {
-        return urls;
-    }
-
-    public void setUrlss(List<Urls> urlss) {
-        this.urls = urlss;
     }
 
     public String getDesc() {

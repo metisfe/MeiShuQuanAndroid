@@ -1,5 +1,6 @@
 package com.metis.meishuquan.model.BLL;
 
+import android.util.Log;
 import android.util.Pair;
 
 import com.metis.meishuquan.MainApplication;
@@ -24,6 +25,8 @@ import java.util.List;
  * Created by wangjin on 15/4/13.
  */
 public class CommonOperator {
+    private static final String Log_PubLishComment_url = "Log_PubLishComment_url";
+
     private static final String URL_SUPPORTORSTEP = "v1.1/Comment/Support";
     private static CommonOperator operator = null;
     private final String PUBLISHCOMMENT = "v1.1/Comment/PublishComment";//发表评论
@@ -73,19 +76,20 @@ public class CommonOperator {
      * @param userid
      * @param newsId
      * @param replyCid  不是子评论时默认为0
-     * @param blockType 0头条，1点评，2课程
+     * @param blockType 0头条，2课程
      * @param callback
      */
     public void publishComment(int userid, int newsId, String content, int replyCid, BlockTypeEnum blockType, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
-                StringBuffer path = new StringBuffer(PUBLISHCOMMENT);
+                StringBuilder path = new StringBuilder(PUBLISHCOMMENT);
                 path.append("?userid=" + userid);
                 path.append("&newsid=" + newsId);
                 path.append("&content=" + content);
                 path.append("&replyCid=" + replyCid);
                 path.append("&blockType=" + blockType.getVal());
                 path.append("&session=" + SESSION);
+                Log.i(Log_PubLishComment_url, path.toString());
                 ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }

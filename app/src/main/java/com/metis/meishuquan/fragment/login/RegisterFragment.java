@@ -124,7 +124,7 @@ public class RegisterFragment extends Fragment {
                     return;
                 }
                 if (pwd.length() < 6 || pwd.length() > 12) {
-                    Toast.makeText(getActivity(), "密码长度应在6-14位之间", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "密码长度应在6-12位之间", Toast.LENGTH_SHORT).show();
                     etPwd.requestFocus();
                     return;
                 }
