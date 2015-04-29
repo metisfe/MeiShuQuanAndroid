@@ -208,4 +208,12 @@
         <item name="android:singleLine">true</item>
         <item name="android:button">@null</item>
     </style>
+    <style name="act_list_spanner">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:spinnerMode">dropdown</item>
+        <item name="android:dropDownVerticalOffset">2dp</item>
+    </style>
 </resources>

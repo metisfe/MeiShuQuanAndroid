@@ -2,6 +2,7 @@ package com.metis.meishuquan.view.shared;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +18,13 @@ import com.metis.meishuquan.R;
  */
 public class TitleView extends RelativeLayout {
 
-    private ImageView mBackIv = null;
+    private ImageView mBackIv = null, mRightIv = null;
     private TextView mTitleTv = null, mTitleRightTv = null;
     private FrameLayout mTitleContainer = null;
 
     private String mTitle = null, mTitleRight = null;
+
+    private Drawable mImageRight = null;
 
     public TitleView(Context context) {
         this(context, null);
@@ -38,6 +41,7 @@ public class TitleView extends RelativeLayout {
         try {
             mTitle = typedArray.getString(R.styleable.TitleView_titleText);
             mTitleRight = typedArray.getString(R.styleable.TitleView_titleTextRight);
+            mImageRight = typedArray.getDrawable(R.styleable.TitleView_titleImageRight);
         } finally {
             typedArray.recycle();
         }
@@ -50,10 +54,12 @@ public class TitleView extends RelativeLayout {
         mTitleTv = (TextView)findViewById(R.id.title_tv);
         mTitleRightTv = (TextView)findViewById(R.id.title_right);
         mBackIv = (ImageView)findViewById(R.id.back);
+        mRightIv = (ImageView)findViewById(R.id.image_right);
         mTitleContainer = (FrameLayout)findViewById(R.id.title_container);
 
         mTitleTv.setText(mTitle);
         mTitleRightTv.setText(mTitleRight);
+        mRightIv.setImageDrawable(mImageRight);
     }
 
     public void setBackListener (OnClickListener listener) {
@@ -79,5 +85,18 @@ public class TitleView extends RelativeLayout {
 
     public void setCenterView (View view) {
         mTitleContainer.addView(view);
+    }
+
+    public void setImageRightResource (int resource) {
+        setImageRightDrawable(getContext().getDrawable(resource));
+    }
+
+    public void setImageRightDrawable (Drawable drawable) {
+        mImageRight = drawable;
+        mRightIv.setImageDrawable(drawable);
+    }
+
+    public void setImageRightVisible (int visible) {
+        mRightIv.setVisibility(visible);
     }
 }

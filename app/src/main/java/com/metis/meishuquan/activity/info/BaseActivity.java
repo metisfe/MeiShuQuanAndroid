@@ -16,6 +16,9 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.InputActivity;
 import com.metis.meishuquan.view.shared.TitleView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by WJ on 2015/4/10.
  */
@@ -25,6 +28,8 @@ public class BaseActivity extends FragmentActivity {
     private TitleView mTitleView = null;
     private FrameLayout mViewContainer = null;
     private View mContentView = null;
+
+    private List<Fragment> mFragmentList = new ArrayList<Fragment>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,20 +95,47 @@ public class BaseActivity extends FragmentActivity {
         return mTitleView;
     }
 
-    public void addFragment (Fragment fragment) {
+    public void addFragment (Fragment fragment, boolean addInBackStack) {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction ft = manager.beginTransaction();
         ft.add(R.id.base_view_container, fragment);
-        ft.addToBackStack(null);
+        if (addInBackStack) {
+            ft.addToBackStack(null);
+        }
         ft.commit();
+        mFragmentList.add(fragment);
     }
 
-    public void removeFragment (Fragment fragment) {
+    public void addFragment (Fragment fragment) {
+        addFragment(fragment, true);
+    }
+
+    public void removeFragment (Fragment fragment, boolean popBackStack) {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction ft = manager.beginTransaction();
         ft.remove(fragment);
-        manager.popBackStack();
+        if (popBackStack) {
+            manager.popBackStack();
+        }
         ft.commit();
+        mFragmentList.remove(fragment);
+    }
+
+    public void removeFragment (Fragment fragment) {
+        removeFragment(fragment, true);
+    }
+
+    public void removeLastFragment (boolean hasInBackStack) {
+        if (mFragmentList.isEmpty()) {
+            return;
+        }
+        removeFragment(mFragmentList.get(mFragmentList.size() - 1), hasInBackStack);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mFragmentList.clear();
     }
 
     @Override
@@ -119,9 +151,14 @@ public class BaseActivity extends FragmentActivity {
     }
 
     public void startInputActivityForResult (String title, CharSequence defStr, boolean singleLine, int requestCode, int inputType) {
+        startInputActivityForResult(title, defStr, null, singleLine, requestCode, inputType);
+    }
+
+    public void startInputActivityForResult (String title, CharSequence defStr, String hint, boolean singleLine, int requestCode, int inputType) {
         Intent it = new Intent(this, InputActivity.class);
         it.putExtra(InputActivity.KEY_TITLE, title);
         it.putExtra(InputActivity.KEY_DEFAULT_STR, defStr);
+        it.putExtra(InputActivity.KEY_HINT, hint);
         it.putExtra(InputActivity.KEY_SINGLE_LINE, singleLine);
         it.putExtra(InputActivity.KEY_REQUEST_CODE, requestCode);
         it.putExtra(InputActivity.KEY_INPUT_TYPE, inputType);
