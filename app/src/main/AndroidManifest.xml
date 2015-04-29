@@ -364,8 +364,13 @@
             android:label="@string/title_activity_my_favorite_detail" >
         </activity>
         <activity
+<<<<<<< HEAD
             android:name=".activity.course.CoursePhotoInfoActivity"
             android:label="@string/title_activity_course_photo_info" >
+=======
+            android:name=".activity.act.ActDetailActivity"
+            android:label="@string/title_activity_act_detail" >
+>>>>>>> origin/master
         </activity>
     </application>
 

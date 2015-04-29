@@ -18,7 +18,8 @@ public class InputActivity extends FragmentActivity {
             KEY_DEFAULT_STR = "default_str",
             KEY_SINGLE_LINE = "single_line",
             KEY_REQUEST_CODE = "request_code",
-            KEY_INPUT_TYPE = "input_type";
+            KEY_INPUT_TYPE = "input_type",
+            KEY_HINT = "input_hint";
 
     public static final int
             REQUEST_CODE_NICK = 100,
@@ -26,7 +27,8 @@ public class InputActivity extends FragmentActivity {
             REQUEST_CODE_CV = 104,
             REQUEST_CODE_AGE = 106,
             REQUEST_CODE_DEPARTMENT_ADDRESS = 108,
-            REQUEST_CODE_ACHIEVEMENT = 110;
+            REQUEST_CODE_ACHIEVEMENT = 110,
+            REQUEST_CODE_MEISHUQUAN_ID = 112;
 
     private TitleView mTitleView = null;
     private InputFragment mInputFragment = null;
@@ -34,6 +36,7 @@ public class InputActivity extends FragmentActivity {
 
     private CharSequence mDefaultStr = null;
     private boolean isSingleLine = false;
+    private String mHint = null;
 
     private int mRequestCode = REQUEST_CODE_NICK;
 
@@ -44,6 +47,7 @@ public class InputActivity extends FragmentActivity {
 
         Intent it = getIntent();
         mDefaultStr = it.getCharSequenceExtra(KEY_DEFAULT_STR);
+        mHint = it.getStringExtra(KEY_HINT);
         isSingleLine = it.getBooleanExtra(KEY_SINGLE_LINE, isSingleLine);
         mRequestCode = it.getIntExtra(KEY_REQUEST_CODE, mRequestCode);
         String title = it.getStringExtra(KEY_TITLE);
@@ -70,6 +74,7 @@ public class InputActivity extends FragmentActivity {
         mInputFragment = (InputFragment)getSupportFragmentManager().findFragmentById(R.id.input_fragment);
         mInputFragment.setSingleLine(isSingleLine);
         mInputFragment.setText(mDefaultStr);
+        mInputFragment.setHint(mHint);
         mInputFragment.setInputType(inputType);
 
         mExtraTipTv = (TextView)findViewById(R.id.input_extra_tip);

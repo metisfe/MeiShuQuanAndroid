@@ -38,7 +38,7 @@
     <string name="title_activity_department_edit">DepartmentEditActivity</string>
     <string name="title_activity_constellation">ConstellationActivity</string>
     <string name="title_activity_qr">QrActivity</string>
-    <string name="title_activity_qr_scan">QrScanActivity</string>
+    <string name="title_activity_qr_scan">扫描二维码</string>
 
     <string name="title_activity_news_info_actity">NewsInfoActity</string>
     <string name="title_activity_image_preview">ImagePreview</string>
@@ -55,5 +55,9 @@
     <string name="title_activity_charge">ChargeActivity</string>
     <string name="title_activity_book_list">BookListActivity</string>
     <string name="title_activity_my_favorite_detail">MyFavoriteDetailActivity</string>
+<<<<<<< HEAD
     <string name="title_activity_course_photo_info">CoursePhotoInfoActivity</string>
+=======
+    <string name="title_activity_act_detail">ActDetailActivity</string>
+>>>>>>> origin/master
 </resources>

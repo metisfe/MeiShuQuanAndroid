@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/act_detail_cover"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/act_cover_height"
+        android:scaleType="centerCrop"
+        />
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/act_detail_cover"
+        android:layout_above="@+id/act_detail_join"
+        >
+        <TextView
+            android:id="@+id/act_detail_text"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+    </ScrollView>
+    <Button
+        android:id="@+id/act_detail_join"
+        android:layout_width="fill_parent"
+        android:layout_height="35dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:layout_marginBottom="35dp"
+        android:layout_marginTop="35dp"
+        android:textColor="@android:color/white"
+        android:background="#fb6d6d"
+        android:text="@string/act_title_join"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        />
+</RelativeLayout>

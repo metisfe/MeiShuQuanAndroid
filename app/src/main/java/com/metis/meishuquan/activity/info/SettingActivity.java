@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.act.ActDetailActivity;
 import com.metis.meishuquan.activity.info.homepage.StudioActivity;
 import com.metis.meishuquan.manager.common.PlayerManager;
 import com.metis.meishuquan.manager.common.RecorderManager;
@@ -56,33 +57,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void onTitleRightPressed() {
         super.onTitleRightPressed();
-        startActivity(new Intent(this, StudioActivity.class));
-        Log.v(TAG, Environment.getExternalStorageDirectory() + File.separator +
-                "0" + File.separator + "sound.mp3");
-        /*RecorderManager.getInstance(this).setOnRecoderListener(new RecorderManager.OnRecorderListener() {
-            @Override
-            public void onStarted(String path) {
-                Toast.makeText(SettingActivity.this, "start", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onRecording() {
-
-            }
-
-            @Override
-            public void onStopped(String path, boolean userDone, long duration) {
-                Toast.makeText(SettingActivity.this, "stop", Toast.LENGTH_SHORT).show();
-                PlayerManager.getInstance(SettingActivity.this).start(path);
-            }
-
-            @Override
-            public void onException(String errorMsg) {
-
-            }
-        });
-        RecorderManager.getInstance(this).start(Environment.getExternalStorageDirectory() + File.separator +
-                "0" + File.separator + System.currentTimeMillis() + ".amr");*/
+        /*startActivity(new Intent(this, StudioActivity.class));*/
+        startActivity(new Intent(this, ActDetailActivity.class));
     }
 
     @Override

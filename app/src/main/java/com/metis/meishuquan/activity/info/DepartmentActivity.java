@@ -22,8 +22,6 @@ public class DepartmentActivity extends BaseActivity {
 
     public static final int REQUEST_CODE_ = 102;
 
-    private TitleView mTitleView = null;
-
     private ListView mDepartmentLv = null;
 
     private List<DepartmentDelegate> mDepartments = new ArrayList<DepartmentDelegate>();
@@ -34,23 +32,24 @@ public class DepartmentActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_department);
 
-        mTitleView = (TitleView)findViewById(R.id.title);
-        mTitleView.setBackListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        mTitleView.setRightListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent (DepartmentActivity.this, DepartmentEditActivity.class);
-                startActivityForResult(it, REQUEST_CODE_);
-            }
-        });
-
         mDepartmentLv = (ListView)findViewById(R.id.department_list);
         mDepartmentLv.setAdapter(mAdapter);
+    }
+
+    @Override
+    public String getTitleCenter() {
+        return getString(R.string.info_department);
+    }
+
+    @Override
+    public String getTitleRight() {
+        return getString(R.string.department_add);
+    }
+
+    @Override
+    public void onTitleRightPressed() {
+        Intent it = new Intent (DepartmentActivity.this, DepartmentEditActivity.class);
+        startActivityForResult(it, REQUEST_CODE_);
     }
 
     @Override

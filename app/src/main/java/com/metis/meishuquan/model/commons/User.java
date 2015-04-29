@@ -32,7 +32,8 @@ public class User implements Serializable {
             KEY_LOCATIONADDRESS = "LocationAddress",
             KEY_GOODSUBJECTS = "GoodSubjects",
             KEY_ACHIEVEMENT = "Achievement",
-            KEY_USER_ID = "userId";
+            KEY_USER_ID = "userId",
+            KEY_ACCOUNT = "Account";
 
     @SerializedName("userId")
     private int userId = -1;

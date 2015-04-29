@@ -93,4 +93,8 @@ public class MyInfoBtn extends RelativeLayout {
     public CharSequence getText () {
         return mTv.getText();
     }
+
+    public void setArrowVisible (int visible) {
+        mArrowIv.setVisibility(visible);
+    }
 }

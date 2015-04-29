@@ -96,7 +96,9 @@ public class UserInfoOperator {
                     Log.v(TAG, "updateUserProfile " + result);
                     Gson gson = new Gson();
                     Result<List<Profile>> profileResult = gson.fromJson(result, new TypeToken<Result<List<Profile>>>(){}.getType());
-                    updateUserProfileByUrl(userId, profileResult.getData().get(0).getOriginalImage());
+                    if (profileResult.getOption().getStatus() == 0) {
+                        updateUserProfileByUrl(userId, profileResult.getData().get(0).getOriginalImage());
+                    }
                     /*if (listener != null) {
                         listener.onGet(true, profileResult.getData());
                     }*/

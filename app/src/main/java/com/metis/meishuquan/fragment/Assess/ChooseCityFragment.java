@@ -35,12 +35,16 @@ import java.util.List;
  * Created by wj on 15/4/1.
  */
 public class ChooseCityFragment extends Fragment {
+
+    public static final String KEY_SHOW_TITLE = "show_title";
+
     private ExpandableListView listView;
     private Button btnBack;
     private SearchView searchView;
     private ExpandeAdapter adapter;
     private AllCity mAllCity = null;
     private OnCityChooseListener mListener = null;
+    private View mTitleView = null;
 
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
@@ -72,6 +76,9 @@ public class ChooseCityFragment extends Fragment {
         this.searchView = (SearchView) rootView.findViewById(R.id.id_assess_city_autocomplete_searchView);
         this.searchView.setSubmitButtonEnabled(false);
 
+        this.mTitleView = rootView.findViewById(R.id.city_title);
+        boolean showTitle = getArguments().getBoolean(KEY_SHOW_TITLE);
+        mTitleView.setVisibility(showTitle ? View.VISIBLE : View.GONE);
 
         this.adapter = new ExpandeAdapter(MainApplication.UIContext, mAllCity);
         this.listView.setAdapter(adapter);

@@ -16,7 +16,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
@@ -38,32 +34,23 @@ import com.metis.meishuquan.activity.InputActivity;
 import com.metis.meishuquan.activity.course.ChooseCourseActivity;
 import com.metis.meishuquan.fragment.assess.ChooseCityFragment;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
-import com.metis.meishuquan.model.BLL.UserOperator;
 import com.metis.meishuquan.model.assess.City;
 import com.metis.meishuquan.model.commons.Result;
 import com.metis.meishuquan.model.commons.User;
-import com.metis.meishuquan.model.course.Course;
 import com.metis.meishuquan.model.course.CourseChannel;
 import com.metis.meishuquan.model.course.CourseChannelItem;
 import com.metis.meishuquan.util.ImageLoaderUtils;
+import com.metis.meishuquan.util.PatternUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
-import com.metis.meishuquan.view.shared.BaseDialog;
 import com.metis.meishuquan.view.shared.MyInfoBtn;
-import com.metis.meishuquan.view.shared.TitleView;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
-
-import org.json.JSONArray;
 
 import java.io.File;
 import java.io.Serializable;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import io.rong.imkit.view.SwitchGroup;
 
 public class InfoActivity extends BaseActivity implements View.OnClickListener {
 
@@ -75,7 +62,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
     private View mProfileContainer = null;
     private ImageView mProfile = null;
 
-    private MyInfoBtn mNickView, mGenderView, mConstellationView, mGradeView, mProvienceView,
+    private MyInfoBtn mNickView, mMeishuquanIdView, mGenderView, mConstellationView, mGradeView, mProvienceView,
             mAgeView, mCvView, mDepartmentView, mDepartmentAddrView, mGoodAtView,
             mAchievementView;
 
@@ -91,6 +78,8 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
     private boolean isStudent = true;
     private boolean isTeacher = false;
 
+    private boolean canEdit = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +91,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
         mProfile = (ImageView)findViewById(R.id.info_profile);
 
         mNickView = (MyInfoBtn)findViewById(R.id.info_nick);
+        mMeishuquanIdView = (MyInfoBtn)findViewById(R.id.info_meishuquan_id);
         mGenderView = (MyInfoBtn)findViewById(R.id.info_gender);
         mConstellationView = (MyInfoBtn)findViewById(R.id.info_constellation);
         mGradeView = (MyInfoBtn)findViewById(R.id.info_level);
@@ -118,6 +108,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
 
         mProfileContainer.setOnClickListener(this);
         mNickView.setOnClickListener(this);
+        mMeishuquanIdView.setOnClickListener(this);
         mRecentsContainer.setOnClickListener(this);
         mGenderView.setOnClickListener(this);
         mProvienceView.setOnClickListener(this);
@@ -144,6 +135,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
         UserInfoOperator.getInstance().getUserInfo(MainApplication.userInfo.getUserId(), new UserInfoOperator.OnGetListener<User>() {
             @Override
             public void onGet(boolean succeed, User user) {
+                canEdit = succeed;
                 if (succeed) {
                     fillUserInfo(user);
                 }
@@ -158,6 +150,9 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        if (!canEdit) {
+            return;
+        }
         Intent it = null;
         switch (v.getId()) {
             case R.id.info_profile_container:
@@ -165,6 +160,11 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.info_nick:
                 startInputActivityForResult(getString(R.string.info_modify_nick), mNickView.getSecondaryText(), true, InputActivity.REQUEST_CODE_NICK);
+                break;
+            case R.id.info_meishuquan_id:
+                if (TextUtils.isEmpty(mMeishuquanIdView.getSecondaryText().toString())) {
+                    startInputActivityForResult(mMeishuquanIdView.getText().toString(), mMeishuquanIdView.getSecondaryText(), true, InputActivity.REQUEST_CODE_MEISHUQUAN_ID);
+                }
                 break;
             case R.id.info_recents_container:
                 startInputActivityForResult(getString(R.string.info_recents), mRecentsContentTv.getText(), false, InputActivity.REQUEST_CODE_RECENTS);
@@ -210,10 +210,25 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
             case InputActivity.REQUEST_CODE_NICK:
                 if (resultCode == RESULT_OK) {
                     CharSequence nick = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR);
+                    if (!PatternUtils.PATTERN_NICK_NAME.matcher(nick.toString()).matches()) {
+                        Toast.makeText(this, R.string.info_nick_name_illegal, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     mNickView.setSecondaryText(nick);
-                    updateInfo("UserNickName", nick.toString());
+                    updateInfo(User.KEY_NICK_NAME, nick.toString());
                 }
-
+                break;
+            case InputActivity.REQUEST_CODE_MEISHUQUAN_ID:
+                if (resultCode == RESULT_OK) {
+                    CharSequence id = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR);
+                    //Pattern pattern = new Pattern("");
+                    if (!PatternUtils.PATTERN_MEISHUQUAN_ID.matcher(id.toString()).matches()) {
+                        Toast.makeText(this, R.string.info_meishuquan_id_illegal, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    mMeishuquanIdView.setSecondaryText(id);
+                    updateInfo(User.KEY_ACCOUNT, id + "");
+                }
                 break;
             case InputActivity.REQUEST_CODE_RECENTS:
                 if (resultCode == RESULT_OK) {
@@ -324,6 +339,11 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
     private void fillUserInfo (User user) {
 
         mNickView.setSecondaryText(user.getName());
+        mMeishuquanIdView.setSecondaryText(user.getAccout());
+        if (!TextUtils.isEmpty(user.getAccout())) {
+            mMeishuquanIdView.setArrowVisible(View.INVISIBLE);
+            mMeishuquanIdView.setClickable(false);
+        }
         mGenderView.setSecondaryText(user.getGender());
         mGradeView.setSecondaryText(user.getGrade());
         final int profileSize = getResources().getDimensionPixelSize(R.dimen.info_profile_size);
@@ -518,6 +538,9 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
         if (mCityFragment == null) {
             mCityFragment = new ChooseCityFragment();
             mCityFragment.setOnCityChooseListener(mCityListener);
+            Bundle bundle = new Bundle();
+            bundle.putBoolean(ChooseCityFragment.KEY_SHOW_TITLE, false);
+            mCityFragment.setArguments(bundle);
         }
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.fragment_container, mCityFragment);
