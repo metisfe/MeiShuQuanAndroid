@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.Option;
+import com.metis.meishuquan.util.PatternUtils;
 import com.metis.meishuquan.view.shared.TitleView;
 
 public class ChangePwdActivity extends BaseActivity implements View.OnClickListener{
@@ -42,6 +43,10 @@ public class ChangePwdActivity extends BaseActivity implements View.OnClickListe
         String oldPwd = mOldEt.getText().toString();
         String newPwd = mNewEt.getText().toString();
         String confirmPwd = mConfirmEt.getText().toString();
+        if (!PatternUtils.PATTERN_PASSWORD.matcher(newPwd).matches()) {
+            Toast.makeText(this, R.string.change_pwd_illegal, Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (!newPwd.equals(confirmPwd)) {
             Toast.makeText(this, R.string.change_pwd_not_match, Toast.LENGTH_SHORT).show();
             return;

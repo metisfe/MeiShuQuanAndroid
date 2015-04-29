@@ -47,6 +47,7 @@
     <string name="info_cv">个人简历</string>
     <string name="info_achievement">教学成果</string>
     <string name="info_meishuquan_id_illegal">美术圈号不符合规则</string>
+    <string name="info_nick_name_illegal">昵称不符合规则</string>
     
     <string name="about_to_score">我要评分</string>
     <string name="about_current_version">当前版本</string>
@@ -101,6 +102,7 @@
     <string name="change_pwd_positive">确定</string>
     <string name="change_pwd_not_new">新密码与原密码一致</string>
     <string name="change_pwd_not_match">确认密码不匹配</string>
+    <string name="change_pwd_illegal">密码格式不正确</string>
     <string name="change_pwd_success">操作成功</string>
     <string name="change_pwd_failed">操作失败</string>
 

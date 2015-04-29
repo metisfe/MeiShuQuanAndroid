@@ -16,7 +16,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
@@ -38,34 +34,23 @@ import com.metis.meishuquan.activity.InputActivity;
 import com.metis.meishuquan.activity.course.ChooseCourseActivity;
 import com.metis.meishuquan.fragment.assess.ChooseCityFragment;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
-import com.metis.meishuquan.model.BLL.UserOperator;
 import com.metis.meishuquan.model.assess.City;
 import com.metis.meishuquan.model.commons.Result;
 import com.metis.meishuquan.model.commons.User;
-import com.metis.meishuquan.model.course.Course;
 import com.metis.meishuquan.model.course.CourseChannel;
 import com.metis.meishuquan.model.course.CourseChannelItem;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.PatternUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
-import com.metis.meishuquan.view.shared.BaseDialog;
 import com.metis.meishuquan.view.shared.MyInfoBtn;
-import com.metis.meishuquan.view.shared.TitleView;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
-
-import org.json.JSONArray;
 
 import java.io.File;
 import java.io.Serializable;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
-
-import io.rong.imkit.view.SwitchGroup;
 
 public class InfoActivity extends BaseActivity implements View.OnClickListener {
 
@@ -225,6 +210,10 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
             case InputActivity.REQUEST_CODE_NICK:
                 if (resultCode == RESULT_OK) {
                     CharSequence nick = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR);
+                    if (!PatternUtils.PATTERN_NICK_NAME.matcher(nick.toString()).matches()) {
+                        Toast.makeText(this, R.string.info_nick_name_illegal, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     mNickView.setSecondaryText(nick);
                     updateInfo(User.KEY_NICK_NAME, nick.toString());
                 }
@@ -233,12 +222,12 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                 if (resultCode == RESULT_OK) {
                     CharSequence id = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR);
                     //Pattern pattern = new Pattern("");
-                    if (PatternUtils.MEISHUQUAN_ID_PATTERN.matcher(id.toString()).matches()) {
-                        mMeishuquanIdView.setSecondaryText(id);
-                        updateInfo(User.KEY_ACCOUNT, id + "");
-                    } else {
+                    if (!PatternUtils.PATTERN_MEISHUQUAN_ID.matcher(id.toString()).matches()) {
                         Toast.makeText(this, R.string.info_meishuquan_id_illegal, Toast.LENGTH_SHORT).show();
+                        return;
                     }
+                    mMeishuquanIdView.setSecondaryText(id);
+                    updateInfo(User.KEY_ACCOUNT, id + "");
                 }
                 break;
             case InputActivity.REQUEST_CODE_RECENTS:
