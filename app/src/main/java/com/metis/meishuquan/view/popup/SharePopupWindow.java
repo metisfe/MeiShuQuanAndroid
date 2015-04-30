@@ -22,8 +22,12 @@ import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.controller.listener.SocializeListeners;
 import com.umeng.socialize.media.BaseShareContent;
 import com.umeng.socialize.media.QZoneShareContent;
+import com.umeng.socialize.media.SinaShareContent;
+import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.sso.QZoneSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
+import com.umeng.socialize.weixin.media.CircleShareContent;
+import com.umeng.socialize.weixin.media.WeiXinShareContent;
 
 /**
  * PopupWindow:分享
@@ -37,9 +41,10 @@ public class SharePopupWindow extends PopupWindow {
     private UMSocialService mController = null;
 
     private String
-            mTitle = "default title",
-            mContent = "default content",
-            mTargetUrl = "http://music.baidu.com/";
+            mTitle = "Let it be",
+            mContent = "let it be",
+            mTargetUrl = "http://blog.sina.com.cn/s/blog_5da93c8f0101o2k1.html",
+            mImageUrl = "http://d8.sina.com.cn/pfpghc/4580073d1256498f97e2750165754027.jpg";
 
     public SharePopupWindow(final Activity mContext, View parent) {
 
@@ -77,6 +82,19 @@ public class SharePopupWindow extends PopupWindow {
             @Override
             public void onClick(View view) {
                 dismiss();
+                CircleShareContent content = new CircleShareContent();
+                fillShareContent(mContext, content);
+                mController.directShare(mContext, SHARE_MEDIA.WEIXIN_CIRCLE, new SocializeListeners.SnsPostListener() {
+                    @Override
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onComplete(SHARE_MEDIA share_media, int i, SocializeEntity socializeEntity) {
+                        Toast.makeText(mContext, "share success", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 
@@ -84,6 +102,19 @@ public class SharePopupWindow extends PopupWindow {
             @Override
             public void onClick(View view) {
                 dismiss();
+                WeiXinShareContent content = new WeiXinShareContent();
+                fillShareContent(mContext, content);
+                mController.directShare(mContext, SHARE_MEDIA.WEIXIN, new SocializeListeners.SnsPostListener() {
+                    @Override
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onComplete(SHARE_MEDIA share_media, int i, SocializeEntity socializeEntity) {
+                        Toast.makeText(mContext, "share success", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 
@@ -92,7 +123,7 @@ public class SharePopupWindow extends PopupWindow {
             public void onClick(View view) {
                 dismiss();
                 QZoneShareContent content = new QZoneShareContent();
-                fillShareContent(content);
+                fillShareContent(mContext, content);
                 mController.directShare(mContext, SHARE_MEDIA.QZONE, new SocializeListeners.SnsPostListener() {
                     @Override
                     public void onStart() {
@@ -111,6 +142,7 @@ public class SharePopupWindow extends PopupWindow {
             @Override
             public void onClick(View view) {
                 dismiss();
+                //SinaShareContent
             }
         });
 
@@ -149,16 +181,18 @@ public class SharePopupWindow extends PopupWindow {
         wxCircleHandler.addToSocialSDK();
     }
 
-    public void setShareInfo (String title, String content, String targetUrl) {
+    public void setShareInfo (String title, String content, String targetUrl, String imageUrl) {
         mTitle = title;
         mContent = content;
         mTargetUrl = targetUrl;
+        mImageUrl = imageUrl;
     }
 
-    private void fillShareContent (BaseShareContent content) {
+    private void fillShareContent (Activity activity, BaseShareContent content) {
         content.setTitle(mTitle);
         content.setShareContent(mContent);
         content.setTargetUrl(mTargetUrl);
+        content.setShareImage(new UMImage(activity, mImageUrl));
         mController.setShareMedia(content);
     }
 }
