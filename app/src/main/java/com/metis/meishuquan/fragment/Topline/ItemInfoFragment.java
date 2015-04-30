@@ -387,7 +387,7 @@ public class ItemInfoFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 SharePopupWindow sharePopupWindow = new SharePopupWindow(getActivity(), rootView);
-                sharePopupWindow.setShareInfo(newsInfo.getData().getTitle(), "", newsInfo.getData().getShareUrl());
+                sharePopupWindow.setShareInfo(newsInfo.getData().getTitle(), "", newsInfo.getData().getShareUrl(), "");
                 Log.i("share_content", newsInfo.getData().getShareUrl());
             }
         });
