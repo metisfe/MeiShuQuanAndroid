@@ -3,6 +3,7 @@ package com.metis.meishuquan.view.popup;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -41,10 +42,10 @@ public class SharePopupWindow extends PopupWindow {
     private UMSocialService mController = null;
 
     private String
-            mTitle = "Let it be",
-            mContent = "let it be",
-            mTargetUrl = "http://blog.sina.com.cn/s/blog_5da93c8f0101o2k1.html",
-            mImageUrl = "http://d8.sina.com.cn/pfpghc/4580073d1256498f97e2750165754027.jpg";
+            mTitle = "",
+            mContent = "",
+            mTargetUrl = "",
+            mImageUrl = "";
 
     public SharePopupWindow(final Activity mContext, View parent) {
 
@@ -182,6 +183,9 @@ public class SharePopupWindow extends PopupWindow {
     }
 
     public void setShareInfo (String title, String content, String targetUrl, String imageUrl) {
+        if (TextUtils.isEmpty(title) || TextUtils.isEmpty(targetUrl)) {
+            throw new IllegalArgumentException("title or targetUrl is Empty");
+        }
         mTitle = title;
         mContent = content;
         mTargetUrl = targetUrl;
