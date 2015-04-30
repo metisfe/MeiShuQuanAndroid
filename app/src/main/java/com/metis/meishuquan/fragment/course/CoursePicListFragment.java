@@ -16,8 +16,11 @@ import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.BLL.CourseOperator;
+import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.CourseType;
 import com.metis.meishuquan.view.shared.DragListView;
+import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import java.util.List;
 
@@ -73,7 +76,12 @@ public class CoursePicListFragment extends Fragment {
     }
 
     private void initData() {
-        CourseOperator.getInstance().getCourseImgList(tag, courseType, 0, index);
+        CourseOperator.getInstance().getCourseImgList(tag, courseType, 0, index, new ApiOperationCallback<ReturnInfo<String>>() {
+            @Override
+            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                
+            }
+        });
 
         int j = 0;
         for (int i = 0; i < urls.length; i++) {
