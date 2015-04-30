@@ -49,8 +49,7 @@
             android:id="@+id/id_ll_class_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="10dp"></LinearLayout>
+            android:orientation="vertical"></LinearLayout>
 
         <LinearLayout
             android:id="@+id/id_ll_relation"

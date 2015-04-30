@@ -82,6 +82,7 @@ public class ClassFragment extends Fragment {
 
     private void updateListView(List<CourseChannelItem> lstCheckedCourseChannelItems) {
         if (lstCheckedCourseChannelItems == null || lstCheckedCourseChannelItems.size() == 0) {
+            tags = "";
             courseChannelBarText = "全部";
             this.tvCourseChannelBar.setText(courseChannelBarText);
             return;
@@ -106,7 +107,8 @@ public class ClassFragment extends Fragment {
         }
         courseChannelBarText = sb1.toString();
         this.tvCourseChannelBar.setText(courseChannelBarText);
-        if (courseListFragment != null) {
+
+        if (!isPicList) {
             courseListFragment = new CourseListFragment();
             Bundle bundle = new Bundle();
             bundle.putString("tags", tags);
@@ -114,7 +116,7 @@ public class ClassFragment extends Fragment {
             FragmentTransaction ft = fm.beginTransaction();
             ft.replace(R.id.id_rl_container_list, courseListFragment);
             ft.commit();
-        } else if (coursePicListFragment != null) {
+        } else {
             coursePicListFragment = new CoursePicListFragment();
             Bundle bundle = new Bundle();
             bundle.putString("tags", tags);
@@ -165,15 +167,23 @@ public class ClassFragment extends Fragment {
                     isPicList = true;
                     btnPicture.setText("课程");
                     coursePicListFragment = new CoursePicListFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("tags", tags);
+                    coursePicListFragment.setArguments(bundle);
                     FragmentTransaction ft = fm.beginTransaction();
-                    ft.replace(R.id.id_rl_container_list, coursePicListFragment);
+                    ft.remove(courseListFragment);
+                    ft.add(R.id.id_rl_container_list, coursePicListFragment);
                     ft.commit();
                 } else {
                     isPicList = false;
                     btnPicture.setText("图片");
                     courseListFragment = new CourseListFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("tags", tags);
+                    courseListFragment.setArguments(bundle);
                     FragmentTransaction ft = fm.beginTransaction();
-                    ft.replace(R.id.id_rl_container_list, courseListFragment);
+                    ft.remove(coursePicListFragment);
+                    ft.add(R.id.id_rl_container_list, courseListFragment);
                     ft.commit();
                 }
             }
@@ -185,13 +195,21 @@ public class ClassFragment extends Fragment {
         if (!json.isEmpty()) {
             lstCheckedCourseChannelItems = new Gson().fromJson(json, new TypeToken<List<CourseChannelItem>>() {
             }.getType());
+            if (lstCheckedCourseChannelItems.size() == 0) {
+                tags = "";
+                return "全部";
+            }
             StringBuilder sb = new StringBuilder();
+            StringBuilder sbTagId = new StringBuilder();
             for (int i = 0; i < lstCheckedCourseChannelItems.size(); i++) {
                 sb.append(lstCheckedCourseChannelItems.get(i).getChannelName().trim());
+                sbTagId.append(String.valueOf(lstCheckedCourseChannelItems.get(i).getChannelId()));
                 if (i < lstCheckedCourseChannelItems.size() - 1) {
                     sb.append(",");
+                    sbTagId.append(",");
                 }
             }
+            this.tags = sbTagId.toString();
             return sb.toString();
         }
         return courseChannelBarText = "全部";

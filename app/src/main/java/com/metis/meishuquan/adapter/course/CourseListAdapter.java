@@ -13,6 +13,7 @@ import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.course.Course;
 import com.metis.meishuquan.model.topline.News;
+import com.metis.meishuquan.util.ImageLoaderUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class CourseListAdapter extends BaseAdapter {
     }
 
     private static class ViewHolder {
-        SmartImageView imgSmall;
+        ImageView imgSmall;
         TextView tvTitle, tvSourse, tvReadCount, tvCommentCount;
     }
 
@@ -60,7 +61,7 @@ public class CourseListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.fragment_class_course_list_item, null, false);
 
-            holder.imgSmall = (SmartImageView) convertView.findViewById(R.id.id_img_class);
+            holder.imgSmall = (ImageView) convertView.findViewById(R.id.id_img_class);
             holder.tvTitle = (TextView) convertView.findViewById(R.id.id_tv_title);
             holder.tvSourse = (TextView) convertView.findViewById(R.id.id_tv_source);
             holder.tvReadCount = (TextView) convertView.findViewById(R.id.id_tv_read_count);
@@ -69,8 +70,7 @@ public class CourseListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
-        holder.imgSmall.setImageUrl(lstData.get(i).getCoursePic());
+        ImageLoaderUtils.getImageLoader(mContext).displayImage(lstData.get(i).getCoursePic(), holder.imgSmall, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.img_topline_default));
         holder.tvTitle.setText(lstData.get(i).getTitle().trim());
         holder.tvSourse.setText(lstData.get(i).getAuthor() != null ? lstData.get(i).getAuthor().getName() : "");
         holder.tvReadCount.setText("阅读(" + lstData.get(i).getViewCount() + ")");

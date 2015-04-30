@@ -50,6 +50,7 @@ import com.metis.meishuquan.model.topline.ContentInfo;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
 import com.metis.meishuquan.model.topline.Urls;
 import com.metis.meishuquan.util.ImageLoaderUtils;
+import com.metis.meishuquan.util.ImageUtil;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
@@ -190,9 +191,6 @@ public class ItemInfoFragment extends Fragment {
                 if (contentInfo.getType().equals("IMG")) {
                     addImageView(contentInfo.getData().getUrl(), contentInfo.getData().getWidth(), contentInfo.getData().getHeight());
                 }
-                if (contentInfo.getType().equals("LINK")) {
-                    //addImageView(contentInfo.getData().getUrl(), contentInfo.getData().getWidth(), contentInfo.getData().getHeight());
-                }
                 if (contentInfo.getType().equals("VOIDE")) {
                     //addImageView(contentInfo.getData().getUrl(), contentInfo.getData().getWidth(), contentInfo.getData().getHeight());
                 }
@@ -211,12 +209,13 @@ public class ItemInfoFragment extends Fragment {
         ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(url.trim(), imageView, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.img_topline_default));
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width * 2, height * 2);
-        lp.topMargin = 10;
-        lp.gravity = Gravity.CENTER_HORIZONTAL;
-        imageView.setLayoutParams(lp);
+        ImageUtil.setImageViewMathParent(getActivity(), ll_content, imageView, width, height);
+//        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width * 2, height * 2);
+//        lp.topMargin = 10;
+//        lp.gravity = Gravity.CENTER_HORIZONTAL;
+//        imageView.setLayoutParams(lp);
 
-        ll_content.addView(imageView);
+//        ll_content.addView(imageView);
         imageGroup.add(imageView);
     }
 
@@ -227,7 +226,7 @@ public class ItemInfoFragment extends Fragment {
         }
         TextView textView = new TextView(getActivity());
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        lp.topMargin = 10;
+        lp.setMargins(20, 10, 20, 10);
         textView.setLayoutParams(lp);
         textView.setTextSize(16);
         textView.setTextColor(getResources().getColor(R.color.tv_channel_item));

@@ -10,6 +10,7 @@ import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.course.CourseChannel;
 import com.metis.meishuquan.model.course.CourseChannelData;
 import com.metis.meishuquan.model.course.CourseChannelItem;
+import com.metis.meishuquan.model.course.CourseImg;
 import com.metis.meishuquan.model.enums.CourseType;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
@@ -121,16 +122,16 @@ public class CourseOperator {
      * @param type      0图片，1视频
      * @param index     索引（页）
      */
-    public void getCourseImgList(String tag, CourseType orderType, int type, int index, ApiOperationCallback<ReturnInfo<String>> callback) {
+    public void getCourseImgList(String tag, CourseType orderType, int type, int index, ApiOperationCallback<ReturnInfo<CourseImg>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuilder PATH = new StringBuilder(COURSEIMGLIST);
-                PATH.append("tag=" + tag);
+                PATH.append("tags=" + tag);
                 PATH.append("&orderType=" + orderType.getVal());
                 PATH.append("&type=" + type);
                 PATH.append("&index=" + index);
                 PATH.append("&session=" + SESSION);
-                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<CourseImg>>) new ReturnInfo<CourseImg>().getClass(), callback);
             } else {
                 Toast.makeText(MainApplication.UIContext, "无网络", Toast.LENGTH_SHORT).show();
             }

@@ -12,89 +12,76 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.loopj.android.image.SmartImageView;
-import com.metis.meishuquan.MainApplication;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.BLL.CourseOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.course.CourseImg;
 import com.metis.meishuquan.model.enums.CourseType;
-import com.metis.meishuquan.view.shared.DragListView;
+import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by wangjin on 15/4/16.
  */
 public class CoursePicListFragment extends Fragment {
-    private Button btnrecommend, btnNewPublish, btnHotCourse;
+    private Button btnRecommend, btnNewPublish, btnHotCourse;
     private LinearLayout oneLayout, twoLayout, threeLayout;
-    private CourseType courseType = CourseType.Recommend;
-    private String[] urls = new String[]{
-            "http://img.my.csdn.net/uploads/201309/01/1378037235_3453.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037235_7476.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037235_9280.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037234_3539.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037234_6318.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037194_2965.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037193_1687.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037193_1286.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037192_8379.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037178_9374.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037177_1254.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037177_6203.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037152_6352.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037151_9565.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037151_7904.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037148_7104.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037129_8825.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037128_5291.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037128_3531.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037127_1085.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037095_7515.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037094_8001.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037093_7168.jpg",
-            "http://img.my.csdn.net/uploads/201309/01/1378037091_4950.jpg",
-            "http://img.my.csdn.net/uploads/201308/31/1377949643_6410.jpg",
-            "http://img.my.csdn.net/uploads/201308/31/1377949642_6939.jpg",
-            "http://img.my.csdn.net/uploads/201308/31/1377949630_4505.jpg",
-            "http://img.my.csdn.net/uploads/201308/31/1377949630_4593.jpg",
-            "http://img.my.csdn.net/uploads/201308/31/1377949629_7309.jpg",
-            "http://img.my.csdn.net/uploads/201308/31/1377949629_8247.jpg",};
+    private CourseType orderType = CourseType.Recommend;
+    private List<CourseImg> lstCourseImg = new ArrayList<CourseImg>();
     private String tag = "";
     private int index = 1;
+    private int type = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            tag = bundle.getString("tags");
+        }
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_class_img_list, container, false);
         initView(rootView);
-        initData();
+        initData(tag, orderType, type, index);
         initEvent();
 
         return rootView;
     }
 
-    private void initData() {
-        CourseOperator.getInstance().getCourseImgList(tag, courseType, 0, index, new ApiOperationCallback<ReturnInfo<String>>() {
+    private void initData(String tag, CourseType orderType, int type, int index) {
+        CourseOperator.getInstance().getCourseImgList(tag, orderType, type, index, new ApiOperationCallback<ReturnInfo<CourseImg>>() {
             @Override
-            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                
+            public void onCompleted(ReturnInfo<CourseImg> result, Exception exception, ServiceFilterResponse response) {
+                if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                    Gson gson = new Gson();
+                    String json = gson.toJson(result);
+                    ReturnInfo returnInfo = gson.fromJson(json, new TypeToken<ReturnInfo<List<CourseImg>>>() {
+                    }.getType());
+                    List<CourseImg> data = (List<CourseImg>) returnInfo.getData();
+                    if (data == null || data.size() == 0) {
+                        return;
+                    }
+                    lstCourseImg.addAll(data);
+
+                    int j = 0;
+                    for (int i = 0; i < lstCourseImg.size(); i++) {
+                        addImgView(lstCourseImg.get(i), j);
+                        j++;
+                        if (j == 3) {
+                            j = 0;
+                        }
+                    }
+                }
             }
         });
-
-        int j = 0;
-        for (int i = 0; i < urls.length; i++) {
-            addImgView(urls[i], j);
-            j++;
-            if (j == 3) {
-                j = 0;
-            }
-        }
     }
 
     private void initView(ViewGroup rootView) {
-        this.btnrecommend = (Button) rootView.findViewById(R.id.id_btn_recommend);
+        this.btnRecommend = (Button) rootView.findViewById(R.id.id_btn_recommend);
         this.btnNewPublish = (Button) rootView.findViewById(R.id.id_btn_new_publish);
         this.btnHotCourse = (Button) rootView.findViewById(R.id.id_btn_hot_course);
         this.oneLayout = (LinearLayout) rootView.findViewById(R.id.id_ll_one);
@@ -102,12 +89,14 @@ public class CoursePicListFragment extends Fragment {
         this.threeLayout = (LinearLayout) rootView.findViewById(R.id.id_ll_three);
     }
 
-    private void addImgView(String url, int j) {
-        SmartImageView imageView = new SmartImageView(getActivity());
-        imageView.setImageUrl(url.trim());
+    private void addImgView(CourseImg courseImg, int j) {
+        ImageView imageView = new ImageView(getActivity());
+        ImageLoaderUtils.getImageLoader(getActivity()).displayImage(courseImg.getThumbnails(), imageView, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.img_topline_default));
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        int width = courseImg.getWidth() * 2;
+        int height = courseImg.getHeight() * 2;
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, height);
         lp.gravity = Gravity.CENTER_HORIZONTAL;
         imageView.setLayoutParams(lp);
         imageView.setPadding(5, 5, 5, 5);
@@ -119,15 +108,18 @@ public class CoursePicListFragment extends Fragment {
         } else if (j == 2) {
             threeLayout.addView(imageView);
         }
-
     }
 
     private void initEvent() {
-        this.btnrecommend.setOnClickListener(new View.OnClickListener() {
+        this.btnRecommend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setButtonChecked(btnrecommend);
+                setButtonChecked(btnRecommend);
                 setButtonUnChecked(new Button[]{btnNewPublish, btnHotCourse});
+
+                removeAllPhoto();
+                orderType = CourseType.Recommend;
+                initData(tag, orderType, type, index);
             }
         });
 
@@ -135,7 +127,11 @@ public class CoursePicListFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 setButtonChecked(btnNewPublish);
-                setButtonUnChecked(new Button[]{btnrecommend, btnHotCourse});
+                setButtonUnChecked(new Button[]{btnRecommend, btnHotCourse});
+
+                removeAllPhoto();
+                orderType = CourseType.NewPublish;
+                initData(tag, orderType, type, index);
             }
         });
 
@@ -143,9 +139,20 @@ public class CoursePicListFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 setButtonChecked(btnHotCourse);
-                setButtonUnChecked(new Button[]{btnNewPublish, btnrecommend});
+                setButtonUnChecked(new Button[]{btnNewPublish, btnRecommend});
+
+                removeAllPhoto();
+                orderType = CourseType.HotCourse;
+                initData(tag, orderType, type, index);
             }
         });
+    }
+
+    private void removeAllPhoto() {
+        oneLayout.removeAllViews();
+        twoLayout.removeAllViews();
+        threeLayout.removeAllViews();
+        lstCourseImg.clear();
     }
 
     private void setButtonChecked(Button btn) {

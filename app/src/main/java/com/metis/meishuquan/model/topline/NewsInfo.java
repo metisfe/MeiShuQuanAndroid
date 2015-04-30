@@ -7,6 +7,8 @@ import java.util.List;
  */
 public class NewsInfo {
 
+    private static final String shareBaseUrl = "http://www.meishuquan.net/H5/ContentDetial.ASPX?ID=";
+
     private String newsId;
 
     private String title;
@@ -30,6 +32,8 @@ public class NewsInfo {
     private List<RelatedNewsList> relatedNewsLists;
 
     private int commentCount;
+
+    private String shareUrl = "http://www.meishuquan.net/H5/ContentDetial.ASPX?ID=";
 
     public String getNewsId() {
         return newsId;
@@ -125,5 +129,14 @@ public class NewsInfo {
 
     public void setCommentCount(int commentCount) {
         this.commentCount = commentCount;
+    }
+
+    public String getShareUrl() {
+        String url = shareBaseUrl + newsId;
+        return url;
+    }
+
+    public void setShareUrl(String shareUrl) {
+        this.shareUrl = shareUrl;
     }
 }

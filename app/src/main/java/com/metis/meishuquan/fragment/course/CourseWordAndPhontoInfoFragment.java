@@ -142,7 +142,7 @@ public class CourseWordAndPhontoInfoFragment extends Fragment {
     //添加视图控件
     private void addImageView(String url, int width, int height) {
         ImageView imageView = new ImageView(getActivity());
-        ImageLoaderUtils.getImageLoader(getActivity()).displayImage(url, imageView, ImageLoaderUtils.getRoundDisplayOptions(500, R.drawable.img_topline_default));
+        ImageLoaderUtils.getImageLoader(getActivity()).displayImage(url, imageView, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.img_topline_default));
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
         //LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -184,7 +184,7 @@ public class CourseWordAndPhontoInfoFragment extends Fragment {
     private void addTextView(String words) {
         TextView textView = new TextView(getActivity());
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        lp.topMargin = 10;
+        lp.setMargins(20, 10, 20, 10);
         textView.setLayoutParams(lp);
         textView.setTextSize(16);
         textView.setTextColor(getResources().getColor(R.color.tv_channel_item));

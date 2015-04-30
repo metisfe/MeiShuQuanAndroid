@@ -1,11 +1,15 @@
 package com.metis.meishuquan.util;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.DisplayMetrics;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import java.io.FileDescriptor;
 
@@ -13,16 +17,14 @@ import java.io.FileDescriptor;
  * Created by wudi on 3/15/2015.
  */
 
-public class ImageUtil
-{
+public class ImageUtil {
     public static final int MAX_IMAGE_WIDTH_PHONE = 600;
     public static final int MAX_IMAGE_HEIGHT_PHONE = 720;
     public static final int MAX_IMAGE_SIZE = 10 * 1024;// 10k
     public static final float LONG_IMAGE_HEIGHT_WIDTH_ASPECT = 2;
     public static final float SHORT_IMAGE_HEIGHT_WIDTH_ASPECT = 0.5f;
 
-    public static int getImageMaxWidth()
-    {
+    public static int getImageMaxWidth() {
         int diplayWidth = SystemUtil.getDisplayWidth();
         // if (diplayWidth > 0 && diplayWidth < MAX_IMAGE_WIDTH_PHONE) {
         return diplayWidth;
@@ -30,8 +32,7 @@ public class ImageUtil
         // return MAX_IMAGE_WIDTH_PHONE ;
     }
 
-    public static int getImageMaxHeight()
-    {
+    public static int getImageMaxHeight() {
         int diplayHeight = SystemUtil.getDisplayHeight();
         // if (diplayHeight > 0 && diplayHeight < MAX_IMAGE_HEIGHT_PHONE) {
         return diplayHeight;
@@ -39,23 +40,19 @@ public class ImageUtil
         // return MAX_IMAGE_HEIGHT_PHONE ;
     }
 
-    public static boolean isLargeImage(Bitmap bm)
-    {
-        if (bm == null)
-        {
+    public static boolean isLargeImage(Bitmap bm) {
+        if (bm == null) {
             return false;
         }
 
-        if (bm.getWidth() >= getImageMaxWidth() || bm.getHeight() >= getImageMaxHeight())
-        {
+        if (bm.getWidth() >= getImageMaxWidth() || bm.getHeight() >= getImageMaxHeight()) {
             return true;
         }
 
         return false;
     }
 
-    public static int calculateInSampleSize(BitmapFactory.Options options)
-    {
+    public static int calculateInSampleSize(BitmapFactory.Options options) {
         return calculateInSampleSize(options, getImageMaxWidth(), getImageMaxHeight());
     }
 
@@ -66,12 +63,10 @@ public class ImageUtil
      * @return size in bytes
      */
     @TargetApi(12)
-    public static int getBitmapSize(BitmapDrawable value)
-    {
+    public static int getBitmapSize(BitmapDrawable value) {
         Bitmap bitmap = value.getBitmap();
 
-        if (SystemUtil.hasHoneycombMR1())
-        {
+        if (SystemUtil.hasHoneycombMR1()) {
             return bitmap.getByteCount();
         }
         // Pre HC-MR1
@@ -79,15 +74,12 @@ public class ImageUtil
     }
 
     /**
-     * @param candidate
-     *            - Bitmap to check
-     * @param targetOptions
-     *            - Options that have the out* value populated
+     * @param candidate     - Bitmap to check
+     * @param targetOptions - Options that have the out* value populated
      * @return true if <code>candidate</code> can be used for inBitmap re-use
-     *         with <code>targetOptions</code>
+     * with <code>targetOptions</code>
      */
-    public static boolean canUseForInBitmap(Bitmap candidate, BitmapFactory.Options targetOptions)
-    {
+    public static boolean canUseForInBitmap(Bitmap candidate, BitmapFactory.Options targetOptions) {
         int width = targetOptions.outWidth / targetOptions.inSampleSize;
         int height = targetOptions.outHeight / targetOptions.inSampleSize;
 
@@ -98,18 +90,14 @@ public class ImageUtil
      * Decode and sample down a bitmap from a file input stream to the requested
      * width and height.
      *
-     * @param fileDescriptor
-     *            The file descriptor to read from
-     * @param reqWidth
-     *            The requested width of the resulting bitmap
-     * @param reqHeight
-     *            The requested height of the resulting bitmap
+     * @param fileDescriptor The file descriptor to read from
+     * @param reqWidth       The requested width of the resulting bitmap
+     * @param reqHeight      The requested height of the resulting bitmap
      * @return A bitmap sampled down from the original with the same aspect
-     *         ratio and dimensions that are equal to or greater than the
-     *         requested width and height
+     * ratio and dimensions that are equal to or greater than the
+     * requested width and height
      */
-    public static Bitmap decodeSampledBitmapFromDescriptor(FileDescriptor fileDescriptor, int reqWidth, int reqHeight)
-    {
+    public static Bitmap decodeSampledBitmapFromDescriptor(FileDescriptor fileDescriptor, int reqWidth, int reqHeight) {
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -137,24 +125,19 @@ public class ImageUtil
      * which can be faster when decoding but results in a larger bitmap which
      * isn't as useful for caching purposes.
      *
-     * @param options
-     *            An options object with out* params already populated (run
-     *            through a decode* method with inJustDecodeBounds==true
-     * @param reqWidth
-     *            The requested width of the resulting bitmap
-     * @param reqHeight
-     *            The requested height of the resulting bitmap
+     * @param options   An options object with out* params already populated (run
+     *                  through a decode* method with inJustDecodeBounds==true
+     * @param reqWidth  The requested width of the resulting bitmap
+     * @param reqHeight The requested height of the resulting bitmap
      * @return The value to be used for inSampleSize
      */
-    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight)
-    {
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;
         int inSampleSize = 1;
 
-        if (height > reqHeight || width > reqWidth)
-        {
+        if (height > reqHeight || width > reqWidth) {
 
             // Calculate ratios of height and width to requested height and
             // width
@@ -180,16 +163,14 @@ public class ImageUtil
             // further
             final float totalReqPixelsCap = reqWidth * reqHeight * 2;
 
-            while (totalPixels / (inSampleSize * inSampleSize) > totalReqPixelsCap)
-            {
+            while (totalPixels / (inSampleSize * inSampleSize) > totalReqPixelsCap) {
                 inSampleSize++;
             }
         }
         return inSampleSize;
     }
 
-    public static Bitmap decodeFixedSizeImage(byte[] data, int dstWidth, int dstHeight)
-    {
+    public static Bitmap decodeFixedSizeImage(byte[] data, int dstWidth, int dstHeight) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeByteArray(data, 0, data.length, options);
@@ -216,6 +197,26 @@ public class ImageUtil
         return Bitmap.createScaledBitmap(roughBitmap, (int) (roughBitmap.getWidth() * values[0]), (int) (roughBitmap.getHeight() * values[4]), true);
     }
 
-
+    public static void setImageViewMathParent(Activity context, LinearLayout view,
+                                              ImageView image, int width, int height) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        context.getWindowManager().getDefaultDisplay()
+                .getMetrics(displayMetrics);
+        float scalew = (float) displayMetrics.widthPixels
+                / (float) width;
+        image.setScaleType(ImageView.ScaleType.MATRIX);
+        Matrix matrix = new Matrix();
+        image.setAdjustViewBounds(true);
+        if (displayMetrics.widthPixels < width) {
+            matrix.postScale(scalew, scalew);
+        } else {
+            matrix.postScale(1 / scalew, 1 / scalew);
+        }
+        image.setMaxWidth(displayMetrics.widthPixels);
+        float ss = displayMetrics.heightPixels > height ? displayMetrics.heightPixels
+                : height;
+        image.setMaxWidth((int) ss);
+        view.addView(image);
+    }
 
 }
