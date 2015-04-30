@@ -1,7 +1,9 @@
 package com.metis.meishuquan.view.popup;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,15 +12,38 @@ import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import com.metis.meishuquan.R;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.bean.SocializeEntity;
+import com.umeng.socialize.controller.UMServiceFactory;
+import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.controller.listener.SocializeListeners;
+import com.umeng.socialize.media.BaseShareContent;
+import com.umeng.socialize.media.QZoneShareContent;
+import com.umeng.socialize.sso.QZoneSsoHandler;
+import com.umeng.socialize.weixin.controller.UMWXHandler;
 
 /**
  * PopupWindow:分享
  * Created by wj on 15/4/7.
  */
 public class SharePopupWindow extends PopupWindow {
-    public SharePopupWindow(Context mContext, View parent) {
+
+    private static final String TAG = SharePopupWindow.class.getSimpleName();
+
+    private boolean isInited = false;
+    private UMSocialService mController = null;
+
+    private String
+            mTitle = "default title",
+            mContent = "default content",
+            mTargetUrl = "http://music.baidu.com/";
+
+    public SharePopupWindow(final Activity mContext, View parent) {
+
+        initYM(mContext);
 
         View view = View.inflate(mContext, R.layout.popup_share, null);
         view.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_ins));
@@ -66,6 +91,19 @@ public class SharePopupWindow extends PopupWindow {
             @Override
             public void onClick(View view) {
                 dismiss();
+                QZoneShareContent content = new QZoneShareContent();
+                fillShareContent(content);
+                mController.directShare(mContext, SHARE_MEDIA.QZONE, new SocializeListeners.SnsPostListener() {
+                    @Override
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onComplete(SHARE_MEDIA share_media, int i, SocializeEntity socializeEntity) {
+                        Toast.makeText(mContext, "share success", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 
@@ -83,5 +121,44 @@ public class SharePopupWindow extends PopupWindow {
             }
         });
 
+    }
+
+    private void initYM (Activity context) {
+        mController = UMServiceFactory.getUMSocialService("www.baidu.com");
+        mController.getConfig().removePlatform(SHARE_MEDIA.TENCENT);
+
+        initQZ(context);
+        initWX(context);
+        isInited = true;
+    }
+
+    private void initQZ (Activity context) {
+        QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(context, "1104485283", "k9f8JhWppP5r1N5t");
+        qZoneSsoHandler.addToSocialSDK();
+    }
+
+    private void initWX (Context context) {
+        String appID = "wx144663d4ae48cdcf";
+        String appSecret = "81daa257f2c448725dc737d656aa947d";
+        // 添加微信平台
+        UMWXHandler wxHandler = new UMWXHandler(context,appID,appSecret);
+        wxHandler.addToSocialSDK();
+        // 添加微信朋友圈
+        UMWXHandler wxCircleHandler = new UMWXHandler(context,appID,appSecret);
+        wxCircleHandler.setToCircle(true);
+        wxCircleHandler.addToSocialSDK();
+    }
+
+    public void setShareInfo (String title, String content, String targetUrl) {
+        mTitle = title;
+        mContent = content;
+        mTargetUrl = targetUrl;
+    }
+
+    private void fillShareContent (BaseShareContent content) {
+        content.setTitle(mTitle);
+        content.setShareContent(mContent);
+        content.setTargetUrl(mTargetUrl);
+        mController.setShareMedia(content);
     }
 }

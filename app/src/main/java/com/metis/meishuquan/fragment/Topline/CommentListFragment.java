@@ -229,7 +229,7 @@ public class CommentListFragment extends Fragment {
         this.rl_Share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//分享
-                new SharePopupWindow(MainApplication.UIContext, rootView);
+                new SharePopupWindow(getActivity(), rootView);
             }
         });
 

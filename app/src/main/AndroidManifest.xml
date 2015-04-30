@@ -107,8 +107,42 @@
             android:label="@string/title_activity_department"
             android:screenOrientation="portrait" />
 
-        <!-- End UMeng -->
+        <!-- Begin UMeng -->
+        <!-- ###################注册SDK使用的Activity###################### -->
+        <!--分享编辑页-->
+        <activity
+            android:name="com.umeng.socialize.view.ShareActivity"
+            android:configChanges="orientation|keyboard"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:theme="@style/Theme.UMDialog"
+            android:windowSoftInputMode="stateVisible|adjustResize" >
+        </activity>
 
+        <!-- ############ QQ空间和QQ SSO授权的Activity注册 ############ -->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- 100424468，如果你使用的公用账号，则不需要修改；否则修改成你在QQ开放平台申请的 APP ID-->
+                <data android:scheme="tencent100424468" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.tencent.connect.common.AssistActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <!-- ###################添加UmengAppkey###################### -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="552b2a72fd98c5799c000966" >
+        </meta-data>
 
         <!-- Begin Rong Cloud -->
         <meta-data
@@ -362,6 +396,10 @@
         <activity
             android:name=".activity.info.MyFavoriteDetailActivity"
             android:label="@string/title_activity_my_favorite_detail" >
+        </activity>
+        <activity
+            android:name=".activity.act.ActDetailActivity"
+            android:label="@string/title_activity_act_detail" >
         </activity>
     </application>
 

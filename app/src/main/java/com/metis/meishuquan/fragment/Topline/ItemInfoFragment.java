@@ -386,7 +386,7 @@ public class ItemInfoFragment extends Fragment {
         this.rl_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new SharePopupWindow(MainApplication.UIContext, rootView);
+                new SharePopupWindow(getActivity(), rootView);
             }
         });
 

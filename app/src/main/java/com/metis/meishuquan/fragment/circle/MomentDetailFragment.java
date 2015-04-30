@@ -226,7 +226,7 @@ public class MomentDetailFragment extends Fragment {
         this.btnShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new SharePopupWindow(MainApplication.UIContext, rootView);
+                new SharePopupWindow(getActivity(), rootView);
             }
         });
     }

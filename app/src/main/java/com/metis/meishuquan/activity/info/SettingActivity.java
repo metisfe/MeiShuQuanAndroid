@@ -2,25 +2,25 @@ package com.metis.meishuquan.activity.info;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.activity.act.ActDetailActivity;
-import com.metis.meishuquan.activity.info.homepage.StudioActivity;
-import com.metis.meishuquan.manager.common.PlayerManager;
-import com.metis.meishuquan.manager.common.RecorderManager;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.shared.MyInfoBtn;
 import com.nostra13.universalimageloader.cache.disc.DiscCacheAware;
-
-import java.io.File;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.bean.SocializeEntity;
+import com.umeng.socialize.controller.UMServiceFactory;
+import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.controller.listener.SocializeListeners;
+import com.umeng.socialize.media.QZoneShareContent;
+import com.umeng.socialize.sso.QZoneSsoHandler;
+import com.umeng.socialize.view.ShareActivity;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
@@ -58,7 +58,31 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     public void onTitleRightPressed() {
         super.onTitleRightPressed();
         /*startActivity(new Intent(this, StudioActivity.class));*/
-        startActivity(new Intent(this, ActDetailActivity.class));
+        /*startActivity(new Intent(this, ActDetailActivity.class));*/
+        //startActivity(new Intent (this, ShareActivity.class));
+        final UMSocialService mController
+                = UMServiceFactory.getUMSocialService("www.baidu.com");
+        QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(this, "1104485283", "k9f8JhWppP5r1N5t");
+        qZoneSsoHandler.addToSocialSDK();
+
+        QZoneShareContent content = new QZoneShareContent();
+        content.setTargetUrl("http://china.ynet.com/3.1/1504/30/10037267.html?source=bdxsy");
+        content.setAppWebSite("http://image.baidu.com/");
+        content.setShareContent("嘿嘿嘿，哈哈哈");
+        content.setTitle("这里是title");
+        mController.setShareMedia(content);
+        mController.getConfig().removePlatform(SHARE_MEDIA.TENCENT);
+        mController.openShare(this, new SocializeListeners.SnsPostListener() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onComplete(SHARE_MEDIA share_media, int i, SocializeEntity socializeEntity) {
+
+            }
+        });
     }
 
     @Override
