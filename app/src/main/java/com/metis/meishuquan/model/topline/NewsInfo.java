@@ -9,7 +9,7 @@ public class NewsInfo {
 
     private static final String shareBaseUrl = "http://www.meishuquan.net/H5/ContentDetial.ASPX?ID=";
 
-    private String newsId;
+    private int newsId;
 
     private String title;
 
@@ -35,11 +35,11 @@ public class NewsInfo {
 
     private String shareUrl = "http://www.meishuquan.net/H5/ContentDetial.ASPX?ID=";
 
-    public String getNewsId() {
+    public int getNewsId() {
         return newsId;
     }
 
-    public void setNewsId(String newsId) {
+    public void setNewsId(int newsId) {
         this.newsId = newsId;
     }
 

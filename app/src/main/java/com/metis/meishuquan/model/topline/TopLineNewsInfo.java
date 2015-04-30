@@ -1,7 +1,5 @@
 package com.metis.meishuquan.model.topline;
 
-import com.metis.meishuquan.model.contract.OptionSettings;
-
 /**
  * Created by xiaoxiao on 15/3/26.
  */

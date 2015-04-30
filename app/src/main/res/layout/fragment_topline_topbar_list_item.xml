@@ -8,15 +8,15 @@
     <ImageView
         android:id="@+id/img_thumbnail"
         android:layout_width="100dp"
-        android:layout_height="75dp"
+        android:layout_height="65dp"
         android:layout_centerVertical="true"
-        android:src="@drawable/img_topline_default"
+        android:background="#cccccc"
         android:scaleType="centerCrop" />
 
     <RelativeLayout
         android:id="@+id/rl_title"
         android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_height="65dp"
         android:layout_alignBottom="@+id/img_thumbnail"
         android:layout_alignTop="@+id/img_thumbnail"
         android:layout_marginBottom="-2dp"
@@ -38,6 +38,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:maxLength="150"
+            android:singleLine="true"
             android:text="消息来源"
             android:textColor="#fb6d6d"
             android:textSize="11sp" />
@@ -47,8 +49,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@+id/tv_source"
-            android:text=" | 阅读(100)"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/tv_comment_count"
+            android:text="阅读(100)"
             android:textColor="#7e7e7e"
             android:textSize="11sp" />
 
@@ -58,7 +61,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_toRightOf="@id/tv_readcount"
             android:gravity="right"
             android:text="评论(10)"
             android:textColor="#7e7e7e"

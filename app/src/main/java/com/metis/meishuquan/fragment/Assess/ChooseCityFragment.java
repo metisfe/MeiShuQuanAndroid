@@ -77,9 +77,10 @@ public class ChooseCityFragment extends Fragment {
         this.searchView.setSubmitButtonEnabled(false);
 
         this.mTitleView = rootView.findViewById(R.id.city_title);
-        boolean showTitle = getArguments().getBoolean(KEY_SHOW_TITLE);
-        mTitleView.setVisibility(showTitle ? View.VISIBLE : View.GONE);
-
+        if (getArguments() != null) {
+            boolean showTitle = getArguments().getBoolean(KEY_SHOW_TITLE);
+            mTitleView.setVisibility(showTitle ? View.VISIBLE : View.GONE);
+        }
         this.adapter = new ExpandeAdapter(MainApplication.UIContext, mAllCity);
         this.listView.setAdapter(adapter);
     }

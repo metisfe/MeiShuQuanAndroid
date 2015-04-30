@@ -219,7 +219,7 @@
     <color name="bg_topline_topbar">#2D2A40</color>
     <color name="bg_topline_topbar_indicator_text">#cdf5ec</color>
     <!--头条列表-->
-    <color name="bg_listview">#f1f1f1</color>
+    <color name="bg_listview">#e2e2e2</color>
     <color name="tv_title_bar">#fb6d6d</color>
     <!--头条频道管理-->
     <color name="tv_channel_item">#7e7e7e</color>

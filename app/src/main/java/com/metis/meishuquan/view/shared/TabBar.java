@@ -98,7 +98,6 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
                     type = SelectedTabType.Circle;
                     break;
             }
-
             this.tabSelectedListener.onTabSelected(type);
         }
     }
@@ -239,7 +238,7 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
             this.circleIcon.setImageResource(R.drawable.icon_tabbar_circle_selected);
             this.circleTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_selected_title_color));
         } else {
-            this.circleIcon.setImageResource(R.drawable.icon_tabbar_circle_unselected);
+            this.circleIcon.setImageResource(R.drawable.icon_tabbar_circle_selected);
             this.circleTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_unselected_title_color));
         }
     }

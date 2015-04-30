@@ -70,6 +70,7 @@ public class ItemInfoFragment extends Fragment {
     public static final String LOG_EXCEPTION = "exception";
 
     private final int LOGINREQUESTCODE = 1001;
+    private String shareContent = "";
 
     private Button btnBack, btnShare;
     private ViewGroup rootView;
@@ -88,9 +89,8 @@ public class ItemInfoFragment extends Fragment {
     private boolean windowAttached;
 
     private int newsId = 0;
-    private FragmentManager fm;
-
     private boolean titleVisible = true;
+    private FragmentManager fm;
 
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
@@ -194,7 +194,6 @@ public class ItemInfoFragment extends Fragment {
                 if (contentInfo.getType().equals("VOIDE")) {
                     //addImageView(contentInfo.getData().getUrl(), contentInfo.getData().getWidth(), contentInfo.getData().getHeight());
                 }
-
             }
         }
     }
@@ -229,6 +228,7 @@ public class ItemInfoFragment extends Fragment {
         lp.setMargins(20, 10, 20, 10);
         textView.setLayoutParams(lp);
         textView.setTextSize(16);
+        textView.setLineSpacing(1.2f, 1.2f);
         textView.setTextColor(getResources().getColor(R.color.tv_channel_item));
 
         int k = 0;
@@ -264,6 +264,7 @@ public class ItemInfoFragment extends Fragment {
 
         //得到最终包含有链接文字的字符串
         String finalWord = sb.toString().trim();
+        shareContent = finalWord;
 
         //创建一个 SpannableString对象
         SpannableString sp = new SpannableString(finalWord);
@@ -385,7 +386,9 @@ public class ItemInfoFragment extends Fragment {
         this.rl_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new SharePopupWindow(getActivity(), rootView);
+                SharePopupWindow sharePopupWindow = new SharePopupWindow(getActivity(), rootView);
+                sharePopupWindow.setShareInfo(newsInfo.getData().getTitle(), "", newsInfo.getData().getShareUrl());
+                Log.i("share_content", newsInfo.getData().getShareUrl());
             }
         });
 

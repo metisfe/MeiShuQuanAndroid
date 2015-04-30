@@ -90,7 +90,7 @@ public class ToplineCustomAdapter extends ToplineAdapter {
         holder.tv_title.setText(news.getTitle());
         String source = news.getSource().getTitle().trim();
         holder.tv_source.setText(source);
-        holder.tv_readCount.setText(source.isEmpty() ? "阅读(" + news.getPageViewCount() + ")" : " | " + "阅读(" + news.getPageViewCount() + ")");
+        holder.tv_readCount.setText("阅读(" + news.getPageViewCount() + ")");
         holder.tv_comment_count.setText("评论(" + news.getCommentCount() + ")");
 
         return convertView;
