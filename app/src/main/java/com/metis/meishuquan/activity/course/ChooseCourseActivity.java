@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.course.CourseChannel;
 import com.metis.meishuquan.model.course.CourseChannelData;
@@ -97,7 +96,7 @@ public class ChooseCourseActivity extends FragmentActivity {
     }
 
     private void getData() {
-        String json = SharedPreferencesUtil.getInstanse(this).getStringByKey(SharedPreferencesUtil.COURSECHANNELLIST);
+        String json = SharedPreferencesUtil.getInstanse(this).getStringByKey(SharedPreferencesUtil.COURSE_CHANNEL_LIST);
         Gson gson = new Gson();
         CourseChannelData data = gson.fromJson(json, new TypeToken<CourseChannelData>() {
         }.getType());

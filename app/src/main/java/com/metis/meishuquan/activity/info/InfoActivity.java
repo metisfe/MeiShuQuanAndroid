@@ -366,7 +366,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
         }
         String subjectsId = user.getGoodSubjects();
         if (!TextUtils.isEmpty(subjectsId)) {
-            String allCourse = SharedPreferencesUtil.getInstanse(this).getStringByKey(SharedPreferencesUtil.COURSECHANNELLIST);
+            String allCourse = SharedPreferencesUtil.getInstanse(this).getStringByKey(SharedPreferencesUtil.COURSE_CHANNEL_LIST);
             Log.v(TAG, "fillUserInfo allCourse=" + allCourse);
             if (TextUtils.isEmpty(allCourse)) {
                 return;

@@ -21,9 +21,11 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.adapter.assess.ChannelGridViewAdapter;
 import com.metis.meishuquan.adapter.assess.GradeGridViewAdapter;
 import com.metis.meishuquan.fragment.main.AssessFragment;
+import com.metis.meishuquan.model.assess.AssessListFilter;
 import com.metis.meishuquan.model.assess.Channel;
 import com.metis.meishuquan.model.assess.ChannelAndGradeData;
 import com.metis.meishuquan.model.assess.Grade;
+import com.metis.meishuquan.model.enums.AssessStateEnum;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 
 import java.util.ArrayList;
@@ -40,14 +42,9 @@ public class FilterConditionForAssessListFragment extends Fragment {
     private GridView gvGrade, gvChannel;
     private ChannelGridViewAdapter channelAdapter;
     private GradeGridViewAdapter gradeAdapter;
-    private List<Grade> lstGrade;
-    private List<Channel> lstChannel;
 
     //条件
-    private int type;//1最新 2已评价 3未评价
-    private Grade selsectedGrade;
-    private Channel selectedChannel;
-
+    private AssessListFilter assessListFilter = new AssessListFilter();
     private AssessFragment.OnFilterCannedListner listner;
 
     @Override
@@ -55,7 +52,7 @@ public class FilterConditionForAssessListFragment extends Fragment {
         //从缓存中读取Grade和Channel数据
         getData();
 
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_assess_list_condition_filter, null);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_assess_list_condition_filter, null, false);
         initView(rootView);
         initEvent();
         return rootView;
@@ -72,8 +69,8 @@ public class FilterConditionForAssessListFragment extends Fragment {
         this.btnGradeAll = (Button) rootView.findViewById(R.id.id_btn_grade_all);
         this.btnChannelAll = (Button) rootView.findViewById(R.id.id_btn_channel_all);
 
-        this.gradeAdapter = new GradeGridViewAdapter(MainApplication.UIContext, lstGrade);
-        this.channelAdapter = new ChannelGridViewAdapter(MainApplication.UIContext, lstChannel);
+        this.gradeAdapter = new GradeGridViewAdapter(MainApplication.UIContext, assessListFilter.getLstSelectedGrade());
+        this.channelAdapter = new ChannelGridViewAdapter(MainApplication.UIContext, assessListFilter.getLstSelectedChannel());
 
         this.gvGrade.setAdapter(gradeAdapter);
         this.gvChannel.setAdapter(channelAdapter);
@@ -86,8 +83,9 @@ public class FilterConditionForAssessListFragment extends Fragment {
         if (!json.equals("")) {
             ChannelAndGradeData data = gson.fromJson(json, new TypeToken<ChannelAndGradeData>() {
             }.getType());
-            this.lstGrade = data.getData().getGradeList();
-            this.lstChannel = data.getData().getChannelList();
+            this.assessListFilter = new AssessListFilter();
+            this.assessListFilter.setLstSelectedGrade(data.getData().getGradeList());
+            this.assessListFilter.setLstSelectedChannel(data.getData().getChannelList());
         }
     }
 
@@ -96,7 +94,7 @@ public class FilterConditionForAssessListFragment extends Fragment {
         this.btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listner.setFilter(selsectedGrade, selectedChannel, type);
+                listner.setFilter(assessListFilter);
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.remove(FilterConditionForAssessListFragment.this);
                 ft.commit();
@@ -107,7 +105,7 @@ public class FilterConditionForAssessListFragment extends Fragment {
         this.btnAssessStateTrue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                type = 2;
+                assessListFilter.setAssessState(AssessStateEnum.ASSESSED);
                 setButtonChecked(btnAssessStateTrue);
                 setButtonUnChecked(btnAssessStateFalse);
                 setButtonUnChecked(btnAssessStateAll);
@@ -118,7 +116,7 @@ public class FilterConditionForAssessListFragment extends Fragment {
         this.btnAssessStateFalse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                type = 3;
+                assessListFilter.setAssessState(AssessStateEnum.UNASSESS);
                 setButtonChecked(btnAssessStateFalse);
                 setButtonUnChecked(btnAssessStateTrue);
                 setButtonUnChecked(btnAssessStateAll);
@@ -129,7 +127,7 @@ public class FilterConditionForAssessListFragment extends Fragment {
         this.btnAssessStateAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                type = 1;
+                assessListFilter.setAssessState(AssessStateEnum.ALL);
                 setButtonChecked(btnAssessStateAll);
                 setButtonUnChecked(btnAssessStateFalse);
                 setButtonUnChecked(btnAssessStateTrue);
@@ -164,10 +162,9 @@ public class FilterConditionForAssessListFragment extends Fragment {
                     TextView textview = (TextView) v;
                     if (position == i) {//当前选中的Item改变背景颜色
                         setSelectedColorForTextView(textview);
-                        selsectedGrade = gradeAdapter.getItem(i);
+                        Grade selsectedGrade = gradeAdapter.getItem(i);
+                        assessListFilter.getLstSelectedGrade().add(selsectedGrade);
                         setButtonUnChecked(btnGradeAll);
-                    } else {
-                        setUnselectedColorForTextView(new TextView[]{textview});
                     }
                 }
             }
@@ -181,17 +178,16 @@ public class FilterConditionForAssessListFragment extends Fragment {
                     TextView textview = (TextView) v;
                     if (position == i) {//当前选中的Item改变背景颜色
                         setSelectedColorForTextView(textview);
-                        selectedChannel = channelAdapter.getItem(i);
+                        Channel selectedChannel = channelAdapter.getItem(i);
+                        assessListFilter.getLstSelectedChannel().add(selectedChannel);
                         setButtonUnChecked(btnChannelAll);
-                    } else {
-                        setUnselectedColorForTextView(new TextView[]{textview});
                     }
                 }
             }
         });
     }
 
-    private void getFilterCondition(AssessFragment.OnFilterCannedListner listner) {
+    public void setFilterConditionListner(AssessFragment.OnFilterCannedListner listner) {
         this.listner = listner;
     }
 

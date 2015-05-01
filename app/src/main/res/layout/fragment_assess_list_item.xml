@@ -2,12 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#cccccc">
+    android:background="#e2e2e2">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#F1F1F1"
+        android:background="#e2e2e2"
         android:padding="10dp">
 
         <ImageView

@@ -1,6 +1,5 @@
 package com.metis.meishuquan.model.BLL;
 
-import android.graphics.Bitmap;
 import android.util.Log;
 import android.util.Pair;
 
@@ -22,12 +21,7 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,8 +118,8 @@ public class AssessOperator {
                                     Gson gson = new Gson();
                                     String json = gson.toJson(result);
                                     SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
-                                    spu.delete(SharedPreferencesUtil.ALLASSESSLIST);
-                                    spu.add(SharedPreferencesUtil.ALLASSESSLIST, json);
+                                    spu.delete(SharedPreferencesUtil.ALL_ASSESS_LIST);
+                                    spu.add(SharedPreferencesUtil.ALL_ASSESS_LIST, json);
                                 }
                             }
                         });

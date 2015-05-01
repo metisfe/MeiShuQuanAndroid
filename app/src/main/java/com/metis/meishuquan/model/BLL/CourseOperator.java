@@ -1,15 +1,10 @@
 package com.metis.meishuquan.model.BLL;
 
-import android.util.Log;
 import android.widget.Toast;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.contract.ReturnInfo;
-import com.metis.meishuquan.model.course.CourseChannel;
-import com.metis.meishuquan.model.course.CourseChannelData;
-import com.metis.meishuquan.model.course.CourseChannelItem;
 import com.metis.meishuquan.model.course.CourseImg;
 import com.metis.meishuquan.model.enums.CourseType;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
@@ -19,9 +14,6 @@ import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import org.apache.http.client.methods.HttpGet;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by wangjin on 15/4/16.
@@ -157,7 +149,7 @@ public class CourseOperator {
                 if (result != null && Integer.parseInt(result.getInfo()) == 0) {
                     Gson gson = new Gson();
                     String json = gson.toJson(result);
-                    SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(SharedPreferencesUtil.COURSECHANNELLIST, json);
+                    SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(SharedPreferencesUtil.COURSE_CHANNEL_LIST, json);
                 }
             }
         });

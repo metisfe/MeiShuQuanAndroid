@@ -24,8 +24,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.loopj.android.image.SmartImageView;
-import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.assess.AssessInfoActivity;
@@ -36,13 +34,14 @@ import com.metis.meishuquan.fragment.assess.FilterConditionForAssessListFragment
 import com.metis.meishuquan.model.BLL.AssessOperator;
 import com.metis.meishuquan.model.assess.AllAssess;
 import com.metis.meishuquan.model.assess.Assess;
-import com.metis.meishuquan.model.assess.AssessSupportAndComment;
+import com.metis.meishuquan.model.assess.AssessListFilter;
 import com.metis.meishuquan.model.assess.Channel;
 import com.metis.meishuquan.model.assess.Grade;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.AssessStateEnum;
 import com.metis.meishuquan.model.enums.QueryTypeEnum;
 import com.metis.meishuquan.util.ImageLoaderUtils;
+import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.popup.ChoosePhotoPopupWindow;
 import com.metis.meishuquan.view.shared.DragListView;
 import com.metis.meishuquan.view.shared.TabBar;
@@ -70,21 +69,21 @@ public class AssessFragment extends Fragment {
     private static final int PICK_PICTURE = 2;
     private ViewGroup rootView;
     private TabBar tabBar;
-    private FragmentManager fm;
 
     private DragListView listView;
     private Button btnRegion, btnFilter, btnPublishComment;
     private Button btnRecommend, btnNewPublish, btnHotComment;
+
     private List<Assess> lstAllAssess = new ArrayList<Assess>();
-    private List<Integer> gradeIds, channelIds;
-    private int regionId;
+    private AssessListFilter assessListFilter = new AssessListFilter();
     private AssessAdapter adapter;
     private QueryTypeEnum type = QueryTypeEnum.RECOMMEND;
     private AssessStateEnum assessState = AssessStateEnum.ALL;
 
-
+    private int regionId;
     private int index = 1;
     private String photoPath = "";
+    private FragmentManager fm;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -95,7 +94,7 @@ public class AssessFragment extends Fragment {
         assessOperator = AssessOperator.getInstance();
         assessOperator.addAssessChannelListToCache();//将过滤条件（年级、标签）加载至缓存
         //加载列表数据
-        getData(DragListView.REFRESH, regionId, true, assessState, gradeIds, channelIds, QueryTypeEnum.RECOMMEND, index);
+        getData(DragListView.REFRESH, regionId, true, assessState, assessListFilter.getLstSelectedGradeIds(), assessListFilter.getLstSelectedChannelIds(), QueryTypeEnum.RECOMMEND, index);
 
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_commentfragment, container, false);
         initView(rootView);
@@ -178,14 +177,14 @@ public class AssessFragment extends Fragment {
         this.listView.setOnRefreshListener(new DragListView.OnRefreshListener() {//列表刷新
             @Override
             public void onRefresh() {
-                getData(DragListView.REFRESH, regionId, true, assessState, gradeIds, channelIds, type, 1);
+                getData(DragListView.REFRESH, regionId, true, assessState, assessListFilter.getLstSelectedGradeIds(), assessListFilter.getLstSelectedChannelIds(), type, index);
             }
         });
 
         this.listView.setOnLoadListener(new DragListView.OnLoadListener() {//列表加载更多
             @Override
             public void onLoad() {
-                getData(DragListView.LOAD, regionId, true, assessState, gradeIds, channelIds, type, index);
+                getData(DragListView.LOAD, regionId, true, assessState, assessListFilter.getLstSelectedGradeIds(), assessListFilter.getLstSelectedChannelIds(), type, index);
                 index++;
             }
         });
@@ -218,6 +217,17 @@ public class AssessFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FilterConditionForAssessListFragment filterConditionForAssessListFragment = new FilterConditionForAssessListFragment();
+                filterConditionForAssessListFragment.setFilterConditionListner(new OnFilterCannedListner() {
+                    @Override
+                    public void setFilter(AssessListFilter assessListFilter) {
+                        //添加至本地保存
+                        Gson gson = new Gson();
+                        String json = gson.toJson(assessListFilter);
+                        Log.i("点评列表筛选条件", json);
+                        SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(SharedPreferencesUtil.CHECKED_ASSESS_FILTER, json);
+                        //TODO:根据筛选条件刷新列表
+                    }
+                });
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.add(R.id.content_container, filterConditionForAssessListFragment);
                 ft.addToBackStack(null);
@@ -249,10 +259,10 @@ public class AssessFragment extends Fragment {
                 setButtonChecked(btnRecommend);
                 setButtonUnChecked(new Button[]{btnNewPublish, btnHotComment});
                 type = QueryTypeEnum.RECOMMEND;
-                if (regionId == 0 && gradeIds == null && channelIds == null) {
-                    getData(DragListView.REFRESH, regionId, true, assessState, gradeIds, channelIds, type, index);
+                if (regionId == 0) {
+                    getData(DragListView.REFRESH, regionId, true, assessState, assessListFilter.getLstSelectedGradeIds(), assessListFilter.getLstSelectedChannelIds(), type, index);
                 } else {
-                    getData(DragListView.REFRESH, regionId, false, assessState, gradeIds, channelIds, type, index);
+                    getData(DragListView.REFRESH, regionId, false, assessState, assessListFilter.getLstSelectedGradeIds(), assessListFilter.getLstSelectedChannelIds(), type, index);
                 }
             }
         });
@@ -263,10 +273,10 @@ public class AssessFragment extends Fragment {
                 setButtonChecked(btnNewPublish);
                 setButtonUnChecked(new Button[]{btnRecommend, btnHotComment});
                 type = QueryTypeEnum.NEW;
-                if (regionId == 0 && gradeIds == null && channelIds == null) {
-                    getData(DragListView.REFRESH, regionId, true, assessState, gradeIds, channelIds, type, index);
+                if (regionId == 0) {
+                    getData(DragListView.REFRESH, regionId, true, assessState, assessListFilter.getLstSelectedGradeIds(), assessListFilter.getLstSelectedChannelIds(), type, index);
                 } else {
-                    getData(DragListView.REFRESH, regionId, false, assessState, gradeIds, channelIds, type, index);
+                    getData(DragListView.REFRESH, regionId, false, assessState, assessListFilter.getLstSelectedGradeIds(), assessListFilter.getLstSelectedChannelIds(), type, index);
                 }
             }
         });
@@ -277,10 +287,10 @@ public class AssessFragment extends Fragment {
                 setButtonChecked(btnHotComment);
                 setButtonUnChecked(new Button[]{btnNewPublish, btnRecommend});
                 type = QueryTypeEnum.HOT;
-                if (regionId == 0 && gradeIds == null && channelIds == null) {
-                    getData(DragListView.REFRESH, regionId, true, assessState, gradeIds, channelIds, type, index);
+                if (regionId == 0) {
+                    getData(DragListView.REFRESH, regionId, true, assessState, assessListFilter.getLstSelectedGradeIds(), assessListFilter.getLstSelectedChannelIds(), type, index);
                 } else {
-                    getData(DragListView.REFRESH, regionId, false, assessState, gradeIds, channelIds, type, index);
+                    getData(DragListView.REFRESH, regionId, false, assessState, assessListFilter.getLstSelectedGradeIds(), assessListFilter.getLstSelectedChannelIds(), type, index);
                 }
             }
         });
@@ -343,7 +353,7 @@ public class AssessFragment extends Fragment {
     }
 
     public interface OnFilterCannedListner {
-        void setFilter(Grade selectedGrad, Channel selectedChannel, int type);
+        void setFilter(AssessListFilter assessListFilter);
     }
 
     /**

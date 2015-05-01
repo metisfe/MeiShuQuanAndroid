@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="#e2e2e2">
 
     <LinearLayout
         android:id="@+id/ll_topBar"
@@ -43,6 +43,6 @@
         android:id="@+id/fragment_shared_toplinefragment_tab_bar"
         bs:tabbarType="followees"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="49dp"
         android:layout_alignParentBottom="true" />
 </RelativeLayout>

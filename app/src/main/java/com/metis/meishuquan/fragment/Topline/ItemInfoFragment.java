@@ -71,6 +71,7 @@ public class ItemInfoFragment extends Fragment {
 
     private final int LOGINREQUESTCODE = 1001;
     private String shareContent = "";
+    private String shareImgUrl = "";
 
     private Button btnBack, btnShare;
     private ViewGroup rootView;
@@ -203,7 +204,7 @@ public class ItemInfoFragment extends Fragment {
         if (ll_content == null) {
             ll_content = (LinearLayout) rootView.findViewById(R.id.id_ll_news_content);//内容父布局
         }
-
+        shareImgUrl = url;
         ImageView imageView = new ImageView(getActivity());
         ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(url.trim(), imageView, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.img_topline_default));
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -387,7 +388,8 @@ public class ItemInfoFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 SharePopupWindow sharePopupWindow = new SharePopupWindow(getActivity(), rootView);
-                sharePopupWindow.setShareInfo(newsInfo.getData().getTitle(), "", newsInfo.getData().getShareUrl(), "");
+                Log.i("分享的图片地址", shareImgUrl);
+                sharePopupWindow.setShareInfo(newsInfo.getData().getTitle(), shareContent, newsInfo.getData().getShareUrl(), shareImgUrl);
                 Log.i("share_content", newsInfo.getData().getShareUrl());
             }
         });
