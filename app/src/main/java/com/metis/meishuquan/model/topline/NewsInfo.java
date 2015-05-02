@@ -29,7 +29,7 @@ public class NewsInfo {
 
     private String commentDefaultText;
 
-    private List<RelatedNewsList> relatedNewsLists;
+    private List<RelatedRead> relatedNewsLists;
 
     private int commentCount;
 
@@ -115,11 +115,11 @@ public class NewsInfo {
         this.commentDefaultText = commentDefaultText;
     }
 
-    public List<RelatedNewsList> getRelatedNewsLists() {
+    public List<RelatedRead> getRelatedNewsLists() {
         return relatedNewsLists;
     }
 
-    public void setRelatedNewsLists(List<RelatedNewsList> relatedNewsLists) {
+    public void setRelatedNewsLists(List<RelatedRead> relatedNewsLists) {
         this.relatedNewsLists = relatedNewsLists;
     }
 

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#e2e2e2"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/id_tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:text="相关阅读标题"
+        android:textColor="#424242"
+        android:textSize="18sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/id_tv_source"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:singleLine="true"
+            android:text="消息来源"
+            android:textColor="#7e7e7e"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/id_tv_read_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/id_tv_comment_count"
+            android:singleLine="true"
+            android:text="阅读(100)"
+            android:textColor="#7e7e7e"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@id/id_tv_comment_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:singleLine="true"
+            android:text="评论(100)"
+            android:textColor="#7e7e7e"
+            android:textSize="12sp" />
+    </RelativeLayout>
+</LinearLayout>
