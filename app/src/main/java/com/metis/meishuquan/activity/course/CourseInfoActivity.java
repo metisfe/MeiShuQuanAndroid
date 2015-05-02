@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +50,7 @@ public class CourseInfoActivity extends FragmentActivity {
     private RelativeLayout rlSupport, rlStep, rlWriteComment, rlCommentList, rlPrivate, rlShare, rlInputComment, rlSend;
     private LinearLayout ll_content, llRelation, ll_support_step;
     private Button btnBack;
+    private ListView lvRelatedRead;
     private ImageView imgAuthor, imgContent;
     private ImageView imgSupport, imgStep, imgPrivate;
     private EditText editText;
@@ -84,7 +86,8 @@ public class CourseInfoActivity extends FragmentActivity {
 
         llRelation = (LinearLayout) this.findViewById(R.id.id_ll_relation);
         ll_content = (LinearLayout) this.findViewById(R.id.id_ll_class_content);//内容父布局
-        ll_support_step = (LinearLayout) this.findViewById(R.id.id_ll_support_step);
+        ll_support_step = (LinearLayout) this.findViewById(R.id.id_ll_support_step);//赞或踩
+//        lvRelatedRead = (ListView) this.findViewById(R.id.id_lv_relation);//相关阅读列表
 
         btnBack = (Button) this.findViewById(R.id.id_course_info_btn_back);
 
@@ -117,78 +120,78 @@ public class CourseInfoActivity extends FragmentActivity {
         });
 
         //赞
-//        rlSupport.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //判断登录状态
-//                if (!MainApplication.isLogin()) {
-//                    startActivity(new Intent(CourseInfoActivity.this, LoginActivity.class));
-//                    return;
-//                }
-//
-//                int count = courseInfo.getData().getSupportCount();
-//                Object supportCount = tvSupportCount.getTag();
-//                if (tvStepCount.getTag() != null) {
-//                    Toast.makeText(MainApplication.UIContext, "已踩", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//                if (supportCount != null) {
-//                    int temp = (int) supportCount;
-//                    if (temp == count + 1) {
-//                        Toast.makeText(MainApplication.UIContext, "已赞", Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
-//                }
-//                //点赞加1效果
-//                supportOrStep(tvSupportCount, tvSupportAddOne, imgSupport, count, true);
-//
-//                CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), courseInfo.getData().getCourseId(), SupportStepTypeEnum.Course, 1, new ApiOperationCallback<ReturnInfo<String>>() {
-//                    @Override
-//                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-//                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
-//                            Log.i("supportOrStep", "赞成功");
-//                        }
-//                    }
-//                });
-//            }
-//        });
-//
-//        //踩
-//        rlStep.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //判断登录状态
-//                if (!MainApplication.isLogin()) {
-//                    startActivity(new Intent(CourseInfoActivity.this, LoginActivity.class));
-//                    return;
-//                }
-//
-//                //点踩加1效果
-//                int count = courseInfo.getData().getOppositionCount();
-//                Object stepCount = tvSupportCount.getTag();
-//                if (tvSupportCount.getTag() != null) {
-//                    Toast.makeText(MainApplication.UIContext, "已赞", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//                if (stepCount != null) {
-//                    int temp = (int) stepCount;
-//                    if (temp == count + 1) {
-//                        Toast.makeText(MainApplication.UIContext, "已踩", Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
-//                }
-//                supportOrStep(tvStepCount, tvStepAddOne, imgStep, count, false);
-//
-//                CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), courseInfo.getData().getCourseId(), SupportStepTypeEnum.Course, 1, new ApiOperationCallback<ReturnInfo<String>>() {
-//                    @Override
-//                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-//                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
-//                            Log.i("supportOrStep", "赞成功");
-//                        }
-//                    }
-//                });
-//            }
-//        });
+        rlSupport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //判断登录状态
+                if (!MainApplication.isLogin()) {
+                    startActivity(new Intent(CourseInfoActivity.this, LoginActivity.class));
+                    return;
+                }
+
+                int count = courseInfo.getData().getSupportCount();
+                Object supportCount = tvSupportCount.getTag();
+                if (tvStepCount.getTag() != null) {
+                    Toast.makeText(MainApplication.UIContext, "已踩", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (supportCount != null) {
+                    int temp = (int) supportCount;
+                    if (temp == count + 1) {
+                        Toast.makeText(MainApplication.UIContext, "已赞", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                //点赞加1效果
+                supportOrStep(tvSupportCount, tvSupportAddOne, imgSupport, count, true);
+
+                CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), courseInfo.getData().getCourseId(), SupportStepTypeEnum.Course, 1, new ApiOperationCallback<ReturnInfo<String>>() {
+                    @Override
+                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                            Log.i("supportOrStep", "赞成功");
+                        }
+                    }
+                });
+            }
+        });
+
+        //踩
+        rlStep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //判断登录状态
+                if (!MainApplication.isLogin()) {
+                    startActivity(new Intent(CourseInfoActivity.this, LoginActivity.class));
+                    return;
+                }
+
+                //点踩加1效果
+                int count = courseInfo.getData().getOppositionCount();
+                Object stepCount = tvSupportCount.getTag();
+                if (tvSupportCount.getTag() != null) {
+                    Toast.makeText(MainApplication.UIContext, "已赞", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (stepCount != null) {
+                    int temp = (int) stepCount;
+                    if (temp == count + 1) {
+                        Toast.makeText(MainApplication.UIContext, "已踩", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                supportOrStep(tvStepCount, tvStepAddOne, imgStep, count, false);
+
+                CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), courseInfo.getData().getCourseId(), SupportStepTypeEnum.Course, 1, new ApiOperationCallback<ReturnInfo<String>>() {
+                    @Override
+                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                            Log.i("supportOrStep", "赞成功");
+                        }
+                    }
+                });
+            }
+        });
 
         //写评论
         rlWriteComment.setOnClickListener(new View.OnClickListener() {

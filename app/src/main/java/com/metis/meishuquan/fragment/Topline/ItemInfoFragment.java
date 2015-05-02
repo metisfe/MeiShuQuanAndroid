@@ -23,10 +23,13 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -38,6 +41,7 @@ import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.login.LoginActivity;
+import com.metis.meishuquan.adapter.topline.CommonAdapter;
 import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
@@ -47,6 +51,7 @@ import com.metis.meishuquan.model.enums.LoginStateEnum;
 import com.metis.meishuquan.model.enums.PrivateResultEnum;
 import com.metis.meishuquan.model.enums.PrivateTypeEnum;
 import com.metis.meishuquan.model.topline.ContentInfo;
+import com.metis.meishuquan.model.topline.RelatedRead;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
 import com.metis.meishuquan.model.topline.Urls;
 import com.metis.meishuquan.util.ImageLoaderUtils;
@@ -68,6 +73,7 @@ public class ItemInfoFragment extends Fragment {
 
     public static final String KEY_TITLE_VISIBLE = "title_visible";
     public static final String LOG_EXCEPTION = "exception";
+    public static final String KEY_NEWSID = "newsId";
 
     private final int LOGINREQUESTCODE = 1001;
     private String shareContent = "";
@@ -83,11 +89,16 @@ public class ItemInfoFragment extends Fragment {
     private RelativeLayout rl_Input;
     private ImageView imgPrivate;
     private ScrollView contentScrollView;
+    private LinearLayout llRelatedRead;//相关阅读父容器
+    private ListView lvRelatedRead;
     private EditText editText;
     private RelativeLayout rlSend;
+
+    private CommonAdapter commonAdapter;
+
     private boolean isPrivate = false;
-    private List<ImageView> imageGroup = new ArrayList<ImageView>();
     private boolean windowAttached;
+    private List<ImageView> imageGroup = new ArrayList<ImageView>();
 
     private int newsId = 0;
     private boolean titleVisible = true;
@@ -104,17 +115,17 @@ public class ItemInfoFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        rootView = (ViewGroup) inflater.inflate(R.layout.fragment_topline_topbar_list_item_info, null, false);
+        initView(rootView);
+        initEvent();
+
         //加载新闻详细
         Bundle args = this.getArguments();
         if (args != null) {
-            newsId = args.getInt("newsId");
+            newsId = args.getInt(KEY_NEWSID);
             //根据新闻Id获取新闻内容
             getInfoData(newsId);
         }
-        rootView = (ViewGroup) inflater.inflate(R.layout.fragment_topline_topbar_list_item_info, null, false);
-
-        initView(rootView);
-        initEvent();
         return rootView;
     }
 
@@ -165,6 +176,9 @@ public class ItemInfoFragment extends Fragment {
         rlSend = (RelativeLayout) rootView.findViewById(R.id.id_rl_send);//发送评论
         contentScrollView = (ScrollView) rootView.findViewById(R.id.id_scrollview_info_content);
 
+        llRelatedRead = (LinearLayout) rootView.findViewById(R.id.id_ll_related_read);//相关阅读父容器
+        lvRelatedRead = (ListView) rootView.findViewById(R.id.id_lv_relation_read);//相关阅读列表
+
         editText = (EditText) rootView.findViewById(R.id.id_comment_edittext);
         imgPrivate = (ImageView) rootView.findViewById(R.id.id_img_favorite);//收藏图标
 
@@ -195,6 +209,16 @@ public class ItemInfoFragment extends Fragment {
                 if (contentInfo.getType().equals("VOIDE")) {
                     //addImageView(contentInfo.getData().getUrl(), contentInfo.getData().getWidth(), contentInfo.getData().getHeight());
                 }
+            }
+
+            //相关阅读
+            if (newsInfo.getData().getRelatedNewsList().size() > 0) {
+                llRelatedRead.setVisibility(View.VISIBLE);
+                //绑定相关阅读数据
+                List<RelatedRead> lstRelatedRead = newsInfo.getData().getRelatedNewsList();
+                commonAdapter = new CommonAdapter(MainApplication.UIContext, lstRelatedRead);
+                lvRelatedRead.setAdapter(commonAdapter);
+                setListViewHeightBasedOnChildren(lvRelatedRead);
             }
         }
     }
@@ -295,6 +319,24 @@ public class ItemInfoFragment extends Fragment {
                 hideInputView();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.remove(ItemInfoFragment.this);
+                ft.commit();
+            }
+        });
+
+        //相关阅读列表项点击事件
+        this.lvRelatedRead.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                int newsId = commonAdapter.getLstRelatedRead().get(i).getNewsId();
+                ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt(KEY_NEWSID, newsId);
+                itemInfoFragment.setArguments(bundle);
+
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.add(R.id.content_container, itemInfoFragment);
+                ft.addToBackStack(null);
                 ft.commit();
             }
         });
@@ -486,7 +528,7 @@ public class ItemInfoFragment extends Fragment {
                     if (result.getInfo().equals(String.valueOf(0))) {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
-                        Log.i("newsInfo", json);
+                        Log.i("头条详情数据", json);
                         if (!TextUtils.isEmpty(json)) {
                             newsInfo = gson.fromJson(json, new TypeToken<TopLineNewsInfo>() {
                             }.getType());
@@ -507,5 +549,27 @@ public class ItemInfoFragment extends Fragment {
     //根据新闻Id获取新闻内容
     public void getInfoData(final int newsId) {
         this.getInfoData(newsId, null);
+    }
+
+    /**
+     * 动态设置ListView的高度
+     *
+     * @param listView
+     */
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        if (listView == null) return;
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
     }
 }

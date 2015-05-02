@@ -1,5 +1,6 @@
 package com.metis.meishuquan.model.topline;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ public class NewsInfo {
 
     private String commentDefaultText;
 
-    private List<RelatedRead> relatedNewsLists;
+    private List<RelatedRead> relatedNewsList;
 
     private int commentCount;
 
@@ -115,12 +116,15 @@ public class NewsInfo {
         this.commentDefaultText = commentDefaultText;
     }
 
-    public List<RelatedRead> getRelatedNewsLists() {
-        return relatedNewsLists;
+    public List<RelatedRead> getRelatedNewsList() {
+        if (relatedNewsList == null) {
+            relatedNewsList = new ArrayList<RelatedRead>();
+        }
+        return relatedNewsList;
     }
 
-    public void setRelatedNewsLists(List<RelatedRead> relatedNewsLists) {
-        this.relatedNewsLists = relatedNewsLists;
+    public void setRelatedNewsList(List<RelatedRead> relatedNewsList) {
+        this.relatedNewsList = relatedNewsList;
     }
 
     public int getCommentCount() {
