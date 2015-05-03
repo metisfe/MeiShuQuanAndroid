@@ -3,6 +3,7 @@ package com.metis.meishuquan.fragment.commons;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,8 @@ import com.metis.meishuquan.model.commons.User;
  * Created by WJ on 2015/4/23.
  */
 public class StudioFragment extends Fragment{
+
+    private static final String TAG = StudioFragment.class.getSimpleName();
 
     private ListView mListView = null;
 
@@ -46,6 +49,8 @@ public class StudioFragment extends Fragment{
 
     private String mTitle1, mTitle2, mTitle3;
 
+    private GridLayout mMenuLayout = null;
+    private TextView mIntroduceTv = null;
     private RadioGroup mRadioGroup;
     private RadioButton mBtn1, mBtn2, mBtn3;
 
@@ -61,6 +66,9 @@ public class StudioFragment extends Fragment{
         mHeaderView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_studio_list_header, null);
         setAdapter(mAdapter);
 
+        mIntroduceTv = (TextView)mHeaderView.findViewById(R.id.studio_list_header_self_introduce);
+        mMenuLayout = (GridLayout)mHeaderView.findViewById(R.id.studio_list_header_menu);
+
         mRadioGroup = (RadioGroup)view.findViewById(R.id.studio_list_header_tab_container);
         mBtn1 = (RadioButton)view.findViewById(R.id.studio_list_header_tab1);
         mBtn2 = (RadioButton)view.findViewById(R.id.studio_list_header_tab2);
@@ -73,7 +81,22 @@ public class StudioFragment extends Fragment{
     }
 
     private void fillHeader (User user) {
-        GridLayout gridLayout = (GridLayout)mHeaderView.findViewById(R.id.studio_list_header_menu);
+        /*if (user == null) {
+            mHeaderView.setVisibility(View.GONE);
+            return;
+        }*/
+        //TODO
+        if (user == null) {
+            user = new User();
+        }
+        Log.v(TAG, "fillHeader " + "studio".equals(user.getUserRole()));
+        if ("studio".equals(user.getUserRole())) {
+            mMenuLayout.setVisibility(View.VISIBLE);
+            mIntroduceTv.setVisibility(View.GONE);
+        } else {
+            mMenuLayout.setVisibility(View.GONE);
+            mIntroduceTv.setVisibility(View.VISIBLE);
+        }
         for (int i = 0; i < mMenuItems.length; i++) {
             final int index = i;
             final MenuItem item = mMenuItems[i];
@@ -90,7 +113,7 @@ public class StudioFragment extends Fragment{
                     }
                 }
             });
-            gridLayout.addView(view);
+            mMenuLayout.addView(view);
         }
 
     }

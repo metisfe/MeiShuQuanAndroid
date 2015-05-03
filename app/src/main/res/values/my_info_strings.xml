@@ -125,6 +125,10 @@
     <string name="studio_tab_works">画室作品</string>
 
     <string name="studio_empty_data_set">暂无数据</string>
+    
+    <string name="studio_tab_daily">日志</string>
+    <string name="studio_tab_album">相册</string>
+    <string name="studio_tab_info_details">个人信息</string>
 
     <string name="my_course_comment_count">评论(%1$d)</string>
     <string name="my_course_read_count">阅读(%1$d)</string>
@@ -150,8 +154,8 @@
 
         <item>山东</item>
         <item>四川</item>
-        <item>长沙</item>
-        <item>武汉</item>
+        <item>湖南</item>
+        <item>湖北</item>
 
         <item>河北</item>
         <item>上海</item>

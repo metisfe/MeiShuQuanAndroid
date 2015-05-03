@@ -8,19 +8,12 @@ import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.info.homepage.StudioActivity;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.shared.MyInfoBtn;
 import com.nostra13.universalimageloader.cache.disc.DiscCacheAware;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.bean.SocializeEntity;
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.controller.listener.SocializeListeners;
-import com.umeng.socialize.media.QZoneShareContent;
-import com.umeng.socialize.sso.QZoneSsoHandler;
-import com.umeng.socialize.view.ShareActivity;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
@@ -57,10 +50,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void onTitleRightPressed() {
         super.onTitleRightPressed();
-        /*startActivity(new Intent(this, StudioActivity.class));*/
+        startActivity(new Intent(this, StudioActivity.class));
         /*startActivity(new Intent(this, ActDetailActivity.class));*/
         //startActivity(new Intent (this, ShareActivity.class));
-        final UMSocialService mController
+        /*final UMSocialService mController
                 = UMServiceFactory.getUMSocialService("www.baidu.com");
         QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(this, "1104485283", "k9f8JhWppP5r1N5t");
         qZoneSsoHandler.addToSocialSDK();
@@ -82,7 +75,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             public void onComplete(SHARE_MEDIA share_media, int i, SocializeEntity socializeEntity) {
 
             }
-        });
+        });*/
     }
 
     @Override
