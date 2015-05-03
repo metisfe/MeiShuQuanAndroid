@@ -35,6 +35,7 @@ import io.rong.imlib.RongIMClient;
  * Created by wudi on 3/15/2015.
  */
 public class MainApplication extends Application {
+
     private static DisplayMetrics displayMetrics;
     public static android.content.res.Resources Resources;
     public static String PackageName;
@@ -51,6 +52,9 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        //set UMeng debugable false
+        com.umeng.socialize.utils.Log.LOG = false;
 
         Resources = this.getResources();
         PackageName = this.getPackageName();

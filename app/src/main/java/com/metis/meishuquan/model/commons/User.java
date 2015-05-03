@@ -33,7 +33,8 @@ public class User implements Serializable {
             KEY_GOODSUBJECTS = "GoodSubjects",
             KEY_ACHIEVEMENT = "Achievement",
             KEY_USER_ID = "userId",
-            KEY_ACCOUNT = "Account";
+            KEY_ACCOUNT = "Account",
+            KEY_USER_ROLE = "userRole";
 
     @SerializedName("userId")
     private int userId = -1;

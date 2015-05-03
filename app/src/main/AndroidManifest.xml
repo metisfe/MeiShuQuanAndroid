@@ -120,10 +120,10 @@
 
         <activity
             android:name=".wxapi.WXEntryActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <!-- ############ QQ空间和QQ SSO授权的Activity注册 ############ -->
         <activity
@@ -141,8 +141,7 @@
         </activity>
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:screenOrientation="portrait"></activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
 
         <!-- ###################添加UmengAppkey###################### -->
         <meta-data
@@ -404,12 +403,16 @@
         <activity
             android:name=".activity.act.ActDetailActivity"
             android:label="@string/title_activity_act_detail" />
+
         <activity
             android:name=".activity.assess.ImageGridActivity"
             android:theme="@android:style/Theme.NoTitleBar" />
         <activity
             android:name=".activity.assess.TestPicActivity"
             android:theme="@android:style/Theme.NoTitleBar" />
+        <activity
+            android:name=".activity.info.homepage.HumanActivity"
+            android:label="@string/title_activity_human"></activity>
     </application>
 
 </manifest>

@@ -2,7 +2,11 @@ package com.metis.meishuquan.activity.info.homepage;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.GestureDetectorCompat;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -14,11 +18,17 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.BaseActivity;
 import com.metis.meishuquan.activity.info.TextActivity;
 import com.metis.meishuquan.fragment.commons.StudioFragment;
+import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 
 public class StudioActivity extends BaseActivity implements
         StudioFragment.OnMenuItemClickListener,
         RadioGroup.OnCheckedChangeListener{
+
+    private static final String TAG = StudioActivity.class.getSimpleName();
+
+    public static final String KEY_USER_ID = User.KEY_USER_ID,
+                                KEY_USER_ROLE = User.KEY_USER_ROLE;
 
     private View mTitleView = null;
     private ImageView mTitleProfile = null;
@@ -39,11 +49,22 @@ public class StudioActivity extends BaseActivity implements
 
         mStudioFragment = (StudioFragment)getSupportFragmentManager().findFragmentById(R.id.studio_fragment);
         mStudioFragment.setOnMenuItemClickListener(this);
-        mStudioFragment.setTabTitle(
-                R.string.studio_tab_top_line,
-                R.string.studio_tab_glory,
-                R.string.studio_tab_works);
+
+        String userRoleStr = getIntent().getStringExtra(KEY_USER_ROLE);
+        if ("studio".equals(userRoleStr)) {
+            mStudioFragment.setTabTitle(
+                    R.string.studio_tab_top_line,
+                    R.string.studio_tab_glory,
+                    R.string.studio_tab_works);
+        } else {
+            mStudioFragment.setTabTitle(
+                    R.string.studio_tab_daily,
+                    R.string.studio_tab_album,
+                    R.string.studio_tab_info_details
+            );
+        }
         mStudioFragment.setOnCheckedChangeListener(this);
+
     }
 
     @Override
