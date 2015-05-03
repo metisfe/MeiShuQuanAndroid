@@ -75,9 +75,6 @@ public class CourseInfoActivity extends FragmentActivity {
 
     private void initView() {
         tvAuthor = (TextView) this.findViewById(R.id.id_tv_author);
-        tvTitle = (TextView) this.findViewById(R.id.id_tv_title);
-        tvCreateTime = (TextView) this.findViewById(R.id.id_tv_create_time);
-        tvReadCount = (TextView) this.findViewById(R.id.id_tv_read_count);
 
         imgAuthor = (ImageView) this.findViewById(R.id.id_img_dynamic);
         imgSupport = (ImageView) this.findViewById(R.id.id_img_support);
@@ -91,7 +88,7 @@ public class CourseInfoActivity extends FragmentActivity {
 
         btnBack = (Button) this.findViewById(R.id.id_course_info_btn_back);
 
-        rlSupport = (RelativeLayout) this.findViewById(R.id.id_rl_support);//赞
+//        rlSupport = (RelativeLayout) this.findViewById(R.id.id_rl_support);//赞
         tvSupportAddOne = (TextView) this.findViewById(R.id.id_tv_support_add_one);
         tvStepAddOne = (TextView) this.findViewById(R.id.id_tv_step_add_one);
         tvSupportCount = (TextView) this.findViewById(R.id.id_tv_support_count);
@@ -116,80 +113,6 @@ public class CourseInfoActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 finish();
-            }
-        });
-
-        //赞
-        rlSupport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //判断登录状态
-                if (!MainApplication.isLogin()) {
-                    startActivity(new Intent(CourseInfoActivity.this, LoginActivity.class));
-                    return;
-                }
-
-                int count = courseInfo.getData().getSupportCount();
-                Object supportCount = tvSupportCount.getTag();
-                if (tvStepCount.getTag() != null) {
-                    Toast.makeText(MainApplication.UIContext, "已踩", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (supportCount != null) {
-                    int temp = (int) supportCount;
-                    if (temp == count + 1) {
-                        Toast.makeText(MainApplication.UIContext, "已赞", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
-                //点赞加1效果
-                supportOrStep(tvSupportCount, tvSupportAddOne, imgSupport, count, true);
-
-                CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), courseInfo.getData().getCourseId(), SupportStepTypeEnum.Course, 1, new ApiOperationCallback<ReturnInfo<String>>() {
-                    @Override
-                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                            Log.i("supportOrStep", "赞成功");
-                        }
-                    }
-                });
-            }
-        });
-
-        //踩
-        rlStep.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //判断登录状态
-                if (!MainApplication.isLogin()) {
-                    startActivity(new Intent(CourseInfoActivity.this, LoginActivity.class));
-                    return;
-                }
-
-                //点踩加1效果
-                int count = courseInfo.getData().getOppositionCount();
-                Object stepCount = tvSupportCount.getTag();
-                if (tvSupportCount.getTag() != null) {
-                    Toast.makeText(MainApplication.UIContext, "已赞", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (stepCount != null) {
-                    int temp = (int) stepCount;
-                    if (temp == count + 1) {
-                        Toast.makeText(MainApplication.UIContext, "已踩", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
-                supportOrStep(tvStepCount, tvStepAddOne, imgStep, count, false);
-
-                CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), courseInfo.getData().getCourseId(), SupportStepTypeEnum.Course, 1, new ApiOperationCallback<ReturnInfo<String>>() {
-                    @Override
-                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                            Log.i("supportOrStep", "赞成功");
-                        }
-                    }
-                });
             }
         });
 
@@ -286,26 +209,6 @@ public class CourseInfoActivity extends FragmentActivity {
         return (ViewGroup) ((ViewGroup) context.findViewById(android.R.id.content)).getChildAt(0);
     }
 
-    private void supportOrStep(TextView tvCount, final TextView tvAddOne, ImageView img, int count, boolean isSupport) {
-        tvAddOne.setVisibility(View.VISIBLE);
-        tvAddOne.startAnimation(animation);
-        int addCount = count + 1;
-        tvCount.setText("(" + addCount + ")");
-        tvCount.setTag(count + 1);
-        tvCount.setTextColor(Color.RED);
-        if (isSupport) {
-            img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.icon_support));
-        } else {
-            img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.icon_step));
-        }
-
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                tvAddOne.setVisibility(View.GONE);
-            }
-        }, 500);
-    }
-
     private void hideInputView() {
         Utils.hideInputMethod(this, editText);
         rlInputComment.setVisibility(View.GONE);
@@ -337,6 +240,7 @@ public class CourseInfoActivity extends FragmentActivity {
                     courseInfo = gson.fromJson(json, new TypeToken<CourseInfo>() {
                     }.getType());
                     if (courseInfo != null) {
+                        bindData();
                         //根据内容类型显示图片混排模式或大图
                         if (courseInfo.getData().getCourseType() == 0) {//图片混排模式
                             CourseWordAndPhontoInfoFragment courseWordAndPhontoInfoFragment = new CourseWordAndPhontoInfoFragment();
@@ -360,9 +264,6 @@ public class CourseInfoActivity extends FragmentActivity {
 
     private void bindData() {
         this.tvAuthor.setText(courseInfo.getData().getAuthor() != null ? courseInfo.getData().getAuthor().getName() : "");
-        this.tvTitle.setText(courseInfo.getData().getTitle());
-        this.tvCreateTime.setText(courseInfo.getData().getCreateTime());
-        this.tvReadCount.setText("阅读(" + courseInfo.getData().getViewCount() + ")");
     }
 
 //    private void addViewByContent() {

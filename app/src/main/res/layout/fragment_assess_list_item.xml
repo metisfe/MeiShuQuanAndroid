@@ -138,7 +138,7 @@
             android:layout_alignEnd="@+id/id_tv_content"
             android:layout_alignRight="@+id/id_tv_content"
             android:text="未点评"
-            android:textColor="@color/red"
+            android:textColor="#fb6d6d"
             android:textSize="13sp" />
     </RelativeLayout>
 

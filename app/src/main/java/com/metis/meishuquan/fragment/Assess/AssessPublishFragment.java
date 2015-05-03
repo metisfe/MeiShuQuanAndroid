@@ -75,7 +75,6 @@ public class AssessPublishFragment extends Fragment {
 
     private Channel selectedChannel;//类型
 
-    private Bimp bimp;
     private static final int TAKE_PHOTO = 1;
     private static final int PICK_PICTURE = 2;
     private String photoPath = "";
@@ -105,7 +104,6 @@ public class AssessPublishFragment extends Fragment {
         this.etDesc = (EditText) rootView.findViewById(R.id.id_edt_desc);
         this.tvWordCount = (TextView) rootView.findViewById(R.id.id_tv_word_count);
         this.addImg = (ImageView) rootView.findViewById(R.id.id_add_image);
-        this.bimp = new Bimp();
     }
 
     private void initEvent() {
@@ -246,9 +244,9 @@ public class AssessPublishFragment extends Fragment {
         Bitmap bitmap = null;
         try {
             if (!path.isEmpty()) {
-                bimp.drr.clear();
-                bimp.drr.add(photoPath);
-                bitmap = bimp.revitionImageSize(bimp.drr.get(0));
+                Bimp.getInstance().drr.clear();
+                Bimp.getInstance().drr.add(photoPath);
+                bitmap = Bimp.getInstance().revitionImageSize(Bimp.getInstance().drr.get(0));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -262,12 +260,12 @@ public class AssessPublishFragment extends Fragment {
         if (resultCode == FragmentActivity.RESULT_OK) {
             switch (requestCode) {
                 case TAKE_PHOTO://拍照
-                    bimp.drr.clear();
-                    bimp.drr.add(photoPath);
+                    Bimp.getInstance().drr.clear();
+                    Bimp.getInstance().drr.add(photoPath);
                     try {
-                        Bitmap bitmap = bimp.revitionImageSize(bimp.drr.get(0));
-                        bimp.bmp.clear();
-                        bimp.bmp.add(bitmap);
+                        Bitmap bitmap = Bimp.getInstance().revitionImageSize(Bimp.getInstance().drr.get(0));
+                        Bimp.getInstance().bmp.clear();
+                        Bimp.getInstance().bmp.add(bitmap);
                         addImg.setImageBitmap(bitmap);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -298,11 +296,11 @@ public class AssessPublishFragment extends Fragment {
                         out.flush();
                         out.close();
 
-                        bimp.drr.clear();
-                        bimp.drr.add(photoPath);
-                        Bitmap releasePic = bimp.revitionImageSize(bimp.drr.get(0));
-                        bimp.bmp.clear();
-                        bimp.bmp.add(releasePic);
+                        Bimp.getInstance().drr.clear();
+                        Bimp.getInstance().drr.add(photoPath);
+                        Bitmap releasePic = Bimp.getInstance().revitionImageSize(Bimp.getInstance().drr.get(0));
+                        Bimp.getInstance().bmp.clear();
+                        Bimp.getInstance().bmp.add(releasePic);
                         addImg.setImageBitmap(releasePic);
                     } catch (IOException e) {
                         e.printStackTrace();

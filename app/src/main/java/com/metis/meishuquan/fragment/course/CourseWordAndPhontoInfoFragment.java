@@ -1,10 +1,13 @@
 package com.metis.meishuquan.fragment.course;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
@@ -26,14 +29,23 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.image.SmartImageView;
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.course.CourseInfoActivity;
+import com.metis.meishuquan.activity.login.LoginActivity;
+import com.metis.meishuquan.model.BLL.CommonOperator;
+import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.course.CourseInfo;
+import com.metis.meishuquan.model.enums.SupportStepTypeEnum;
 import com.metis.meishuquan.model.topline.ContentInfo;
 import com.metis.meishuquan.model.topline.Urls;
 import com.metis.meishuquan.util.ImageLoaderUtils;
+import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import java.util.List;
 import java.util.StringTokenizer;
@@ -45,6 +57,7 @@ import java.util.StringTokenizer;
 public class CourseWordAndPhontoInfoFragment extends Fragment {
     private static final String KEY_COURSE_INFO = "COURSE_INFO";
 
+    private TextView tvTitle, tvCreateTime, tvReadCount, tvSupportAddOne, tvStepAddOne, tvSupportCount, tvStepCount;
     private RelativeLayout rlSupport, rlStep;
     private LinearLayout ll_content, llRelation, ll_support_step;
     private ListView lvRelationRead;
@@ -70,6 +83,10 @@ public class CourseWordAndPhontoInfoFragment extends Fragment {
     }
 
     private void initView(ViewGroup rootView) {
+        tvTitle = (TextView) rootView.findViewById(R.id.id_tv_title);
+        tvCreateTime = (TextView) rootView.findViewById(R.id.id_tv_create_time);
+        tvReadCount = (TextView) rootView.findViewById(R.id.id_tv_read_count);
+
         imgSupport = (ImageView) rootView.findViewById(R.id.id_img_support);
         imgStep = (ImageView) rootView.findViewById(R.id.id_img_step);
         imgPrivate = (ImageView) rootView.findViewById(R.id.id_img_favorite);
@@ -81,6 +98,11 @@ public class CourseWordAndPhontoInfoFragment extends Fragment {
 
         rlSupport = (RelativeLayout) rootView.findViewById(R.id.id_rl_support);//赞
         rlStep = (RelativeLayout) rootView.findViewById(R.id.id_rl_step);//踩
+
+        tvSupportAddOne = (TextView) rootView.findViewById(R.id.id_tv_support_add_one);
+        tvStepAddOne = (TextView) rootView.findViewById(R.id.id_tv_step_add_one);
+        tvSupportCount = (TextView) rootView.findViewById(R.id.id_tv_support_count);
+        tvStepCount = (TextView) rootView.findViewById(R.id.id_tv_step_count);
         animation = AnimationUtils.loadAnimation(getActivity(), R.anim.support_add_one);
     }
 
@@ -89,7 +111,36 @@ public class CourseWordAndPhontoInfoFragment extends Fragment {
         rlSupport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //判断登录状态
+                if (!MainApplication.isLogin()) {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    return;
+                }
 
+                int count = courseInfo.getData().getSupportCount();
+                Object supportCount = tvSupportCount.getTag();
+                if (tvStepCount.getTag() != null) {
+                    Toast.makeText(MainApplication.UIContext, "已踩", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (supportCount != null) {
+                    int temp = (int) supportCount;
+                    if (temp == count + 1) {
+                        Toast.makeText(MainApplication.UIContext, "已赞", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                //点赞加1效果
+                supportOrStep(tvSupportCount, tvSupportAddOne, imgSupport, count, true);
+
+                CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), courseInfo.getData().getCourseId(), SupportStepTypeEnum.Course, 1, new ApiOperationCallback<ReturnInfo<String>>() {
+                    @Override
+                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                            Log.i("supportOrStep", "赞成功");
+                        }
+                    }
+                });
             }
         });
 
@@ -97,7 +148,36 @@ public class CourseWordAndPhontoInfoFragment extends Fragment {
         rlStep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //判断登录状态
+                if (!MainApplication.isLogin()) {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    return;
+                }
 
+                //点踩加1效果
+                int count = courseInfo.getData().getOppositionCount();
+                Object stepCount = tvSupportCount.getTag();
+                if (tvSupportCount.getTag() != null) {
+                    Toast.makeText(MainApplication.UIContext, "已赞", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (stepCount != null) {
+                    int temp = (int) stepCount;
+                    if (temp == count + 1) {
+                        Toast.makeText(MainApplication.UIContext, "已踩", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                supportOrStep(tvStepCount, tvStepAddOne, imgStep, count, false);
+
+                CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), courseInfo.getData().getCourseId(), SupportStepTypeEnum.Course, 1, new ApiOperationCallback<ReturnInfo<String>>() {
+                    @Override
+                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                            Log.i("supportOrStep", "赞成功");
+                        }
+                    }
+                });
             }
         });
 
@@ -108,6 +188,32 @@ public class CourseWordAndPhontoInfoFragment extends Fragment {
 
             }
         });
+    }
+
+    private void bindData() {
+        this.tvTitle.setText(courseInfo.getData().getTitle());
+        this.tvCreateTime.setText(courseInfo.getData().getCreateTime());
+        this.tvReadCount.setText("阅读(" + courseInfo.getData().getViewCount() + ")");
+    }
+
+    private void supportOrStep(TextView tvCount, final TextView tvAddOne, ImageView img, int count, boolean isSupport) {
+        tvAddOne.setVisibility(View.VISIBLE);
+        tvAddOne.startAnimation(animation);
+        int addCount = count + 1;
+        tvCount.setText("(" + addCount + ")");
+        tvCount.setTag(count + 1);
+        tvCount.setTextColor(Color.RED);
+        if (isSupport) {
+            img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.icon_support));
+        } else {
+            img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.icon_step));
+        }
+
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                tvAddOne.setVisibility(View.GONE);
+            }
+        }, 500);
     }
 
     private void addViewByContent() {

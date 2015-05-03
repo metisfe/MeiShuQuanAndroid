@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,8 +78,10 @@ public class AssessInfoActivity extends FragmentActivity {
     private Button btnRecord, btnSend;
     private EditText etInput;
     private LinearLayout llSupport, llComment;
+    private RelativeLayout rlChoosePhoto;
     private FlowLayout flImgs;
     private ImageView imgSupport;
+    private Button btnChoosePhoto;
     private ListView listView;
     private View headerView;
 
@@ -166,6 +169,9 @@ public class AssessInfoActivity extends FragmentActivity {
         this.btnRecord = (Button) this.findViewById(R.id.id_btn_voice_record);//录音
         this.etInput = (EditText) this.findViewById(R.id.id_et_input_comment);//输入框
         this.btnSend = (Button) this.findViewById(R.id.id_btn_send);//发送文字
+
+        this.rlChoosePhoto = (RelativeLayout) this.findViewById(R.id.id_rl_choose_photo);
+        this.btnChoosePhoto = (Button) this.findViewById(R.id.id_btn_choose_photo);
     }
 
     private void initEvent() {
@@ -205,6 +211,9 @@ public class AssessInfoActivity extends FragmentActivity {
                         if (getWindow().getAttributes().softInputMode == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED) {
                             Utils.hideInputMethod(AssessInfoActivity.this, etInput);
                         }
+                        if (rlChoosePhoto.getVisibility() == View.VISIBLE) {
+                            rlChoosePhoto.setVisibility(View.GONE);
+                        }
                         selectedAssessComment = null;
                         clearEditText();
                         break;
@@ -236,10 +245,19 @@ public class AssessInfoActivity extends FragmentActivity {
             }
         });
 
+        //更多-选择图片
         this.imgMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                rlChoosePhoto.setVisibility(View.VISIBLE);
+            }
+        });
 
+        //选择图片
+        this.btnChoosePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(AssessInfoActivity.this, TestPicActivity.class));
             }
         });
 
@@ -390,6 +408,7 @@ public class AssessInfoActivity extends FragmentActivity {
         AssessComment assessComment = (AssessComment) returnInfo.getData();
         if (assessComment != null) {
             assessSupportAndComment.getAssessCommentList().add(assessComment);
+            listView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
             btnSend.setVisibility(View.GONE);
             clearEditText();
@@ -619,7 +638,6 @@ public class AssessInfoActivity extends FragmentActivity {
                 }
             }
             return convertView;
-
         }
     }
 }

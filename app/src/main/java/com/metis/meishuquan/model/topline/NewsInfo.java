@@ -1,12 +1,13 @@
 package com.metis.meishuquan.model.topline;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by wj on 15/3/26.
  */
-public class NewsInfo {
+public class NewsInfo implements Serializable {
 
     private static final String shareBaseUrl = "http://www.meishuquan.net/H5/ContentDetial.ASPX?ID=";
 
@@ -31,6 +32,10 @@ public class NewsInfo {
     private String commentDefaultText;
 
     private List<RelatedRead> relatedNewsList;
+
+    private int supportCount;
+
+    private int oppositionCount;
 
     private int commentCount;
 
@@ -125,6 +130,22 @@ public class NewsInfo {
 
     public void setRelatedNewsList(List<RelatedRead> relatedNewsList) {
         this.relatedNewsList = relatedNewsList;
+    }
+
+    public int getSupportCount() {
+        return supportCount;
+    }
+
+    public void setSupportCount(int supportCount) {
+        this.supportCount = supportCount;
+    }
+
+    public int getOppositionCount() {
+        return oppositionCount;
+    }
+
+    public void setOppositionCount(int oppositionCount) {
+        this.oppositionCount = oppositionCount;
     }
 
     public int getCommentCount() {

@@ -3,8 +3,11 @@ package com.metis.meishuquan.fragment.Topline;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -38,6 +41,7 @@ import android.widget.Toast;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.loopj.android.image.SmartImageView;
+import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.login.LoginActivity;
@@ -50,12 +54,14 @@ import com.metis.meishuquan.model.enums.BlockTypeEnum;
 import com.metis.meishuquan.model.enums.LoginStateEnum;
 import com.metis.meishuquan.model.enums.PrivateResultEnum;
 import com.metis.meishuquan.model.enums.PrivateTypeEnum;
+import com.metis.meishuquan.model.enums.SupportStepTypeEnum;
 import com.metis.meishuquan.model.topline.ContentInfo;
 import com.metis.meishuquan.model.topline.RelatedRead;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
 import com.metis.meishuquan.model.topline.Urls;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.ImageUtil;
+import com.metis.meishuquan.view.Common.MatchParentImageView;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
@@ -84,10 +90,10 @@ public class ItemInfoFragment extends Fragment {
     private LinearLayout ll_content;
     private TopLineNewsInfo newsInfo;
     private View titleBar = null;
-    private TextView tv_title, tv_createtime, tv_sourse, tv_comment_count;
-    private RelativeLayout rl_writeCommont, rl_commontList, rl_private, rl_share, rl_main;
+    private TextView tv_title, tv_createtime, tv_sourse, tv_comment_count, tvSupportAddOne, tvStepAddOne, tvSupportCount, tvStepCount;
+    private RelativeLayout rl_writeCommont, rl_commontList, rl_private, rl_share, rl_main, rlSupport, rlStep;
     private RelativeLayout rl_Input;
-    private ImageView imgPrivate;
+    private ImageView imgSupport, imgStep, imgPrivate;
     private ScrollView contentScrollView;
     private LinearLayout llRelatedRead;//相关阅读父容器
     private ListView lvRelatedRead;
@@ -102,6 +108,7 @@ public class ItemInfoFragment extends Fragment {
 
     private int newsId = 0;
     private boolean titleVisible = true;
+    private Animation animation;
     private FragmentManager fm;
 
     @Override
@@ -179,9 +186,20 @@ public class ItemInfoFragment extends Fragment {
         llRelatedRead = (LinearLayout) rootView.findViewById(R.id.id_ll_related_read);//相关阅读父容器
         lvRelatedRead = (ListView) rootView.findViewById(R.id.id_lv_relation_read);//相关阅读列表
 
+        rlSupport = (RelativeLayout) rootView.findViewById(R.id.id_rl_support);//赞
+        tvSupportAddOne = (TextView) rootView.findViewById(R.id.id_tv_support_add_one);
+        tvStepAddOne = (TextView) rootView.findViewById(R.id.id_tv_step_add_one);
+        tvSupportCount = (TextView) rootView.findViewById(R.id.id_tv_support_count);
+        tvStepCount = (TextView) rootView.findViewById(R.id.id_tv_step_count);
+
+        rlStep = (RelativeLayout) rootView.findViewById(R.id.id_rl_step);//踩
+
         editText = (EditText) rootView.findViewById(R.id.id_comment_edittext);
+        imgSupport = (ImageView) rootView.findViewById(R.id.id_img_support);
+        imgStep = (ImageView) rootView.findViewById(R.id.id_img_step);
         imgPrivate = (ImageView) rootView.findViewById(R.id.id_img_favorite);//收藏图标
 
+        animation = AnimationUtils.loadAnimation(MainApplication.UIContext, R.anim.support_add_one);
         fm = getActivity().getSupportFragmentManager();
     }
 
@@ -230,15 +248,14 @@ public class ItemInfoFragment extends Fragment {
         }
         shareImgUrl = url;
         ImageView imageView = new ImageView(getActivity());
+
         ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(url.trim(), imageView, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.img_topline_default));
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
         ImageUtil.setImageViewMathParent(getActivity(), ll_content, imageView, width, height);
-//        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width * 2, height * 2);
+//        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 //        lp.topMargin = 10;
 //        lp.gravity = Gravity.CENTER_HORIZONTAL;
 //        imageView.setLayoutParams(lp);
-
 //        ll_content.addView(imageView);
         imageGroup.add(imageView);
     }
@@ -341,6 +358,80 @@ public class ItemInfoFragment extends Fragment {
             }
         });
 
+        //赞
+        rlSupport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //判断登录状态
+                if (!MainApplication.isLogin()) {
+                    startActivity(new Intent(MainApplication.MainActivity, LoginActivity.class));
+                    return;
+                }
+
+                int count = newsInfo.getData().getSupportCount();
+                Object supportCount = tvSupportCount.getTag();
+                if (tvStepCount.getTag() != null) {
+                    Toast.makeText(MainApplication.UIContext, "已踩", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (supportCount != null) {
+                    int temp = (int) supportCount;
+                    if (temp == count + 1) {
+                        Toast.makeText(MainApplication.UIContext, "已赞", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                //点赞加1效果
+                supportOrStep(tvSupportCount, tvSupportAddOne, imgSupport, count, true);
+
+                CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), newsId, SupportStepTypeEnum.News, 1, new ApiOperationCallback<ReturnInfo<String>>() {
+                    @Override
+                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                            Log.i("supportOrStep", "赞成功");
+                        }
+                    }
+                });
+            }
+        });
+
+        //踩
+        rlStep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //判断登录状态
+                if (!MainApplication.isLogin()) {
+                    startActivity(new Intent(MainApplication.MainActivity, LoginActivity.class));
+                    return;
+                }
+
+                //点踩加1效果
+                int count = newsInfo.getData().getOppositionCount();
+                Object stepCount = tvSupportCount.getTag();
+                if (tvSupportCount.getTag() != null) {
+                    Toast.makeText(MainApplication.UIContext, "已赞", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (stepCount != null) {
+                    int temp = (int) stepCount;
+                    if (temp == count + 1) {
+                        Toast.makeText(MainApplication.UIContext, "已踩", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                supportOrStep(tvStepCount, tvStepAddOne, imgStep, count, false);
+
+                CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), newsId, SupportStepTypeEnum.News, 1, new ApiOperationCallback<ReturnInfo<String>>() {
+                    @Override
+                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                            Log.i("supportOrStep", "赞成功");
+                        }
+                    }
+                });
+            }
+        });
+
         this.contentScrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -429,10 +520,12 @@ public class ItemInfoFragment extends Fragment {
         this.rl_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharePopupWindow sharePopupWindow = new SharePopupWindow(getActivity(), rootView);
-                Log.i("分享的图片地址", shareImgUrl);
-                sharePopupWindow.setShareInfo(newsInfo.getData().getTitle(), shareContent, newsInfo.getData().getShareUrl(), shareImgUrl);
-                Log.i("share_content", newsInfo.getData().getShareUrl());
+                if (newsInfo != null && newsInfo.getData() != null) {
+                    SharePopupWindow sharePopupWindow = new SharePopupWindow(getActivity(), rootView);
+                    Log.i("分享的图片地址", shareImgUrl);
+                    sharePopupWindow.setShareInfo(newsInfo.getData().getTitle(), shareContent, newsInfo.getData().getShareUrl(), shareImgUrl);
+                    Log.i("share_content", newsInfo.getData().getShareUrl());
+                }
             }
         });
 
@@ -456,6 +549,26 @@ public class ItemInfoFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void supportOrStep(TextView tvCount, final TextView tvAddOne, ImageView img, int count, boolean isSupport) {
+        tvAddOne.setVisibility(View.VISIBLE);
+        tvAddOne.startAnimation(animation);
+        int addCount = count + 1;
+        tvCount.setText("(" + addCount + ")");
+        tvCount.setTag(count + 1);
+        tvCount.setTextColor(Color.RED);
+        if (isSupport) {
+            img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.icon_support));
+        } else {
+            img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.icon_step));
+        }
+
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                tvAddOne.setVisibility(View.GONE);
+            }
+        }, 500);
     }
 
     private void hideInputView() {
@@ -491,6 +604,10 @@ public class ItemInfoFragment extends Fragment {
             } else {
                 this.tv_comment_count.setVisibility(View.GONE);
             }
+
+            //赞和踩数量及用户赞状态
+            this.tvSupportCount.setText("(" + newsInfo.getData().getSupportCount() + ")");
+            this.tvStepCount.setText("(" + newsInfo.getData().getOppositionCount() + ")");
 
             //TODO:收藏状态,根据用户当前登录状态，设置收藏状态
 

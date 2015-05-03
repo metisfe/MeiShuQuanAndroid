@@ -60,7 +60,7 @@
             android:layout_marginTop="20dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -68,6 +68,12 @@
                 android:text="相关阅读"
                 android:textColor="#fb6d6d"
                 android:textSize="16sp" />
+
+            <ListView
+                android:id="@+id/id_lv_relation_read"
+                android:layout_width="match_parent"
+                android:background="#e2e2e2"
+                android:layout_height="wrap_content"></ListView>
         </LinearLayout>
 
         <LinearLayout

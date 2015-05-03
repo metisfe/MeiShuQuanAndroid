@@ -409,6 +409,7 @@ public class AssessFragment extends Fragment {
                 holder.tvSupportCount = (TextView) convertView.findViewById(R.id.id_tv_support_count);
                 holder.tvCommentCount = (TextView) convertView.findViewById(R.id.id_tv_comment_count);
                 holder.tvContentType = (TextView) convertView.findViewById(R.id.id_tv_content_type);
+                holder.tvCommentState = (TextView) convertView.findViewById(R.id.id_tv_comment_state);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
