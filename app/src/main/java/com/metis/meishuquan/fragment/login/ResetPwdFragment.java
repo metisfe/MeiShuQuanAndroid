@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,21 +106,17 @@ public class ResetPwdFragment extends Fragment {
                     etNewPwd.requestFocus();
                     return;
                 }
-                userOperator.forgetPwd(phone, code, pwd, new ApiOperationCallback<ReturnInfo<String>>() {
+                userOperator.forgetPwd(phone, verCode, pwd, new ApiOperationCallback<ReturnInfo<String>>() {
                     @Override
                     public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                         if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                            //修改本地登录状态
-                            SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(getActivity());
-                            spu.update(SharedPreferencesUtil.LOGIN_STATE, String.valueOf(true));
                             Toast.makeText(getActivity(), "修改成功,请重新登录", Toast.LENGTH_SHORT).show();
                             //getActivity().finish();
                             FragmentTransaction ft = fm.beginTransaction();
                             ft.remove(ResetPwdFragment.this);
                             ft.commit();
-                        } else {
-                            //TODO:根据返回的errorcode判断注册状态
-                            Toast.makeText(getActivity(), "修改失败", Toast.LENGTH_SHORT).show();
+                        } else if (result != null && result.getErrorCode().equals(String.valueOf(0))) {
+                            Toast.makeText(getActivity(), result.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -148,7 +145,8 @@ public class ResetPwdFragment extends Fragment {
                             String json = gson.toJson(result);
                             RegisterCode registerCode = gson.fromJson(json, new TypeToken<RegisterCode>() {
                             }.getType());
-                            code = registerCode.getData();
+//                            code = registerCode.getData();
+                            Log.i(getClass().getSimpleName(), "验证码请求发送成功!");
                         } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
                             if (result.getErrorCode().equals("0")) {
                                 Toast.makeText(getActivity(), result.getMessage(), Toast.LENGTH_SHORT).show();

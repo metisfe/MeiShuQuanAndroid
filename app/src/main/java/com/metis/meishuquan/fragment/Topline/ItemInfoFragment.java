@@ -44,6 +44,7 @@ import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.info.ImagePreviewActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.adapter.topline.CommonAdapter;
 import com.metis.meishuquan.model.BLL.CommonOperator;
@@ -77,6 +78,8 @@ import java.util.StringTokenizer;
  */
 public class ItemInfoFragment extends Fragment {
 
+    public static final String KEY_IMAGE_URL_ARRAY = "image_url_array",
+            KEY_THUMB_URL_ARRAY = "thumb_url_array";
     public static final String KEY_TITLE_VISIBLE = "title_visible";
     public static final String LOG_EXCEPTION = "exception";
     public static final String KEY_NEWSID = "newsId";
@@ -105,6 +108,7 @@ public class ItemInfoFragment extends Fragment {
     private boolean isPrivate = false;
     private boolean windowAttached;
     private List<ImageView> imageGroup = new ArrayList<ImageView>();
+    private String[] imgUrls;
 
     private int newsId = 0;
     private boolean titleVisible = true;
@@ -257,6 +261,15 @@ public class ItemInfoFragment extends Fragment {
 //        lp.gravity = Gravity.CENTER_HORIZONTAL;
 //        imageView.setLayoutParams(lp);
 //        ll_content.addView(imageView);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ImagePreviewActivity.class);
+                intent.putExtra(KEY_IMAGE_URL_ARRAY, (String[]) null);
+                startActivity(intent);
+            }
+        });
+
         imageGroup.add(imageView);
     }
 
