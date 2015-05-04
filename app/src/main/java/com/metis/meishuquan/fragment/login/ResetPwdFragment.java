@@ -89,6 +89,10 @@ public class ResetPwdFragment extends Fragment {
                     Toast.makeText(getActivity(), "请输入验证码", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if (!verCode.isEmpty() && verCode.length() < 6) {
+                    Toast.makeText(getActivity(), "请输入6位验证码", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (pwd.isEmpty()) {
                     Toast.makeText(getActivity(), "请输入密码", Toast.LENGTH_SHORT).show();
                     etNewPwd.requestFocus();
@@ -127,6 +131,7 @@ public class ResetPwdFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String phone = etPhone.getText().toString();
+                String code = etVerificationCode.getText().toString().trim();
                 if (phone.isEmpty()) {
                     Toast.makeText(getActivity(), "请输入手机号码", Toast.LENGTH_SHORT).show();
                     return;
@@ -141,11 +146,6 @@ public class ResetPwdFragment extends Fragment {
                     @Override
                     public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                         if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                            Gson gson = new Gson();
-                            String json = gson.toJson(result);
-                            RegisterCode registerCode = gson.fromJson(json, new TypeToken<RegisterCode>() {
-                            }.getType());
-//                            code = registerCode.getData();
                             Log.i(getClass().getSimpleName(), "验证码请求发送成功!");
                         } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
                             if (result.getErrorCode().equals("0")) {

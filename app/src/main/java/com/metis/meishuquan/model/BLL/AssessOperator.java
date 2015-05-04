@@ -144,8 +144,7 @@ public class AssessOperator {
                                     String json = gson.toJson(result);
                                     //将json串添加至缓存
                                     SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
-                                    spu.delete(SharedPreferencesUtil.ASSESS_CHANNEL_LIST);
-                                    spu.add(SharedPreferencesUtil.ASSESS_CHANNEL_LIST, json);
+                                    spu.update(SharedPreferencesUtil.ASSESS_LIST_FILTER_DATA, json);
                                 }
                             }
                         });

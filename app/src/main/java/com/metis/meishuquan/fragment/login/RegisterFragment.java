@@ -111,6 +111,10 @@ public class RegisterFragment extends Fragment {
                     Toast.makeText(getActivity(), "请输入验证码", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if (!verCode.isEmpty() && verCode.length() < 6) {
+                    Toast.makeText(getActivity(), "请输入6位验证码", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (pwd.isEmpty()) {
                     Toast.makeText(getActivity(), "请输入密码", Toast.LENGTH_SHORT).show();
                     etPwd.requestFocus();
@@ -129,54 +133,46 @@ public class RegisterFragment extends Fragment {
                     return;
                 }
                 if (!verCode.equals("")) {
-                    int i = verCode.compareTo(requestCode);
-                    if (i == 0) {
-                        if (selectedId == -1) {
-                            Log.e("roleId", "selectedRoleId为-1");
-                        }
-                        userOperator.register(phone, requestCode, pwd, selectedId, new ApiOperationCallback<ReturnInfo<String>>() {
-                            @Override
-                            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                                    Gson gson = new Gson();
-                                    String json = gson.toJson(result);
-                                    Log.e("userInfo", json);
-                                    //json to object
-                                    final LoginUserData user = gson.fromJson(json, new TypeToken<LoginUserData>() {
-                                    }.getType());
-                                    //set login state
-                                    user.getData().setAppLoginState(LoginStateEnum.YES);
-
-                                    //connect to Rong
-                                    String token = user.getData().getToken();
-                                    ChatManager.userRongId = user.getData().getRongCloudId();
-                                    MainApplication.rongConnect(token);
-
-                                    //add userInfo into sharedPreferences
-                                    Gson gson1 = new Gson();
-                                    String finalUserInfoJson = gson1.toJson(user);
-                                    SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(getActivity());
-                                    spu.update(SharedPreferencesUtil.USER_LOGIN_INFO, finalUserInfoJson);
-
-                                    //update field of UserInfo to main application
-                                    MainApplication.userInfo = user.getData();
-
-                                    //hide input method
-                                    Utils.hideInputMethod(getActivity(), etPwd);
-                                    Utils.hideInputMethod(getActivity(), etUserName);
-                                    Toast.makeText(MainApplication.UIContext, "注册成功", Toast.LENGTH_SHORT).show();
-                                    getActivity().finish();
-                                } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
-                                    Toast.makeText(MainApplication.UIContext, result.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                    } else {
-                        Toast.makeText(getActivity(), "验证码验证超时，请重新验证", Toast.LENGTH_SHORT).show();
-                        etVerificationCode.setText("");
-                        etVerificationCode.requestFocus();
-                        return;
+                    if (selectedId == -1) {
+                        Log.e("roleId", "selectedRoleId为-1");
                     }
+                    userOperator.register(phone, verCode, pwd, selectedId, new ApiOperationCallback<ReturnInfo<String>>() {
+                        @Override
+                        public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                            if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                Gson gson = new Gson();
+                                String json = gson.toJson(result);
+                                Log.e("userInfo", json);
+                                //json to object
+                                final LoginUserData user = gson.fromJson(json, new TypeToken<LoginUserData>() {
+                                }.getType());
+                                //set login state
+                                user.getData().setAppLoginState(LoginStateEnum.YES);
+
+                                //connect to Rong
+                                String token = user.getData().getToken();
+                                ChatManager.userRongId = user.getData().getRongCloudId();
+                                MainApplication.rongConnect(token);
+
+                                //add userInfo into sharedPreferences
+                                Gson gson1 = new Gson();
+                                String finalUserInfoJson = gson1.toJson(user);
+                                SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(getActivity());
+                                spu.update(SharedPreferencesUtil.USER_LOGIN_INFO, finalUserInfoJson);
+
+                                //update field of UserInfo to main application
+                                MainApplication.userInfo = user.getData();
+
+                                //hide input method
+                                Utils.hideInputMethod(getActivity(), etPwd);
+                                Utils.hideInputMethod(getActivity(), etUserName);
+                                Toast.makeText(MainApplication.UIContext, "注册成功", Toast.LENGTH_SHORT).show();
+                                getActivity().finish();
+                            } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
+                                Toast.makeText(MainApplication.UIContext, result.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -201,11 +197,7 @@ public class RegisterFragment extends Fragment {
                     @Override
                     public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                         if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                            Gson gson = new Gson();
-                            String json = gson.toJson(result);
-                            RegisterCode code = gson.fromJson(json, new TypeToken<RegisterCode>() {
-                            }.getType());
-                            requestCode = code.getData();
+                            Log.i(getClass().getSimpleName(), "验证码已发送");
                         } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
                             Toast.makeText(MainApplication.UIContext, result.getMessage(), Toast.LENGTH_SHORT).show();
                         }

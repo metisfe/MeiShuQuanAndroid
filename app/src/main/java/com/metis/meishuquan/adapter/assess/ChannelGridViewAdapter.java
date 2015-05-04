@@ -15,6 +15,7 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.assess.Channel;
 import com.metis.meishuquan.model.assess.Grade;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,10 +24,17 @@ import java.util.List;
 public class ChannelGridViewAdapter extends BaseAdapter {
     private Context context;
     private List<Channel> lstChannel;
+    private List<Channel> lstCheckedChannel = new ArrayList<Channel>();
+    private List<Channel> lstOldCheckedChannel = new ArrayList<Channel>();
 
-    public ChannelGridViewAdapter(Context context, List<Channel> lstChannel) {
+    public ChannelGridViewAdapter(Context context, List<Channel> lstChannel, List<Channel> lstOldCheckedChannel) {
         this.context = context;
         this.lstChannel = lstChannel;
+        this.lstOldCheckedChannel = lstOldCheckedChannel;
+    }
+
+    public List<Channel> getCheckedChannel() {
+        return lstCheckedChannel;
     }
 
     public void setData(List<Channel> lstChannel) {
@@ -59,8 +67,8 @@ public class ChannelGridViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        TextView textView;
+    public View getView(final int i, View view, ViewGroup viewGroup) {
+        final TextView textView;
         if (view == null) {
             textView = new TextView(context);
             textView.setLayoutParams(new GridView.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -72,6 +80,35 @@ public class ChannelGridViewAdapter extends BaseAdapter {
             textView = (TextView) view.getTag();
         }
         textView.setText(lstChannel.get(i).getChannelName());
+        //判断是否包含上次已选的条件
+        if (lstOldCheckedChannel.size() > 0 && lstOldCheckedChannel.contains(lstChannel.get(i))) {
+            setCheckedTextViewColor(textView);
+        }
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!lstChannel.get(i).isChecked()) {
+                    setCheckedTextViewColor(textView);
+                    lstChannel.get(i).setChecked(true);
+                    lstCheckedChannel.add(lstChannel.get(i));
+                } else {
+                    setUnCheckedTextViewColor(textView);
+                    lstChannel.get(i).setChecked(false);
+                    if (lstCheckedChannel.size() > 0 && lstCheckedChannel.contains(lstChannel.get(i))) {
+                        lstCheckedChannel.remove(lstChannel.get(i));
+                    }
+                }
+            }
+        });
         return view;
+    }
+
+    private void setCheckedTextViewColor(TextView tv) {
+        tv.setTextColor(Color.rgb(251, 109, 109));
+    }
+
+    private void setUnCheckedTextViewColor(TextView tv) {
+        tv.setTextColor(Color.rgb(126, 126, 126));
     }
 }

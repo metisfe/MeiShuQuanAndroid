@@ -1,7 +1,9 @@
 package com.metis.meishuquan.model.topline;
 
-import com.metis.meishuquan.model.login.User;
 
+import com.metis.meishuquan.model.commons.User;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,6 +37,9 @@ public class Comment {
     }
 
     public User getUser() {
+        if (user == null) {
+            user = new User();
+        }
         return user;
     }
 
@@ -75,6 +80,9 @@ public class Comment {
     }
 
     public User getReplyUser() {
+        if (replyUser == null) {
+            replyUser = new User();
+        }
         return replyUser;
     }
 
@@ -83,6 +91,9 @@ public class Comment {
     }
 
     public List<ImgOrVoiceUrl> getImgOrVoiceUrls() {
+        if (imgOrVoiceUrls == null) {
+            imgOrVoiceUrls = new ArrayList<ImgOrVoiceUrl>();
+        }
         return imgOrVoiceUrls;
     }
 

@@ -53,7 +53,6 @@ public class ImagePreviewSingleFragment extends Fragment {
             if (externalCacheDir.exists()) {
                 mRootPath = new File(externalCacheDir, "temp").getAbsolutePath();
             }
-
             mImagePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath();
         }
 

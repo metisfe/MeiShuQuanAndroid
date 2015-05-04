@@ -33,13 +33,13 @@ public class AssessListFilter implements Serializable {
     }
 
     public void setLstSelectedGrade(List<Grade> lstSelectedGrade) {
-        if (lstSelectedChannel == null) {
-            lstSelectedChannel = new ArrayList<Channel>();
-        }
         this.lstSelectedGrade = lstSelectedGrade;
     }
 
     public List<Channel> getLstSelectedChannel() {
+        if (lstSelectedChannel == null) {
+            lstSelectedChannel = new ArrayList<Channel>();
+        }
         return lstSelectedChannel;
     }
 

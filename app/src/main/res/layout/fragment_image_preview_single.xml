@@ -2,5 +2,7 @@
 <com.uk.co.senab.photoview.PhotoView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/image_preview_single_iv"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-</com.uk.co.senab.photoview.PhotoView>
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    </com.uk.co.senab.photoview.PhotoView>

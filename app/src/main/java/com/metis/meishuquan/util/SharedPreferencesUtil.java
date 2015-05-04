@@ -11,21 +11,23 @@ import java.util.Map;
  * Created by WJ on 2015/3/24.
  */
 public class SharedPreferencesUtil {
+    /*头条*/
     public static final String CHANNELS = "CHANNELS";
-    public static final String CHANNELID_NEWS = "news";
-    public static final String ASSESS_CHANNEL_LIST = "ASSESS_CHANNEL_LIST";
-    public static final String REGION = "REGION";
-    public static final String ALL_ASSESS_LIST = "ALL_ASSESS_LIST";
-    public static final String LOGIN_STATE = "LOGIN_STATE";
+    public static final String CHANNELID_NEWS = "NEWS";
+    /*点评*/
+    public static final String ASSESS_LIST_FILTER_DATA = "ASSESS_LIST_FILTER_DATA";//点评列表筛选条件
+    public static final String ALL_ASSESS_LIST = "ALL_ASSESS_LIST";//点评列表数据
+    public static final String REGION = "REGION";//省市
+    public static final String CHECKED_ASSESS_FILTER = "CHECKED_ASSESS_FILTER";//点评列表已选择的筛选条件
+    /*课程*/
+    public static final String COURSE_LIST = "COURSE_LIST";//课程列表
+    public static final String COURSE_CHANNEL_LIST = "COURSE_CHANNEL_LIST";//课程标签
+    public static final String COURSE_IMG_LIST = "COURSE_IMG_LIST";//课程图片列表
+    /*我*/
     public static final String USER_ROLE = "USER_ROLE";
     public static final String USER_LOGIN_INFO = "USER_LOGIN_INFO";
-    public static final String COURSE_LIST = "COURSE_LIST";
-    public static final String COURSE_CHANNEL_LIST = "COURSE_CHANNEL_LIST";
-    public static final String COURSE_IMG_LIST = "COURSE_IMG_LIST";
-
-
     public static final String CHECKED_CHANNEL_ITEMS = "CHECKED_CHANNEL_ITEMS";//已选择的课程类型
-    public static final String CHECKED_ASSESS_FILTER = "CHECKED_ASSESS_FILTER";//点评列表筛选条件
+
 
     private static SharedPreferencesUtil spu = null;
     private Context context;

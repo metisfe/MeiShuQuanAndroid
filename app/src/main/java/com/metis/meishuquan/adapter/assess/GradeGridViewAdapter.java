@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.assess.Grade;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,16 +22,23 @@ import java.util.List;
 public class GradeGridViewAdapter extends BaseAdapter {
     private Context context;
     private List<Grade> lstGrade;
+    private List<Grade> lstCheckedGrade = new ArrayList<Grade>();
+    private List<Grade> lstOldCheckedGrade;
 
-    public GradeGridViewAdapter(Context context, List<Grade> lstGrade) {
+    public GradeGridViewAdapter(Context context, List<Grade> lstGrade, List<Grade> lstOldCheckedGrade) {
         this.context = context;
         this.lstGrade = lstGrade;
+        this.lstOldCheckedGrade = lstOldCheckedGrade;
     }
 
-    public void setData(List<Grade> lstGrade) {
-        this.lstGrade.clear();
-        this.lstGrade = lstGrade;
+    public List<Grade> getCheckedGrade() {
+        return lstCheckedGrade;
     }
+
+//    public void setData(List<Grade> lstGrade) {
+//        this.lstGrade.clear();
+//        this.lstGrade = lstGrade;
+//    }
 
     @Override
     public int getCount() {
@@ -57,8 +65,8 @@ public class GradeGridViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View convertView, ViewGroup viewGroup) {
-        TextView textView;
+    public View getView(final int i, View convertView, ViewGroup viewGroup) {
+        final TextView textView;
         if (convertView == null) {
             textView = new TextView(context);
             textView.setLayoutParams(new GridView.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -70,6 +78,35 @@ public class GradeGridViewAdapter extends BaseAdapter {
             textView = (TextView) convertView.getTag();
         }
         textView.setText(lstGrade.get(i).getName());
+        //判断是否包含上次已选的条件
+        if (lstOldCheckedGrade.size() > 0 && lstOldCheckedGrade.contains(lstGrade.get(i))) {
+            setCheckedTextViewColor(textView);
+        }
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!lstGrade.get(i).isChecked()) {
+                    setCheckedTextViewColor(textView);
+                    lstGrade.get(i).setChecked(true);
+                    lstCheckedGrade.add(lstGrade.get(i));
+                } else {
+                    setUnCheckedTextViewColor(textView);
+                    lstGrade.get(i).setChecked(false);
+                    if (lstCheckedGrade.size() > 0 && lstCheckedGrade.contains(lstGrade.get(i))) {
+                        lstCheckedGrade.remove(lstGrade.get(i));
+                    }
+                }
+            }
+        });
         return convertView;
+    }
+
+    private void setCheckedTextViewColor(TextView tv) {
+        tv.setTextColor(Color.rgb(251, 109, 109));
+    }
+
+    private void setUnCheckedTextViewColor(TextView tv) {
+        tv.setTextColor(Color.rgb(126, 126, 126));
     }
 }

@@ -35,6 +35,7 @@ import com.google.gson.Gson;
 import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.info.ImagePreviewActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.manager.common.RecorderManager;
 import com.metis.meishuquan.model.BLL.AssessOperator;
@@ -69,11 +70,12 @@ import java.util.List;
 
 public class AssessInfoActivity extends FragmentActivity {
     public static final String KEY_ASSESS_ID = "assess_id";
-
-    private String TAG = "getAssessSupportAndComment";
+    public static final String KEY_IMAGE_URL_ARRAY = "image_url_array",
+            KEY_THUMB_URL_ARRAY = "thumb_url_array";
+    private static final String TAG = "getAssessSupportAndComment";
     private Button btnBack;
     private TextView tvName, tvGrade, tvType, tvPublishTime, tvAssessState, tvContent, tvSupportCount, tvCommentCount, tvAddOne;
-    private SmartImageView imgPortrait, imgContent;
+    private ImageView imgPortrait, imgContent;
     private ImageView imgCommentMode, imgMore, imgTriangle;
     private Button btnRecord, btnSend;
     private EditText etInput;
@@ -95,6 +97,7 @@ public class AssessInfoActivity extends FragmentActivity {
     private String voicePath = "";
     private RecorderManager recorderManager;
     private boolean isLongClick;
+    private ArrayList<String> lstImgUrl = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +159,19 @@ public class AssessInfoActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
 
+            }
+        });
+
+        this.imgContent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (assess == null) return;
+                lstImgUrl.clear();
+                lstImgUrl.add(assess.getOriginalImage().getUrl());
+                Intent intent = new Intent(AssessInfoActivity.this, ImagePreviewActivity.class);
+                intent.putStringArrayListExtra(KEY_IMAGE_URL_ARRAY, lstImgUrl);
+                startActivity(intent);
+                overridePendingTransition(R.anim.activity_zoomin, 0);
             }
         });
     }
@@ -517,7 +533,7 @@ public class AssessInfoActivity extends FragmentActivity {
         //姓名
         this.tvName.setText(assess.getUser().getName().isEmpty() ? "" : assess.getUser().getName().trim());
         //头像
-        this.imgPortrait.setImageUrl(assess.getUser().getAvatar(), R.drawable.default_user_dynamic);
+        ImageLoaderUtils.getImageLoader(this).displayImage(assess.getUser().getAvatar(), imgPortrait, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height), R.drawable.default_user_dynamic));
         //年级
         this.tvGrade.setText(assess.getUser().getGrade().isEmpty() ? "" : assess.getUser().getGrade());
         //点评状态
@@ -535,7 +551,8 @@ public class AssessInfoActivity extends FragmentActivity {
         //图片
         this.imgContent.setMinimumHeight(assess.getThumbnails().getHeigth() * 2);
         this.imgContent.setMinimumWidth(assess.getThumbnails().getWidth() * 2);
-        this.imgContent.setImageUrl(assess.getThumbnails().getUrl());
+        ImageLoaderUtils.getImageLoader(this).displayImage(assess.getThumbnails().getUrl(), imgContent);
+
         //赞数量和评论数量
         this.tvSupportCount.setText("赞(" + assess.getSupportCount() + ")");
         this.tvCommentCount.setText("评论(" + assess.getCommentCount() + ")");

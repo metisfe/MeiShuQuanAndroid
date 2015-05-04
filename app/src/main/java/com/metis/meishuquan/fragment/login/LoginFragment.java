@@ -27,6 +27,8 @@ import com.metis.meishuquan.util.Utils;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
+import java.util.regex.Pattern;
+
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
 
@@ -109,6 +111,7 @@ public class LoginFragment extends Fragment {
                             //add userInfo into sharedPreferences
                             Gson gson1 = new Gson();
                             String finalUserInfoJson = gson1.toJson(user);
+                            Log.i("用户信息", finalUserInfoJson);
                             SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(getActivity());
                             spu.update(SharedPreferencesUtil.USER_LOGIN_INFO, finalUserInfoJson);
 
@@ -171,6 +174,11 @@ public class LoginFragment extends Fragment {
         String pwd = etPwd.getText().toString().trim();
         if (accout.isEmpty()) {
             Toast.makeText(MainApplication.UIContext, "请输入登录账号", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
+        if (!p.matcher(accout).matches()) {
+            Toast.makeText(getActivity(), "请输入正确的手机号", Toast.LENGTH_SHORT).show();
             return false;
         }
         if (pwd.isEmpty()) {

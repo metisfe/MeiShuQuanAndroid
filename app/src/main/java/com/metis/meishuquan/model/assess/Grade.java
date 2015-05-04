@@ -9,6 +9,8 @@ public class Grade {
 
     private String name;
 
+    private boolean isChecked;
+
     public int getId() {
         return id;
     }
@@ -23,5 +25,13 @@ public class Grade {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean isChecked) {
+        this.isChecked = isChecked;
     }
 }

@@ -27,6 +27,7 @@ import com.google.gson.reflect.TypeToken;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.assess.AssessInfoActivity;
+import com.metis.meishuquan.activity.info.ImagePreviewActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.assess.AssessPublishFragment;
 import com.metis.meishuquan.fragment.assess.ChooseCityFragment;
@@ -35,8 +36,6 @@ import com.metis.meishuquan.model.BLL.AssessOperator;
 import com.metis.meishuquan.model.assess.AllAssess;
 import com.metis.meishuquan.model.assess.Assess;
 import com.metis.meishuquan.model.assess.AssessListFilter;
-import com.metis.meishuquan.model.assess.Channel;
-import com.metis.meishuquan.model.assess.Grade;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.AssessStateEnum;
 import com.metis.meishuquan.model.enums.QueryTypeEnum;
@@ -64,6 +63,8 @@ import java.util.List;
  * Created by wj on 3/15/2015.
  */
 public class AssessFragment extends Fragment {
+    public static final String KEY_IMAGE_URL_ARRAY = "image_url_array",
+            KEY_THUMB_URL_ARRAY = "thumb_url_array";
     private static final String TAG = "getAssessComment";
     private static final int TAKE_PHOTO = 1;
     private static final int PICK_PICTURE = 2;
@@ -79,6 +80,7 @@ public class AssessFragment extends Fragment {
     private AssessAdapter adapter;
     private QueryTypeEnum type = QueryTypeEnum.RECOMMEND;
     private AssessStateEnum assessState = AssessStateEnum.ALL;
+    private ArrayList<String> lstImgUrl = new ArrayList<String>();
 
     private int regionId;
     private int index = 1;
@@ -170,7 +172,6 @@ public class AssessFragment extends Fragment {
 
         this.adapter = new AssessAdapter(this.lstAllAssess);
         this.listView.setAdapter(adapter);
-
     }
 
     private void initEvent() {
@@ -217,14 +218,14 @@ public class AssessFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FilterConditionForAssessListFragment filterConditionForAssessListFragment = new FilterConditionForAssessListFragment();
-                filterConditionForAssessListFragment.setFilterConditionListner(new OnFilterCannedListner() {
+                filterConditionForAssessListFragment.setFilterConditionListner(new OnFilterChanngedListner() {
                     @Override
                     public void setFilter(AssessListFilter assessListFilter) {
                         //添加至本地保存
                         Gson gson = new Gson();
                         String json = gson.toJson(assessListFilter);
                         Log.i("点评列表筛选条件", json);
-                        SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(SharedPreferencesUtil.CHECKED_ASSESS_FILTER, json);
+                        SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(SharedPreferencesUtil.CHECKED_ASSESS_FILTER + MainApplication.userInfo.getUserId(), json);
                         //TODO:根据筛选条件刷新列表
                     }
                 });
@@ -352,7 +353,7 @@ public class AssessFragment extends Fragment {
         void setPath(String path);
     }
 
-    public interface OnFilterCannedListner {
+    public interface OnFilterChanngedListner {
         void setFilter(AssessListFilter assessListFilter);
     }
 
@@ -396,7 +397,7 @@ public class AssessFragment extends Fragment {
 
         @Override
         public View getView(final int i, View convertView, ViewGroup view) {
-            Assess assess = lstAssess.get(i);
+            final Assess assess = lstAssess.get(i);
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_assess_list_item, null);
@@ -445,12 +446,17 @@ public class AssessFragment extends Fragment {
             //内容图片
             holder.img_content.setMinimumWidth(assess.getThumbnails().getWidth() * 2);
             holder.img_content.setMinimumHeight(assess.getThumbnails().getHeigth() * 2);
-            ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(assess.getThumbnails().getUrl(), holder.img_content, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.img_topline_default));
+            ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(assess.getThumbnails().getUrl(), holder.img_content);
             //预览大图
             holder.img_content.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //TODO:
+                    lstImgUrl.clear();
+                    lstImgUrl.add(assess.getOriginalImage().getUrl());
+                    Intent intent = new Intent(getActivity(), ImagePreviewActivity.class);
+                    intent.putStringArrayListExtra(KEY_IMAGE_URL_ARRAY, lstImgUrl);
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.activity_zoomin, 0);
                 }
             });
 

@@ -43,6 +43,7 @@ import com.metis.meishuquan.model.enums.PrivateTypeEnum;
 import com.metis.meishuquan.model.enums.SupportStepTypeEnum;
 import com.metis.meishuquan.model.topline.AllComments;
 import com.metis.meishuquan.model.topline.Comment;
+import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.metis.meishuquan.view.shared.DragListView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -98,6 +99,15 @@ public class CommentListFragment extends Fragment {
 
         ;
     };
+
+    @Override
+    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        int animId = R.anim.right_out;
+        if (enter) {
+            animId = R.anim.right_in;
+        }
+        return AnimationUtils.loadAnimation(getActivity(), animId);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -296,6 +306,7 @@ public class CommentListFragment extends Fragment {
                 if (result != null) {
                     Gson gson = new Gson();
                     String json = gson.toJson(result);
+                    Log.i(getClass().getSimpleName(), "评论数据：" + json);
                     commentsData = gson.fromJson(json, new TypeToken<AllComments>() {
                     }.getType());
                     List<Comment> data = new ArrayList<Comment>();
@@ -335,7 +346,7 @@ public class CommentListFragment extends Fragment {
         }
 
         private class ViewHolder {
-            SmartImageView portrait;
+            ImageView portrait;
             TextView userName, source, notifyTime, content, tag;
             TextView tvSupportCount, tvAddOne;
             Button btnSupport;
@@ -388,9 +399,9 @@ public class CommentListFragment extends Fragment {
         }
 
         private void initView(View view, ViewHolder holder) {
-            //holder.portrait= (SmartImageView) view.findViewById(R.id.id_img_portrait);
+            holder.portrait = (ImageView) view.findViewById(R.id.id_img_portrait);
             holder.userName = (TextView) view.findViewById(R.id.id_username);
-            //holder.source= (TextView) view.findViewById(R.id.id_username);
+            holder.source = (TextView) view.findViewById(R.id.id_tv_region);
             holder.notifyTime = (TextView) view.findViewById(R.id.id_notifytime);
             holder.content = (TextView) view.findViewById(R.id.id_textview_comment_content);
             holder.rl_support = (RelativeLayout) view.findViewById(R.id.id_rl_support);//顶
@@ -457,8 +468,10 @@ public class CommentListFragment extends Fragment {
         }
 
         private void bindData(Comment comment, ViewHolder holder) {
+            ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(comment.getUser().getAvatar(), holder.portrait,
+                    ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height), R.drawable.default_user_dynamic));
             holder.userName.setText(comment.getUser().getName());
-            //holder.source.setText(comment.getCommentDateTime());
+            holder.source.setText(comment.getUser().getLocationAddress());
             String notifyTimeStr = comment.getCommentDateTime();
             holder.notifyTime.setText(notifyTimeStr);
             holder.content.setText(comment.getContent());

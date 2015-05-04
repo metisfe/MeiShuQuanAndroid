@@ -64,6 +64,7 @@ import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.ImageUtil;
 import com.metis.meishuquan.view.Common.MatchParentImageView;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
+import com.metis.meishuquan.view.topline.MeasureableListView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
@@ -90,7 +91,7 @@ public class ItemInfoFragment extends Fragment {
 
     private Button btnBack, btnShare;
     private ViewGroup rootView;
-    private LinearLayout ll_content;
+    private LinearLayout ll_content, ll_relatedReadAndSupportContainer;
     private TopLineNewsInfo newsInfo;
     private View titleBar = null;
     private TextView tv_title, tv_createtime, tv_sourse, tv_comment_count, tvSupportAddOne, tvStepAddOne, tvSupportCount, tvStepCount;
@@ -99,7 +100,7 @@ public class ItemInfoFragment extends Fragment {
     private ImageView imgSupport, imgStep, imgPrivate;
     private ScrollView contentScrollView;
     private LinearLayout llRelatedRead;//相关阅读父容器
-    private ListView lvRelatedRead;
+    private MeasureableListView lvRelatedRead;
     private EditText editText;
     private RelativeLayout rlSend;
 
@@ -108,7 +109,7 @@ public class ItemInfoFragment extends Fragment {
     private boolean isPrivate = false;
     private boolean windowAttached;
     private List<ImageView> imageGroup = new ArrayList<ImageView>();
-    private String[] imgUrls;
+    private ArrayList<String> lstImgUrls = new ArrayList<String>();
 
     private int newsId = 0;
     private boolean titleVisible = true;
@@ -187,8 +188,9 @@ public class ItemInfoFragment extends Fragment {
         rlSend = (RelativeLayout) rootView.findViewById(R.id.id_rl_send);//发送评论
         contentScrollView = (ScrollView) rootView.findViewById(R.id.id_scrollview_info_content);
 
+        ll_relatedReadAndSupportContainer = (LinearLayout) rootView.findViewById(R.id.id_ll_related_read_and_support_container);
         llRelatedRead = (LinearLayout) rootView.findViewById(R.id.id_ll_related_read);//相关阅读父容器
-        lvRelatedRead = (ListView) rootView.findViewById(R.id.id_lv_relation_read);//相关阅读列表
+        lvRelatedRead = (MeasureableListView) rootView.findViewById(R.id.id_lv_relation_read);//相关阅读列表
 
         rlSupport = (RelativeLayout) rootView.findViewById(R.id.id_rl_support);//赞
         tvSupportAddOne = (TextView) rootView.findViewById(R.id.id_tv_support_add_one);
@@ -226,6 +228,7 @@ public class ItemInfoFragment extends Fragment {
                     }
                 }
                 if (contentInfo.getType().equals("IMG")) {
+                    lstImgUrls.add(contentInfo.getData().getUrl());
                     addImageView(contentInfo.getData().getUrl(), contentInfo.getData().getWidth(), contentInfo.getData().getHeight());
                 }
                 if (contentInfo.getType().equals("VOIDE")) {
@@ -235,7 +238,7 @@ public class ItemInfoFragment extends Fragment {
 
             //相关阅读
             if (newsInfo.getData().getRelatedNewsList().size() > 0) {
-                llRelatedRead.setVisibility(View.VISIBLE);
+                ll_relatedReadAndSupportContainer.setVisibility(View.VISIBLE);
                 //绑定相关阅读数据
                 List<RelatedRead> lstRelatedRead = newsInfo.getData().getRelatedNewsList();
                 commonAdapter = new CommonAdapter(MainApplication.UIContext, lstRelatedRead);
@@ -265,8 +268,9 @@ public class ItemInfoFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), ImagePreviewActivity.class);
-                intent.putExtra(KEY_IMAGE_URL_ARRAY, (String[]) null);
+                intent.putStringArrayListExtra(KEY_IMAGE_URL_ARRAY, lstImgUrls);
                 startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.activity_zoomin, 0);
             }
         });
 
@@ -484,9 +488,9 @@ public class ItemInfoFragment extends Fragment {
                 //跳转至评论列表
                 CommentListFragment commentListFragment = new CommentListFragment();
                 commentListFragment.setArguments(args);
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                FragmentTransaction fragmentTransaction = fm.beginTransaction();
                 fragmentTransaction.add(R.id.content_container, commentListFragment);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
                 fragmentTransaction.commit();
             }
@@ -695,7 +699,7 @@ public class ItemInfoFragment extends Fragment {
         int totalHeight = 0;
         for (int i = 0; i < listAdapter.getCount(); i++) {
             View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0);
+            listItem.measure(0, 0); // 计算子项View的宽高
             totalHeight += listItem.getMeasuredHeight();
         }
         ViewGroup.LayoutParams params = listView.getLayoutParams();

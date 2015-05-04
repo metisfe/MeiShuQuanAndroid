@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
     android:background="#CCCCCC">
 
     <RelativeLayout
@@ -29,12 +30,13 @@
         android:layout_below="@+id/rl_title_bar"
         android:background="#F0F0F0"
         android:orientation="horizontal"
-        android:paddingLeft="20dp">
+        android:paddingLeft="15dp">
 
         <Button
             android:id="@+id/id_btn_state_all"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
             android:layout_gravity="center_vertical"
             android:background="#F0F0F0"
             android:text="全部"
@@ -71,12 +73,13 @@
         android:layout_below="@+id/ll_assess_state"
         android:layout_marginTop="20dp"
         android:background="#F0F0F0"
-        android:paddingLeft="20dp">
+        android:paddingLeft="15dp">
 
         <Button
             android:id="@+id/id_btn_grade_all"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
             android:background="#F0F0F0"
             android:layout_marginTop="10dp"
             android:text="全部"
@@ -104,14 +107,15 @@
         android:layout_below="@+id/ll_filter_grade"
         android:layout_marginTop="20dp"
         android:background="#F0F0F0"
-        android:paddingLeft="20dp">
+        android:paddingLeft="15dp">
 
         <Button
             android:id="@+id/id_btn_channel_all"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:background="#F0F0F0"
             android:text="全部"
+            android:padding="5dp"
             android:layout_marginTop="10dp"
             android:textColor="#fb6d6d"
             android:textSize="15sp" />

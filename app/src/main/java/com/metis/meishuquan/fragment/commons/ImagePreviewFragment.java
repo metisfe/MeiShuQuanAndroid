@@ -18,13 +18,14 @@ import java.util.List;
 /**
  * Created by WJ on 2015/4/20.
  */
-public class ImagePreviewFragment extends Fragment implements ViewPager.OnPageChangeListener{
+public class ImagePreviewFragment extends Fragment implements ViewPager.OnPageChangeListener {
 
     //public static final String KEY_
 
     private ViewPager mViewPager = null;
 
-    private String[] mUrlArray = {};
+    //    private String[] mUrlArray = {};
+    private List<String> lstImageUrl = new ArrayList<String>();
     private List<ImagePreviewSingleFragment> mFragmentList = new ArrayList<ImagePreviewSingleFragment>();
 
     private ImagePreviewAdapter mAdapter = null;
@@ -39,15 +40,15 @@ public class ImagePreviewFragment extends Fragment implements ViewPager.OnPageCh
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mViewPager = (ViewPager)view.findViewById(R.id.image_preview_viewpager);
+        mViewPager = (ViewPager) view.findViewById(R.id.image_preview_viewpager);
         mViewPager.setOnPageChangeListener(this);
         mAdapter = new ImagePreviewAdapter(getChildFragmentManager());
         mViewPager.setAdapter(mAdapter);
         setOnPhotoClickListener(mPhotoClickListener);
     }
 
-    public void setUrlArray (String[] urlArray) {
-        mUrlArray = urlArray;
+    public void setLstImageUrl(List<String> lstImageUrl) {
+        this.lstImageUrl = lstImageUrl;
         mAdapter.notifyDataSetChanged();
     }
 
@@ -92,22 +93,22 @@ public class ImagePreviewFragment extends Fragment implements ViewPager.OnPageCh
         public ImagePreviewSingleFragment getItem(int position) {
             if (position < mFragmentList.size()) {
                 ImagePreviewSingleFragment singleFragment = mFragmentList.get(position);
-                singleFragment.loadImageUrl(mUrlArray[position]);
+                singleFragment.loadImageUrl(lstImageUrl.get(position));
                 return singleFragment;
             }
             ImagePreviewSingleFragment singleFragment = new ImagePreviewSingleFragment();
-            singleFragment.loadImageUrl(mUrlArray[position]);
+            singleFragment.loadImageUrl(lstImageUrl.get(position));
             mFragmentList.add(singleFragment);
             return singleFragment;
         }
 
         @Override
         public int getCount() {
-            return mUrlArray.length;
+            return lstImageUrl.size();
         }
     }
 
-    public void setOnPhotoClickListener (ImagePreviewSingleFragment.OnPhotoClickListener listener) {
+    public void setOnPhotoClickListener(ImagePreviewSingleFragment.OnPhotoClickListener listener) {
         mPhotoClickListener = listener;
         if (mAdapter != null) {
             for (int i = 0; i < mAdapter.getCount(); i++) {

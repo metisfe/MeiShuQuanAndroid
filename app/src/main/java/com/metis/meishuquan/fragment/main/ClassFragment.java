@@ -63,8 +63,6 @@ public class ClassFragment extends Fragment {
             Gson gson = new Gson();
             String json = gson.toJson(items);
             SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(SharedPreferencesUtil.CHECKED_CHANNEL_ITEMS + MainApplication.userInfo.getUserId(), json);
-        } else {
-
         }
         super.onActivityResult(requestCode, resultCode, data);
 

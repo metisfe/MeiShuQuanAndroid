@@ -88,7 +88,7 @@ public class PublishAssessChooseTypeFragment extends Fragment {
 
     private void getChannelDataFromCache() {
         SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
-        String json = spu.getStringByKey(SharedPreferencesUtil.ASSESS_CHANNEL_LIST);
+        String json = spu.getStringByKey(SharedPreferencesUtil.ASSESS_LIST_FILTER_DATA);
         Gson gson = new Gson();
         if (!json.equals("")) {
             ChannelAndGradeData data = gson.fromJson(json, new TypeToken<ChannelAndGradeData>() {
