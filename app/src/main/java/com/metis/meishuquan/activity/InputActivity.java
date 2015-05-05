@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.fragment.commons.InputFragment;
@@ -63,6 +65,11 @@ public class InputActivity extends FragmentActivity {
         mTitleView.setRightListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String text = mInputFragment.getText().toString();
+                if (TextUtils.isEmpty(text)) {
+                    Toast.makeText(InputActivity.this, R.string.input_not_empty, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent it = new Intent();
                 it.putExtra(KEY_DEFAULT_STR, mInputFragment.getText());
                 setResult(RESULT_OK, it);

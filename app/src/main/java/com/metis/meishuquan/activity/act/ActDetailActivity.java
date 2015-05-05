@@ -10,13 +10,16 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.BaseActivity;
 import com.metis.meishuquan.fragment.act.ActDetailFragment;
 import com.metis.meishuquan.fragment.act.ActListFragment;
+import com.metis.meishuquan.model.BLL.ActiveOperator;
+import com.metis.meishuquan.model.BLL.UserInfoOperator;
+import com.metis.meishuquan.model.commons.ActiveInfo;
 
 public class ActDetailActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener {
 
     private View mCustomTitle = null;
 
-    private ActDetailFragment mDetailFragment = new ActDetailFragment();
-    private ActListFragment mListFragment = new ActListFragment();
+    private ActDetailFragment mDetailFragment = ActDetailFragment.getInstance();
+    private ActListFragment mListFragment = ActListFragment.getInstance();
 
     private RadioGroup mGroup = null;
     private RadioButton mDetailBtn, mListBtn;
@@ -45,6 +48,7 @@ public class ActDetailActivity extends BaseActivity implements RadioGroup.OnChec
         getTitleView().setTitleRightVisible(View.GONE);
         getTitleView().setImageRightVisible(View.GONE);
         getTitleView().setImageRightResource(R.drawable.ic_launcher);
+
     }
 
     @Override

@@ -57,4 +57,5 @@
     <string name="title_activity_my_favorite_detail">MyFavoriteDetailActivity</string>
     <string name="title_activity_act_detail">ActDetailActivity</string>
     <string name="title_activity_human">HumanActivity</string>
+    <string name="title_activity_studio_detail">StudioDetailActivity</string>
 </resources>

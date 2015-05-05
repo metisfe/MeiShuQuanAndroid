@@ -94,7 +94,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         mNameCardView.setOnClickListener(this);
         mAdvanceView.setOnClickListener(this);
         mSettingView.setOnClickListener(this);
-
+        mProfileIv.setOnClickListener(this);
     }
 
     @Override
@@ -140,6 +140,9 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     }
 
     private void fillUserInfo (User user) {
+        if (user == null) {
+            return;
+        }
         final int profilePix = mMainApplication.getResources().getDimensionPixelSize(R.dimen.my_info_profile_size);
         mInfoName.setText(user.getName());
         mAttentionCountTv.setText(MainApplication.UIContext.getString(R.string.my_info_count, user.getAttCount()));
@@ -158,6 +161,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.my_info_profile_container:
+            case R.id.my_info_profile:
                 startActivity(new Intent(getActivity(), InfoActivity.class));
                 break;
             case R.id.my_info_login:

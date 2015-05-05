@@ -54,5 +54,12 @@
         android:layout_height="fill_parent"
         android:layout_below="@+id/qr_user_info"
         />
-
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/qr_tip"
+        android:textSize="12sp"
+        android:textColor="#7c7c7c"
+        android:layout_below="@+id/qr_fragment"
+        />
 </RelativeLayout>

@@ -14,10 +14,55 @@
         android:layout_below="@+id/act_detail_cover"
         android:layout_above="@+id/act_detail_join"
         >
-        <TextView
-            android:id="@+id/act_detail_text"
+        <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
+            android:layout_height="wrap_content"
+            >
+            <TextView
+                android:id="@+id/act_detail_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:textSize="18sp"
+                android:textColor="#424242"
+                />
+            <TextView
+                android:id="@+id/act_detail_desc"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/act_detail_title"
+                android:textSize="16sp"
+                android:textColor="#7e7e7e"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                />
+            <TextView
+                android:id="@+id/act_detail_award"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/act_detail_desc"
+                android:textSize="16sp"
+                android:textColor="#7e7e7e"
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                />
+            <TextView
+                android:id="@+id/act_detail_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/act_detail_award"
+                android:textSize="16sp"
+                android:textColor="#7e7e7e"
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                />
+        </RelativeLayout>
     </ScrollView>
     <Button
         android:id="@+id/act_detail_join"

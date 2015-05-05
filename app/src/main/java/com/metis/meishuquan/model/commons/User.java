@@ -22,6 +22,7 @@ public class User implements Serializable {
     public static final String
             KEY_NICK_NAME = "UserNickName",
             KEY_GENDER = "Gender",
+            KEY_BIRTHDAY = "Birthday",
             KEY_GRADE = "Grade",
             KEY_SELFINTRODUCE = "SelfIntroduce",
             KEY_USERAVATAR = "UserAvatar",
@@ -182,12 +183,10 @@ public class User implements Serializable {
     }
 
     public String getUserAvatar() {
-        Log.v(TAG, "getUserAvatar " + userAvatar);
         return userAvatar;
     }
 
     public void setUserAvatar(String userAvatar) {
-        Log.v(TAG, "setUserAvatar " + userAvatar);
         this.userAvatar = userAvatar;
     }
 

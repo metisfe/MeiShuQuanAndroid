@@ -42,6 +42,8 @@
             android:id="@+id/studio_list_header_self_introduce"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            style="@style/info_secondaryTextStyle"
             />
         <GridLayout
             android:id="@+id/studio_list_header_menu"

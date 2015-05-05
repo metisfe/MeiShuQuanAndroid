@@ -1,5 +1,6 @@
 package com.metis.meishuquan.fragment.commons;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -90,7 +91,7 @@ public class StudioFragment extends Fragment{
             user = new User();
         }
         Log.v(TAG, "fillHeader " + "studio".equals(user.getUserRole()));
-        if ("studio".equals(user.getUserRole())) {
+        if (/*"studio".equals(user.getUserRole())*/true) {
             mMenuLayout.setVisibility(View.VISIBLE);
             mIntroduceTv.setVisibility(View.GONE);
         } else {
@@ -137,6 +138,16 @@ public class StudioFragment extends Fragment{
         setTabTitle(getString(titleRes1), getString(titleRes2), getString(titleRes3));
     }
 
+    public void setSelfIntroduce (String introduce) {
+        if (mIntroduceTv != null) {
+            mIntroduceTv.setText(introduce);
+        }
+    }
+
+    public int getCheckTabId () {
+        return mRadioGroup.getCheckedRadioButtonId();
+    }
+
     public void setOnCheckedChangeListener (RadioGroup.OnCheckedChangeListener listener) {
         mCheckChangeListener = listener;
         if (mRadioGroup != null) {
@@ -148,7 +159,7 @@ public class StudioFragment extends Fragment{
         mAdapter = adapter;
         if (mListView != null) {
             if (mAdapter == null) {
-                mAdapter = new EmptyAdapter();
+                mAdapter = EmptyAdapter.getInstance(getActivity());
             }
 
             mListView.setAdapter(mAdapter);
@@ -180,7 +191,21 @@ public class StudioFragment extends Fragment{
 
     }
 
-    public class EmptyAdapter extends BaseAdapter {
+    public static class EmptyAdapter extends BaseAdapter {
+
+        private Context mContext = null;
+        private static EmptyAdapter sAdapter = null;
+
+        public static EmptyAdapter getInstance (Context context) {
+            if (sAdapter == null) {
+                sAdapter = new EmptyAdapter(context.getApplicationContext());
+            }
+            return sAdapter;
+        }
+
+        public EmptyAdapter (Context context) {
+            mContext = context;
+        }
 
         @Override
         public int getCount() {
@@ -189,7 +214,7 @@ public class StudioFragment extends Fragment{
 
         @Override
         public String getItem(int position) {
-            return getString(R.string.studio_empty_data_set);
+            return mContext.getString(R.string.studio_empty_data_set);
         }
 
         @Override
@@ -199,7 +224,7 @@ public class StudioFragment extends Fragment{
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            TextView tv = new TextView(getActivity());
+            TextView tv = new TextView(mContext);
             tv.setText(getItem(position));
             return tv;
         }

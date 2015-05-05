@@ -174,7 +174,7 @@ public class UserInfoOperator {
                         Log.v(TAG, "getUserInfo json=" + json);
 
                         Result<User> resultData = gson.fromJson(json, new TypeToken<Result<User>>(){}.getType());
-                        if (resultData != null) {
+                        if (resultData != null && resultData.getOption().getStatus() == 0) {
                             User user = resultData.getData();
                             mUserCache.put(uid + "", user);
 

@@ -67,7 +67,7 @@ public class MyInfoBtn extends RelativeLayout {
         mTv.setText(mText);
         mSecondaryTv.setText(mSecondaryText);
 
-        mIv.setVisibility(mImageVisible ? View.VISIBLE : View.GONE);
+        setImageVisible(mImageVisible);
         mSecondaryTv.setVisibility(mSecondaryTextVisible ? View.VISIBLE : View.GONE);
         mArrowIv.setVisibility(mArrowVisible ? View.VISIBLE : View.INVISIBLE);
     }
@@ -96,5 +96,10 @@ public class MyInfoBtn extends RelativeLayout {
 
     public void setArrowVisible (int visible) {
         mArrowIv.setVisibility(visible);
+    }
+
+    public void setImageVisible (boolean visible) {
+        mImageVisible = visible;
+        mIv.setVisibility(mImageVisible ? View.VISIBLE : View.GONE);
     }
 }

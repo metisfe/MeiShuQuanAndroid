@@ -190,4 +190,7 @@
 
         <item>陕西</item>
     </string-array>
+
+    <string name="input_not_empty">请填写内容</string>
+    <string name="qr_tip">扫一扫添加我为好友</string>
 </resources>

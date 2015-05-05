@@ -412,7 +412,11 @@
             android:theme="@android:style/Theme.NoTitleBar" />
         <activity
             android:name=".activity.info.homepage.HumanActivity"
-            android:label="@string/title_activity_human"></activity>
+            android:label="@string/title_activity_human" />
+        <activity
+            android:name=".activity.info.homepage.StudioDetailActivity"
+            android:label="@string/title_activity_studio_detail" >
+        </activity>
     </application>
 
 </manifest>
