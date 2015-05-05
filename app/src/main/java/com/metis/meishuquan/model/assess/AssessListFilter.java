@@ -1,6 +1,7 @@
 package com.metis.meishuquan.model.assess;
 
 import com.metis.meishuquan.model.enums.AssessStateEnum;
+import com.metis.meishuquan.model.enums.QueryTypeEnum;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,12 +11,21 @@ import java.util.List;
  * Created by wangjin on 15/5/2.
  */
 public class AssessListFilter implements Serializable {
+    private QueryTypeEnum queryType = QueryTypeEnum.RECOMMEND;
     private AssessStateEnum assessState = AssessStateEnum.ALL;
     private List<Grade> lstSelectedGrade;
     private List<Channel> lstSelectedChannel;
 
     private List<Integer> lstSelectedGradeIds;
     private List<Integer> lstSelectedChannelIds;
+
+    public QueryTypeEnum getQueryType() {
+        return queryType;
+    }
+
+    public void setQueryType(QueryTypeEnum queryType) {
+        this.queryType = queryType;
+    }
 
     public AssessStateEnum getAssessState() {
         return assessState;

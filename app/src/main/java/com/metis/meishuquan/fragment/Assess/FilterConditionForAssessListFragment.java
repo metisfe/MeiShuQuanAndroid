@@ -28,6 +28,7 @@ import com.metis.meishuquan.model.assess.Grade;
 import com.metis.meishuquan.model.enums.AssessStateEnum;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,6 +59,7 @@ public class FilterConditionForAssessListFragment extends Fragment {
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_assess_list_condition_filter, null, false);
         initView(rootView);
+        setFilterData();
         initEvent();
         return rootView;
     }
@@ -111,10 +113,10 @@ public class FilterConditionForAssessListFragment extends Fragment {
             public void onClick(View view) {
                 //传递已选择的筛选条件
                 AssessListFilter assessListFilterNew = new AssessListFilter();
-                assessListFilterNew.setAssessState(assessState);
+                assessListFilterNew.setAssessState(assessState);//评价状态（已评价，未评语，全部）
                 assessListFilterNew.setLstSelectedChannel(channelAdapter.getCheckedChannel());
                 assessListFilterNew.setLstSelectedGrade(gradeAdapter.getCheckedGrade());
-                listner.setFilter(assessListFilter);
+                listner.setFilter(assessListFilterNew);
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.remove(FilterConditionForAssessListFragment.this);
                 ft.commit();
@@ -160,7 +162,10 @@ public class FilterConditionForAssessListFragment extends Fragment {
             public void onClick(View view) {
                 setButtonChecked(btnGradeAll);
                 gvGrade.setAdapter(gradeAdapter);
+                gradeAdapter.lstOldCheckedGrade.clear();
+                gradeAdapter.lstCheckedGrade.clear();
                 gradeAdapter.notifyDataSetChanged();
+
             }
         });
 
@@ -170,7 +175,10 @@ public class FilterConditionForAssessListFragment extends Fragment {
             public void onClick(View view) {
                 setButtonChecked(btnChannelAll);
                 gvChannel.setAdapter(channelAdapter);
+                channelAdapter.lstOldCheckedChannel.clear();
+                channelAdapter.lstCheckedChannel.clear();
                 channelAdapter.notifyDataSetChanged();
+
             }
         });
 
@@ -205,6 +213,27 @@ public class FilterConditionForAssessListFragment extends Fragment {
 //                }
 //            }
 //        });
+    }
+
+    private void setFilterData() {
+        //评价状态
+        if (assessListFilter.getAssessState() == AssessStateEnum.ALL) {
+            setButtonChecked(this.btnAssessStateAll);
+        } else if (assessListFilter.getAssessState() == AssessStateEnum.ASSESSED) {
+            setButtonChecked(this.btnAssessStateTrue);
+            setButtonUnChecked(this.btnAssessStateAll);
+        } else if (assessListFilter.getAssessState() == AssessStateEnum.UNASSESS) {
+            setButtonChecked(this.btnAssessStateFalse);
+            setButtonUnChecked(this.btnAssessStateAll);
+        }
+        //年级
+        if (assessListFilter.getLstSelectedGrade().size() > 0) {
+            setButtonUnChecked(this.btnGradeAll);
+        }
+        //频道
+        if (assessListFilter.getLstSelectedChannel().size() > 0) {
+            setButtonUnChecked(this.btnChannelAll);
+        }
     }
 
     public void setFilterConditionListner(AssessFragment.OnFilterChanngedListner listner) {

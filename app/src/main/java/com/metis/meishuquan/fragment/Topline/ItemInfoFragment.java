@@ -107,8 +107,6 @@ public class ItemInfoFragment extends Fragment {
     private CommonAdapter commonAdapter;
 
     private boolean isPrivate = false;
-    private boolean windowAttached;
-    private List<ImageView> imageGroup = new ArrayList<ImageView>();
     private ArrayList<String> lstImgUrls = new ArrayList<String>();
 
     private int newsId = 0;
@@ -273,8 +271,6 @@ public class ItemInfoFragment extends Fragment {
                 getActivity().overridePendingTransition(R.anim.activity_zoomin, 0);
             }
         });
-
-        imageGroup.add(imageView);
     }
 
     //添加文本控件
@@ -558,8 +554,11 @@ public class ItemInfoFragment extends Fragment {
                             if (result != null && result.getInfo().equals(String.valueOf(0))) {
                                 Toast.makeText(getActivity(), "发送成功", Toast.LENGTH_SHORT).show();
                                 hideInputView();
-                            } else {
-                                Log.e(LOG_EXCEPTION, exception.toString());
+                            } else if (result != null && !result.getInfo().equals(String.valueOf(0))) {
+                                Log.e(LOG_EXCEPTION, "errorcode:" + result.getErrorCode() + "message:" + result.getMessage());
+                                if (result.getErrorCode().equals(String.valueOf(4))) {
+                                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                                }
                             }
                         }
                     });
@@ -632,32 +631,11 @@ public class ItemInfoFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        windowAttached = true;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        windowAttached = false;
-        for (ImageView imageView : imageGroup) {
-            if (imageView != null && imageView.getDrawable() != null) {
-                ((BitmapDrawable) imageView.getDrawable()).getBitmap().recycle();
-                imageView.setImageDrawable(null);
-            }
-        }
-
-        imageGroup = null;
-    }
-
     public void getInfoData(final int newsId, final UserInfoOperator.OnGetListener<TopLineNewsInfo> listener) {
         TopLineOperator topLineOperator = TopLineOperator.getInstance();
         topLineOperator.getNewsInfoById(newsId, new ApiOperationCallback<ReturnInfo<String>>() {
             @Override
             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                if (!windowAttached) return;
                 if (result != null) {
                     if (result.getInfo().equals(String.valueOf(0))) {
                         Gson gson = new Gson();
@@ -673,12 +651,11 @@ public class ItemInfoFragment extends Fragment {
                     }
                     bindData();
                     addViewByContent();
-                } else {
-                    getInfoData(newsId, listener);
                 }
             }
         });
     }
+
 
     //根据新闻Id获取新闻内容
     public void getInfoData(final int newsId) {

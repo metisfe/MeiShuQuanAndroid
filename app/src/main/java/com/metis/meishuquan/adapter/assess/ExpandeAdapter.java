@@ -8,9 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.CompoundButton;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.metis.meishuquan.R;
@@ -139,6 +141,7 @@ public class ExpandeAdapter extends BaseExpandableListAdapter {
             holder.mTag.setText(mData.getData().get(i).getGroupName());
         } else {
             convertView = mInflater.inflate(R.layout.fragment_assess_city_list_group_item, null);
+            holder.rbtnCheckProvince = (RadioButton) convertView.findViewById(R.id.id_radiobtn_province);
             holder.mGroupName = (TextView) convertView.findViewById(R.id.id_tv_city_group_name);
             holder.mGroupName.setTextColor(Color.rgb(127, 126, 127));
             holder.mIsExpand = (TextView) convertView.findViewById(R.id.id_tv_city_group_tag);
@@ -162,6 +165,7 @@ public class ExpandeAdapter extends BaseExpandableListAdapter {
 
     class GroupViewHolder {
         TextView mGroupName, mIsExpand, mTag;
+        RadioButton rbtnCheckProvince;
     }
 
     class ChildViewHolder {

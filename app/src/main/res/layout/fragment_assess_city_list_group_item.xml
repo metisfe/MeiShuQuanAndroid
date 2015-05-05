@@ -4,11 +4,18 @@
     android:layout_height="55dp"
     android:padding="10dp">
 
+    <RadioButton
+        android:id="@+id/id_radiobtn_province"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true" />
+
     <TextView
         android:id="@+id/id_tv_city_group_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/id_radiobtn_province"
         android:layout_centerVertical="true"
         android:text="测试数据"
         android:textSize="16sp" />

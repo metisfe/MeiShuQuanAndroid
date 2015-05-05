@@ -190,7 +190,6 @@ public class ToplineFragment extends Fragment {
         public List<ChannelItem> userItems = null;
         public List<ChannelItem> otherItems = null;
 
-
         public TabPageIndicatorAdapter(FragmentManager fm, String jsonStr) {
             super(fm);
             changeData(jsonStr);

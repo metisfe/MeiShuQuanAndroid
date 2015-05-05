@@ -24,8 +24,8 @@ import java.util.List;
 public class ChannelGridViewAdapter extends BaseAdapter {
     private Context context;
     private List<Channel> lstChannel;
-    private List<Channel> lstCheckedChannel = new ArrayList<Channel>();
-    private List<Channel> lstOldCheckedChannel = new ArrayList<Channel>();
+    public List<Channel> lstCheckedChannel = new ArrayList<Channel>();
+    public List<Channel> lstOldCheckedChannel = new ArrayList<Channel>();
 
     public ChannelGridViewAdapter(Context context, List<Channel> lstChannel, List<Channel> lstOldCheckedChannel) {
         this.context = context;
@@ -35,11 +35,6 @@ public class ChannelGridViewAdapter extends BaseAdapter {
 
     public List<Channel> getCheckedChannel() {
         return lstCheckedChannel;
-    }
-
-    public void setData(List<Channel> lstChannel) {
-        this.lstChannel.clear();
-        this.lstChannel = lstChannel;
     }
 
     @Override
@@ -83,21 +78,21 @@ public class ChannelGridViewAdapter extends BaseAdapter {
         //判断是否包含上次已选的条件
         if (lstOldCheckedChannel.size() > 0 && lstOldCheckedChannel.contains(lstChannel.get(i))) {
             setCheckedTextViewColor(textView);
+            lstChannel.get(i).setChecked(true);
+            lstCheckedChannel.add(lstChannel.get(i));
         }
 
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!lstChannel.get(i).isChecked()) {
-                    setCheckedTextViewColor(textView);
-                    lstChannel.get(i).setChecked(true);
-                    lstCheckedChannel.add(lstChannel.get(i));
-                } else {
-                    setUnCheckedTextViewColor(textView);
+                if (lstChannel.get(i).isChecked()) {
                     lstChannel.get(i).setChecked(false);
-                    if (lstCheckedChannel.size() > 0 && lstCheckedChannel.contains(lstChannel.get(i))) {
-                        lstCheckedChannel.remove(lstChannel.get(i));
-                    }
+                    setUnCheckedTextViewColor(textView);
+                    lstCheckedChannel.remove(lstChannel.get(i));
+                } else {
+                    lstChannel.get(i).setChecked(true);
+                    setCheckedTextViewColor(textView);
+                    lstCheckedChannel.add(lstChannel.get(i));
                 }
             }
         });

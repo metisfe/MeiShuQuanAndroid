@@ -22,8 +22,8 @@ import java.util.List;
 public class GradeGridViewAdapter extends BaseAdapter {
     private Context context;
     private List<Grade> lstGrade;
-    private List<Grade> lstCheckedGrade = new ArrayList<Grade>();
-    private List<Grade> lstOldCheckedGrade;
+    public List<Grade> lstCheckedGrade = new ArrayList<Grade>();
+    public List<Grade> lstOldCheckedGrade = new ArrayList<Grade>();
 
     public GradeGridViewAdapter(Context context, List<Grade> lstGrade, List<Grade> lstOldCheckedGrade) {
         this.context = context;
@@ -34,11 +34,6 @@ public class GradeGridViewAdapter extends BaseAdapter {
     public List<Grade> getCheckedGrade() {
         return lstCheckedGrade;
     }
-
-//    public void setData(List<Grade> lstGrade) {
-//        this.lstGrade.clear();
-//        this.lstGrade = lstGrade;
-//    }
 
     @Override
     public int getCount() {
@@ -81,21 +76,21 @@ public class GradeGridViewAdapter extends BaseAdapter {
         //判断是否包含上次已选的条件
         if (lstOldCheckedGrade.size() > 0 && lstOldCheckedGrade.contains(lstGrade.get(i))) {
             setCheckedTextViewColor(textView);
+            lstGrade.get(i).setChecked(true);
+            lstCheckedGrade.add(lstGrade.get(i));
         }
 
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!lstGrade.get(i).isChecked()) {
-                    setCheckedTextViewColor(textView);
-                    lstGrade.get(i).setChecked(true);
-                    lstCheckedGrade.add(lstGrade.get(i));
-                } else {
-                    setUnCheckedTextViewColor(textView);
+                if (lstGrade.get(i).isChecked()) {
                     lstGrade.get(i).setChecked(false);
-                    if (lstCheckedGrade.size() > 0 && lstCheckedGrade.contains(lstGrade.get(i))) {
-                        lstCheckedGrade.remove(lstGrade.get(i));
-                    }
+                    setUnCheckedTextViewColor(textView);
+                    lstCheckedGrade.remove(lstGrade.get(i));
+                } else {
+                    lstGrade.get(i).setChecked(true);
+                    setCheckedTextViewColor(textView);
+                    lstCheckedGrade.add(lstGrade.get(i));
                 }
             }
         });

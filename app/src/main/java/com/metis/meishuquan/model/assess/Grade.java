@@ -1,10 +1,12 @@
 package com.metis.meishuquan.model.assess;
 
+import java.io.Serializable;
+
 /**
  * POJO:年级
  * Created by wj on 15/4/2.
  */
-public class Grade {
+public class Grade implements Serializable {
     private int id;
 
     private String name;
@@ -33,5 +35,13 @@ public class Grade {
 
     public void setChecked(boolean isChecked) {
         this.isChecked = isChecked;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o != null && o instanceof Grade) {
+            return this.getId() == ((Grade) o).getId();
+        }
+        return false;
     }
 }

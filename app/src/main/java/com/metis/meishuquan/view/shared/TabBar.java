@@ -40,7 +40,7 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
     //circle
     private View circleTab;
     private ImageView circleIcon;
-    private TextView circleTitle;
+//    private TextView circleTitle;
 
     //课程
     private View discoverTab;
@@ -124,7 +124,7 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
         this.activityTitle = (TextView) this.findViewById(R.id.view_shared_tabbar_activity_title);
         this.circleTab = this.findViewById(R.id.view_shared_tabbar_circle);
         this.circleIcon = (ImageView) this.findViewById(R.id.view_shared_tabbar_circle_icon);
-        this.circleTitle = (TextView) this.findViewById(R.id.view_shared_tabbar_circle_title);
+//        this.circleTitle = (TextView) this.findViewById(R.id.view_shared_tabbar_circle_title);
         this.followeesTab.setOnClickListener(this);
         this.topStoryTab.setOnClickListener(this);
         this.discoverTab.setOnClickListener(this);
@@ -233,13 +233,13 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
      * @param isSelected 选中状态
      */
     private void selectedCircleTab(boolean isSelected) {
-        this.circleTitle.setText(R.string.tab_circle);
+//        this.circleTitle.setText(R.string.tab_circle);
         if (isSelected) {
             this.circleIcon.setImageResource(R.drawable.icon_tabbar_circle_selected);
-            this.circleTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_selected_title_color));
+//            this.circleTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_selected_title_color));
         } else {
             this.circleIcon.setImageResource(R.drawable.icon_tabbar_circle_selected);
-            this.circleTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_unselected_title_color));
+//            this.circleTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_unselected_title_color));
         }
     }
 }

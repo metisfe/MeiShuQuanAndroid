@@ -109,7 +109,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
         super.onPause();
         //CountManager.getInstance().save();
         //MobclickAgent.onPause(this);
-        AppStatus.keepSelectedTabType();
+        //AppStatus.keepSelectedTabType();
         //MusicFloatView.getInstance(MainApplication.MainActivity).hide();
     }
 
@@ -179,6 +179,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
         int size = getSupportFragmentManager().getBackStackEntryCount();
         if (size == 0) {
             if (doWantToQuite) {
+                AppStatus.clear();
                 this.finish();
             } else {
                 Toast.makeText(this, PressBackAgainToQuiteApplicationMessage, Toast.LENGTH_LONG).show();
@@ -213,30 +214,24 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
                 || name.equals(ClassFragment.class.getSimpleName());
     }
 
-    public void removeAllAttachedView()
-    {
-        if (popupRoot!=null)
-        {
+    public void removeAllAttachedView() {
+        if (popupRoot != null) {
             popupRoot.removeAllViews();
             attachViewCount = 0;
         }
     }
 
-    public void removeAttachedView(View view)
-    {
-        if (popupRoot!=null && view!=null)
-        {
+    public void removeAttachedView(View view) {
+        if (popupRoot != null && view != null) {
             popupRoot.removeView(view);
-            attachViewCount --;
+            attachViewCount--;
         }
     }
 
-    public void addAttachView(View view)
-    {
-        if (popupRoot!=null && view!=null)
-        {
+    public void addAttachView(View view) {
+        if (popupRoot != null && view != null) {
             popupRoot.addView(view);
-            attachViewCount ++;
+            attachViewCount++;
         }
     }
 }

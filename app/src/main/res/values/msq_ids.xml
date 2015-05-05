@@ -4,4 +4,7 @@
     <item name="msq_assess_info_commenttype_img" type="id" />
     <item name="msq_assess_info_commenttype_voice" type="id" />
     <item name="msq_assess_info_commenttype_portrait" type="id" />
+
+    <!--点评筛选条件-->
+    <item name="msq_assess_list_filter_checked_state" type="id" />
 </resources>

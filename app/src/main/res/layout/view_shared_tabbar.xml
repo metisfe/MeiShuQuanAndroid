@@ -93,21 +93,21 @@
             android:background="@null"
             android:clickable="true">
 
-            <TextView
-                android:id="@+id/view_shared_tabbar_circle_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="3dp"
-                android:background="@null"
-                android:clickable="false"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:singleLine="true"
-                android:text="Comment"
-                android:textSize="11dp" />
+            <!--<TextView-->
+            <!--android:id="@+id/view_shared_tabbar_circle_title"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_marginBottom="3dp"-->
+            <!--android:background="@null"-->
+            <!--android:clickable="false"-->
+            <!--android:ellipsize="end"-->
+            <!--android:gravity="center"-->
+            <!--android:includeFontPadding="false"-->
+            <!--android:singleLine="true"-->
+            <!--android:text="Comment"-->
+            <!--android:textSize="11dp" />-->
         </RelativeLayout>
 
         <RelativeLayout
@@ -186,8 +186,8 @@
 
     <ImageView
         android:id="@+id/view_shared_tabbar_circle_icon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_centerHorizontal="true"
         android:background="@drawable/icon_tabbar_circle_selected"
         android:clickable="false"

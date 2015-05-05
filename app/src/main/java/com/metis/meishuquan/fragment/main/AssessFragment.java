@@ -11,7 +11,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +32,9 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.assess.AssessInfoActivity;
 import com.metis.meishuquan.activity.info.ImagePreviewActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
+import com.metis.meishuquan.adapter.topline.DataHelper;
+import com.metis.meishuquan.fragment.Topline.ItemFragment;
+import com.metis.meishuquan.fragment.assess.AssessListItemFragment;
 import com.metis.meishuquan.fragment.assess.AssessPublishFragment;
 import com.metis.meishuquan.fragment.assess.ChooseCityFragment;
 import com.metis.meishuquan.fragment.assess.FilterConditionForAssessListFragment;
@@ -39,6 +45,7 @@ import com.metis.meishuquan.model.assess.AssessListFilter;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.AssessStateEnum;
 import com.metis.meishuquan.model.enums.QueryTypeEnum;
+import com.metis.meishuquan.model.topline.ChannelItem;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.popup.ChoosePhotoPopupWindow;
@@ -46,6 +53,7 @@ import com.metis.meishuquan.view.shared.DragListView;
 import com.metis.meishuquan.view.shared.TabBar;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.viewpagerindicator.TabPageIndicator;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -63,45 +71,47 @@ import java.util.List;
  * Created by wj on 3/15/2015.
  */
 public class AssessFragment extends Fragment {
-    public static final String KEY_IMAGE_URL_ARRAY = "image_url_array",
-            KEY_THUMB_URL_ARRAY = "thumb_url_array";
+    private static final String KEY_LIST_FILTER = "assessListFilter";
     private static final String TAG = "getAssessComment";
     private static final int TAKE_PHOTO = 1;
     private static final int PICK_PICTURE = 2;
     private ViewGroup rootView;
     private TabBar tabBar;
 
-    private DragListView listView;
+    private ViewPager viewPager;
+    private TabPageIndicator indicator;
+    private TabPageIndicatorAdapter fragmentPagerAdapter;
     private Button btnRegion, btnFilter, btnPublishComment;
-    private Button btnRecommend, btnNewPublish, btnHotComment;
 
-    private List<Assess> lstAllAssess = new ArrayList<Assess>();
-    private AssessListFilter assessListFilter = new AssessListFilter();
-    private AssessAdapter adapter;
-    private QueryTypeEnum type = QueryTypeEnum.RECOMMEND;
-    private AssessStateEnum assessState = AssessStateEnum.ALL;
-    private ArrayList<String> lstImgUrl = new ArrayList<String>();
+    private AssessListFilter assessListFilter;
 
-    private int regionId;
-    private int index = 1;
     private String photoPath = "";
     private FragmentManager fm;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        //TODO:定位
         AssessOperator assessOperator = AssessOperator.getInstance();
         assessOperator.AddRegionToCache();
         //加载过滤条件之标签数据
         assessOperator = AssessOperator.getInstance();
         assessOperator.addAssessChannelListToCache();//将过滤条件（年级、标签）加载至缓存
-        //加载列表数据
-        getData(DragListView.REFRESH, regionId, true, assessState, assessListFilter.getLstSelectedGradeIds(), assessListFilter.getLstSelectedChannelIds(), QueryTypeEnum.RECOMMEND, index);
 
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_commentfragment, container, false);
         initView(rootView);
         initEvent();
         return rootView;
+    }
+
+    //读取用户上次选择的筛选条件
+    private AssessListFilter getCheckedData() {
+        String json = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey(SharedPreferencesUtil.CHECKED_ASSESS_FILTER + MainApplication.userInfo.getUserId());
+        Gson gson = new Gson();
+        if (!json.equals("")) {
+            AssessListFilter data = gson.fromJson(json, new com.google.common.reflect.TypeToken<AssessListFilter>() {
+            }.getType());
+            return data;
+        }
+        return new AssessListFilter();
     }
 
     @Override
@@ -161,46 +171,23 @@ public class AssessFragment extends Fragment {
     private void initView(ViewGroup rootView) {
         this.fm = getActivity().getSupportFragmentManager();
         this.tabBar = (TabBar) rootView.findViewById(R.id.fragment_shared_commentfragment_tab_bar);
+        this.viewPager = (ViewPager) rootView.findViewById(R.id.fragment_shared_assess_list_viewpager);
+        this.indicator = (TabPageIndicator) rootView.findViewById(R.id.assess_indicator);
         this.tabBar.setTabSelectedListener(MainApplication.MainActivity);
-        this.listView = (DragListView) rootView.findViewById(R.id.id_fragment_comment_listview);
         this.btnRegion = (Button) rootView.findViewById(R.id.id_btn_region);
         this.btnPublishComment = (Button) rootView.findViewById(R.id.id_btn_assess_comment);
         this.btnFilter = (Button) rootView.findViewById(R.id.id_btn_commentlist_filter);
-        this.btnRecommend = (Button) rootView.findViewById(R.id.id_btn_recommend);//推荐
-        this.btnNewPublish = (Button) rootView.findViewById(R.id.id_btn_new_publish);//最新
-        this.btnHotComment = (Button) rootView.findViewById(R.id.id_btn_hot_course);//最多评论
+        this.fragmentPagerAdapter = new TabPageIndicatorAdapter(getActivity().getSupportFragmentManager());
+        this.fragmentPagerAdapter.setAssessListFilter(getCheckedData());
 
-        this.adapter = new AssessAdapter(this.lstAllAssess);
-        this.listView.setAdapter(adapter);
+        //设置ViewPager适配器
+        this.viewPager.setAdapter(fragmentPagerAdapter);
+
+        //实例化TabPageIndicator然后设置ViewPager与之关联
+        this.indicator.setViewPager(viewPager);
     }
 
     private void initEvent() {
-        this.listView.setOnRefreshListener(new DragListView.OnRefreshListener() {//列表刷新
-            @Override
-            public void onRefresh() {
-                getData(DragListView.REFRESH, regionId, true, assessState, assessListFilter.getLstSelectedGradeIds(), assessListFilter.getLstSelectedChannelIds(), type, index);
-            }
-        });
-
-        this.listView.setOnLoadListener(new DragListView.OnLoadListener() {//列表加载更多
-            @Override
-            public void onLoad() {
-                getData(DragListView.LOAD, regionId, true, assessState, assessListFilter.getLstSelectedGradeIds(), assessListFilter.getLstSelectedChannelIds(), type, index);
-                index++;
-            }
-        });
-
-        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {//列表项点击
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                if (position >= lstAllAssess.size() + 1) return;
-                final Assess assess = lstAllAssess.get(position - 1);
-                Intent intent = new Intent(getActivity(), AssessInfoActivity.class);
-                intent.putExtra("assess", (Serializable) assess);
-                startActivity(intent);
-            }
-        });
-
         //全国
         this.btnRegion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -220,13 +207,16 @@ public class AssessFragment extends Fragment {
                 FilterConditionForAssessListFragment filterConditionForAssessListFragment = new FilterConditionForAssessListFragment();
                 filterConditionForAssessListFragment.setFilterConditionListner(new OnFilterChanngedListner() {
                     @Override
-                    public void setFilter(AssessListFilter assessListFilter) {
+                    public void setFilter(AssessListFilter filter) {
                         //添加至本地保存
                         Gson gson = new Gson();
-                        String json = gson.toJson(assessListFilter);
+                        String json = gson.toJson(filter);
                         Log.i("点评列表筛选条件", json);
                         SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(SharedPreferencesUtil.CHECKED_ASSESS_FILTER + MainApplication.userInfo.getUserId(), json);
                         //TODO:根据筛选条件刷新列表
+                        fragmentPagerAdapter.setAssessListFilter(filter);
+                        fragmentPagerAdapter.notifyDataSetChanged();
+                        indicator.notifyDataSetChanged();
                     }
                 });
                 FragmentTransaction ft = fm.beginTransaction();
@@ -253,100 +243,6 @@ public class AssessFragment extends Fragment {
                 }
             }
         });
-
-        this.btnRecommend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setButtonChecked(btnRecommend);
-                setButtonUnChecked(new Button[]{btnNewPublish, btnHotComment});
-                type = QueryTypeEnum.RECOMMEND;
-                if (regionId == 0) {
-                    getData(DragListView.REFRESH, regionId, true, assessState, assessListFilter.getLstSelectedGradeIds(), assessListFilter.getLstSelectedChannelIds(), type, index);
-                } else {
-                    getData(DragListView.REFRESH, regionId, false, assessState, assessListFilter.getLstSelectedGradeIds(), assessListFilter.getLstSelectedChannelIds(), type, index);
-                }
-            }
-        });
-
-        this.btnNewPublish.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setButtonChecked(btnNewPublish);
-                setButtonUnChecked(new Button[]{btnRecommend, btnHotComment});
-                type = QueryTypeEnum.NEW;
-                if (regionId == 0) {
-                    getData(DragListView.REFRESH, regionId, true, assessState, assessListFilter.getLstSelectedGradeIds(), assessListFilter.getLstSelectedChannelIds(), type, index);
-                } else {
-                    getData(DragListView.REFRESH, regionId, false, assessState, assessListFilter.getLstSelectedGradeIds(), assessListFilter.getLstSelectedChannelIds(), type, index);
-                }
-            }
-        });
-
-        this.btnHotComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setButtonChecked(btnHotComment);
-                setButtonUnChecked(new Button[]{btnNewPublish, btnRecommend});
-                type = QueryTypeEnum.HOT;
-                if (regionId == 0) {
-                    getData(DragListView.REFRESH, regionId, true, assessState, assessListFilter.getLstSelectedGradeIds(), assessListFilter.getLstSelectedChannelIds(), type, index);
-                } else {
-                    getData(DragListView.REFRESH, regionId, false, assessState, assessListFilter.getLstSelectedGradeIds(), assessListFilter.getLstSelectedChannelIds(), type, index);
-                }
-            }
-        });
-    }
-
-    private void setButtonChecked(Button btn) {
-        btn.setTextColor(Color.rgb(251, 109, 109));
-    }
-
-    private void setButtonUnChecked(Button[] btns) {
-        for (Button button : btns) {
-            button.setTextColor(Color.rgb(126, 126, 126));
-        }
-    }
-
-    private void getData(final int loadingType, int region, boolean isAll, AssessStateEnum mType, List<Integer> grades, List<Integer> channelIds, final QueryTypeEnum queryTypeEnum, final int index) {
-        AssessOperator assessOperator = AssessOperator.getInstance();
-        assessOperator.getAssessList(region, isAll, mType, grades, channelIds, index, queryTypeEnum, new ApiOperationCallback<ReturnInfo<String>>() {
-            @Override
-            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                AllAssess allAssess = new AllAssess();
-                if (result != null) {
-                    Gson gson = new Gson();
-                    String json = gson.toJson(result);
-                    Log.i("assesslist", json);
-                    allAssess = gson.fromJson(json, new TypeToken<AllAssess>() {
-                    }.getType());
-                    List<Assess> assessList = null;
-                    if (loadingType == listView.REFRESH) {
-                        if (queryTypeEnum == QueryTypeEnum.RECOMMEND) {
-                            assessList = allAssess.getData().getSelectAssessList();//推荐点评
-                        } else if (queryTypeEnum == QueryTypeEnum.HOT) {
-                            assessList = allAssess.getData().getHotAssessList();//热门点评
-                        } else if (queryTypeEnum == QueryTypeEnum.NEW) {
-                            assessList = allAssess.getData().getLastAssessList();//最新点评
-                        }
-                        listView.onRefreshComplete();
-                        lstAllAssess.clear();
-                        lstAllAssess.addAll(assessList);
-                    } else if (loadingType == listView.LOAD) {
-                        if (queryTypeEnum == QueryTypeEnum.RECOMMEND) {
-                            assessList = allAssess.getData().getSelectAssessList();//推荐点评
-                        } else if (queryTypeEnum == QueryTypeEnum.HOT) {
-                            assessList = allAssess.getData().getHotAssessList();//热门点评
-                        } else if (queryTypeEnum == QueryTypeEnum.NEW) {
-                            assessList = allAssess.getData().getLastAssessList();//最新点评
-                        }
-                        listView.onLoadComplete();
-                        lstAllAssess.addAll(assessList);
-                    }
-                    listView.setResultSize(assessList.size());
-                    adapter.notifyDataSetChanged();
-                }
-            }
-        });
     }
 
     public interface OnPathChannedListner {
@@ -357,117 +253,56 @@ public class AssessFragment extends Fragment {
         void setFilter(AssessListFilter assessListFilter);
     }
 
-    /**
-     * 点评列表适配器
-     */
-    private class AssessAdapter extends BaseAdapter {
-        private List<Assess> lstAssess = new ArrayList<Assess>();
-        private ViewHolder holder;
+    class TabPageIndicatorAdapter extends FragmentStatePagerAdapter {
+        public String[] titles = new String[]{"精选推荐", "最新发布", "最热评论"};
+        private AssessListFilter assessListFilter = null;
 
-        public AssessAdapter(List<Assess> lstAllComments) {
-            this.lstAssess = lstAllComments;
+        public TabPageIndicatorAdapter(FragmentManager fm) {
+            super(fm);
         }
 
-        private class ViewHolder {
-            ImageView portrait, img_content;
-            TextView userName, grade, createTime, content;
-            TextView tvSupportCount, tvCommentCount, tvContentType, tvCommentState;
+        public void setAssessListFilter(AssessListFilter assessListFilter) {
+            this.assessListFilter = assessListFilter;
+        }
 
+        @Override
+        public AssessListItemFragment getItem(int position) {
+            AssessListItemFragment itemFragment = new AssessListItemFragment();
+            return itemFragment;
+        }
+
+        @Override
+        public AssessListItemFragment instantiateItem(ViewGroup container, int position) {
+            AssessListItemFragment itemFragment = (AssessListItemFragment) super.instantiateItem(container, position);
+            String title = titles[position];
+            if (assessListFilter == null) {
+                assessListFilter = new AssessListFilter();
+            }
+            if (title.equals("精选推荐")) {
+                itemFragment.setQueryType(QueryTypeEnum.RECOMMEND);
+            } else if (title.equals("最新发布")) {
+                itemFragment.setQueryType(QueryTypeEnum.NEW);
+            } else if (title.equals("最热评论")) {
+                itemFragment.setQueryType(QueryTypeEnum.HOT);
+            }
+            itemFragment.setAssessListFilter(assessListFilter);
+
+            return itemFragment;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return titles[position];
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return PagerAdapter.POSITION_NONE;
         }
 
         @Override
         public int getCount() {
-            return lstAssess.size();
-        }
-
-        @Override
-        public Assess getItem(int i) {
-            return lstAssess.get(i);
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
-        @Override
-        public boolean isEnabled(int position) {
-            return true;
-        }
-
-        @Override
-        public View getView(final int i, View convertView, ViewGroup view) {
-            final Assess assess = lstAssess.get(i);
-            if (convertView == null) {
-                holder = new ViewHolder();
-                convertView = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_assess_list_item, null);
-                holder.portrait = (ImageView) convertView.findViewById(R.id.id_img_portrait);
-                holder.userName = (TextView) convertView.findViewById(R.id.id_username);
-                holder.grade = (TextView) convertView.findViewById(R.id.id_tv_grade);
-                holder.createTime = (TextView) convertView.findViewById(R.id.id_createtime);
-                holder.content = (TextView) convertView.findViewById(R.id.id_tv_content);
-                holder.img_content = (ImageView) convertView.findViewById(R.id.id_img_content);
-                holder.tvSupportCount = (TextView) convertView.findViewById(R.id.id_tv_support_count);
-                holder.tvCommentCount = (TextView) convertView.findViewById(R.id.id_tv_comment_count);
-                holder.tvContentType = (TextView) convertView.findViewById(R.id.id_tv_content_type);
-                holder.tvCommentState = (TextView) convertView.findViewById(R.id.id_tv_comment_state);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-            //用户名
-            holder.userName.setText(assess.getUser().getName());
-
-            //用户头像
-            if (!assess.getUser().getAvatar().isEmpty()) {
-                ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(assess.getUser().getAvatar(), holder.portrait, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height), R.drawable.default_user_dynamic));
-            }
-
-            //年级
-            //holder.grade.setText(assess());
-
-            //创建时间
-            SimpleDateFormat sFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            try {
-                Date date = sFormat.parse(assess.getCreateTime());
-                String dataStr = sFormat.format(date);
-                holder.createTime.setText(dataStr);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            //内容描述
-            if (assess.getDesc().length() > 0) {
-                holder.content.setText(assess.getDesc());
-            } else {
-                holder.content.setHeight(0);
-            }
-
-            //内容图片
-            holder.img_content.setMinimumWidth(assess.getThumbnails().getWidth() * 2);
-            holder.img_content.setMinimumHeight(assess.getThumbnails().getHeigth() * 2);
-            ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(assess.getThumbnails().getUrl(), holder.img_content);
-            //预览大图
-            holder.img_content.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    lstImgUrl.clear();
-                    lstImgUrl.add(assess.getOriginalImage().getUrl());
-                    Intent intent = new Intent(getActivity(), ImagePreviewActivity.class);
-                    intent.putStringArrayListExtra(KEY_IMAGE_URL_ARRAY, lstImgUrl);
-                    startActivity(intent);
-                    getActivity().overridePendingTransition(R.anim.activity_zoomin, 0);
-                }
-            });
-
-            holder.tvSupportCount.setText("赞(" + assess.getSupportCount() + ")");//赞数量
-            holder.tvCommentCount.setText("评论(" + assess.getCommentCount() + ")");//评论数量
-            holder.tvContentType.setText(assess.getAssessChannel().getChannelName());//内容类型
-            //设置点评状态
-            if (assess.getCommentCount() > 0) {
-                holder.tvCommentState.setText("已点评");
-            }
-            return convertView;
+            return titles.length;
         }
     }
 }
