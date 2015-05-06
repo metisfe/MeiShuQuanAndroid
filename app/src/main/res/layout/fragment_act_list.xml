@@ -27,4 +27,12 @@
         android:layout_height="fill_parent"
         android:layout_below="@+id/act_list_spanner_group"
         />
+    <TextView
+        android:id="@+id/act_empty"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/act_list_spanner_group"
+        android:gravity="center"
+        android:text="@string/act_empty"
+        />
 </RelativeLayout>

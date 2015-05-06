@@ -136,6 +136,10 @@
     <string name="act_title_details">活动详情</string>
     <string name="act_title_list">PK榜</string>
     <string name="act_title_join">我要报名</string>
+    <string name="act_joined_count">已报名%1$d人</string>
+    <string name="act_comment_count">评论%1$d人</string>
+    <string name="act_support_count">%1$d次</string>
+    <string name="act_empty">暂无数据</string>
 
     <string-array name="act_filter_1">
         <item>学生PK榜</item>

@@ -23,7 +23,7 @@ public class HumanActivity extends BaseActivity {
         setContentView(R.layout.activity_human);
 
         mTitleView = LayoutInflater.from(this).inflate(R.layout.layout_studio_title, null);
-        getTitleView().setCenterView(mTitleView);
+        getTitleView().addCenterView(mTitleView);
         mTitleProfile = (ImageView)mTitleView.findViewById(R.id.studio_title_profile);
         ImageLoaderUtils.getImageLoader(this).displayImage("http://images.apple.com/cn/live/2015-mar-event/images/751591e0653867230e700d3a99157780826cce88_xlarge.jpg",
                 mTitleProfile,

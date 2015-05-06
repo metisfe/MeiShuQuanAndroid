@@ -1,6 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="wrap_content">
+    <RadioButton
+        android:id="@+id/top_list_item_check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:visibility="gone"
+        />
+    <ImageView
+        android:id="@+id/top_list_item_profile"
+        android:layout_width="@dimen/active_list_profile_size"
+        android:layout_height="@dimen/active_list_profile_size"
+        android:layout_margin="10dp"
+        android:layout_toRightOf="@+id/top_list_item_check_box"
+        />
+    <TextView
+        android:id="@+id/top_list_item_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/top_list_item_extra"
+        android:layout_toRightOf="@+id/top_list_item_profile"
+        />
+    <TextView
+        android:id="@+id/top_list_item_location"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/top_list_item_extra"
+        android:layout_toRightOf="@+id/top_list_item_profile"
+        android:layout_below="@+id/top_list_item_name"
+        />
+    <RelativeLayout
+        android:id="@+id/top_list_item_extra"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        >
+        <TextView
+            android:id="@+id/top_list_item_join_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/top_list_item_comment_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/top_list_item_join_count"
+            />
+        <TextView
+            android:id="@+id/top_list_item_support_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/top_list_item_comment_count"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/top_list_item_support_count"
+            android:layout_below="@+id/top_list_item_comment_count"
+            android:src="@drawable/top_list_item_support"
+            />
+    </RelativeLayout>
 </RelativeLayout>

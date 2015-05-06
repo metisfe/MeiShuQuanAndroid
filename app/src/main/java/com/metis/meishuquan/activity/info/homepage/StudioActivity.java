@@ -6,15 +6,13 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -81,7 +79,7 @@ public class StudioActivity extends BaseActivity implements
         setContentView(R.layout.activity_studio);
 
         mTitleView = LayoutInflater.from(this).inflate(R.layout.layout_studio_title, null);
-        getTitleView().setCenterView(mTitleView);
+        getTitleView().addCenterView(mTitleView);
         mTitleProfile = (ImageView)mTitleView.findViewById(R.id.studio_title_profile);
         mTitleName = (TextView)mTitleView.findViewById(R.id.studio_title_name);
         mSubTitleName = (TextView)mTitleView.findViewById(R.id.studio_title_meishuquan_id);

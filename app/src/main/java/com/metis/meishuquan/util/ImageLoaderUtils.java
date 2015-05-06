@@ -45,6 +45,7 @@ public class ImageLoaderUtils {
                 .showImageForEmptyUri(resousceId)
                 .showImageOnFail(resousceId)
                 .showImageOnLoading(resousceId)
+                .considerExifParams(true)
                 .build();
         return options;
     }
@@ -56,6 +57,7 @@ public class ImageLoaderUtils {
                 .showImageForEmptyUri(resousceId)
                 .showImageOnFail(resousceId)
                 .showImageOnLoading(resousceId)
+                .considerExifParams(true)
                 .build();
         return options;
     }
