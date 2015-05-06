@@ -66,7 +66,7 @@ public class ChatManager {
                 new ApiOperationCallback<MyGroupList>() {
                     @Override
                     public void onCompleted(MyGroupList result, Exception exception, ServiceFilterResponse response) {
-                        Log.d("circle","test" + response.getContent());
+//                        Log.d("circle","test" + response.getContent());
                         if (result != null && result.option != null && result.option.isSuccess() && result.data != null) {
                             List<String> ids = new ArrayList<String>();
                             for (CDiscussion d : result.data) {

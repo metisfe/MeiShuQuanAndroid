@@ -65,9 +65,7 @@
                 android:id="@+id/id_et_input_comment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp"
+                android:layout_margin="5dp"
                 android:layout_toLeftOf="@+id/id_rl_send"
                 android:layout_toRightOf="@+id/id_img_comment_mode"
                 android:background="@drawable/bg_assess_info_comment_input"
@@ -75,16 +73,16 @@
                 android:padding="5dp"
                 android:textSize="12sp" />
 
-            <Button
+            <com.metis.meishuquan.view.assess.AudioRecorderButton
                 android:id="@+id/id_btn_voice_record"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_toLeftOf="@+id/id_rl_send"
                 android:layout_toRightOf="@+id/id_img_comment_mode"
-                android:background="@drawable/bg_assess_info_comment_input"
+                android:background="@drawable/btn_recorder_normal"
                 android:padding="5dp"
-                android:text="按住 说话"
+                android:text="@string/str_recorder_normal"
                 android:textColor="#424242"
                 android:textSize="15sp"
                 android:visibility="gone" />
@@ -132,10 +130,10 @@
             android:id="@+id/id_rl_choose_photo"
             android:layout_width="match_parent"
             android:layout_height="150dp"
+            android:layout_below="@+id/id_rl_input"
             android:background="#f0f0f0"
-            android:visibility="gone"
             android:padding="10dp"
-            android:layout_below="@+id/id_rl_input">
+            android:visibility="gone">
 
             <Button
                 android:id="@+id/id_btn_choose_photo"

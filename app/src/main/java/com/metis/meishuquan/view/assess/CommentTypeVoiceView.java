@@ -1,14 +1,21 @@
 package com.metis.meishuquan.view.assess;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,6 +23,7 @@ import android.widget.Toast;
 
 import com.lidroid.xutils.HttpUtils;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.manager.common.MediaManager;
 import com.metis.meishuquan.manager.common.PlayerManager;
 import com.metis.meishuquan.model.assess.AssessComment;
 import com.metis.meishuquan.util.DownloadUtil;
@@ -35,10 +43,18 @@ public class CommentTypeVoiceView extends RelativeLayout {
     private Context context;
     private AssessComment assessComment;
 
+    private CommentTypeVoiceView commentTypeVoiceView;
     private ImageView imgPortrait;
     private TextView tvCommentUser, tvReply, tvReplyUser, tvContent, tvCommentTime;
-    private Button btnPlayVoice;
+    private FrameLayout btnPlayVoice;
+    private TextView tvVoiceTime;
+    private View viewAnim;
+
     private String path = "";
+
+    private int mMinVoiceWidth;
+    private int mMaxVoiceWidth;
+
 
     public void setAssessComment(AssessComment assessComment) {
         this.assessComment = assessComment;
@@ -48,8 +64,15 @@ public class CommentTypeVoiceView extends RelativeLayout {
     public CommentTypeVoiceView(Context context) {
         super(context);
         this.context = context;
-        LayoutInflater.from(context).inflate(R.layout.layout_assess_reply_comment_type_voice, this);
-        initView(this);
+
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(outMetrics);
+        mMaxVoiceWidth = (int) (outMetrics.widthPixels * 0.7f);
+        mMinVoiceWidth = (int) (outMetrics.widthPixels * 0.15f);
+
+        commentTypeVoiceView = (CommentTypeVoiceView) LayoutInflater.from(context).inflate(R.layout.layout_assess_reply_comment_type_voice, this);
+        initView(commentTypeVoiceView);
         intEvent();
     }
 
@@ -60,7 +83,9 @@ public class CommentTypeVoiceView extends RelativeLayout {
         this.tvReplyUser = (TextView) commentTypeVoiceView.findViewById(R.id.id_tv_reply_user_name);
         this.tvContent = (TextView) commentTypeVoiceView.findViewById(R.id.id_tv_comment_content);
         this.tvCommentTime = (TextView) commentTypeVoiceView.findViewById(R.id.id_tv_comment_createtime);
-        this.btnPlayVoice = (Button) commentTypeVoiceView.findViewById(R.id.id_btn_play_voice);
+        this.btnPlayVoice = (FrameLayout) commentTypeVoiceView.findViewById(R.id.id_btn_play_voice);
+        this.viewAnim = commentTypeVoiceView.findViewById(R.id.id_view_anim);
+        this.tvVoiceTime = (TextView) commentTypeVoiceView.findViewById(R.id.id_tv_recorder_length);
     }
 
     private void initData(final AssessComment assessComment) {
@@ -78,12 +103,9 @@ public class CommentTypeVoiceView extends RelativeLayout {
             this.tvReplyUser.setText(assessComment.getReplyUser().getName());//被回复人
             this.tvCommentTime.setText(assessComment.getCommentDateTime());//评论时间
 
-//            String url = assessComment.getImgOrVoiceUrl().get(0).getVoiceUrl();
-//            DownloadTask downloadTask = new DownloadTask(context, url);
-//            downloadTask.execute();
-//            if (!path.isEmpty()) {
-//                this.btnPlayVoice.setTag(path);
-//            }
+            ViewGroup.LayoutParams lp = this.btnPlayVoice.getLayoutParams();
+            lp.width = (int) (mMinVoiceWidth + (mMaxVoiceWidth / 60f + assessComment.getTime()));
+            this.tvVoiceTime.setText(Math.round(assessComment.getTime()) + "\"");
         }
     }
 
@@ -160,8 +182,24 @@ public class CommentTypeVoiceView extends RelativeLayout {
         @Override
         protected void onPostExecute(Integer integer) {
             Log.i("path", path);
-            PlayerManager.getInstance(context).start(path);
-//            PlayerManager.getInstance(context).start("/storage/emulated/0/326.amr");
+            if (viewAnim != null) {
+                viewAnim.setBackgroundResource(R.drawable.adj);
+                viewAnim = null;
+            }
+            if (viewAnim == null) {
+                viewAnim = commentTypeVoiceView.findViewById(R.id.id_view_anim);
+            }
+            viewAnim.setBackgroundResource(R.drawable.play_anim);
+            AnimationDrawable animation = (AnimationDrawable) viewAnim.getBackground();
+            animation.start();
+//            PlayerManager.getInstance(context).start(path);
+
+            MediaManager.playSound(path, new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    viewAnim.setBackgroundResource(R.drawable.adj);
+                }
+            });
             Toast.makeText(context, "下载完毕播放", Toast.LENGTH_SHORT).show();
         }
 

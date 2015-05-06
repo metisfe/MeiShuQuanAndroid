@@ -38,6 +38,8 @@ public class AssessComment implements Serializable {
     @SerializedName("commentType")
     private int commentType;
 
+    private float time = 10.0f;
+
     public int getId() {
         return id;
     }
@@ -117,5 +119,13 @@ public class AssessComment implements Serializable {
 
     public void setCommentType(int commentType) {
         this.commentType = commentType;
+    }
+
+    public float getTime() {
+        return time;
+    }
+
+    public void setTime(float time) {
+        this.time = time;
     }
 }
