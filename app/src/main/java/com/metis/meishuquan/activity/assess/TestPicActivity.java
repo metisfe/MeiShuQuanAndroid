@@ -41,15 +41,7 @@ public class TestPicActivity extends Activity {
 	 * 初始化数据
 	 */
 	private void initData() {
-		// /**
-		// * 这里，我们假设已经从网络或者本地解析好了数据，所以直接在这里模拟了10个实体类，直接装进列表中
-		// */
-		// dataList = new ArrayList<Entity>();
-		// for(int i=-0;i<10;i++){
-		// Entity entity = new Entity(R.drawable.picture, false);
-		// dataList.add(entity);
-		// }
-		dataList = helper.getImagesBucketList(false);	
+		dataList = helper.getImagesBucketList(false);
 		bimap=BitmapFactory.decodeResource(
 				getResources(),
 				R.drawable.icon_addpic_unfocused);

@@ -375,12 +375,6 @@ public class ItemInfoFragment extends Fragment {
         rlSupport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //判断登录状态
-                if (!MainApplication.isLogin()) {
-                    startActivity(new Intent(MainApplication.MainActivity, LoginActivity.class));
-                    return;
-                }
-
                 int count = newsInfo.getData().getSupportCount();
                 Object supportCount = tvSupportCount.getTag();
                 if (tvStepCount.getTag() != null) {
@@ -397,14 +391,18 @@ public class ItemInfoFragment extends Fragment {
                 //点赞加1效果
                 supportOrStep(tvSupportCount, tvSupportAddOne, imgSupport, count, true);
 
-                CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), newsId, SupportStepTypeEnum.News, 1, new ApiOperationCallback<ReturnInfo<String>>() {
-                    @Override
-                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                            Log.i("supportOrStep", "赞成功");
+
+                //判断登录状态
+                if (MainApplication.isLogin()) {
+                    CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), newsId, SupportStepTypeEnum.News, 1, new ApiOperationCallback<ReturnInfo<String>>() {
+                        @Override
+                        public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                            if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                Log.i("supportOrStep", "赞成功");
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         });
 
@@ -412,12 +410,6 @@ public class ItemInfoFragment extends Fragment {
         rlStep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //判断登录状态
-                if (!MainApplication.isLogin()) {
-                    startActivity(new Intent(MainApplication.MainActivity, LoginActivity.class));
-                    return;
-                }
-
                 //点踩加1效果
                 int count = newsInfo.getData().getOppositionCount();
                 Object stepCount = tvSupportCount.getTag();
@@ -434,14 +426,18 @@ public class ItemInfoFragment extends Fragment {
                 }
                 supportOrStep(tvStepCount, tvStepAddOne, imgStep, count, false);
 
-                CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), newsId, SupportStepTypeEnum.News, 1, new ApiOperationCallback<ReturnInfo<String>>() {
-                    @Override
-                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                        if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                            Log.i("supportOrStep", "赞成功");
+                //判断登录状态
+                if (MainApplication.isLogin()) {
+                    CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), newsId, SupportStepTypeEnum.News, 1, new ApiOperationCallback<ReturnInfo<String>>() {
+                        @Override
+                        public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                            if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                Log.i("supportOrStep", "赞成功");
+                            }
                         }
-                    }
-                });
+                    });
+                }
+
             }
         });
 
@@ -461,7 +457,7 @@ public class ItemInfoFragment extends Fragment {
         this.rl_writeCommont.setOnClickListener(new View.OnClickListener() {//写评论
             @Override
             public void onClick(View view) {//写评论
-                if (MainApplication.userInfo.getAppLoginState() == LoginStateEnum.YES) {
+                if (MainApplication.isLogin()) {
                     showInputView();
                 } else {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -473,22 +469,7 @@ public class ItemInfoFragment extends Fragment {
         this.rl_commontList.setOnClickListener(new View.OnClickListener() {//评论列表
             @Override
             public void onClick(View view) {//查看评论列表
-                if (newsInfo == null) {
-                    return;
-                }
-                Bundle args = new Bundle();
-                if (newsId != 0) {
-                    args.putInt("newsId", newsId);
-                    args.putInt("totalCommentCount", newsInfo.getData().getCommentCount());
-                }
-                //跳转至评论列表
-                CommentListFragment commentListFragment = new CommentListFragment();
-                commentListFragment.setArguments(args);
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.add(R.id.content_container, commentListFragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
-                fragmentTransaction.commit();
+                navigitToCommentListFragment();
             }
         });
 
@@ -553,6 +534,9 @@ public class ItemInfoFragment extends Fragment {
                         public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                             if (result != null && result.getInfo().equals(String.valueOf(0))) {
                                 Toast.makeText(getActivity(), "发送成功", Toast.LENGTH_SHORT).show();
+                                int count = Integer.parseInt(tv_comment_count.getText().toString());
+                                tv_comment_count.setText(String.valueOf(count + 1));
+                                navigitToCommentListFragment();
                                 hideInputView();
                             } else if (result != null && !result.getInfo().equals(String.valueOf(0))) {
                                 Log.e(LOG_EXCEPTION, "errorcode:" + result.getErrorCode() + "message:" + result.getMessage());
@@ -565,6 +549,25 @@ public class ItemInfoFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void navigitToCommentListFragment() {
+        if (newsInfo == null) {
+            return;
+        }
+        Bundle args = new Bundle();
+        if (newsId != 0) {
+            args.putInt("newsId", newsId);
+            args.putInt("totalCommentCount", newsInfo.getData().getCommentCount());
+        }
+        //跳转至评论列表
+        CommentListFragment commentListFragment = new CommentListFragment();
+        commentListFragment.setArguments(args);
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.add(R.id.content_container, commentListFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+        fragmentTransaction.commit();
     }
 
     private void supportOrStep(TextView tvCount, final TextView tvAddOne, ImageView img, int count, boolean isSupport) {

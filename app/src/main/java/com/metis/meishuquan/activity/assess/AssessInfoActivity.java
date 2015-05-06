@@ -2,6 +2,7 @@ package com.metis.meishuquan.activity.assess;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
@@ -45,6 +46,7 @@ import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.assess.Assess;
 import com.metis.meishuquan.model.assess.AssessComment;
 import com.metis.meishuquan.model.assess.AssessSupportAndComment;
+import com.metis.meishuquan.model.assess.Bimp;
 import com.metis.meishuquan.model.assess.PushCommentParam;
 import com.metis.meishuquan.model.commons.SimpleUser;
 import com.metis.meishuquan.model.contract.ReturnInfo;
@@ -68,6 +70,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,8 +129,43 @@ public class AssessInfoActivity extends FragmentActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
         MediaManager.resume();
+        if (Bimp.getInstance().drr.size() > 0) {
+            sendPhotoComment(Bimp.getInstance().drr);
+            Toast.makeText(this, "发送成功", Toast.LENGTH_SHORT).show();
+        }
+        super.onResume();
+    }
+
+    private void sendPhotoComment(List<String> drr) {
+        int totalSize = 0;
+        //得到图片的字节数组
+        List<Bitmap> lstCheckedPhoto = new ArrayList<Bitmap>();
+        for (int i = 0; i < drr.size(); i++) {
+            try {
+                Bitmap bitmap = Bimp.getInstance().revitionImageSize(drr.get(i));
+                lstCheckedPhoto.add(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        //计算总字节长度和子长度
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < lstCheckedPhoto.size(); i++) {
+            byte[] imgByte = ImageLoaderUtils.BitmapToByteArray(lstCheckedPhoto.get(i));
+            sb.append(imgByte.length);
+            if (i < lstCheckedPhoto.size() - 1) {
+                sb.append(",");
+            }
+            totalSize += imgByte.length;
+        }
+
+        //组织define
+        String define = totalSize + "," + lstCheckedPhoto.size() + "," + sb.toString();
+
+
+//        CommonOperator.getInstance().fileUpload(FileUploadTypeEnum.IMG,define,);
+
     }
 
     @Override
@@ -296,106 +334,19 @@ public class AssessInfoActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(AssessInfoActivity.this, TestPicActivity.class));
+                rlChoosePhoto.setVisibility(View.GONE);
+
             }
         });
 
         this.btnRecord.setmAudioFinishRecorderListener(new AudioRecorderButton.AudioFinishRecorderListener() {
             @Override
             public void onFinish(float seconds, String filePath) {
-                
-
+                sendRecordVoice(seconds, filePath);
+                adapter.notifyDataSetChanged();
                 listView.setSelection(lstAssessComment.size() - 1);
             }
         });
-
-//        this.btnRecord.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View view) {
-//                if (!Environment.getExternalStorageDirectory().exists()) {
-//                    Toast.makeText(AssessInfoActivity.this, "No SDCard", Toast.LENGTH_SHORT).show();
-//                    return false;
-//                }
-//                isLongClick = true;
-//                //录音
-//                Long startVoiceT = SystemClock.currentThreadTimeMillis();
-//                String voiceName = startVoiceT + ".amr";
-//
-//                File dir = new File(Environment.getExternalStorageDirectory()
-//                        + "/myVoice/");
-//                if (!dir.exists()) {
-//                    dir.mkdir();
-//                }
-//                voicePath = dir.getPath() + "/" + voiceName;
-//                Log.e("voicePath", voicePath + "&&&&&&");
-//                recorderManager = RecorderManager.getInstance(AssessInfoActivity.this);
-//                recorderManager.start(voicePath);
-//                Log.e("start", "开始录音" + "&&&&&&");
-//                return true;
-//            }
-//        });
-//
-//        this.btnRecord.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                switch (motionEvent.getAction()) {
-//                    case MotionEvent.ACTION_UP:
-//                        isLongClick = false;
-//                        //停止录音
-//                        recorderManager.stop();
-//                        //上传录音
-//                        byte[] data = FileUtil.getBytesFromFile(voicePath);
-//
-//                        String define = data.length + "," + 1 + "," + data.length;
-//
-//                        CommonOperator.getInstance().fileUpload(FileUploadTypeEnum.AMR, define, data, new ServiceFilterResponseCallback() {
-//                            @Override
-//                            public void onResponse(ServiceFilterResponse response, Exception exception) {
-//                                //上传文件
-//                                if (!response.getContent().isEmpty()) {
-//                                    String json = response.getContent();
-//                                    Log.i("fileUpload", json);
-//                                    String fileStr = "";
-//                                    try {
-//                                        JSONObject object = new JSONObject(json);
-//                                        JSONArray array = object.getJSONArray("data");
-//                                        JSONObject object1 = (JSONObject) array.get(0);
-//                                        String voiceUrl = object1.getString("voiceUrl");//获取数组第一个元素的voiceUrl
-//                                        Log.i("voiceUrl", voiceUrl);
-//
-//                                        PushCommentParam param = new PushCommentParam();
-//                                        param.setUserId(MainApplication.userInfo.getUserId());
-//                                        param.setAssessId(assess.getId());
-//                                        param.setCommentType(CommentTypeEnum.Voice.getVal());
-//                                        param.setVoice(voiceUrl);
-//                                        if (selectedAssessComment != null) {
-//                                            param.setReplyUserId(selectedAssessComment.getUser().getUserId());
-//                                        }
-//
-//                                        //发表评论
-//                                        AssessOperator.getInstance().pushComment(param, new ApiOperationCallback<ReturnInfo<AssessComment>>() {
-//                                            @Override
-//                                            public void onCompleted(ReturnInfo<AssessComment> result, Exception exception, ServiceFilterResponse response) {
-//                                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
-//                                                    Gson gson = new Gson();
-//                                                    String json = gson.toJson(result);
-//                                                    refreshList(json);
-//                                                } else if (result != null && !result.getErrorCode().equals(String.valueOf(4))) {
-//                                                    Toast.makeText(AssessInfoActivity.this, "请重新登录", Toast.LENGTH_SHORT).show();
-//                                                    startActivity(new Intent(AssessInfoActivity.this, LoginActivity.class));
-//                                                }
-//                                            }
-//                                        });
-//                                    } catch (JSONException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//                            }
-//                        });
-//                        break;
-//                }
-//                return false;
-//            }
-//        });
 
         this.btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -448,13 +399,67 @@ public class AssessInfoActivity extends FragmentActivity {
         });
     }
 
+    private void sendRecordVoice(float seconds, String filePath) {
+        //上传录音
+        byte[] data = FileUtil.getBytesFromFile(filePath);
+
+        String define = data.length + "," + 1 + "," + data.length;
+
+        CommonOperator.getInstance().fileUpload(FileUploadTypeEnum.AMR, define, data, new ServiceFilterResponseCallback() {
+            @Override
+            public void onResponse(ServiceFilterResponse response, Exception exception) {
+                //上传文件
+                if (!response.getContent().isEmpty()) {
+                    String json = response.getContent();
+                    Log.i("fileUpload", json);
+                    String fileStr = "";
+                    try {
+                        JSONObject object = new JSONObject(json);
+                        JSONArray array = object.getJSONArray("data");
+                        JSONObject object1 = (JSONObject) array.get(0);
+                        String voiceUrl = object1.getString("voiceUrl");//获取数组第一个元素的voiceUrl
+                        Log.i("voiceUrl", voiceUrl);
+
+                        PushCommentParam param = new PushCommentParam();
+                        param.setUserId(MainApplication.userInfo.getUserId());
+                        param.setAssessId(assess.getId());
+                        param.setCommentType(CommentTypeEnum.Voice.getVal());
+                        param.setVoice(voiceUrl);
+                        if (selectedAssessComment != null) {
+                            param.setReplyUserId(selectedAssessComment.getUser().getUserId());
+                        }
+                        param.setSession(MainApplication.getSession());
+
+                        //发表评论
+                        AssessOperator.getInstance().pushComment(param, new ApiOperationCallback<ReturnInfo<AssessComment>>() {
+                            @Override
+                            public void onCompleted(ReturnInfo<AssessComment> result, Exception exception, ServiceFilterResponse response) {
+                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                    Gson gson = new Gson();
+                                    String json = gson.toJson(result);
+                                    refreshList(json);
+                                } else if (result != null && result.getErrorCode().equals(String.valueOf(4))) {
+                                    Toast.makeText(AssessInfoActivity.this, "请重新登录", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(AssessInfoActivity.this, LoginActivity.class));
+                                }
+                            }
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
     private void refreshList(String json) {
         //刷新列表
         ReturnInfo returnInfo = new Gson().fromJson(json, new TypeToken<ReturnInfo<AssessComment>>() {
         }.getType());
         AssessComment assessComment = (AssessComment) returnInfo.getData();
         if (assessComment != null) {
-            assessSupportAndComment.getAssessCommentList().add(assessComment);
+            lstAssessComment.add(assessComment);
+            assessSupportAndComment.setAssessCommentList(lstAssessComment);
             listView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
             btnSend.setVisibility(View.GONE);

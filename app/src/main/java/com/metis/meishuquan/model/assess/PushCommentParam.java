@@ -16,6 +16,7 @@ public class PushCommentParam {
     private List<AssessCommentImg> imgs;
     private String voice = "";
     private int commentType = 0;
+    private String session = "";
 
     public int getAssessId() {
         return assessId;
@@ -90,5 +91,13 @@ public class PushCommentParam {
 
     public void setCommentType(int commentType) {
         this.commentType = commentType;
+    }
+
+    public String getSession() {
+        return session;
+    }
+
+    public void setSession(String session) {
+        this.session = session;
     }
 }
