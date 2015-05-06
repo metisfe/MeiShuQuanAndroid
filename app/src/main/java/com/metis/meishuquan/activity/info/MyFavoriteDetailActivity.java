@@ -6,14 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.fragment.Topline.ItemInfoFragment;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.topline.NewsInfo;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
-import com.metis.meishuquan.util.ImageLoaderUtils;
 
 public class MyFavoriteDetailActivity extends BaseActivity {
 
@@ -35,7 +33,7 @@ public class MyFavoriteDetailActivity extends BaseActivity {
         mItemInfoFragment =
                 (ItemInfoFragment)getSupportFragmentManager().findFragmentById(R.id.detail_fragment);
         mHeaderView = LayoutInflater.from(this).inflate(R.layout.layout_studio_title, null);
-        getTitleView().setCenterView(mHeaderView);
+        getTitleView().addCenterView(mHeaderView);
 
         mItemId = getIntent().getIntExtra(KEY_ITEM_ID, mItemId);
         Log.v(TAG, "mItemId " + mItemId);

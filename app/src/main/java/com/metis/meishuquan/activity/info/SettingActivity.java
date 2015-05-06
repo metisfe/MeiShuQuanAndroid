@@ -8,7 +8,11 @@ import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.act.ActDetailActivity;
+import com.metis.meishuquan.activity.act.SelectStudioActivity;
 import com.metis.meishuquan.activity.info.homepage.StudioActivity;
+import com.metis.meishuquan.model.BLL.ActiveOperator;
+import com.metis.meishuquan.model.BLL.StudioOperator;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
@@ -50,8 +54,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void onTitleRightPressed() {
         super.onTitleRightPressed();
-        startActivity(new Intent(this, StudioActivity.class));
-        /*startActivity(new Intent(this, ActDetailActivity.class));*/
+        //ActiveOperator.getInstance().getActiveDetail();
+        //StudioOperator.getInstance().getStudioBaseInfo(10090);
+        //startActivity(new Intent(this, StudioActivity.class));
+        startActivity(new Intent(this, SelectStudioActivity.class));
+        ActiveOperator.getInstance().selectStudio(0);
+        //startActivity(new Intent(this, ActDetailActivity.class));
         //startActivity(new Intent (this, ShareActivity.class));
         /*final UMSocialService mController
                 = UMServiceFactory.getUMSocialService("www.baidu.com");

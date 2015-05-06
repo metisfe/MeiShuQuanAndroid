@@ -20,7 +20,7 @@ public class TitleView extends RelativeLayout {
 
     private ImageView mBackIv = null, mRightIv = null;
     private TextView mTitleTv = null, mTitleRightTv = null;
-    private FrameLayout mTitleContainer = null;
+    private FrameLayout mTitleContainer = null, mTitleRightContainer = null;
 
     private String mTitle = null, mTitleRight = null;
 
@@ -56,6 +56,7 @@ public class TitleView extends RelativeLayout {
         mBackIv = (ImageView)findViewById(R.id.back);
         mRightIv = (ImageView)findViewById(R.id.image_right);
         mTitleContainer = (FrameLayout)findViewById(R.id.title_container);
+        mTitleRightContainer = (FrameLayout)findViewById(R.id.right_container);
 
         mTitleTv.setText(mTitle);
         mTitleRightTv.setText(mTitleRight);
@@ -67,7 +68,7 @@ public class TitleView extends RelativeLayout {
     }
 
     public void setRightListener (OnClickListener listener) {
-        mTitleRightTv.setOnClickListener(listener);
+        mTitleRightContainer.setOnClickListener(listener);
     }
 
     public void setTitleRight (String title) {
@@ -83,12 +84,16 @@ public class TitleView extends RelativeLayout {
         mTitleTv.setText(title);
     }
 
-    public void setCenterView (View view) {
+    public void addCenterView(View view) {
         mTitleContainer.addView(view);
     }
 
+    public void removeCenterView (View view) {
+        mTitleContainer.removeView(view);
+    }
+
     public void setImageRightResource (int resource) {
-        setImageRightDrawable(getContext().getDrawable(resource));
+        setImageRightDrawable(getContext().getResources().getDrawable(resource));
     }
 
     public void setImageRightDrawable (Drawable drawable) {

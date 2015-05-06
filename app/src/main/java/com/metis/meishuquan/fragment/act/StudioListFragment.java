@@ -1,18 +1,13 @@
 package com.metis.meishuquan.fragment.act;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RadioButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.metis.meishuquan.MainApplication;
@@ -26,70 +21,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by WJ on 2015/4/29.
+ * Created by WJ on 2015/5/6.
  */
-public class ActListFragment extends ActiveListFragment {
+public class StudioListFragment extends ActiveListFragment {
 
-    private static final String TAG = ActListFragment.class.getSimpleName();
-
-    private static ActListFragment sFragment = new ActListFragment();
-
-    public static ActListFragment getInstance () {
-        return sFragment;
-    }
-
-    /*private Spinner mFilter1, mFilter2, mFilter3;
-    private ListView mActListView = null;*/
-
-    private ArrayList<String>
-            mFilterData1 = new ArrayList<String>(),
-            mFilterData2 = new ArrayList<String>(),
-            mFilterData3 = new ArrayList<String>();
+    private List<TopListDelegate> mDataList = new ArrayList<TopListDelegate>();
+    private TopListAdapter mAdapter = new TopListAdapter(mDataList);
 
     private int mIndex = 1;
 
-    private List<TopListItem> mDataList = new ArrayList<TopListItem>();
-    private TopListAdapter mAdapter = new TopListAdapter(mDataList);
-
-    private String mKeyWords = "";
+    private TopListDelegate mSelectedDelegate = null;
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        getListView().setAdapter(mAdapter);
-        /*View emptyView = view.findViewById(R.id.act_empty);
-        mActListView.setEmptyView(emptyView);*/
-
-        if (mFilterData1.isEmpty()) {
-            String[] filterArr1 = getResources().getStringArray(R.array.act_filter_1);
-            for (int i = 0; i < filterArr1.length; i++) {
-                mFilterData1.add(filterArr1[i]);
-            }
-        }
-
-        if (mFilterData2.isEmpty()) {
-            String[] filterArr2 = getResources().getStringArray(R.array.act_filter_2);
-            for (int i = 0; i < filterArr2.length; i++) {
-                mFilterData2.add(filterArr2[i]);
-            }
-        }
-
-        if (mFilterData3.isEmpty()) {
-            String[] filterArr3 = getResources().getStringArray(R.array.act_filter_3);
-            for (int i = 0; i < filterArr3.length; i++) {
-                mFilterData3.add(filterArr3[i]);
-            }
-        }
-
-        getFilterSpinner1().setAdapter(new SimpleAdapter(mFilterData1));
-        getFilterSpinner2().setAdapter(new SimpleAdapter(mFilterData2));
-        getFilterSpinner3().setAdapter(new SimpleAdapter(mFilterData3));
-
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         getFilterSpinner1().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.v(TAG, "mFilter1 onItemSelected " + i + " " + l);
-                reLoadDataList();
+                reloadDataList();
             }
 
             @Override
@@ -97,12 +46,10 @@ public class ActListFragment extends ActiveListFragment {
 
             }
         });
-
         getFilterSpinner2().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.v(TAG, "mFilter2 onItemSelected " + i + " " + l);
-                reLoadDataList();
+                reloadDataList();
             }
 
             @Override
@@ -110,12 +57,10 @@ public class ActListFragment extends ActiveListFragment {
 
             }
         });
-
         getFilterSpinner3().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.v(TAG, "mFilter3 onItemSelected " + i + " " + l);
-                reLoadDataList();
+                reloadDataList();
             }
 
             @Override
@@ -123,65 +68,62 @@ public class ActListFragment extends ActiveListFragment {
 
             }
         });
+
+        reloadDataList();
     }
 
-    private void reLoadDataList () {
+    private void reloadDataList () {
         mIndex = 1;
         loadDataList(mIndex, new UserInfoOperator.OnGetListener<List<TopListItem>>() {
             @Override
             public void onGet(boolean succeed, List<TopListItem> topListItems) {
                 if (succeed) {
                     mDataList.clear();
-                    mDataList.addAll(topListItems);
+                    final int length = topListItems.size();
+                    List<TopListDelegate> delegates = new ArrayList<TopListDelegate>();
+                    for (int i = 0; i < length; i++) {
+                        TopListDelegate delegate = new TopListDelegate(topListItems.get(i));
+                        delegates.add(delegate);
+                    }
+                    mDataList.addAll(delegates);
                     mAdapter.notifyDataSetChanged();
                 }
             }
         });
     }
 
-    private void loadDataListNextPage () {
+    private void loadDataListMore () {
         loadDataList(mIndex + 1, new UserInfoOperator.OnGetListener<List<TopListItem>>() {
             @Override
             public void onGet(boolean succeed, List<TopListItem> topListItems) {
                 if (succeed) {
                     mIndex++;
-                    mDataList.addAll(topListItems);
+                    final int length = topListItems.size();
+                    List<TopListDelegate> delegates = new ArrayList<TopListDelegate>();
+                    for (int i = 0; i < length; i++) {
+                        TopListDelegate delegate = new TopListDelegate(topListItems.get(i));
+                        delegates.add(delegate);
+                    }
+                    mDataList.addAll(delegates);
                     mAdapter.notifyDataSetChanged();
                 }
             }
         });
     }
 
-    private void loadDataList(int index, UserInfoOperator.OnGetListener<List<TopListItem>> listener) {
+    private void loadDataList (int index, UserInfoOperator.OnGetListener<List<TopListItem>> listener) {
         int filter1 = (int)getFilterSpinner1().getSelectedItemId();
         int filter2 = (int)getFilterSpinner2().getSelectedItemId();
         int filter3 = (int)getFilterSpinner3().getSelectedItemId();
 
-        switch (filter1) {
-            case 1:
-                ActiveOperator.getInstance().topListByStudent(filter2, 11, index, mKeyWords, listener);
-                break;
-            case 2:
-                ActiveOperator.getInstance().topListByStudio(filter2, 11, index, mKeyWords, listener);
-                break;
-        }
-    }
-
-    public void searchContent (String keyWords) {
-        mKeyWords = keyWords;
-        reLoadDataList();
-    }
-
-    public void clearSearch () {
-        mKeyWords = "";
-        reLoadDataList();
+        ActiveOperator.getInstance().getStudioList(11, filter2, filter3, index, listener);
     }
 
     private class TopListAdapter extends BaseAdapter {
 
-        private List<TopListItem> mData = null;
+        private List<TopListDelegate> mData = null;
 
-        public TopListAdapter (List<TopListItem> data) {
+        public TopListAdapter (List<TopListDelegate> data) {
             mData = data;
         }
 
@@ -191,7 +133,7 @@ public class ActListFragment extends ActiveListFragment {
         }
 
         @Override
-        public TopListItem getItem(int i) {
+        public TopListDelegate getItem(int i) {
             return mData.get(i);
         }
 
@@ -216,7 +158,10 @@ public class ActListFragment extends ActiveListFragment {
             } else {
                 holder = (ViewHolder)view.getTag();
             }
-            TopListItem item = getItem(i);
+            final TopListDelegate itemDelegate = getItem(i);
+            final TopListItem item = itemDelegate.getTopListItem();
+            holder.selectBtn.setVisibility(View.VISIBLE);
+            holder.selectBtn.setChecked(itemDelegate.isChecked());
             holder.nameTv.setText(item.getUserNickName());
             holder.locationTv.setText(item.getProvince());
             ImageLoaderUtils.getImageLoader(getActivity()).displayImage(
@@ -233,6 +178,18 @@ public class ActListFragment extends ActiveListFragment {
             holder.supportCountTv.setText(
                     MainApplication.UIContext.getString(R.string.act_support_count, item.getUpCount())
             );
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mSelectedDelegate != null) {
+                        mSelectedDelegate.setChecked(false);
+                    }
+                    itemDelegate.setChecked(true);
+                    mSelectedDelegate = itemDelegate;
+                    ActiveOperator.getInstance().selectStudio(item.getpId());
+                    getActivity().finish();
+                }
+            });
             return view;
         }
     }
@@ -245,37 +202,25 @@ public class ActListFragment extends ActiveListFragment {
         public TextView joinCountTv, commentCountTv, supportCountTv;
     }
 
-    private class SimpleAdapter extends BaseAdapter {
+    private class TopListDelegate {
 
-        private ArrayList<String> mNameList = null;
+        private TopListItem mItem = null;
+        private boolean isChecked = false;
 
-        public SimpleAdapter (ArrayList<String> nameList) {
-            mNameList = nameList;
+        public TopListDelegate (TopListItem item) {
+            mItem = item;
         }
 
-        @Override
-        public int getCount() {
-            return mNameList.size();
+        public TopListItem getTopListItem () {
+            return mItem;
         }
 
-        @Override
-        public String getItem(int position) {
-            return mNameList.get(position);
+        public void setChecked (boolean checked) {
+            isChecked = checked;
         }
 
-        @Override
-        public long getItemId(int position) {
-            return position + 1;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.act_list_spinner_item, null);
-            }
-            TextView tv = (TextView)convertView.findViewById(R.id.item_text);
-            tv.setText(getItem(position));
-            return convertView;
+        public boolean isChecked () {
+            return isChecked;
         }
     }
 }
