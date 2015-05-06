@@ -417,6 +417,10 @@
             android:name=".activity.info.homepage.StudioDetailActivity"
             android:label="@string/title_activity_studio_detail" >
         </activity>
+        <activity
+            android:name=".activity.act.SelectStudioActivity"
+            android:label="@string/title_activity_select_studio" >
+        </activity>
     </application>
 
 </manifest>

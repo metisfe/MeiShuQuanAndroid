@@ -75,7 +75,7 @@ public class ActiveOperator {
         }
     }
 
-    public void getStudioList (int provinceId, int type, int collegeId, int index) {
+    public void getStudioList (int provinceId, int type, int collegeId, int index, UserInfoOperator.OnGetListener<List<TopListItem>> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_ACTIVE_STUDIO_LIST);
             sb.append("?" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
@@ -83,7 +83,7 @@ public class ActiveOperator {
             sb.append("&" + KEY_TYPE + "=" + type);
             sb.append("&" + KEY_COLLEGE_ID + "=" + collegeId);
             sb.append("&" + KEY_INDEX + "=" + index);
-            Log.v(TAG, "getActiveDetail request=" + sb.toString());
+            Log.v(TAG, "getStudioList request=" + sb.toString());
             ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
 
                 @Override
@@ -91,7 +91,7 @@ public class ActiveOperator {
                     if (result != null) {
                         Gson gson = new Gson();
                         String resultJson = gson.toJson(result);
-                        Log.v(TAG, "getActiveDetail resultJson=" + resultJson);
+                        Log.v(TAG, "getStudioList resultJson=" + resultJson);
                     }
                 }
             });
@@ -103,15 +103,16 @@ public class ActiveOperator {
             StringBuilder sb = new StringBuilder(URL_ACTIVE_STUDIO_LIST);
             sb.append("?" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
             sb.append("&" + KEY_STUDIO_ID + "=" + studioId);
-            Log.v(TAG, "getActiveDetail request=" + sb.toString());
+            Log.v(TAG, "selectStudio request=" + sb.toString());
             ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    Log.v(TAG, "selectStudio callback=" + response.getContent());
                     if (result != null) {
                         Gson gson = new Gson();
                         String resultJson = gson.toJson(result);
-                        Log.v(TAG, "getActiveDetail resultJson=" + resultJson);
+                        Log.v(TAG, "selectStudio resultJson=" + resultJson);
                     }
                 }
             });

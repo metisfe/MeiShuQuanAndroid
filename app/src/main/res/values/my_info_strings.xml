@@ -140,6 +140,7 @@
     <string name="act_comment_count">评论%1$d人</string>
     <string name="act_support_count">%1$d次</string>
     <string name="act_empty">暂无数据</string>
+    <string name="act_select_studio">选画室</string>
 
     <string-array name="act_filter_1">
         <item>学生PK榜</item>

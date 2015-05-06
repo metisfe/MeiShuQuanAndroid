@@ -58,4 +58,5 @@
     <string name="title_activity_act_detail">ActDetailActivity</string>
     <string name="title_activity_human">HumanActivity</string>
     <string name="title_activity_studio_detail">StudioDetailActivity</string>
+    <string name="title_activity_select_studio">SelectStudioActivity</string>
 </resources>
