@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -36,32 +37,36 @@ import java.util.List;
  */
 public class ItemFragment extends Fragment implements AdapterView.OnItemClickListener {
 
+    private static final int activityId = -1;
+    private boolean isShowActivity;
+
+
     private DragListView listView;
     private List<News> list = new ArrayList<News>();
+    private ImageView imgAct;//活动
     private int channelId = -1;
     private TopLineOperator operator;
 
     private ToplineCustomAdapter toplineAdapter;
 
-    private Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
-            List<News> result = (List<News>) msg.obj;
-            switch (msg.what) {
-                case DragListView.REFRESH:
-                    listView.onRefreshComplete();
-                    list.clear();
-                    list.addAll(result);
-                    break;
-                case DragListView.LOAD:
-                    listView.onLoadComplete();
-                    list.addAll(result);
-                    break;
-            }
-            listView.setResultSize(result.size());
-            toplineAdapter.notifyDataSetChanged();
-        }
-        ;
-    };
+//    private Handler handler = new Handler() {
+//        public void handleMessage(Message msg) {
+//            List<News> result = (List<News>) msg.obj;
+//            switch (msg.what) {
+//                case DragListView.REFRESH:
+//                    listView.onRefreshComplete();
+//                    list.clear();
+//                    list.addAll(result);
+//                    break;
+//                case DragListView.LOAD:
+//                    listView.onLoadComplete();
+//                    list.addAll(result);
+//                    break;
+//            }
+//            listView.setResultSize(result.size());
+//            toplineAdapter.notifyDataSetChanged();
+//        };
+//    };
 
 
     @Override
@@ -75,13 +80,19 @@ public class ItemFragment extends Fragment implements AdapterView.OnItemClickLis
         initData();
 
         View contextView = inflater.inflate(R.layout.fragment_topline_topbar_list, container, false);
+        View headerView = inflater.inflate(R.layout.view_act_topline, null, false);
 
         //初始化
         initView(contextView);
+        initHeaderView(headerView);
 
         //初始化事件
         initEvent();
         return contextView;
+    }
+
+    private void initHeaderView(View headerView) {
+
     }
 
     /**

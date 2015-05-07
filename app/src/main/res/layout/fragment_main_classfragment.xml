@@ -62,7 +62,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/fragment_shared_classfragment_tab_bar"
-        android:layout_below="@+id/rl_title_bar" />
+        android:layout_below="@+id/rl_title_bar"
+        android:layout_marginBottom="44dp" />
 
     <com.metis.meishuquan.view.shared.TabBar
         android:id="@+id/fragment_shared_classfragment_tab_bar"

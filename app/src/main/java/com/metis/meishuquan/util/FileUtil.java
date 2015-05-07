@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 /**
  * Created by wangjin on 15/4/27.
@@ -120,5 +121,25 @@ public class FileUtil {
         } catch (IOException e) {
         }
         return null;
+    }
+
+    /**
+     * 将字数数据集合合并成一个字节数组
+     *
+     * @param srcArrays 字数数据集合
+     * @return
+     */
+    public static byte[] sysCopy(List<byte[]> srcArrays) {
+        int len = 0;
+        for (byte[] srcArray : srcArrays) {
+            len += srcArray.length;
+        }
+        byte[] destArray = new byte[len];
+        int destLen = 0;
+        for (byte[] srcArray : srcArrays) {
+            System.arraycopy(srcArray, 0, destArray, destLen, srcArray.length);
+            destLen += srcArray.length;
+        }
+        return destArray;
     }
 }

@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -39,14 +40,18 @@ import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.ImagePreviewActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
+import com.metis.meishuquan.fragment.main.AssessFragment;
 import com.metis.meishuquan.manager.common.MediaManager;
 import com.metis.meishuquan.manager.common.RecorderManager;
 import com.metis.meishuquan.model.BLL.AssessOperator;
 import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.assess.Assess;
 import com.metis.meishuquan.model.assess.AssessComment;
+import com.metis.meishuquan.model.assess.AssessCommentImg;
+import com.metis.meishuquan.model.assess.AssessCommentImgData;
 import com.metis.meishuquan.model.assess.AssessSupportAndComment;
 import com.metis.meishuquan.model.assess.Bimp;
+import com.metis.meishuquan.model.assess.ImgOrVoiceUrl;
 import com.metis.meishuquan.model.assess.PushCommentParam;
 import com.metis.meishuquan.model.commons.SimpleUser;
 import com.metis.meishuquan.model.contract.ReturnInfo;
@@ -69,6 +74,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -139,7 +145,6 @@ public class AssessInfoActivity extends FragmentActivity {
 
     private void sendPhotoComment(List<String> drr) {
         int totalSize = 0;
-        //得到图片的字节数组
         List<Bitmap> lstCheckedPhoto = new ArrayList<Bitmap>();
         for (int i = 0; i < drr.size(); i++) {
             try {
@@ -163,8 +168,47 @@ public class AssessInfoActivity extends FragmentActivity {
         //组织define
         String define = totalSize + "," + lstCheckedPhoto.size() + "," + sb.toString();
 
+        List<byte[]> lstArrays = new ArrayList<byte[]>();
+        for (int i = 0; i < lstCheckedPhoto.size(); i++) {
+            byte[] imgByte = ImageLoaderUtils.BitmapToByteArray(lstCheckedPhoto.get(i));
+            lstArrays.add(imgByte);
+        }
+        byte[] totalByte = FileUtil.sysCopy(lstArrays);
+        CommonOperator.getInstance().fileUpload(FileUploadTypeEnum.IMG, define, totalByte, new ServiceFilterResponseCallback() {
+            @Override
+            public void onResponse(ServiceFilterResponse response, Exception exception) {
+                //上传文件
+                if (!response.getContent().isEmpty()) {
+                    String json = response.getContent();
+                    Log.v("fileUpload", json);
+                    Gson gson = new Gson();
+                    AssessCommentImgData data = gson.fromJson(json, new TypeToken<AssessCommentImgData>() {
+                    }.getType());
 
-//        CommonOperator.getInstance().fileUpload(FileUploadTypeEnum.IMG,define,);
+                    PushCommentParam param = new PushCommentParam();
+                    param.setUserId(MainApplication.userInfo.getUserId());
+                    param.setAssessId(assess.getId());
+                    param.setCommentType(CommentTypeEnum.Image.getVal());
+                    param.setContent(etInput.getText().toString());
+                    if (selectedAssessComment != null) {
+                        param.setReplyUserId(selectedAssessComment.getUser().getUserId());
+                    }
+                    param.setImgs(data.getData());
+                    if (data.getData().size() > 0) {
+                        AssessOperator.getInstance().pushComment(param, new ApiOperationCallback<ReturnInfo<AssessComment>>() {
+                            @Override
+                            public void onCompleted(ReturnInfo<AssessComment> result, Exception exception, ServiceFilterResponse response) {
+                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                    Gson gson = new Gson();
+                                    String json = gson.toJson(result);
+                                    refreshList(json);
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
 
     }
 

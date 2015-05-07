@@ -2,18 +2,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#e2e2e2">
+    android:background="@color/bg_listview">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#e2e2e2"
+        android:background="@color/bg_listview"
         android:padding="10dp">
 
         <ImageView
             android:id="@+id/id_img_portrait"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:scaleType="centerCrop"
             android:background="@drawable/default_user_dynamic" />
 
@@ -27,6 +27,7 @@
             android:layout_toRightOf="@+id/id_img_portrait"
             android:singleLine="true"
             android:text="张三"
+            android:textSize="17sp"
             android:textColor="#424242" />
 
         <TextView
@@ -39,6 +40,7 @@
             android:layout_toRightOf="@+id/id_username"
             android:singleLine="true"
             android:text="高三"
+            android:textSize="12sp"
             android:textColor="#7e7e7e" />
 
         <TextView
@@ -50,6 +52,7 @@
             android:layout_marginTop="10dp"
             android:singleLine="true"
             android:text="45分钟前"
+            android:textSize="12sp"
             android:textColor="#909090" />
 
         <TextView
@@ -60,6 +63,7 @@
             android:layout_alignStart="@+id/id_img_portrait"
             android:layout_below="@+id/id_img_portrait"
             android:layout_marginTop="10dp"
+            android:textSize="15sp"
             android:text="本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情本人热情、热情"
             android:textColor="#7e7e7e" />
 
@@ -139,8 +143,8 @@
             android:layout_alignEnd="@+id/id_tv_content"
             android:layout_alignRight="@+id/id_tv_content"
             android:text="未点评"
-            android:textColor="#fb6d6d"
-            android:textSize="13sp" />
+            android:textColor="#7e7e7e"
+            android:textSize="12sp" />
     </RelativeLayout>
 
 

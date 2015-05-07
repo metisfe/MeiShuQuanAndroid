@@ -3,7 +3,7 @@
     xmlns:bs="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#e2e2e2">
+    android:background="@color/bg_listview">
 
     <RelativeLayout
         android:id="@+id/rl_title_bar"
@@ -24,28 +24,24 @@
             android:textColor="#CFD3ED"
             android:textSize="17sp" />
 
-        <LinearLayout
-            android:id="@+id/id_ll_commentlist_filter"
+
+        <Button
+            android:id="@+id/id_btn_commentlist_filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true">
+            android:layout_centerInParent="true"
+            android:background="#2d2a40"
+            android:text="全部"
+            android:textColor="#fb6d6d"
+            android:textSize="20sp" />
 
-            <Button
-                android:id="@+id/id_btn_commentlist_filter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#2d2a40"
-                android:text="全部"
-                android:textColor="#fb6d6d"
-                android:textSize="20sp" />
-
-            <ImageView
-                android:layout_width="18dp"
-                android:layout_height="8dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:src="@drawable/bg_btn_arrow_selected_down" />
-        </LinearLayout>
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="8dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/id_btn_commentlist_filter"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/bg_btn_arrow_selected_down" />
 
 
         <Button
@@ -68,14 +64,17 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/rl_title_bar"
         android:orientation="vertical"
-        android:layout_above="@+id/fragment_shared_commentfragment_tab_bar"
-        android:background="#e2e2e2">
+        android:layout_marginBottom="44dp"
+        android:background="@color/bg_listview">
 
         <com.viewpagerindicator.TabPageIndicator
             android:id="@+id/assess_indicator"
             android:layout_width="match_parent"
             android:contentDescription="mycustom"
-            android:layout_height="44dp" />
+            android:background="@drawable/bg_main_tab_bar"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_height="40dp" />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/fragment_shared_assess_list_viewpager"

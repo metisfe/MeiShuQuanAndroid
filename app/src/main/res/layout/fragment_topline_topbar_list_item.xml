@@ -35,10 +35,11 @@
 
         <TextView
             android:id="@+id/tv_source"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:maxLength="150"
+            android:layout_toLeftOf="@+id/tv_readcount"
+            android:layout_marginRight="5dp"
             android:singleLine="true"
             android:text="消息来源"
             android:textColor="#fb6d6d"

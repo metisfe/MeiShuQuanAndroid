@@ -8,7 +8,7 @@
         android:id="@+id/listview_topbar_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/bg_listview"
-        android:listSelector="@color/transparent"/>
+        android:background="@color/transparent"
+        android:listSelector="#e2e2e2" />
 
 </LinearLayout>

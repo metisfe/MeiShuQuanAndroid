@@ -21,6 +21,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:singleLine="true"
+            android:maxLength="6"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@+id/id_img_dynamic"
             android:textColor="#fb6d6d"

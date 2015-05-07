@@ -259,10 +259,8 @@ public class AssessOperator {
                 Gson gson = new Gson();
                 String json = gson.toJson(param);
                 Pair<String, String> pair1 = new Pair<String, String>("param", json);
-                Pair<String, String> pair2 = new Pair<String, String>("session", SESSION);
                 pram.add(pair1);
-                pram.add(pair2);
-                ApiDataProvider.getmClient().invokeApi(PushComment, null, HttpPost.METHOD_NAME, pram, (Class<ReturnInfo<AssessComment>>) new ReturnInfo<AssessComment>().getClass(), callback);
+                ApiDataProvider.getmClient().invokeApi(PushComment, pram, HttpPost.METHOD_NAME, null, (Class<ReturnInfo<AssessComment>>) new ReturnInfo<AssessComment>().getClass(), callback);
             }
         }
     }

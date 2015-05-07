@@ -64,8 +64,8 @@ public class AudioManager {
             //设置MediaRecorder的音频源为麦克风
             mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             //设置音频的格式
-            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
-            mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
             mMediaRecorder.setMaxDuration(60 * 1000);
 
             mMediaRecorder.prepare();
@@ -89,7 +89,7 @@ public class AudioManager {
     public int getVoiceLevel(int maxLevel) {
         if (isPrepare) {
             try {
-                return maxLevel + mMediaRecorder.getMaxAmplitude() / 32768 + 1;
+                return maxLevel * mMediaRecorder.getMaxAmplitude() / 32768 + 1;
             } catch (Exception e) {
                 e.printStackTrace();
             }

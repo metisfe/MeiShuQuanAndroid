@@ -190,13 +190,14 @@ public class CommentTypeVoiceView extends RelativeLayout {
                 viewAnim = commentTypeVoiceView.findViewById(R.id.id_view_anim);
             }
             viewAnim.setBackgroundResource(R.drawable.play_anim);
-            AnimationDrawable animation = (AnimationDrawable) viewAnim.getBackground();
+            final AnimationDrawable animation = (AnimationDrawable) viewAnim.getBackground();
             animation.start();
 //            PlayerManager.getInstance(context).start(path);
 
             MediaManager.playSound(path, new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
+                    animation.stop();
                     viewAnim.setBackgroundResource(R.drawable.adj);
                 }
             });

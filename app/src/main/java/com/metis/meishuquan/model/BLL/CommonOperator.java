@@ -114,6 +114,7 @@ public class CommonOperator {
                 path.append("&type=" + type.getVal());
                 path.append("&result=" + result.getVal());
                 path.append("&session=" + SESSION);
+                Log.i("收藏Url", path.toString());
                 ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
@@ -135,6 +136,7 @@ public class CommonOperator {
                 FILEUPLOAD.append("?type=" + type.getVal());
                 FILEUPLOAD.append("&define=" + define);
                 FILEUPLOAD.append("&session=" + SESSION);
+
                 List<Pair<String, String>> pram = new ArrayList<>();
                 Pair<String, String> pair1 = new Pair<String, String>("type", String.valueOf(type));
                 Pair<String, String> pair2 = new Pair<String, String>("define", define);
