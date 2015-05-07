@@ -64,4 +64,6 @@
     <string name="str_recorder_recording">松开 结束</string>
     <string name="str_recorder_want_cancel">松开手指 取消发送</string>
     <string name="title_activity_select_studio">SelectStudioActivity</string>
+    <string name="title_activity_achievement_detail">AchievementDetailActivity</string>
+    <string name="title_activity_web">WebActivity</string>
 </resources>

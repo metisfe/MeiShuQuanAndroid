@@ -75,7 +75,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
 
     private List<CourseChannelItem> mCourseItems = null;
 
-    private boolean isStudent = true;
+    private boolean isStudent = false;
     private boolean isTeacher = false;
 
     private boolean canEdit = false;

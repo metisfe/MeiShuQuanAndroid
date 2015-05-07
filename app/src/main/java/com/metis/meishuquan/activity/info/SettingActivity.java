@@ -56,9 +56,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         super.onTitleRightPressed();
         //ActiveOperator.getInstance().getActiveDetail();
         //StudioOperator.getInstance().getStudioBaseInfo(10090);
-        //startActivity(new Intent(this, StudioActivity.class));
-        startActivity(new Intent(this, SelectStudioActivity.class));
-        ActiveOperator.getInstance().selectStudio(0);
+        startActivity(new Intent(this, StudioActivity.class));
+        /*startActivity(new Intent(this, SelectStudioActivity.class));
+        ActiveOperator.getInstance().selectStudio(0);*/
         //startActivity(new Intent(this, ActDetailActivity.class));
         //startActivity(new Intent (this, ShareActivity.class));
         /*final UMSocialService mController

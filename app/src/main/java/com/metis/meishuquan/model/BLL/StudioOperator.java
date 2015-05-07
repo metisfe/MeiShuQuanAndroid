@@ -57,6 +57,7 @@ public class StudioOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    Log.v(TAG, "getStudioBaseInfo callback=" + response.getContent());
                     if (result != null) {
                         Gson gson = new Gson();
                         String resultJson = gson.toJson(result);
@@ -225,7 +226,7 @@ public class StudioOperator {
         }
     }
 
-    public void getWorks (int studioId, int lastPhotoId, int photoType, final UserInfoOperator.OnGetListener<WorkInfo> listener) {
+    public void getWorks (int studioId, int lastPhotoId, int photoType, final UserInfoOperator.OnGetListener<List<WorkInfo>> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_STUDIO_WORK_LIST);
             sb.append(studioId);
@@ -238,10 +239,11 @@ public class StudioOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    Log.v(TAG, "getWorks callback=" + response.getContent());
                     if (result != null) {
                         Gson gson = new Gson();
                         String resultJson = gson.toJson(result);
-                        Result<WorkInfo> resultInfo = gson.fromJson(resultJson, new TypeToken<Result<WorkInfo>>() {
+                        Result<List<WorkInfo>> resultInfo = gson.fromJson(resultJson, new TypeToken<Result<List<WorkInfo>>>() {
                         }.getType());
                         if (listener != null) {
                             if (resultInfo.getOption().getStatus() == 0) {

@@ -22,20 +22,27 @@ import android.widget.Toast;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.InputActivity;
+import com.metis.meishuquan.activity.WebActivity;
 import com.metis.meishuquan.activity.info.BaseActivity;
 import com.metis.meishuquan.activity.info.TextActivity;
 import com.metis.meishuquan.adapter.commons.ConstellationAdapter;
 import com.metis.meishuquan.adapter.commons.SimplePrvsAdapter;
+import com.metis.meishuquan.adapter.studio.AchievementAdapter;
 import com.metis.meishuquan.adapter.studio.InfoAdapter;
 import com.metis.meishuquan.fragment.commons.ListDialogFragment;
 import com.metis.meishuquan.fragment.commons.StudioFragment;
 import com.metis.meishuquan.manager.common.UserManager;
+import com.metis.meishuquan.model.BLL.Achievement;
+import com.metis.meishuquan.model.BLL.StudioBaseInfo;
+import com.metis.meishuquan.model.BLL.StudioOperator;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
+import com.metis.meishuquan.model.BLL.WorkInfo;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.PatternUtils;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class StudioActivity extends BaseActivity implements
         StudioFragment.OnMenuItemClickListener,
@@ -60,6 +67,8 @@ public class StudioActivity extends BaseActivity implements
 
     private User mUser = null;
 
+    private List<Achievement> mAchievementList = null;
+
     private SimplePrvsAdapter.OnPrvsItemClickListener mPrvsListener = new SimplePrvsAdapter.OnPrvsItemClickListener() {
 
         @Override
@@ -72,6 +81,8 @@ public class StudioActivity extends BaseActivity implements
             }
         }
     };
+
+    private StudioBaseInfo mInfo = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +102,7 @@ public class StudioActivity extends BaseActivity implements
         mStudioFragment.setOnMenuItemClickListener(this);
 
         String userRoleStr = getIntent().getStringExtra(KEY_USER_ROLE);
+        userRoleStr = "studio";
         if ("studio".equals(userRoleStr)) {
             mStudioFragment.setTabTitle(
                     R.string.studio_tab_top_line,
@@ -110,7 +122,8 @@ public class StudioActivity extends BaseActivity implements
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        loadUser(mUserId, new UserInfoOperator.OnGetListener<User>() {
+        //TODO
+        loadUser(100090, new UserInfoOperator.OnGetListener<User>() {
             @Override
             public void onGet(boolean succeed, User user) {
                 if (succeed) {
@@ -119,6 +132,17 @@ public class StudioActivity extends BaseActivity implements
                 }
             }
         });
+        loadStudioInfo(100090, new UserInfoOperator.OnGetListener<StudioBaseInfo>() {
+            @Override
+            public void onGet(boolean succeed, StudioBaseInfo o) {
+                mInfo = o;
+                fillStudioInfo(mInfo);
+            }
+        });
+    }
+
+    private void fillStudioInfo (StudioBaseInfo info) {
+        mStudioFragment.setStudioBaseInfo(info);
     }
 
     private void fillUser (User user) {
@@ -133,37 +157,48 @@ public class StudioActivity extends BaseActivity implements
 
     @Override
     public void onMenuItemClick(StudioFragment.MenuItem item, int position) {
+        Intent it = null;
         switch (item.id) {
             case R.id.studio_menu_introduce:
-                startActivity(new Intent(this, StudioDetailActivity.class));
+                it = new Intent(this, StudioDetailActivity.class);
+                it.putExtra(StudioDetailActivity.KEY_STUDIO_INFO, mInfo);
                 break;
             case R.id.studio_menu_album:
-                startActivity(new Intent(this, StudioAlbumActivity.class));
+                it = new Intent(this, StudioAlbumActivity.class);
                 break;
             case R.id.studio_menu_team:
-                startActivity(new Intent(this, TeacherTeamActivity.class));
+                it = new Intent(this, TeacherTeamActivity.class);
                 break;
             case R.id.studio_menu_course_arrangement:
-                startActivity(new Intent(this, CourseArrangementActivity.class));
+                it = new Intent(this, CourseArrangementActivity.class);
                 break;
             case R.id.studio_menu_video:
-                startActivity(new Intent(this, VideoListActivity.class));
+                it = new Intent(this, VideoListActivity.class);
                 break;
             case R.id.studio_menu_charge:
-                startActivity(new Intent(this, ChargeActivity.class));
+                /*it = new Intent(this, ChargeActivity.class);*/
+                it = new Intent(this, WebActivity.class);
+                it.putExtra(WebActivity.KEY_URL, "http://www.google.com");
+                it.putExtra(WebActivity.KEY_TITLE, getString(R.string.studio_charge));
                 break;
             case R.id.studio_menu_book_publish:
-                startActivity(new Intent(this, BookListActivity.class));
+                it = new Intent(this, BookListActivity.class);
                 break;
             case R.id.studio_menu_contact_us:
                 //TODO
-                startActivity(new Intent(this, TextActivity.class));
+                it = new Intent(this, TextActivity.class);
                 break;
         }
+        it.putExtra(StudioBaseInfo.KEY_STUDIO_ID, mInfo.getStudioId());
+        startActivity(it);
+    }
+
+    private void loadStudioInfo (int sutdioId, UserInfoOperator.OnGetListener<StudioBaseInfo> listener) {
+        StudioOperator.getInstance().getStudioBaseInfo(100090, listener);
     }
 
     private void loadUser (long userId, UserInfoOperator.OnGetListener<User> listener) {
-        UserInfoOperator.getInstance().getUserInfo(mUserId, listener);
+        UserInfoOperator.getInstance().getUserInfo(userId, listener);
     }
 
     @Override
@@ -173,29 +208,52 @@ public class StudioActivity extends BaseActivity implements
                 mAdapter = new NewAdapter();
                 break;
             case R.id.studio_list_header_tab2:
-                mAdapter = new MyAdapter();
-                break;
-            case R.id.studio_list_header_tab3:
-                if (mUser == null) {
+                if (mAchievementList == null) {
                     mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
-                    loadUser(mUserId, new UserInfoOperator.OnGetListener<User>() {
+                    StudioOperator.getInstance().getAchievementList(mInfo.getStudioId(), 0, new UserInfoOperator.OnGetListener<List<Achievement>>() {
                         @Override
-                        public void onGet(boolean succeed, User user) {
-                            if (succeed) {
-                                mUser = user;
-                                if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab3) {
-                                    InfoAdapter adapter = new InfoAdapter(StudioActivity.this, user);
-                                    adapter.setOnInfoItemClickListener(StudioActivity.this);
-                                    mAdapter = adapter;
-                                    mStudioFragment.setAdapter(mAdapter);
-                                }
-                            }
+                        public void onGet(boolean succeed, List<Achievement> achievements) {
+                            mAchievementList = achievements;
+                            mAdapter = new AchievementAdapter(StudioActivity.this, achievements);
+                            mStudioFragment.setAdapter(mAdapter);
                         }
                     });
                 } else {
-                    InfoAdapter adapter = new InfoAdapter(StudioActivity.this, mUser);
-                    adapter.setOnInfoItemClickListener(StudioActivity.this);
-                    mAdapter = adapter;
+                    mAdapter = new AchievementAdapter(this, mAchievementList);
+                }
+
+                break;
+            case R.id.studio_list_header_tab3:
+                if (mInfo != null) {
+                    mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
+                    StudioOperator.getInstance().getWorks(mInfo.getStudioId(), 0, 1, new UserInfoOperator.OnGetListener<List<WorkInfo>>() {
+                        @Override
+                        public void onGet(boolean succeed, List<WorkInfo> workInfo) {
+
+                        }
+                    });
+                } else {
+                    if (mUser == null) {
+                        mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
+                        loadUser(mUserId, new UserInfoOperator.OnGetListener<User>() {
+                            @Override
+                            public void onGet(boolean succeed, User user) {
+                                if (succeed) {
+                                    mUser = user;
+                                    if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab3) {
+                                        InfoAdapter adapter = new InfoAdapter(StudioActivity.this, user);
+                                        adapter.setOnInfoItemClickListener(StudioActivity.this);
+                                        mAdapter = adapter;
+                                        mStudioFragment.setAdapter(mAdapter);
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        InfoAdapter adapter = new InfoAdapter(StudioActivity.this, mUser);
+                        adapter.setOnInfoItemClickListener(StudioActivity.this);
+                        mAdapter = adapter;
+                    }
                 }
                 break;
         }

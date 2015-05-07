@@ -19,7 +19,9 @@ import android.widget.TextView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.BaseActivity;
+import com.metis.meishuquan.model.BLL.StudioBaseInfo;
 import com.metis.meishuquan.model.commons.User;
+import com.metis.meishuquan.util.ImageLoaderUtils;
 
 /**
  * Created by WJ on 2015/4/23.
@@ -31,6 +33,7 @@ public class StudioFragment extends Fragment{
     private ListView mListView = null;
 
     private View mHeaderView = null;
+    private ImageView mHeadCoverIv = null;
 
     private BaseAdapter mAdapter = null;
 
@@ -65,6 +68,7 @@ public class StudioFragment extends Fragment{
         super.onViewCreated(view, savedInstanceState);
         mListView = (ListView)view.findViewById(R.id.studio_list_view);
         mHeaderView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_studio_list_header, null);
+        mHeadCoverIv = (ImageView)mHeaderView.findViewById(R.id.studio_list_header_cover);
         setAdapter(mAdapter);
 
         mIntroduceTv = (TextView)mHeaderView.findViewById(R.id.studio_list_header_self_introduce);
@@ -79,6 +83,20 @@ public class StudioFragment extends Fragment{
         mRadioGroup.check(R.id.studio_list_header_tab1);
         //fillHeader();
         fillHeader(null);
+    }
+
+    public void setUser (User user) {
+        fillHeader(user);
+    }
+
+    public void setStudioBaseInfo (StudioBaseInfo info) {
+        fillStudioInfo(info);
+    }
+
+    private void fillStudioInfo (StudioBaseInfo info) {
+        ImageLoaderUtils.getImageLoader(getActivity()).displayImage(
+                info.getBackgroundImg(), mHeadCoverIv, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
+        );
     }
 
     private void fillHeader (User user) {
@@ -226,6 +244,7 @@ public class StudioFragment extends Fragment{
         public View getView(int position, View convertView, ViewGroup parent) {
             TextView tv = new TextView(mContext);
             tv.setText(getItem(position));
+            tv.setTextColor(mContext.getResources().getColor(android.R.color.black));
             return tv;
         }
     }

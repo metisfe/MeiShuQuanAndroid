@@ -2,10 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.metis.meishuquan.activity.info.homepage.VideoListActivity">
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/video_recycler_view"
+    tools:context="com.metis.meishuquan.activity.WebActivity">
+    <fragment
+        android:id="@+id/web_fragment"
+        android:name="com.metis.meishuquan.fragment.commons.WebFragment"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        />
+        android:layout_height="fill_parent"/>
 </RelativeLayout>

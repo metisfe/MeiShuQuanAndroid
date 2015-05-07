@@ -1,11 +1,13 @@
 package com.metis.meishuquan.model.BLL;
 
+import com.metis.meishuquan.adapter.ImgTitleSubImpl;
+
 import java.io.Serializable;
 
 /**
  * Created by WJ on 2015/5/6.
  */
-public class VideoInfo implements Serializable {
+public class VideoInfo implements Serializable, ImgTitleSubImpl {
     private int videoId;
     private int studioId;
     private String videoURL;
@@ -59,5 +61,20 @@ public class VideoInfo implements Serializable {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    @Override
+    public String getImageUrl() {
+        return getVideoPic();
+    }
+
+    @Override
+    public String getTitle() {
+        return null;
+    }
+
+    @Override
+    public String getSubTitle() {
+        return null;
     }
 }

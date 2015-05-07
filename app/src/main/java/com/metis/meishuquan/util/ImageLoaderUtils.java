@@ -34,7 +34,7 @@ public class ImageLoaderUtils {
     }
 
     public static DisplayImageOptions getRoundDisplayOptions(int size) {
-        return getRoundDisplayOptions(size, R.drawable.ic_launcher);
+        return getRoundDisplayOptions(size, R.drawable.default_user_dynamic);
     }
 
     public static DisplayImageOptions getRoundDisplayOptions(int size, int resousceId) {

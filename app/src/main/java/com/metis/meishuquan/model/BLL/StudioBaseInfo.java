@@ -1,11 +1,18 @@
 package com.metis.meishuquan.model.BLL;
 
+import android.text.TextUtils;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by WJ on 2015/5/6.
  */
 public class StudioBaseInfo implements Serializable {
+
+    public static final String KEY_STUDIO_ID = "studio_id";
+
     private int studioId;
     private String studioDesc;
     private String backgroundImg;
@@ -131,5 +138,22 @@ public class StudioBaseInfo implements Serializable {
 
     public void setAddressPhoto(String addressPhoto) {
         this.addressPhoto = addressPhoto;
+    }
+
+    public List<String> getImageList () {
+        List<String> list = new ArrayList<String>();
+        if (!TextUtils.isEmpty(studioShowImg1)) {
+            list.add(studioShowImg1);
+        }
+        if (!TextUtils.isEmpty(studioShowImg2)) {
+            list.add(studioShowImg2);
+        }
+        if (!TextUtils.isEmpty(studioShowImg3)) {
+            list.add(studioShowImg3);
+        }
+        if (!TextUtils.isEmpty(studioShowImg4)) {
+            list.add(studioShowImg4);
+        }
+        return list;
     }
 }

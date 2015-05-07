@@ -80,7 +80,7 @@ public class InfoAdapter extends BaseAdapter {
         btn.setText(item.title);
         btn.setSecondaryText(item.content);
         btn.setImageVisible(false);
-        btn.setArrowVisible(item.editable ? View.VISIBLE : View.INVISIBLE);
+        btn.setArrowVisible(item.editable ? View.VISIBLE : View.GONE);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

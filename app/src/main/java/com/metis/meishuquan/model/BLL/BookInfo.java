@@ -1,11 +1,13 @@
 package com.metis.meishuquan.model.BLL;
 
+import com.metis.meishuquan.adapter.ImgTitleSubImpl;
+
 import java.io.Serializable;
 
 /**
  * Created by WJ on 2015/5/6.
  */
-public class BookInfo implements Serializable {
+public class BookInfo implements Serializable, ImgTitleSubImpl {
     private int booksId;
     private int studioId;
     private String bookName;
@@ -68,5 +70,20 @@ public class BookInfo implements Serializable {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    @Override
+    public String getImageUrl() {
+        return getBookPhoto();
+    }
+
+    @Override
+    public String getTitle() {
+        return getBookName();
+    }
+
+    @Override
+    public String getSubTitle() {
+        return getBookAuthor();
     }
 }

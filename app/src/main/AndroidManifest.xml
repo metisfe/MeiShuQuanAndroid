@@ -421,6 +421,14 @@
             android:name=".activity.act.SelectStudioActivity"
             android:label="@string/title_activity_select_studio" >
         </activity>
+        <activity
+            android:name=".activity.info.homepage.AchievementDetailActivity"
+            android:label="@string/title_activity_achievement_detail" >
+        </activity>
+        <activity
+            android:name=".activity.WebActivity"
+            android:label="@string/title_activity_web" >
+        </activity>
     </application>
 
 </manifest>

@@ -1,11 +1,14 @@
 package com.metis.meishuquan.model.BLL;
 
+import com.metis.meishuquan.adapter.ImgTitleSubAdapter;
+import com.metis.meishuquan.adapter.ImgTitleSubImpl;
+
 import java.io.Serializable;
 
 /**
  * Created by WJ on 2015/5/6.
  */
-public class TeacherInfo implements Serializable {
+public class TeacherInfo implements Serializable, ImgTitleSubImpl {
     private int teacherId;
     private int studioId;
     private String teacherPhoto;
@@ -50,5 +53,20 @@ public class TeacherInfo implements Serializable {
 
     public void setTeacherName(String teacherName) {
         this.teacherName = teacherName;
+    }
+
+    @Override
+    public String getImageUrl() {
+        return getTeacherPhoto();
+    }
+
+    @Override
+    public String getTitle() {
+        return getTeacherName();
+    }
+
+    @Override
+    public String getSubTitle() {
+        return getTeacherInfo();
     }
 }
