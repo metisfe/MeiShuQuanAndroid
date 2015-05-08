@@ -29,7 +29,8 @@ public class User implements Serializable {
             KEY_ACHIEVEMENT = "Achievement",
             KEY_USER_ID = "userId",
             KEY_ACCOUNT = "Account",
-            KEY_USER_ROLE = "userRole";
+            KEY_USER_ROLE = "userRole",
+            KEY_USER_RESUME = "UserResume";
 
     @SerializedName("userId")
     private int userId = -1;
@@ -100,9 +101,20 @@ public class User implements Serializable {
     @SerializedName("achievement")
     private String achievement = "";
 
+    @SerializedName("backgroundImg")
+    private String backgroundImg;
+
     private LoginStateEnum appLoginState = LoginStateEnum.NO;
 
     private LoginStateEnum rongLoginState = LoginStateEnum.NO;
+
+    public String getBackgroundImg() {
+        return backgroundImg;
+    }
+
+    public void setBackgroundImg(String backgroundImg) {
+        this.backgroundImg = backgroundImg;
+    }
 
     public void setName(String name) {
         this.name = name;

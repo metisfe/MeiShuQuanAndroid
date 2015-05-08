@@ -56,7 +56,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         super.onTitleRightPressed();
         //ActiveOperator.getInstance().getActiveDetail();
         //StudioOperator.getInstance().getStudioBaseInfo(10090);
-        startActivity(new Intent(this, StudioActivity.class));
+        Intent it = new Intent(this, StudioActivity.class);
+        it.putExtra(StudioActivity.KEY_USER_ID, 100090);
+        startActivity(it);
         /*startActivity(new Intent(this, SelectStudioActivity.class));
         ActiveOperator.getInstance().selectStudio(0);*/
         //startActivity(new Intent(this, ActDetailActivity.class));

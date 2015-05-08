@@ -21,6 +21,7 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.BaseActivity;
 import com.metis.meishuquan.model.BLL.StudioBaseInfo;
 import com.metis.meishuquan.model.commons.User;
+import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 
 /**
@@ -82,7 +83,7 @@ public class StudioFragment extends Fragment{
         setOnCheckedChangeListener(mCheckChangeListener);
         mRadioGroup.check(R.id.studio_list_header_tab1);
         //fillHeader();
-        fillHeader(null);
+        //fillHeader(null);
     }
 
     public void setUser (User user) {
@@ -105,17 +106,18 @@ public class StudioFragment extends Fragment{
             return;
         }*/
         //TODO
-        if (user == null) {
-            user = new User();
-        }
-        Log.v(TAG, "fillHeader " + "studio".equals(user.getUserRole()));
-        if (/*"studio".equals(user.getUserRole())*/true) {
+
+        if (user.getUserRoleEnum() == IdTypeEnum.STUDIO) {
             mMenuLayout.setVisibility(View.VISIBLE);
             mIntroduceTv.setVisibility(View.GONE);
         } else {
             mMenuLayout.setVisibility(View.GONE);
             mIntroduceTv.setVisibility(View.VISIBLE);
         }
+        ImageLoaderUtils.getImageLoader(getActivity()).displayImage(
+                user.getBackgroundImg(), mHeadCoverIv,
+                ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
+        );
         for (int i = 0; i < mMenuItems.length; i++) {
             final int index = i;
             final MenuItem item = mMenuItems[i];

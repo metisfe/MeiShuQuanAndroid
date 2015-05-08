@@ -43,6 +43,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_margin="10dp"
             style="@style/info_secondaryTextStyle"
             />
         <GridLayout

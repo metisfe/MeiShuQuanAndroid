@@ -248,7 +248,7 @@ public class InfoActivity extends BaseActivity implements View.OnClickListener {
                 if (resultCode == RESULT_OK) {
                     CharSequence content = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR);
                     mCvView.setSecondaryText(content);
-                    updateInfo(User.KEY_SELFINTRODUCE, content.toString());
+                    updateInfo(User.KEY_USER_RESUME, content.toString());
                 }
                 break;
             case InputActivity.REQUEST_CODE_DEPARTMENT_ADDRESS:

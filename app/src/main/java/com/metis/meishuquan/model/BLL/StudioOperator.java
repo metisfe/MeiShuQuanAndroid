@@ -30,7 +30,7 @@ public class StudioOperator {
             URL_STUDIO_VIDEO_LIST = "v1.1/Studio/StudioVideolist?studioId=",
             URL_STUDIO_ACHIEVEMENT_LIST = "v1.1/Studio/AchievementList?studioId=",
             URL_STUDIO_ACHIEVEMENT_DETAIL = "v1.1/Studio/AchievementDetial?achievementId=",
-            URL_STUDIO_WORK_LIST = "v1.1/Studio?studioId=";
+            URL_STUDIO_WORK_LIST = "v1.1/Studio/StudioPhotos?studioId=";
 
     private static final String
             KEY_SESSION = "session",
@@ -46,7 +46,7 @@ public class StudioOperator {
         return sOperator;
     }
 
-    public void getStudioBaseInfo (int studioId, final UserInfoOperator.OnGetListener<StudioBaseInfo> infoOnGetListener) {
+    public void getStudioBaseInfo (long studioId, final UserInfoOperator.OnGetListener<StudioBaseInfo> infoOnGetListener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_STUDIO_BASE_INFO);
             sb.append(studioId);
@@ -226,7 +226,7 @@ public class StudioOperator {
         }
     }
 
-    public void getWorks (int studioId, int lastPhotoId, int photoType, final UserInfoOperator.OnGetListener<List<WorkInfo>> listener) {
+    public void getWorks (long studioId, int lastPhotoId, int photoType, final UserInfoOperator.OnGetListener<List<WorkInfo>> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_STUDIO_WORK_LIST);
             sb.append(studioId);

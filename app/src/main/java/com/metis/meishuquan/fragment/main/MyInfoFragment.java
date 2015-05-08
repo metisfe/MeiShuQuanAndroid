@@ -25,6 +25,7 @@ import com.metis.meishuquan.activity.info.MyCourseActivity;
 import com.metis.meishuquan.activity.info.MyFavoritesActivity;
 import com.metis.meishuquan.activity.info.NameCardQrActivity;
 import com.metis.meishuquan.activity.info.SettingActivity;
+import com.metis.meishuquan.activity.info.homepage.StudioActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.login.LoginFragment;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
@@ -162,7 +163,9 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.my_info_profile_container:
             case R.id.my_info_profile:
-                startActivity(new Intent(getActivity(), InfoActivity.class));
+                Intent intent = new Intent (getActivity(), StudioActivity.class);
+                intent.putExtra(StudioActivity.KEY_USER_ID, MainApplication.userInfo.getUserId());
+                startActivity(intent);
                 break;
             case R.id.my_info_login:
                 //showLoginFragment();

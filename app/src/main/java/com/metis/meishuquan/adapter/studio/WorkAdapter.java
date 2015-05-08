@@ -26,6 +26,14 @@ public class WorkAdapter extends BaseAdapter {
     public WorkAdapter (Context context, List<WorkInfo> works) {
         mContext = context;
         addAllWorkInfo(works);
+        WorkInfoGroup group = new WorkInfoGroup();
+        /*group.mInfo1 = new WorkInfo();
+        group.mInfo2 = new WorkInfo();
+        group.mInfo3 = new WorkInfo();
+        group.mInfo1.setPhotoThumbnail("http://sfile.baidu.com/r/image/2015-03-06/232c50a98dd7c264233bad6937d403de.png");
+        group.mInfo2.setPhotoThumbnail("http://ubmcmm.baidustatic.com/media/v1/0f000aJOWLDVWfyYtXV6Z6.jpg");
+        group.mInfo3.setPhotoThumbnail("http://ww1.sinaimg.cn/bmiddle/6694d955jw1erwu2dne44j20bp0lbmyc.jpg");
+        mDataList.add(group);*/
     }
 
     @Override
@@ -56,18 +64,26 @@ public class WorkAdapter extends BaseAdapter {
             holder = (ViewHolder)view.getTag();
         }
         WorkInfoGroup workInfo = getItem(i);
-        ImageLoaderUtils.getImageLoader(mContext).displayImage(
-                workInfo.mInfo1.getPhotoThumbnail(), holder.mIv1,
-                ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
-        );
-        ImageLoaderUtils.getImageLoader(mContext).displayImage(
-                workInfo.mInfo2.getPhotoThumbnail(), holder.mIv2,
-                ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
-        );
-        ImageLoaderUtils.getImageLoader(mContext).displayImage(
-                workInfo.mInfo3.getPhotoThumbnail(), holder.mIv3,
-                ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
-        );
+        if (workInfo.mInfo1 != null) {
+            ImageLoaderUtils.getImageLoader(mContext).displayImage(
+                    workInfo.mInfo1.getPhotoThumbnail(), holder.mIv1,
+                    ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
+            );
+        }
+        if (workInfo.mInfo2 != null) {
+            ImageLoaderUtils.getImageLoader(mContext).displayImage(
+                    workInfo.mInfo2.getPhotoThumbnail(), holder.mIv2,
+                    ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
+            );
+        }
+
+        if (workInfo.mInfo3 != null) {
+            ImageLoaderUtils.getImageLoader(mContext).displayImage(
+                    workInfo.mInfo3.getPhotoThumbnail(), holder.mIv3,
+                    ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
+            );
+        }
+
         return view;
     }
 

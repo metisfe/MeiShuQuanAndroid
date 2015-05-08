@@ -29,6 +29,7 @@ import com.metis.meishuquan.adapter.commons.ConstellationAdapter;
 import com.metis.meishuquan.adapter.commons.SimplePrvsAdapter;
 import com.metis.meishuquan.adapter.studio.AchievementAdapter;
 import com.metis.meishuquan.adapter.studio.InfoAdapter;
+import com.metis.meishuquan.adapter.studio.WorkAdapter;
 import com.metis.meishuquan.fragment.commons.ListDialogFragment;
 import com.metis.meishuquan.fragment.commons.StudioFragment;
 import com.metis.meishuquan.manager.common.UserManager;
@@ -38,6 +39,7 @@ import com.metis.meishuquan.model.BLL.StudioOperator;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.BLL.WorkInfo;
 import com.metis.meishuquan.model.commons.User;
+import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.PatternUtils;
 
@@ -68,6 +70,7 @@ public class StudioActivity extends BaseActivity implements
     private User mUser = null;
 
     private List<Achievement> mAchievementList = null;
+    private List<WorkInfo> mWorkInfoList = null;
 
     private SimplePrvsAdapter.OnPrvsItemClickListener mPrvsListener = new SimplePrvsAdapter.OnPrvsItemClickListener() {
 
@@ -89,6 +92,8 @@ public class StudioActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studio);
 
+        mUserId = getIntent().getIntExtra(KEY_USER_ID, (int)mUserId);
+
         mTitleView = LayoutInflater.from(this).inflate(R.layout.layout_studio_title, null);
         getTitleView().addCenterView(mTitleView);
         mTitleProfile = (ImageView)mTitleView.findViewById(R.id.studio_title_profile);
@@ -101,20 +106,6 @@ public class StudioActivity extends BaseActivity implements
         mStudioFragment = (StudioFragment)getSupportFragmentManager().findFragmentById(R.id.studio_fragment);
         mStudioFragment.setOnMenuItemClickListener(this);
 
-        String userRoleStr = getIntent().getStringExtra(KEY_USER_ROLE);
-        userRoleStr = "studio";
-        if ("studio".equals(userRoleStr)) {
-            mStudioFragment.setTabTitle(
-                    R.string.studio_tab_top_line,
-                    R.string.studio_tab_glory,
-                    R.string.studio_tab_works);
-        } else {
-            mStudioFragment.setTabTitle(
-                    R.string.studio_tab_daily,
-                    R.string.studio_tab_album,
-                    R.string.studio_tab_info_details
-            );
-        }
         mStudioFragment.setOnCheckedChangeListener(this);
 
     }
@@ -123,24 +114,27 @@ public class StudioActivity extends BaseActivity implements
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         //TODO
-        loadUser(100090, new UserInfoOperator.OnGetListener<User>() {
+        loadUser(mUserId, new UserInfoOperator.OnGetListener<User>() {
             @Override
             public void onGet(boolean succeed, User user) {
                 if (succeed) {
                     mUser = user;
                     fillUser(user);
+                    if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
+                        loadStudioInfo(mUserId, new UserInfoOperator.OnGetListener<StudioBaseInfo>() {
+                            @Override
+                            public void onGet(boolean succeed, StudioBaseInfo o) {
+                                if (succeed) {
+                                    mInfo = o;
+                                    fillStudioInfo(mInfo);
+                                }
+                            }
+                        });
+                    }
                 }
             }
         });
-        loadStudioInfo(100090, new UserInfoOperator.OnGetListener<StudioBaseInfo>() {
-            @Override
-            public void onGet(boolean succeed, StudioBaseInfo o) {
-                if (succeed) {
-                    mInfo = o;
-                    fillStudioInfo(mInfo);
-                }
-            }
-        });
+
     }
 
     private void fillStudioInfo (StudioBaseInfo info) {
@@ -154,6 +148,19 @@ public class StudioActivity extends BaseActivity implements
                         mTitleProfile,
                         ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.studio_profile_size)));
         mTitleName.setText(user.getName());
+        if (user.getUserRoleEnum() == IdTypeEnum.STUDIO) {
+            mStudioFragment.setTabTitle(
+                    R.string.studio_tab_top_line,
+                    R.string.studio_tab_glory,
+                    R.string.studio_tab_works);
+        } else {
+            mStudioFragment.setTabTitle(
+                    R.string.studio_tab_daily,
+                    R.string.studio_tab_album,
+                    R.string.studio_tab_info_details
+            );
+        }
+        mStudioFragment.setUser(user);
         //mSubTitleName.setText(user.get);
     }
 
@@ -195,8 +202,8 @@ public class StudioActivity extends BaseActivity implements
         startActivity(it);
     }
 
-    private void loadStudioInfo (int sutdioId, UserInfoOperator.OnGetListener<StudioBaseInfo> listener) {
-        StudioOperator.getInstance().getStudioBaseInfo(100090, listener);
+    private void loadStudioInfo (long sutdioId, UserInfoOperator.OnGetListener<StudioBaseInfo> listener) {
+        StudioOperator.getInstance().getStudioBaseInfo(sutdioId, listener);
     }
 
     private void loadUser (long userId, UserInfoOperator.OnGetListener<User> listener) {
@@ -210,58 +217,73 @@ public class StudioActivity extends BaseActivity implements
                 mAdapter = new NewAdapter();
                 break;
             case R.id.studio_list_header_tab2:
-                if (mAchievementList == null) {
-                    mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
-                    if (mInfo == null) {
-                        break;
-                    }
-                    StudioOperator.getInstance().getAchievementList(mInfo.getStudioId(), 0, new UserInfoOperator.OnGetListener<List<Achievement>>() {
-                        @Override
-                        public void onGet(boolean succeed, List<Achievement> achievements) {
-                            mAchievementList = achievements;
-                            mAdapter = new AchievementAdapter(StudioActivity.this, achievements);
-                            mStudioFragment.setAdapter(mAdapter);
+                if (mUser != null) {
+                    if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
+                        //辉煌成绩
+                        if (mAchievementList == null) {
+                            mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
+                            StudioOperator.getInstance().getAchievementList(mUser.getUserId(), 0, new UserInfoOperator.OnGetListener<List<Achievement>>() {
+                                @Override
+                                public void onGet(boolean succeed, List<Achievement> achievements) {
+                                    mAchievementList = achievements;
+                                    mAdapter = new AchievementAdapter(StudioActivity.this, achievements);
+                                    mStudioFragment.setAdapter(mAdapter);
+                                }
+                            });
+                        } else {
+                            mAdapter = new AchievementAdapter(this, mAchievementList);
                         }
-                    });
+                    } else {
+                        //获取个人相册
+                        Log.v(TAG, "1 getWorks mWorkInfoList == null " + (mWorkInfoList == null));
+                        if (mWorkInfoList != null) {
+                            mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
+                        } else {
+                            mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
+                            StudioOperator.getInstance().getWorks(mUser.getUserId(), 0, 0, new UserInfoOperator.OnGetListener<List<WorkInfo>>() {
+                                @Override
+                                public void onGet(boolean succeed, List<WorkInfo> workInfo) {
+                                    if (succeed) {
+                                        mWorkInfoList = workInfo;
+                                        Log.v(TAG, "2 getWorks mWorkInfoList == null " + (mWorkInfoList == null));
+                                        mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
+                                        mStudioFragment.setAdapter(mAdapter);
+                                    }
+                                }
+                            });
+                        }
+                    }
                 } else {
-                    mAdapter = new AchievementAdapter(this, mAchievementList);
+                    mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
                 }
 
                 break;
             case R.id.studio_list_header_tab3:
-                if (mInfo != null) {
-                    mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
-                    if (mInfo == null) {
-                        break;
-                    }
-                    StudioOperator.getInstance().getWorks(mInfo.getStudioId(), 0, 1, new UserInfoOperator.OnGetListener<List<WorkInfo>>() {
-                        @Override
-                        public void onGet(boolean succeed, List<WorkInfo> workInfo) {
-
-                        }
-                    });
-                } else {
-                    if (mUser == null) {
-                        mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
-                        loadUser(mUserId, new UserInfoOperator.OnGetListener<User>() {
-                            @Override
-                            public void onGet(boolean succeed, User user) {
-                                if (succeed) {
-                                    mUser = user;
-                                    if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab3) {
-                                        InfoAdapter adapter = new InfoAdapter(StudioActivity.this, user);
-                                        adapter.setOnInfoItemClickListener(StudioActivity.this);
-                                        mAdapter = adapter;
+                if (mUser != null) {
+                    if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
+                        //获取画室作品信息
+                        if (mWorkInfoList != null) {
+                            mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
+                        } else {
+                            mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
+                            StudioOperator.getInstance().getWorks(mUser.getUserId(), 0, 1, new UserInfoOperator.OnGetListener<List<WorkInfo>>() {
+                                @Override
+                                public void onGet(boolean succeed, List<WorkInfo> workInfo) {
+                                    if (succeed) {
+                                        mWorkInfoList = workInfo;
+                                        mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
                                         mStudioFragment.setAdapter(mAdapter);
                                     }
                                 }
-                            }
-                        });
+                            });
+                        }
                     } else {
                         InfoAdapter adapter = new InfoAdapter(StudioActivity.this, mUser);
                         adapter.setOnInfoItemClickListener(StudioActivity.this);
                         mAdapter = adapter;
                     }
+                } else {
+                    mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
                 }
                 break;
         }
