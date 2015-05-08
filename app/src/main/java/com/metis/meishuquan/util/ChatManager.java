@@ -230,7 +230,7 @@ public class ChatManager {
     public static void refreshFriendData() {
         StringBuilder PATH = new StringBuilder("v1.1/Message/MyFriendList");
         PATH.append("?type=1&session=");
-        PATH.append(MainApplication.userInfo.getCookie());
+        PATH.append(MainApplication.getSession());
 
         ApiDataProvider.getmClient().invokeApi(PATH.toString(), null,
                 HttpGet.METHOD_NAME, null, MyFriendList.class,

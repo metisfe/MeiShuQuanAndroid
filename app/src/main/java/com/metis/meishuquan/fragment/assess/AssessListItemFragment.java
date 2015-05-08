@@ -256,6 +256,11 @@ public class AssessListItemFragment extends Fragment {
             }
 
             //内容图片
+            if (assess.getThumbnails().getUrl().equals("")){
+                holder.img_content.setVisibility(View.GONE);
+            }else{
+                holder.img_content.setVisibility(View.VISIBLE);
+            }
             holder.img_content.setMinimumWidth(assess.getThumbnails().getWidth() * 2);
             holder.img_content.setMinimumHeight(assess.getThumbnails().getHeigth() * 2);
             ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(assess.getThumbnails().getUrl(), holder.img_content);

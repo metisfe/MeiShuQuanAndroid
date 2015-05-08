@@ -88,7 +88,11 @@ public class AssessPublishFragment extends Fragment {
         if (bundle != null) {
             //设置父级返回的图片
             this.photoPath = bundle.getString("photoPath");
-            addImg.setImageBitmap(getBitmapFormPath(photoPath));
+            if (!photoPath.equals("")) {
+                addImg.setImageBitmap(getBitmapFormPath(photoPath));
+            } else {
+                addImg.setVisibility(View.GONE);
+            }
         }
 
         initEvent();
@@ -135,54 +139,11 @@ public class AssessPublishFragment extends Fragment {
         this.btnAssessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Utils.hideInputMethod(MainApplication.UIContext, etDesc);
-                if (selectedChannel == null || selectedChannel.getChannelId() == 0) {
-                    Toast.makeText(MainApplication.UIContext, "请选择类型", Toast.LENGTH_SHORT).show();
-                    return;
+                if (!photoPath.equals("")) {
+                    publishWordAndPhoto();
+                } else {
+                    publishWord();
                 }
-
-                //获取作品描述信息
-                final String desc = etDesc.getText().toString();
-
-                //得到图片的字节数组
-                byte[] imgByte = ImageLoaderUtils.BitmapToByteArray(getBitmapFormPath(photoPath));
-
-                //文件描述信息
-                String define = imgByte.length + "," + 1 + "," + imgByte.length;
-                Log.i("define", define);
-
-                //发布提问
-                assessOperator = AssessOperator.getInstance();
-                assessOperator.fileUpload(FileUploadTypeEnum.IMG, define, imgByte, new ServiceFilterResponseCallback() {
-                    @Override
-                    public void onResponse(ServiceFilterResponse response, Exception exception) {
-                        //上传文件
-                        if (!response.getContent().isEmpty()) {
-                            String json = response.getContent();
-                            Log.v("fileUpload", json);
-                            String fileStr = "";
-                            try {
-                                JSONObject object = new JSONObject(json);
-                                JSONArray array = object.getJSONArray("data");
-                                fileStr = array.getString(0);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            assessOperator.uploadAssess(MainApplication.userInfo.getUserId(), desc, selectedChannel.getChannelId(), 0, fileStr, new ApiOperationCallback<ReturnInfo<String>>() {
-                                @Override
-                                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                                    if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                                        Toast.makeText(MainApplication.UIContext, "发布成功", Toast.LENGTH_SHORT).show();
-                                        FragmentTransaction ft = fm.beginTransaction();
-                                        ft.replace(R.id.content_container, new AssessFragment());
-                                        ft.commit();
-                                    }
-                                }
-                            });
-                        }
-
-                    }
-                });
             }
         });
 
@@ -236,6 +197,82 @@ public class AssessPublishFragment extends Fragment {
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.add(R.id.content_container, inviteTeacherFragment);
                 ft.commit();
+            }
+        });
+    }
+
+    private void publishWord() {
+        Utils.hideInputMethod(MainApplication.UIContext, etDesc);
+        String desc = etDesc.getText().toString();
+        if (selectedChannel == null || selectedChannel.getChannelId() == 0) {
+            Toast.makeText(MainApplication.UIContext, "请选择类型", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!desc.isEmpty()) {
+            AssessOperator.getInstance().uploadAssess(MainApplication.userInfo.getUserId(), desc, selectedChannel.getChannelId(), 0, "", new ApiOperationCallback<ReturnInfo<String>>() {
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                        Toast.makeText(MainApplication.UIContext, "发布成功", Toast.LENGTH_SHORT).show();
+                        FragmentTransaction ft = fm.beginTransaction();
+                        ft.replace(R.id.content_container, new AssessFragment());
+                        ft.commit();
+                    }
+                }
+            });
+        } else {
+            Toast.makeText(MainApplication.UIContext, "请输入你的问题", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void publishWordAndPhoto() {
+        Utils.hideInputMethod(MainApplication.UIContext, etDesc);
+        if (selectedChannel == null || selectedChannel.getChannelId() == 0) {
+            Toast.makeText(MainApplication.UIContext, "请选择类型", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //获取作品描述信息
+        final String desc = etDesc.getText().toString();
+
+        //得到图片的字节数组
+        byte[] imgByte = ImageLoaderUtils.BitmapToByteArray(getBitmapFormPath(photoPath));
+
+        //文件描述信息
+        String define = imgByte.length + "," + 1 + "," + imgByte.length;
+        Log.i("define", define);
+
+        //发布提问
+        assessOperator = AssessOperator.getInstance();
+        assessOperator.fileUpload(FileUploadTypeEnum.IMG, define, imgByte, new ServiceFilterResponseCallback() {
+            @Override
+            public void onResponse(ServiceFilterResponse response, Exception exception) {
+                //上传文件
+                if (!response.getContent().isEmpty()) {
+                    String json = response.getContent();
+                    Log.v("fileUpload", json);
+                    String fileStr = "";
+                    try {
+                        JSONObject object = new JSONObject(json);
+                        JSONArray array = object.getJSONArray("data");
+                        fileStr = array.getString(0);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    assessOperator.uploadAssess(MainApplication.userInfo.getUserId(), desc, selectedChannel.getChannelId(), 0, fileStr, new ApiOperationCallback<ReturnInfo<String>>() {
+                        @Override
+                        public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                            if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                Toast.makeText(MainApplication.UIContext, "发布成功", Toast.LENGTH_SHORT).show();
+                                FragmentTransaction ft = fm.beginTransaction();
+                                ft.replace(R.id.content_container, new AssessFragment());
+                                ft.commit();
+                            }
+                        }
+                    });
+                }
+
             }
         });
     }

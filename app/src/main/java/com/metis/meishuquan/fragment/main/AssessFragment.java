@@ -48,6 +48,7 @@ import com.metis.meishuquan.model.enums.QueryTypeEnum;
 import com.metis.meishuquan.model.topline.ChannelItem;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
+import com.metis.meishuquan.view.popup.AssessChoosePhotoPopupWindow;
 import com.metis.meishuquan.view.popup.ChoosePhotoPopupWindow;
 import com.metis.meishuquan.view.shared.DragListView;
 import com.metis.meishuquan.view.shared.TabBar;
@@ -166,6 +167,7 @@ public class AssessFragment extends Fragment {
         ft.add(R.id.content_container, assessPublishFragment);
         ft.addToBackStack(null);
         ft.commit();
+        this.photoPath = "";
     }
 
     private void initView(ViewGroup rootView) {
@@ -231,11 +233,25 @@ public class AssessFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (MainApplication.isLogin()) {
-                    ChoosePhotoPopupWindow choosePhotoPopupWindow = new ChoosePhotoPopupWindow(MainApplication.UIContext, AssessFragment.this, rootView);
+                    AssessChoosePhotoPopupWindow choosePhotoPopupWindow = new AssessChoosePhotoPopupWindow(MainApplication.UIContext, AssessFragment.this, rootView);
                     choosePhotoPopupWindow.getPath(new OnPathChannedListner() {
                         @Override
                         public void setPath(String path) {
                             photoPath = path;
+                        }
+                    });
+
+                    choosePhotoPopupWindow.setWordCheckedListner(new OnWordCheckedListner() {
+                        @Override
+                        public void openWordAssessPublishFragment() {
+                            AssessPublishFragment assessPublishFragment = new AssessPublishFragment();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("photoPath", photoPath);
+                            assessPublishFragment.setArguments(bundle);
+                            FragmentTransaction ft = fm.beginTransaction();
+                            ft.add(R.id.content_container, assessPublishFragment);
+                            ft.addToBackStack(null);
+                            ft.commit();
                         }
                     });
                 } else {
@@ -251,6 +267,10 @@ public class AssessFragment extends Fragment {
 
     public interface OnFilterChanngedListner {
         void setFilter(AssessListFilter assessListFilter);
+    }
+
+    public interface OnWordCheckedListner {
+        void openWordAssessPublishFragment();
     }
 
     class TabPageIndicatorAdapter extends FragmentStatePagerAdapter {

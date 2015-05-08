@@ -35,6 +35,8 @@ import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
@@ -138,7 +140,6 @@ public class AssessInfoActivity extends FragmentActivity {
         MediaManager.resume();
         if (Bimp.getInstance().drr.size() > 0) {
             sendPhotoComment(Bimp.getInstance().drr);
-            Toast.makeText(this, "发送成功", Toast.LENGTH_SHORT).show();
         }
         super.onResume();
     }
@@ -184,6 +185,9 @@ public class AssessInfoActivity extends FragmentActivity {
                     Gson gson = new Gson();
                     AssessCommentImgData data = gson.fromJson(json, new TypeToken<AssessCommentImgData>() {
                     }.getType());
+                    String imgs = new Gson().toJson(data.getData());
+//                    JsonObject jsonObject = new JsonObject();
+//                    JsonArray jsonArray = jsonObject.getAsJsonArray("data");
 
                     PushCommentParam param = new PushCommentParam();
                     param.setUserId(MainApplication.userInfo.getUserId());
@@ -193,19 +197,18 @@ public class AssessInfoActivity extends FragmentActivity {
                     if (selectedAssessComment != null) {
                         param.setReplyUserId(selectedAssessComment.getUser().getUserId());
                     }
-                    param.setImgs(data.getData());
-                    if (data.getData().size() > 0) {
-                        AssessOperator.getInstance().pushComment(param, new ApiOperationCallback<ReturnInfo<AssessComment>>() {
-                            @Override
-                            public void onCompleted(ReturnInfo<AssessComment> result, Exception exception, ServiceFilterResponse response) {
-                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                                    Gson gson = new Gson();
-                                    String json = gson.toJson(result);
-                                    refreshList(json);
-                                }
+                    param.setImgs(imgs);
+                    AssessOperator.getInstance().pushComment(param, new ApiOperationCallback<ReturnInfo<AssessComment>>() {
+                        @Override
+                        public void onCompleted(ReturnInfo<AssessComment> result, Exception exception, ServiceFilterResponse response) {
+                            if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                Gson gson = new Gson();
+                                String json = gson.toJson(result);
+                                refreshList(json);
+                                Bimp.getInstance().drr.clear();
                             }
-                        });
-                    }
+                        }
+                    });
                 }
             }
         });
@@ -483,7 +486,7 @@ public class AssessInfoActivity extends FragmentActivity {
                                     String json = gson.toJson(result);
                                     refreshList(json);
                                 } else if (result != null && result.getErrorCode().equals(String.valueOf(4))) {
-                                    Toast.makeText(AssessInfoActivity.this, "请重新登录", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AssessInfoActivity.this, "账号异常，请重新登录", Toast.LENGTH_SHORT).show();
                                     startActivity(new Intent(AssessInfoActivity.this, LoginActivity.class));
                                 }
                             }

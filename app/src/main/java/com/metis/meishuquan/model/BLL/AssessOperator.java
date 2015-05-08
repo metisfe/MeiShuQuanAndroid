@@ -4,6 +4,7 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.assess.AssessComment;
 import com.metis.meishuquan.model.assess.AssessSupportAndComment;
@@ -21,6 +22,8 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -255,12 +258,18 @@ public class AssessOperator {
             if (flag) {
                 StringBuilder PATH = new StringBuilder(PushComment);
                 PATH.append("&session=" + SESSION);
-                List<Pair<String, String>> pram = new ArrayList<>();
-                Gson gson = new Gson();
-                String json = gson.toJson(param);
-                Pair<String, String> pair1 = new Pair<String, String>("param", json);
-                pram.add(pair1);
-                ApiDataProvider.getmClient().invokeApi(PushComment, pram, HttpPost.METHOD_NAME, null, (Class<ReturnInfo<AssessComment>>) new ReturnInfo<AssessComment>().getClass(), callback);
+
+                JsonObject object = new JsonObject();
+                object.addProperty("AssessId", param.getAssessId());
+                object.addProperty("UserId", param.getUserId());
+                object.addProperty("ReplyUserId", param.getReplyUserId());
+                object.addProperty("Content", param.getContent());
+                object.addProperty("Imgs", param.getImgs());
+                object.addProperty("Voice", param.getVoice());
+                object.addProperty("VoiceLength", param.getVoiceLength());
+                object.addProperty("CommentType", param.getCommentType());
+
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), object, HttpPost.METHOD_NAME, null, (Class<ReturnInfo<AssessComment>>) new ReturnInfo<AssessComment>().getClass(), callback);
             }
         }
     }

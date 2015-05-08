@@ -13,9 +13,10 @@ public class PushCommentParam {
     private String content = "";
     private int score = 0;
     private String points = "";
-    private List<AssessCommentImg> imgs;
+    private String imgs;
     private String voice = "";
     private int commentType = 0;
+    private int voiceLength = 0;
     private String session = "";
 
     public int getAssessId() {
@@ -66,15 +67,20 @@ public class PushCommentParam {
         this.points = points;
     }
 
-    public List<AssessCommentImg> getImgs() {
-        if (imgs == null) {
-            imgs = new ArrayList<AssessCommentImg>();
-        }
+    public String getImgs() {
         return imgs;
     }
 
-    public void setImgs(List<AssessCommentImg> imgs) {
+    public void setImgs(String imgs) {
         this.imgs = imgs;
+    }
+
+    public int getVoiceLength() {
+        return voiceLength;
+    }
+
+    public void setVoiceLength(int voiceLength) {
+        this.voiceLength = voiceLength;
     }
 
     public String getVoice() {

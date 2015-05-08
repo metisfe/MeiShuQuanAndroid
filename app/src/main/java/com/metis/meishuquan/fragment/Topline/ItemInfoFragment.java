@@ -379,26 +379,25 @@ public class ItemInfoFragment extends Fragment {
         rlSupport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (newsInfo.getData().getUserMark().isSupport()) {
-                    Toast.makeText(MainApplication.UIContext, "您已赞", Toast.LENGTH_SHORT).show();
-                }
-
                 int count = newsInfo.getData().getSupportCount();
                 Object supportCount = tvSupportCount.getTag();
                 if (tvStepCount.getTag() != null) {
-                    Toast.makeText(MainApplication.UIContext, "已踩", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainApplication.UIContext, "您已踩", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (supportCount != null) {
                     int temp = (int) supportCount;
                     if (temp == count + 1) {
-                        Toast.makeText(MainApplication.UIContext, "已赞", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainApplication.UIContext, "您已赞", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
                 //点赞加1效果
                 supportOrStep(tvSupportCount, tvSupportAddOne, imgSupport, count, true);
 
+                if (newsInfo.getData().getUserMark() != null && newsInfo.getData().getUserMark().isSupport()) {
+                    Toast.makeText(MainApplication.UIContext, "您已赞", Toast.LENGTH_SHORT).show();
+                }
 
                 //判断登录状态
                 if (MainApplication.isLogin()) {
@@ -418,21 +417,26 @@ public class ItemInfoFragment extends Fragment {
         rlStep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (newsInfo.getData().getUserMark() != null && newsInfo.getData().getUserMark().isOpposition()) {
+                    Toast.makeText(MainApplication.UIContext, "您已踩", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 //点踩加1效果
                 int count = newsInfo.getData().getOppositionCount();
                 Object stepCount = tvSupportCount.getTag();
                 if (tvSupportCount.getTag() != null) {
-                    Toast.makeText(MainApplication.UIContext, "已赞", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainApplication.UIContext, "您已赞", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (stepCount != null) {
                     int temp = (int) stepCount;
                     if (temp == count + 1) {
-                        Toast.makeText(MainApplication.UIContext, "已踩", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainApplication.UIContext, "您已踩", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
                 supportOrStep(tvStepCount, tvStepAddOne, imgStep, count, false);
+
 
                 //判断登录状态
                 if (MainApplication.isLogin()) {
@@ -440,7 +444,7 @@ public class ItemInfoFragment extends Fragment {
                         @Override
                         public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                             if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                                Log.i("supportOrStep", "赞成功");
+                                Log.i("supportOrStep", "踩成功");
                             }
                         }
                     });
@@ -525,7 +529,7 @@ public class ItemInfoFragment extends Fragment {
                 if (newsInfo != null && newsInfo.getData() != null) {
                     SharePopupWindow sharePopupWindow = new SharePopupWindow(getActivity(), rootView);
                     Log.i("分享的图片地址", shareImgUrl);
-                    sharePopupWindow.setShareInfo(newsInfo.getData().getTitle(), shareContent, newsInfo.getData().getShareUrl(), shareImgUrl);
+                    sharePopupWindow.setShareInfo(newsInfo.getData().getTitle(), newsInfo.getData().getTitle(), newsInfo.getData().getShareUrl(), shareImgUrl);
                     Log.i("share_content", newsInfo.getData().getShareUrl());
                 }
             }
