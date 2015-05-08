@@ -86,7 +86,7 @@ public class ItemInfoFragment extends Fragment {
     public static final String KEY_NEWSID = "newsId";
 
     private final int LOGINREQUESTCODE = 1001;
-    private String shareContent = "";
+    private String shareContent = "来自美术圈";
     private String shareImgUrl = "";
 
     private Button btnBack, btnShare;
@@ -236,12 +236,14 @@ public class ItemInfoFragment extends Fragment {
 
             //相关阅读
             if (newsInfo.getData().getRelatedNewsList().size() > 0) {
-                ll_relatedReadAndSupportContainer.setVisibility(View.VISIBLE);
+                llRelatedRead.setVisibility(View.VISIBLE);
                 //绑定相关阅读数据
                 List<RelatedRead> lstRelatedRead = newsInfo.getData().getRelatedNewsList();
                 commonAdapter = new CommonAdapter(MainApplication.UIContext, lstRelatedRead);
                 lvRelatedRead.setAdapter(commonAdapter);
                 setListViewHeightBasedOnChildren(lvRelatedRead);
+            } else {
+                llRelatedRead.setVisibility(View.GONE);
             }
         }
     }
@@ -251,7 +253,9 @@ public class ItemInfoFragment extends Fragment {
         if (ll_content == null) {
             ll_content = (LinearLayout) rootView.findViewById(R.id.id_ll_news_content);//内容父布局
         }
-        shareImgUrl = url;
+        if (shareImgUrl.equals("")) {
+            shareImgUrl = url;
+        }
         ImageView imageView = new ImageView(getActivity());
 
         ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(url.trim(), imageView, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.img_topline_default));
@@ -375,6 +379,10 @@ public class ItemInfoFragment extends Fragment {
         rlSupport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (newsInfo.getData().getUserMark().isSupport()) {
+                    Toast.makeText(MainApplication.UIContext, "您已赞", Toast.LENGTH_SHORT).show();
+                }
+
                 int count = newsInfo.getData().getSupportCount();
                 Object supportCount = tvSupportCount.getTag();
                 if (tvStepCount.getTag() != null) {
@@ -543,6 +551,8 @@ public class ItemInfoFragment extends Fragment {
                                 if (result.getErrorCode().equals(String.valueOf(4))) {
                                     startActivity(new Intent(getActivity(), LoginActivity.class));
                                 }
+                            } else if (exception != null) {
+                                Log.e(LOG_EXCEPTION, exception.getCause().toString());
                             }
                         }
                     });
@@ -628,8 +638,22 @@ public class ItemInfoFragment extends Fragment {
             this.tvSupportCount.setText("(" + newsInfo.getData().getSupportCount() + ")");
             this.tvStepCount.setText("(" + newsInfo.getData().getOppositionCount() + ")");
 
-            //TODO:收藏状态,根据用户当前登录状态，设置收藏状态
-
+            if (newsInfo.getData().getUserMark() != null) {
+                //收藏状态,根据用户当前登录状态，设置收藏状态
+                if (newsInfo.getData().getUserMark().isFavorite()) {
+                    imgPrivate.setBackgroundResource(R.drawable.ic_action_topline_private);
+                }
+                //根据用户是否赞
+                if (newsInfo.getData().getUserMark().isSupport()) {
+                    imgSupport.setBackgroundResource(R.drawable.icon_support);
+                    tvSupportCount.setTextColor(Color.RED);
+                }
+                //根据用户是否踩
+                if (newsInfo.getData().getUserMark().isOpposition()) {
+                    imgStep.setBackgroundResource(R.drawable.icon_step);
+                    tvStepCount.setTextColor(Color.RED);
+                }
+            }
 
         }
     }
@@ -658,7 +682,6 @@ public class ItemInfoFragment extends Fragment {
             }
         });
     }
-
 
     //根据新闻Id获取新闻内容
     public void getInfoData(final int newsId) {

@@ -88,7 +88,7 @@ public class CommonOperator {
                 path.append("&content=" + content);
                 path.append("&replyCid=" + replyCid);
                 path.append("&blockType=" + blockType.getVal());
-                path.append("&session=" + SESSION);
+                path.append("&session=" + MainApplication.getSession());
                 Log.i(Log_PubLishComment_url, path.toString());
                 ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);

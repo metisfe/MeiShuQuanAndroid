@@ -112,7 +112,7 @@ public class LoginFragment extends Fragment {
                             Gson gson1 = new Gson();
                             String finalUserInfoJson = gson1.toJson(user);
                             Log.i("用户信息", finalUserInfoJson);
-                            SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(getActivity());
+                            SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
                             spu.update(SharedPreferencesUtil.USER_LOGIN_INFO, finalUserInfoJson);
 
                             //update field of UserInfo to main application
@@ -124,15 +124,16 @@ public class LoginFragment extends Fragment {
                             Toast.makeText(MainApplication.UIContext, "登录成功", Toast.LENGTH_SHORT).show();
                             getActivity().finish();
                             isPressLogin = false;
-                        } else if (result != null || exception != null) {
-                            //Log.e("**LoginFragment", result.getMessage() + "error:" + exception.getCause());
+                        } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
+                            Toast.makeText(MainApplication.UIContext, result.getMessage(), Toast.LENGTH_SHORT).show();
                             isPressLogin = false;
-                        } else {
-                            Toast.makeText(MainApplication.UIContext, "账号与密码不匹配，请重新输入", Toast.LENGTH_SHORT).show();
+                        } else if (result != null || exception != null) {
+                            Log.e("**LoginFragment", exception.getCause().toString());
                             isPressLogin = false;
                         }
                     }
                 });
+
             }
         });
         //注册

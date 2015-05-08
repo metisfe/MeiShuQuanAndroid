@@ -20,6 +20,12 @@ public class RelatedRead implements Serializable {
     @SerializedName("source")
     private String source = "";
 
+    @SerializedName("pageViewCount")
+    private int pageViewCount;
+
+    @SerializedName("commentCount")
+    private int commentCount;
+
     public int getNewsId() {
         return newsId;
     }
@@ -50,5 +56,21 @@ public class RelatedRead implements Serializable {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public int getPageViewCount() {
+        return pageViewCount;
+    }
+
+    public void setPageViewCount(int pageViewCount) {
+        this.pageViewCount = pageViewCount;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
     }
 }
