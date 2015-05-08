@@ -135,8 +135,10 @@ public class StudioActivity extends BaseActivity implements
         loadStudioInfo(100090, new UserInfoOperator.OnGetListener<StudioBaseInfo>() {
             @Override
             public void onGet(boolean succeed, StudioBaseInfo o) {
-                mInfo = o;
-                fillStudioInfo(mInfo);
+                if (succeed) {
+                    mInfo = o;
+                    fillStudioInfo(mInfo);
+                }
             }
         });
     }
@@ -210,6 +212,9 @@ public class StudioActivity extends BaseActivity implements
             case R.id.studio_list_header_tab2:
                 if (mAchievementList == null) {
                     mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
+                    if (mInfo == null) {
+                        break;
+                    }
                     StudioOperator.getInstance().getAchievementList(mInfo.getStudioId(), 0, new UserInfoOperator.OnGetListener<List<Achievement>>() {
                         @Override
                         public void onGet(boolean succeed, List<Achievement> achievements) {
@@ -226,6 +231,9 @@ public class StudioActivity extends BaseActivity implements
             case R.id.studio_list_header_tab3:
                 if (mInfo != null) {
                     mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
+                    if (mInfo == null) {
+                        break;
+                    }
                     StudioOperator.getInstance().getWorks(mInfo.getStudioId(), 0, 1, new UserInfoOperator.OnGetListener<List<WorkInfo>>() {
                         @Override
                         public void onGet(boolean succeed, List<WorkInfo> workInfo) {

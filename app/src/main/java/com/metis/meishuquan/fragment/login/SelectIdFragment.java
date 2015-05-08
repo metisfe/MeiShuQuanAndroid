@@ -84,7 +84,7 @@ public class SelectIdFragment extends Fragment {
         gvData = (GridView) rootView.findViewById(R.id.id_select_id_gridview);
 
         fm = getActivity().getSupportFragmentManager();
-        idTypeEnum = IdTypeEnum.Student;
+        idTypeEnum = IdTypeEnum.STUDENT;
         if (this.userRole != null) {
             for (IdentityType type : userRole.getData()) {
                 if (type.getName().equals("学生")) {
@@ -95,7 +95,7 @@ public class SelectIdFragment extends Fragment {
         this.gvData.setAdapter(adapter);
         setSelectedColorForTextView(tvStudent);
         setSelectedDrawable(imgStudent);
-        setUnSelectedDrawable(IdTypeEnum.Student);
+        setUnSelectedDrawable(IdTypeEnum.STUDENT);
 
     }
 
@@ -133,11 +133,11 @@ public class SelectIdFragment extends Fragment {
         imgStudent.setOnClickListener(new View.OnClickListener() {//学生
             @Override
             public void onClick(View view) {
-                idTypeEnum = IdTypeEnum.Student;
+                idTypeEnum = IdTypeEnum.STUDENT;
                 setSelectedColorForTextView(tvStudent);
                 setUnselectedColorForTextView(new TextView[]{tvTeacher, tvHuashi, tvParent, tvOther});
                 setSelectedDrawable(imgStudent);
-                setUnSelectedDrawable(IdTypeEnum.Student);
+                setUnSelectedDrawable(IdTypeEnum.STUDENT);
                 for (IdentityType type : userRole.getData()) {
                     if (type.getName().equals("学生")) {
                         adapter = new MyGridAdapter(type.getChildLists());
@@ -150,11 +150,11 @@ public class SelectIdFragment extends Fragment {
         imgTeacher.setOnClickListener(new View.OnClickListener() {//老师
             @Override
             public void onClick(View view) {
-                idTypeEnum = IdTypeEnum.Teacher;
+                idTypeEnum = IdTypeEnum.TEACHER;
                 setSelectedColorForTextView(tvTeacher);
                 setUnselectedColorForTextView(new TextView[]{tvStudent, tvHuashi, tvParent, tvOther});
                 setSelectedDrawable(imgTeacher);
-                setUnSelectedDrawable(IdTypeEnum.Teacher);
+                setUnSelectedDrawable(IdTypeEnum.TEACHER);
                 for (IdentityType type : userRole.getData()) {
                     if (type.getName().equals("老师")) {
                         adapter = new MyGridAdapter(type.getChildLists());
@@ -167,11 +167,11 @@ public class SelectIdFragment extends Fragment {
         imgHuashi.setOnClickListener(new View.OnClickListener() {//画室机构
             @Override
             public void onClick(View view) {
-                idTypeEnum = IdTypeEnum.HuaShi;
+                idTypeEnum = IdTypeEnum.STUDIO;
                 setSelectedColorForTextView(tvHuashi);
                 setUnselectedColorForTextView(new TextView[]{tvTeacher, tvStudent, tvParent, tvOther});
                 setSelectedDrawable(imgHuashi);
-                setUnSelectedDrawable(IdTypeEnum.HuaShi);
+                setUnSelectedDrawable(IdTypeEnum.STUDIO);
                 for (IdentityType type : userRole.getData()) {
                     if (type.getName().equals("画室/机构")) {
                         adapter = new MyGridAdapter(type.getChildLists());
@@ -184,11 +184,11 @@ public class SelectIdFragment extends Fragment {
         imgParent.setOnClickListener(new View.OnClickListener() {//家长
             @Override
             public void onClick(View view) {
-                idTypeEnum = IdTypeEnum.Parent;
+                idTypeEnum = IdTypeEnum.PARENT;
                 setSelectedColorForTextView(tvParent);
                 setUnselectedColorForTextView(new TextView[]{tvTeacher, tvHuashi, tvStudent, tvOther});
                 setSelectedDrawable(imgParent);
-                setUnSelectedDrawable(IdTypeEnum.Parent);
+                setUnSelectedDrawable(IdTypeEnum.PARENT);
                 for (IdentityType type : userRole.getData()) {
                     if (type.getName().equals("家长")) {
                         adapter = new MyGridAdapter(type.getChildLists());
@@ -201,11 +201,11 @@ public class SelectIdFragment extends Fragment {
         imgOther.setOnClickListener(new View.OnClickListener() {//其他
             @Override
             public void onClick(View view) {
-                idTypeEnum = IdTypeEnum.Other;
+                idTypeEnum = IdTypeEnum.OTHER;
                 setSelectedColorForTextView(tvOther);
                 setUnselectedColorForTextView(new TextView[]{tvTeacher, tvHuashi, tvParent, tvStudent});
                 setSelectedDrawable(imgOther);
-                setUnSelectedDrawable(IdTypeEnum.Other);
+                setUnSelectedDrawable(IdTypeEnum.OTHER);
                 for (IdentityType type : userRole.getData()) {
                     if (type.getName().equals("爱好者")) {
                         adapter = new MyGridAdapter(type.getChildLists());
@@ -244,19 +244,19 @@ public class SelectIdFragment extends Fragment {
 
     private void setSelectedDrawable(ImageView img) {
         switch (idTypeEnum) {
-            case Student:
+            case STUDENT:
                 img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_select_id_1));
                 break;
-            case Teacher:
+            case TEACHER:
                 img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_select_id_2));
                 break;
-            case HuaShi:
+            case STUDIO:
                 img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_select_id_3));
                 break;
-            case Parent:
+            case PARENT:
                 img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_select_id_4));
                 break;
-            case Other:
+            case OTHER:
                 img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_select_id_5));
                 break;
         }
@@ -264,31 +264,31 @@ public class SelectIdFragment extends Fragment {
 
     private void setUnSelectedDrawable(IdTypeEnum selectType) {
         switch (selectType) {
-            case Student:
+            case STUDENT:
                 imgTeacher.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_2));
                 imgHuashi.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_3));
                 imgParent.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_4));
                 imgOther.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_5));
                 break;
-            case Teacher:
+            case TEACHER:
                 imgStudent.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_1));
                 imgHuashi.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_3));
                 imgParent.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_4));
                 imgOther.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_5));
                 break;
-            case HuaShi:
+            case STUDIO:
                 imgStudent.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_1));
                 imgTeacher.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_2));
                 imgParent.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_4));
                 imgOther.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_5));
                 break;
-            case Parent:
+            case PARENT:
                 imgStudent.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_1));
                 imgTeacher.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_2));
                 imgHuashi.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_3));
                 imgOther.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_5));
                 break;
-            case Other:
+            case OTHER:
                 imgStudent.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_1));
                 imgTeacher.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_2));
                 imgHuashi.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_unselect_id_3));

@@ -66,4 +66,10 @@
     <string name="title_activity_select_studio">SelectStudioActivity</string>
     <string name="title_activity_achievement_detail">AchievementDetailActivity</string>
     <string name="title_activity_web">WebActivity</string>
+
+    <string name="id_type_student">学生</string>
+    <string name="id_type_teacher">老师</string>
+    <string name="id_type_studio">画室</string>
+    <string name="id_type_parent">家长</string>
+    <string name="id_type_other">其他</string>
 </resources>

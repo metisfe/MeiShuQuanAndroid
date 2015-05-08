@@ -1,16 +1,10 @@
 package com.metis.meishuquan.model.commons;
 
-import android.util.Log;
-
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
-import com.metis.meishuquan.model.course.CourseChannelItem;
+import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.enums.LoginStateEnum;
-import com.metis.meishuquan.util.SharedPreferencesUtil;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Created by WJ on 2015/4/9.
@@ -68,7 +62,7 @@ public class User implements Serializable {
     private String avatar = "";
 
     @SerializedName("userRole")
-    private String userRole = "";
+    private int userRole;
 
     @SerializedName("birthday")
     private String birthday = "";
@@ -198,12 +192,16 @@ public class User implements Serializable {
         this.avatar = avatar;
     }
 
-    public String getUserRole() {
+    public int getUserRole() {
         return userRole;
     }
 
-    public void setUserRole(String userRole) {
+    public void setUserRole(int userRole) {
         this.userRole = userRole;
+    }
+
+    public IdTypeEnum getUserRoleEnum () {
+        return IdTypeEnum.getUserRoleByType(this.userRole);
     }
 
     public String getAccout() {

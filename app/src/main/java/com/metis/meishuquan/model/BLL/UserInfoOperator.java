@@ -125,7 +125,7 @@ public class UserInfoOperator {
             json.addProperty(KEY_USER_ID, uid);
             Set<String> set = map.keySet();
             for (String key : set) {
-                json.addProperty(key, map.get(key));
+                json.addProperty(key, URLEncoder.encode(map.get(key)));
             }
             StringBuilder sb = new StringBuilder(json.toString());
             sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
@@ -447,6 +447,7 @@ public class UserInfoOperator {
             jsonObject.addProperty(KEY_APPVERSION, Utils.getVersion(MainApplication.UIContext));
             jsonObject.addProperty(KEY_PHONE_VERSION, Build.MODEL + "-" + Build.MANUFACTURER + "-" + Build.VERSION.RELEASE + "-" + Build.VERSION.SDK);
             jsonObject.addProperty(KEY_FEED_MESSAGE, message);
+            jsonObject.addProperty(KEY_USER_ID, MainApplication.userInfo.getUserId());
             //jsonObject.addProperty(KEY_);
             if (!TextUtils.isEmpty(imageUrl)) {
                 jsonObject.addProperty(KEY_FEED_IMAGE, imageUrl);
@@ -462,9 +463,9 @@ public class UserInfoOperator {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             jsonObject.addProperty(KEY_CREATE_TIME, format.format(new Date()));
             StringBuilder sb = new StringBuilder(URL_FEEDBACK);
-            sb.append("?" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+            /*sb.append("?" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());*/
             Log.v(TAG, "feedback request=" + sb.toString() + " and params=" + jsonObject);
-            ApiDataProvider.getmClient().invokeApi(sb.toString(), jsonObject.toString(), HttpPost.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), jsonObject, HttpPost.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {

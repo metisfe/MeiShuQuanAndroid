@@ -183,13 +183,17 @@ public class SharePopupWindow extends PopupWindow {
     }
 
     public void setShareInfo (String title, String content, String targetUrl, String imageUrl) {
-        if (TextUtils.isEmpty(title) || TextUtils.isEmpty(targetUrl)) {
+        if (TextUtils.isEmpty(title) || TextUtils.isEmpty(targetUrl) || TextUtils.isEmpty(content) || TextUtils.isEmpty(imageUrl)) {
             throw new IllegalArgumentException("title or targetUrl is Empty");
         }
         mTitle = title;
         mContent = content;
         mTargetUrl = targetUrl;
         mImageUrl = imageUrl;
+        /*Log.v(TAG, "setShareInfo title=" + mTitle);
+        Log.v(TAG, "setShareInfo content=" +  mContent);
+        Log.v(TAG, "setShareInfo mTargetUrl=" + mTargetUrl);
+        Log.v(TAG, "setShareInfo mImageUrl=" + mImageUrl);*/
     }
 
     private void fillShareContent (Activity activity, BaseShareContent content) {

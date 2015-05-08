@@ -25,7 +25,7 @@ public class WorkAdapter extends BaseAdapter {
 
     public WorkAdapter (Context context, List<WorkInfo> works) {
         mContext = context;
-        mDataList = works;
+        addAllWorkInfo(works);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class WorkAdapter extends BaseAdapter {
     }
 
     @Override
-    public WorkInfo getItem(int i) {
+    public WorkInfoGroup getItem(int i) {
         return mDataList.get(i);
     }
 
@@ -55,38 +55,62 @@ public class WorkAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder)view.getTag();
         }
-        WorkInfo workInfo = getItem(i);
+        WorkInfoGroup workInfo = getItem(i);
         ImageLoaderUtils.getImageLoader(mContext).displayImage(
-                workInfo.getPhotoThumbnail(), holder.mIv1,
+                workInfo.mInfo1.getPhotoThumbnail(), holder.mIv1,
+                ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
+        );
+        ImageLoaderUtils.getImageLoader(mContext).displayImage(
+                workInfo.mInfo2.getPhotoThumbnail(), holder.mIv2,
+                ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
+        );
+        ImageLoaderUtils.getImageLoader(mContext).displayImage(
+                workInfo.mInfo3.getPhotoThumbnail(), holder.mIv3,
                 ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
         );
         return view;
     }
 
     private void addAllWorkInfo (List<WorkInfo> workInfos) {
-        if (mDataList.isEmpty()) {
-            int index = 0;
-            final int length = workInfos.size();
-            for (; index < length; index += 3) {
-                WorkInfoGroup group = new WorkInfoGroup();
-                group.mInfo1 = workInfos.get(index);
-                group.mInfo2 = workInfos.get(index + 1);
-                group.mInfo3 = workInfos.get(index + 2);
-                mDataList.add(group);
+        if (workInfos == null || workInfos.isEmpty()) {
+            return;
+        }
+        if (!mDataList.isEmpty()) {
+            WorkInfoGroup lastGroup = mDataList.get(mDataList.size() - 1);
+            if (lastGroup.mInfo2 == null) {
+                lastGroup.mInfo2 = workInfos.remove(0);
             }
-            index -= 3;
-            if (index < length) {
-                WorkInfoGroup group = new WorkInfoGroup();
-                if (index + 1 < length) {
-                    group.mInfo1 = workInfos.get(index + 1);
-                }
-                if (index + 2 < length) {
-                    group.mInfo2 = workInfos.get(index + 2);
-                }
+            if (lastGroup.mInfo3 == null && !workInfos.isEmpty()) {
+                lastGroup.mInfo3 = workInfos.remove(0);
             }
-        } else {
 
         }
+        mDataList.addAll(makeWorkInfoGroupList(workInfos));
+    }
+
+    private List<WorkInfoGroup> makeWorkInfoGroupList (List<WorkInfo> workInfos) {
+        List<WorkInfoGroup> groupList = new ArrayList<WorkInfoGroup>();
+        int index = 0;
+        final int length = workInfos.size();
+        for (; index < length; index += 3) {
+            WorkInfoGroup group = new WorkInfoGroup();
+            group.mInfo1 = workInfos.get(index);
+            group.mInfo2 = workInfos.get(index + 1);
+            group.mInfo3 = workInfos.get(index + 2);
+            groupList.add(group);
+        }
+        index -= 3;
+        if (index < length) {
+            WorkInfoGroup group = new WorkInfoGroup();
+            if (index + 1 < length) {
+                group.mInfo1 = workInfos.get(index + 1);
+            }
+            if (index + 2 < length) {
+                group.mInfo2 = workInfos.get(index + 2);
+            }
+            groupList.add(group);
+        }
+        return groupList;
     }
 
     private class ViewHolder {
