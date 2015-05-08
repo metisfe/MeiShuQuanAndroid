@@ -1,9 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        test {
+            keyAlias 'key'
+            keyPassword '123123123'
+            storeFile file('/Users/wangjin/Desktop/Metis-app/apk/key.store')
+            storePassword '123123123'
+        }
+    }
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
-
     defaultConfig {
         applicationId "com.metis.meishuquan"
         minSdkVersion 15
@@ -16,15 +23,21 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        test {
+            debuggable true
+            jniDebuggable false
+            signingConfig signingConfigs.test
+            renderscriptDebuggable false
+            minifyEnabled false
+            zipAlignEnabled true
+        }
     }
-
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs']
         }
 
     }
-
 }
 
 dependencies {

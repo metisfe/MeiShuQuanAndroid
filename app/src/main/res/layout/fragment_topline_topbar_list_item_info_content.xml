@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:layout_height="wrap_content"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <LinearLayout
                 android:id="@+id/id_ll_related_read"
@@ -99,7 +99,7 @@
                             android:layout_centerVertical="true"
                             android:layout_centerHorizontal="true"
                             android:clickable="false"
-                            android:src="@drawable/icon_unsupport" />
+                            android:background="@drawable/icon_unsupport" />
 
                         <TextView
                             android:id="@+id/id_tv_support_count"
@@ -140,7 +140,7 @@
                             android:layout_height="25dp"
                             android:clickable="false"
                             android:layout_centerInParent="true"
-                            android:src="@drawable/icon_unstep" />
+                            android:background="@drawable/icon_unstep" />
 
                         <TextView
                             android:id="@+id/id_tv_step_count"

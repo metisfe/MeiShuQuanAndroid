@@ -39,6 +39,8 @@ public class NewsInfo implements Serializable {
 
     private int commentCount;
 
+    private UserMark userMark;
+
     private String shareUrl = "http://www.meishuquan.net/H5/ContentDetial.ASPX?ID=";
 
     public int getNewsId() {
@@ -154,6 +156,14 @@ public class NewsInfo implements Serializable {
 
     public void setCommentCount(int commentCount) {
         this.commentCount = commentCount;
+    }
+
+    public UserMark getUserMark() {
+        return userMark;
+    }
+
+    public void setUserMark(UserMark userMark) {
+        this.userMark = userMark;
     }
 
     public String getShareUrl() {

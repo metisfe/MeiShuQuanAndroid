@@ -3,7 +3,7 @@
     xmlns:bs="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#e2e2e2">
+    android:background="@color/bg_listview">
 
     <RelativeLayout
         android:id="@+id/rl_title_bar"
@@ -61,9 +61,8 @@
         android:id="@+id/id_rl_container_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/fragment_shared_classfragment_tab_bar"
-        android:layout_below="@+id/rl_title_bar"
-        android:layout_marginBottom="44dp" />
+        android:layout_marginBottom="44dp"
+        android:layout_below="@+id/rl_title_bar" />
 
     <com.metis.meishuquan.view.shared.TabBar
         android:id="@+id/fragment_shared_classfragment_tab_bar"

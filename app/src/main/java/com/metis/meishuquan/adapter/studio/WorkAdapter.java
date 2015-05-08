@@ -23,9 +23,13 @@ public class WorkAdapter extends BaseAdapter {
 
     private Context mContext = null;
 
-    public WorkAdapter (Context context, List<WorkInfo> works) {
+    public WorkAdapter(Context context, List<WorkInfo> works) {
         mContext = context;
+<<<<<<< Updated upstream
         addAllWorkInfo(works);
+=======
+        //mDataList = works;
+>>>>>>> Stashed changes
     }
 
     @Override
@@ -34,8 +38,14 @@ public class WorkAdapter extends BaseAdapter {
     }
 
     @Override
+<<<<<<< Updated upstream
     public WorkInfoGroup getItem(int i) {
         return mDataList.get(i);
+=======
+    public WorkInfo getItem(int i) {
+        //return mDataList.get(i);
+        return null;
+>>>>>>> Stashed changes
     }
 
     @Override
@@ -49,11 +59,11 @@ public class WorkAdapter extends BaseAdapter {
         if (view == null) {
             view = LayoutInflater.from(mContext).inflate(R.layout.layout_work_item, null);
             holder = new ViewHolder();
-            holder.mIv1 = (ImageView)view.findViewById(R.id.work_1);
-            holder.mIv2 = (ImageView)view.findViewById(R.id.work_2);
-            holder.mIv3 = (ImageView)view.findViewById(R.id.work_3);
+            holder.mIv1 = (ImageView) view.findViewById(R.id.work_1);
+            holder.mIv2 = (ImageView) view.findViewById(R.id.work_2);
+            holder.mIv3 = (ImageView) view.findViewById(R.id.work_3);
         } else {
-            holder = (ViewHolder)view.getTag();
+            holder = (ViewHolder) view.getTag();
         }
         WorkInfoGroup workInfo = getItem(i);
         ImageLoaderUtils.getImageLoader(mContext).displayImage(
@@ -71,6 +81,7 @@ public class WorkAdapter extends BaseAdapter {
         return view;
     }
 
+<<<<<<< Updated upstream
     private void addAllWorkInfo (List<WorkInfo> workInfos) {
         if (workInfos == null || workInfos.isEmpty()) {
             return;
@@ -79,6 +90,18 @@ public class WorkAdapter extends BaseAdapter {
             WorkInfoGroup lastGroup = mDataList.get(mDataList.size() - 1);
             if (lastGroup.mInfo2 == null) {
                 lastGroup.mInfo2 = workInfos.remove(0);
+=======
+    private void addAllWorkInfo(List<WorkInfo> workInfos) {
+        if (mDataList.isEmpty()) {
+            int index = 0;
+            final int length = workInfos.size();
+            for (; index < length; index += 3) {
+                WorkInfoGroup group = new WorkInfoGroup();
+                group.mInfo1 = workInfos.get(index);
+                group.mInfo2 = workInfos.get(index + 1);
+                group.mInfo3 = workInfos.get(index + 2);
+                mDataList.add(group);
+>>>>>>> Stashed changes
             }
             if (lastGroup.mInfo3 == null && !workInfos.isEmpty()) {
                 lastGroup.mInfo3 = workInfos.remove(0);
