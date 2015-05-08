@@ -185,9 +185,6 @@ public class AssessInfoActivity extends FragmentActivity {
                     Gson gson = new Gson();
                     AssessCommentImgData data = gson.fromJson(json, new TypeToken<AssessCommentImgData>() {
                     }.getType());
-                    String imgs = new Gson().toJson(data.getData());
-//                    JsonObject jsonObject = new JsonObject();
-//                    JsonArray jsonArray = jsonObject.getAsJsonArray("data");
 
                     PushCommentParam param = new PushCommentParam();
                     param.setUserId(MainApplication.userInfo.getUserId());
@@ -197,7 +194,7 @@ public class AssessInfoActivity extends FragmentActivity {
                     if (selectedAssessComment != null) {
                         param.setReplyUserId(selectedAssessComment.getUser().getUserId());
                     }
-                    param.setImgs(imgs);
+                    param.setImgs(data.getData());
                     AssessOperator.getInstance().pushComment(param, new ApiOperationCallback<ReturnInfo<AssessComment>>() {
                         @Override
                         public void onCompleted(ReturnInfo<AssessComment> result, Exception exception, ServiceFilterResponse response) {

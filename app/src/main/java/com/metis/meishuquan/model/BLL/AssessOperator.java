@@ -259,17 +259,18 @@ public class AssessOperator {
                 StringBuilder PATH = new StringBuilder(PushComment);
                 PATH.append("&session=" + SESSION);
 
-                JsonObject object = new JsonObject();
-                object.addProperty("AssessId", param.getAssessId());
-                object.addProperty("UserId", param.getUserId());
-                object.addProperty("ReplyUserId", param.getReplyUserId());
-                object.addProperty("Content", param.getContent());
-                object.addProperty("Imgs", param.getImgs());
-                object.addProperty("Voice", param.getVoice());
-                object.addProperty("VoiceLength", param.getVoiceLength());
-                object.addProperty("CommentType", param.getCommentType());
+//                JsonObject object = new JsonObject();
+//                object.addProperty("AssessId", param.getAssessId());
+//                object.addProperty("UserId", param.getUserId());
+//                object.addProperty("ReplyUserId", param.getReplyUserId());
+//                object.addProperty("Content", param.getContent());
+//                object.a
+//                object.addProperty("Imgs", param.getImgs());
+//                object.addProperty("Voice", param.getVoice());
+//                object.addProperty("VoiceLength", param.getVoiceLength());
+//                object.addProperty("CommentType", param.getCommentType());
 
-                ApiDataProvider.getmClient().invokeApi(PATH.toString(), object, HttpPost.METHOD_NAME, null, (Class<ReturnInfo<AssessComment>>) new ReturnInfo<AssessComment>().getClass(), callback);
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), param, HttpPost.METHOD_NAME, null, (Class<ReturnInfo<AssessComment>>) new ReturnInfo<AssessComment>().getClass(), callback);
             }
         }
     }

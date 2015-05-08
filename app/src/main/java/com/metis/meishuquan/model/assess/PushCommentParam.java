@@ -7,103 +7,71 @@ import java.util.List;
  * Created by wangjin on 15/4/24.
  */
 public class PushCommentParam {
-    private int assessId = 0;
-    private int userId = 0;
-    private int replyUserId = 0;
-    private String content = "";
-    private int score = 0;
-    private String points = "";
-    private String imgs;
-    private String voice = "";
-    private int commentType = 0;
-    private int voiceLength = 0;
-    private String session = "";
+    private int AssessId = 0;
+    private int UserId = 0;
+    private int ReplyUserId = 0;
+    private String Content = "";
+//    private int score = 0;
+//    private String points = "";
+    private List<AssessCommentImg> Imgs;
+    private String Voice = "";
+    private int CommentType = 0;
+//    private String session = "";
+
 
     public int getAssessId() {
-        return assessId;
+        return AssessId;
     }
 
     public void setAssessId(int assessId) {
-        this.assessId = assessId;
+        AssessId = assessId;
     }
 
     public int getUserId() {
-        return userId;
+        return UserId;
     }
 
     public void setUserId(int userId) {
-        this.userId = userId;
+        UserId = userId;
     }
 
     public int getReplyUserId() {
-        return replyUserId;
+        return ReplyUserId;
     }
 
     public void setReplyUserId(int replyUserId) {
-        this.replyUserId = replyUserId;
+        ReplyUserId = replyUserId;
     }
 
     public String getContent() {
-        return content;
+        return Content;
     }
 
     public void setContent(String content) {
-        this.content = content;
+        Content = content;
     }
 
-    public int getScore() {
-        return score;
+    public List<AssessCommentImg> getImgs() {
+        return Imgs;
     }
 
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public String getPoints() {
-        return points;
-    }
-
-    public void setPoints(String points) {
-        this.points = points;
-    }
-
-    public String getImgs() {
-        return imgs;
-    }
-
-    public void setImgs(String imgs) {
-        this.imgs = imgs;
-    }
-
-    public int getVoiceLength() {
-        return voiceLength;
-    }
-
-    public void setVoiceLength(int voiceLength) {
-        this.voiceLength = voiceLength;
+    public void setImgs(List<AssessCommentImg> imgs) {
+        Imgs = imgs;
     }
 
     public String getVoice() {
-        return voice;
+        return Voice;
     }
 
     public void setVoice(String voice) {
-        this.voice = voice;
+        Voice = voice;
     }
 
     public int getCommentType() {
-        return commentType;
+        return CommentType;
     }
 
     public void setCommentType(int commentType) {
-        this.commentType = commentType;
-    }
-
-    public String getSession() {
-        return session;
-    }
-
-    public void setSession(String session) {
-        this.session = session;
+        CommentType = commentType;
     }
 }
