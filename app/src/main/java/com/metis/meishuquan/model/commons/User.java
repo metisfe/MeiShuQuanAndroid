@@ -104,6 +104,9 @@ public class User implements Serializable {
     @SerializedName("backgroundImg")
     private String backgroundImg;
 
+    @SerializedName("userResume")
+    private String userResume;
+
     private LoginStateEnum appLoginState = LoginStateEnum.NO;
 
     private LoginStateEnum rongLoginState = LoginStateEnum.NO;
@@ -310,6 +313,14 @@ public class User implements Serializable {
 
     public void setAchievement(String achievement) {
         this.achievement = achievement;
+    }
+
+    public String getUserResume() {
+        return userResume;
+    }
+
+    public void setUserResume(String userResume) {
+        this.userResume = userResume;
     }
 
     /*public List<CourseChannelItem> getGoodSubjectsList () {

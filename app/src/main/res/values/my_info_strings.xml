@@ -48,6 +48,9 @@
     <string name="info_achievement">教学成果</string>
     <string name="info_meishuquan_id_illegal">美术圈号不符合规则</string>
     <string name="info_nick_name_illegal">昵称不符合规则</string>
+    <string name="info_illegal_birthday">出生日期不合法</string>
+    <string name="info_profile_gallery">相册</string>
+    <string name="info_profile_camera">相机</string>
     
     <string name="about_to_score">我要评分</string>
     <string name="about_current_version">当前版本</string>

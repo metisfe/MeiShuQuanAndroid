@@ -5,9 +5,12 @@ import android.util.Log;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
+import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.commons.Result;
+import com.metis.meishuquan.model.contract.Moment;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
+import com.metis.meishuquan.model.topline.News;
 import com.metis.meishuquan.util.SystemUtil;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
@@ -30,7 +33,9 @@ public class StudioOperator {
             URL_STUDIO_VIDEO_LIST = "v1.1/Studio/StudioVideolist?studioId=",
             URL_STUDIO_ACHIEVEMENT_LIST = "v1.1/Studio/AchievementList?studioId=",
             URL_STUDIO_ACHIEVEMENT_DETAIL = "v1.1/Studio/AchievementDetial?achievementId=",
-            URL_STUDIO_WORK_LIST = "v1.1/Studio/StudioPhotos?studioId=";
+            URL_STUDIO_WORK_LIST = "v1.1/Studio/StudioPhotos?studioId=",
+            URL_STUDIO_MY_NEWS_LIST = "v1.1/News/MyNewsList?userId=",
+            URL_STUDIO_MY_CIRCLE_LIST = "v1.1/UserCenter/MyCircle";
 
     private static final String
             KEY_SESSION = "session",
@@ -38,7 +43,9 @@ public class StudioOperator {
             KEY_ACHIEVEMENT_ID = "achievementId",
             KEY_LAST_VIDEO_ID = "lastVideoId",
             KEY_LAST_PHOTO_ID = "lastPhotoId",
-            KEY_PHOTO_TYPE = "photoType";
+            KEY_PHOTO_TYPE = "photoType",
+            KEY_LAST_NEWS_ID = "lastNewsId",
+            KEY_USER_ID = "userId";
 
     private static StudioOperator sOperator = new StudioOperator();
 
@@ -253,6 +260,68 @@ public class StudioOperator {
                             }
                         }
                         Log.v(TAG, "getWorks resultJson=" + resultJson);
+                    }
+                }
+            });
+        }
+    }
+
+    public void getMyNewsList (long userId, int lastNewsId, final UserInfoOperator.OnGetListener<List<Moment>> listener) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            StringBuilder sb = new StringBuilder(URL_STUDIO_MY_NEWS_LIST);
+            sb.append(userId);
+            sb.append("&" + KEY_LAST_NEWS_ID + "=" + lastNewsId);
+            sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+
+            Log.v(TAG, "getMyNewsList request=" + sb.toString());
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    Log.v(TAG, "getMyNewsList callback=" + response.getContent());
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String resultJson = gson.toJson(result);
+                        Result<List<Moment>> resultInfo = gson.fromJson(resultJson, new TypeToken<Result<List<Moment>>>() {
+                        }.getType());
+                        if (listener != null) {
+                            if (resultInfo.getOption().getStatus() == 0) {
+                                listener.onGet(true, resultInfo.getData());
+                            } else {
+                                listener.onGet(false, null);
+                            }
+                        }
+                        Log.v(TAG, "getMyNewsList resultJson=" + resultJson);
+                    }
+                }
+            });
+        }
+    }
+
+    public void getMyCircleList (final UserInfoOperator.OnGetListener<List<CCircleDetailModel>> listener) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            StringBuilder sb = new StringBuilder(URL_STUDIO_MY_CIRCLE_LIST);
+            sb.append("?" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+
+            Log.v(TAG, "getMyCircleList request=" + sb.toString());
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    Log.v(TAG, "getMyCircleList callback=" + response.getContent());
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String resultJson = gson.toJson(result);
+                        Result<List<CCircleDetailModel>> resultInfo = gson.fromJson(resultJson, new TypeToken<Result<List<CCircleDetailModel>>>() {
+                        }.getType());
+                        if (listener != null) {
+                            if (resultInfo.getOption().getStatus() == 0) {
+                                listener.onGet(true, resultInfo.getData());
+                            } else {
+                                listener.onGet(false, null);
+                            }
+                        }
+                        Log.v(TAG, "getMyCircleList resultJson=" + resultJson);
                     }
                 }
             });

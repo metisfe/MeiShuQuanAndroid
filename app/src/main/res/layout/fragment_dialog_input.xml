@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    >
+    <TextView
+        android:id="@+id/input_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/input_edit"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|top"
+        android:background="@drawable/edittext_outlines_bg"
+        android:layout_margin="5dp"
+        android:textColor="#424242"
+        android:textCursorDrawable="@null"
+        android:layout_below="@+id/input_title"
+        android:padding="5dp"
+        android:focusableInTouchMode="true"
+        />
+    <Button
+        android:id="@+id/input_ok"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/input_edit"
+        android:text="@string/gender_ok"
+        android:background="@android:color/transparent"
+        android:textColor="@android:color/black"
+        />
+</RelativeLayout>

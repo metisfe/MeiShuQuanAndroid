@@ -32,11 +32,11 @@ public class UserManager {
         }
         int tIndex = birthdayStr.indexOf('T');
         if (tIndex < 0) {
-            return 0;
+            tIndex = birthdayStr.length();
         }
         String birthday = birthdayStr.substring(0, tIndex);
         if (!PatternUtils.PATTERN_BIRTHDAY.matcher(birthday).matches()) {
-            throw new NumberFormatException("be sure birthday yyyy-MM-dd");
+            throw new NumberFormatException("be sure birthday yyyy-MM-dd and in face is " + birthdayStr);
         }
         Calendar cal = Calendar.getInstance();
         int nowYear = cal.get(Calendar.YEAR);

@@ -6,6 +6,8 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,17 +21,26 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.InputActivity;
 import com.metis.meishuquan.activity.WebActivity;
+import com.metis.meishuquan.activity.course.ChooseCourseActivity;
 import com.metis.meishuquan.activity.info.BaseActivity;
+import com.metis.meishuquan.activity.info.ConstellationActivity;
+import com.metis.meishuquan.activity.info.DepartmentActivity;
 import com.metis.meishuquan.activity.info.TextActivity;
+import com.metis.meishuquan.adapter.circle.CircleMomentAdapter;
 import com.metis.meishuquan.adapter.commons.ConstellationAdapter;
 import com.metis.meishuquan.adapter.commons.SimplePrvsAdapter;
 import com.metis.meishuquan.adapter.studio.AchievementAdapter;
+import com.metis.meishuquan.adapter.studio.CircleListAdapter;
 import com.metis.meishuquan.adapter.studio.InfoAdapter;
+import com.metis.meishuquan.adapter.studio.UserInfoAdapter;
 import com.metis.meishuquan.adapter.studio.WorkAdapter;
+import com.metis.meishuquan.adapter.topline.ToplineAdapter;
+import com.metis.meishuquan.fragment.commons.InputDialogFragment;
 import com.metis.meishuquan.fragment.commons.ListDialogFragment;
 import com.metis.meishuquan.fragment.commons.StudioFragment;
 import com.metis.meishuquan.manager.common.UserManager;
@@ -38,18 +49,24 @@ import com.metis.meishuquan.model.BLL.StudioBaseInfo;
 import com.metis.meishuquan.model.BLL.StudioOperator;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.BLL.WorkInfo;
+import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.commons.User;
+import com.metis.meishuquan.model.contract.Moment;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
+import com.metis.meishuquan.model.topline.News;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.PatternUtils;
 
+import java.io.Serializable;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StudioActivity extends BaseActivity implements
         StudioFragment.OnMenuItemClickListener,
         RadioGroup.OnCheckedChangeListener,
-        InfoAdapter.OnInfoItemClickListener,
+        /*InfoAdapter.OnInfoItemClickListener,*/
         ConstellationAdapter.OnItemClickListener{
 
     private static final String TAG = StudioActivity.class.getSimpleName();
@@ -71,6 +88,8 @@ public class StudioActivity extends BaseActivity implements
 
     private List<Achievement> mAchievementList = null;
     private List<WorkInfo> mWorkInfoList = null;
+    private List<Moment> mNewsList = null;
+    private List<CCircleDetailModel> mCircleList = null;
 
     private SimplePrvsAdapter.OnPrvsItemClickListener mPrvsListener = new SimplePrvsAdapter.OnPrvsItemClickListener() {
 
@@ -86,6 +105,7 @@ public class StudioActivity extends BaseActivity implements
     };
 
     private StudioBaseInfo mInfo = null;
+    private boolean canEdit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +113,7 @@ public class StudioActivity extends BaseActivity implements
         setContentView(R.layout.activity_studio);
 
         mUserId = getIntent().getIntExtra(KEY_USER_ID, (int)mUserId);
+        canEdit = mUserId == MainApplication.userInfo.getUserId();
 
         mTitleView = LayoutInflater.from(this).inflate(R.layout.layout_studio_title, null);
         getTitleView().addCenterView(mTitleView);
@@ -214,7 +235,44 @@ public class StudioActivity extends BaseActivity implements
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
             case R.id.studio_list_header_tab1:
-                mAdapter = new NewAdapter();
+                if (mUser != null) {
+                    if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
+                        if (mNewsList == null) {
+                            mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
+                            StudioOperator.getInstance().getMyNewsList(mUser.getUserId(), 0, new UserInfoOperator.OnGetListener<List<Moment>>() {
+                                @Override
+                                public void onGet(boolean succeed, List<Moment> newses) {
+                                    if (succeed) {
+                                        mNewsList = newses;
+                                        mAdapter = new ToplineAdapter(StudioActivity.this);
+                                        mStudioFragment.setAdapter(mAdapter);
+                                    }
+                                }
+                            });
+                        } else {
+                            mAdapter = new ToplineAdapter(StudioActivity.this);
+                        }
+                    } else {
+                        if (mCircleList == null) {
+                            mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
+                            StudioOperator.getInstance().getMyCircleList(new UserInfoOperator.OnGetListener<List<CCircleDetailModel>>() {
+                                @Override
+                                public void onGet(boolean succeed, List<CCircleDetailModel> cCircleDetailModels) {
+                                    if (succeed) {
+                                        mCircleList = cCircleDetailModels;
+                                        mAdapter = new CircleListAdapter(cCircleDetailModels);
+                                        mStudioFragment.setAdapter(mAdapter);
+                                    }
+                                }
+                            });
+                        } else {
+                            mAdapter = new CircleListAdapter(mCircleList);
+                        }
+
+                    }
+                } else {
+                    mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
+                }
                 break;
             case R.id.studio_list_header_tab2:
                 if (mUser != null) {
@@ -278,8 +336,10 @@ public class StudioActivity extends BaseActivity implements
                             });
                         }
                     } else {
-                        InfoAdapter adapter = new InfoAdapter(StudioActivity.this, mUser);
-                        adapter.setOnInfoItemClickListener(StudioActivity.this);
+                        //InfoAdapter adapter = new InfoAdapter(StudioActivity.this, mUser);
+                        //adapter.setOnInfoItemClickListener(StudioActivity.this);
+                        UserInfoAdapter adapter = new UserInfoAdapter(this, mUser, mUser.getUserId() == MainApplication.userInfo.getUserId());
+                        adapter.setOnClickListener(mInfoClickListener);
                         mAdapter = adapter;
                     }
                 } else {
@@ -343,7 +403,7 @@ public class StudioActivity extends BaseActivity implements
         }
     }
 
-    @Override
+    /*@Override
     public void onClick(View view, InfoAdapter.Item item, User user) {
         if (item.title.equals(getString(R.string.info_nick))) {
             startInputActivityForResult(getString(R.string.info_modify_nick), item.content, true, InputActivity.REQUEST_CODE_NICK);
@@ -370,7 +430,7 @@ public class StudioActivity extends BaseActivity implements
         } else if (item.title.equals(getString(R.string.info_department_address))) {
             startInputActivityForResult(getString(R.string.info_department_address), item.content, false, InputActivity.REQUEST_CODE_DEPARTMENT_ADDRESS);
         }
-    }
+    }*/
 
     private Dialog mDialog = null;
     private String mGender = null;
@@ -409,11 +469,13 @@ public class StudioActivity extends BaseActivity implements
                 } else {
                     mGender = maleStr;
                 }
-                if (mAdapter != null && mAdapter instanceof InfoAdapter) {
-                    InfoAdapter adapter = (InfoAdapter) mAdapter;
-                    adapter.setGender(mGender);
-                }
+
+                mUser.setGender(mGender);
                 UserManager.updateMyInfo(User.KEY_GENDER, mGender);
+                if (mAdapter != null && mAdapter instanceof UserInfoAdapter) {
+                    UserInfoAdapter adapter = (UserInfoAdapter) mAdapter;
+                    adapter.notifyDataSetChanged();
+                }
                 //updateInfo(User.KEY_GENDER, mGenderView.getSecondaryText().toString());
             }
         });
@@ -424,10 +486,28 @@ public class StudioActivity extends BaseActivity implements
     private DatePickerDialog.OnDateSetListener mDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-            if (mAdapter != null && mAdapter instanceof InfoAdapter) {
-                InfoAdapter adapter = (InfoAdapter) mAdapter;
-                adapter.setBirthday(i, i1 + 1, i2);
+            int nowYear = Calendar.getInstance().get(Calendar.YEAR);
+            int nowMonth = Calendar.getInstance().get(Calendar.MONTH);
+            int nowDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+            if (i > nowYear) {
+                Toast.makeText(StudioActivity.this, R.string.info_illegal_birthday, Toast.LENGTH_SHORT).show();
+                return;
+            } else if (i == nowYear) {
+                if (i1 > nowMonth){
+                    Toast.makeText(StudioActivity.this, R.string.info_illegal_birthday, Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (i1 == nowMonth) {
+                    if (i2 > nowDay) {
+                        Toast.makeText(StudioActivity.this, R.string.info_illegal_birthday, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+            }
+            if (mAdapter != null && mAdapter instanceof UserInfoAdapter) {
+                UserInfoAdapter adapter = (UserInfoAdapter) mAdapter;
+                mUser.setBirthday(PatternUtils.formatToDateStr(i, i1 + 1, i2));
                 UserManager.updateMyInfo(User.KEY_BIRTHDAY, PatternUtils.formatToDateStr(i, i1 + 1, i2));
+                adapter.notifyDataSetChanged();
             }
             Log.v(TAG, "onDateSet " + i + " " + i1 + " " + i2);
         }
@@ -445,35 +525,185 @@ public class StudioActivity extends BaseActivity implements
         dialog.show();
     }
 
+    private View.OnClickListener mInfoClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (!canEdit) {
+                return;
+            }
+            Intent it = null;
+            switch (v.getId()) {
+                case R.id.info_profile_container:
+                    ListDialogFragment.getInstance().setAdapter(new MyAdapter());
+                    ListDialogFragment.getInstance().show(getSupportFragmentManager(), TAG);
+                    break;
+                case R.id.info_nick:
+                    showDialogAndUpdate(getString(R.string.info_nick), mUser.getName(), "", User.KEY_NICK_NAME, new InputDialogFragment.OnOkListener() {
+                        @Override
+                        public void onOkClick(View view, CharSequence cs) {
+                            mUser.setName(cs.toString());
+                        }
+                    });
+                    //startInputActivityForResult(getString(R.string.info_modify_nick), mUser.getName(), true, InputActivity.REQUEST_CODE_NICK);
+                    break;
+                case R.id.info_meishuquan_id:
+
+                    if (TextUtils.isEmpty(mUser.getAccout())) {
+                        showDialogAndUpdate(getString(R.string.info_meishuquan_id), "", getString(R.string.info_meishuquan_id), User.KEY_ACCOUNT, new InputDialogFragment.OnOkListener() {
+                            @Override
+                            public void onOkClick(View view, CharSequence cs) {
+                                mUser.setAccout(cs.toString());
+                            }
+                        });
+                    }
+                    break;
+                case R.id.info_recents_container:
+                    showDialogAndUpdate(getString(R.string.info_recents), mUser.getSelfSignature(), getString(R.string.info_recents), User.KEY_SELFSIGNATURE, new InputDialogFragment.OnOkListener() {
+                        @Override
+                        public void onOkClick(View view, CharSequence cs) {
+                            mUser.setSelfSignature(cs.toString());
+                        }
+                    });
+                    //startInputActivityForResult(getString(R.string.info_recents), mRecentsContentTv.getText(), false, InputActivity.REQUEST_CODE_RECENTS);
+                    break;
+                case R.id.info_gender:
+                    showDialog();
+                    break;
+                case R.id.info_age:
+                    showBirthdayDialog();
+                    //startInputActivityForResult(getString(R.string.info_ages), mAgeView.getSecondaryText(), true, InputActivity.REQUEST_CODE_AGE, InputType.TYPE_CLASS_NUMBER);
+                    break;
+                case R.id.info_constellation:
+                    final ListDialogFragment fragment = ListDialogFragment.getInstance();
+                    ConstellationAdapter adapter = ConstellationAdapter.getInstance(StudioActivity.this, mUser.getHoroscope());
+                    adapter.setOnItemClickListener(new ConstellationAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, String name) {
+                            mUser.setHoroscope(name);
+                            UserManager.updateMyInfo(User.KEY_HOROSCOPE, name);
+                            fragment.dismiss();
+                            if (mAdapter != null && mAdapter instanceof UserInfoAdapter) {
+                                UserInfoAdapter userInfoAdapter = (UserInfoAdapter)mAdapter;
+                                userInfoAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    });
+                    fragment.setAdapter(adapter);
+                    fragment.show(getSupportFragmentManager(), TAG);
+                    break;
+                case R.id.info_department_address:
+                    showDialogAndUpdate(getString(R.string.info_department_address), mUser.getLocationAddress(), getString(R.string.info_department_address), User.KEY_LOCATIONADDRESS, new InputDialogFragment.OnOkListener() {
+                        @Override
+                        public void onOkClick(View view, CharSequence cs) {
+                            mUser.setLocationAddress(cs.toString());
+                        }
+                    });
+                    break;
+                case R.id.info_cv:
+                    showDialogAndUpdate(getString(R.string.info_cv), mUser.getUserResume(), getString(R.string.info_cv), User.KEY_USER_RESUME, new InputDialogFragment.OnOkListener() {
+                        @Override
+                        public void onOkClick(View view, CharSequence cs) {
+                            mUser.setUserResume(cs.toString());
+                        }
+                    });
+                    break;
+                case R.id.info_achievement:
+                    showDialogAndUpdate(getString(R.string.info_achievement), mUser.getAchievement(), getString(R.string.info_achievement), User.KEY_USER_RESUME, new InputDialogFragment.OnOkListener() {
+                        @Override
+                        public void onOkClick(View view, CharSequence cs) {
+                            mUser.setAchievement(cs.toString());
+                        }
+                    });
+                    break;
+                /*case R.id.info_provience:
+                    showCityFragment();
+                    break;
+                case R.id.info_department:
+                    startActivity(new Intent (this, DepartmentActivity.class));
+                    break;
+                case R.id.info_department_address:
+                    startInputActivityForResult(getString(R.string.info_department_address), mDepartmentAddrView.getSecondaryText(), false, InputActivity.REQUEST_CODE_DEPARTMENT_ADDRESS);
+                    break;
+                case R.id.info_good_at:
+                    it = new Intent (this, ChooseCourseActivity.class);
+                    it.putExtra(ChooseCourseActivity.OLDSELECTEDCHANNELITEMS, (Serializable)mCourseItems);
+                    startActivityForResult(it, REQUEST_CODE_CHOOSE_COURSE);
+                    break;
+                case R.id.info_cv:
+                    startInputActivityForResult(mCvView.getText().toString(), mCvView.getSecondaryText(), false, InputActivity.REQUEST_CODE_CV);
+                    break;
+                case R.id.info_achievement:
+                    startInputActivityForResult(mAchievementView.getText().toString(), mAchievementView.getSecondaryText(), false, InputActivity.REQUEST_CODE_ACHIEVEMENT);
+                    break;*/
+            }
+        }
+    };
+
+    private void showDialogAndUpdate (String title, String text, String hint, final String key, final InputDialogFragment.OnOkListener listener) {
+        InputDialogFragment.getInstance(title, text, hint, new InputDialogFragment.OnOkListener() {
+            @Override
+            public void onOkClick(View view, CharSequence cs) {
+                if (TextUtils.isEmpty(cs)) {
+                    return;
+                }
+                if (listener != null) {
+                    listener.onOkClick(view, cs);
+                }
+                UserManager.updateMyInfo(key, cs.toString());
+                //updateInfo(key, cs.toString());
+            }
+        }).show(getSupportFragmentManager(), "");
+    }
+
+
+
+    /*public void updateInfo (String key, String value) {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put(key, value);
+        UserInfoOperator.getInstance().updateUserInfo(MainApplication.userInfo.getUserId(), map);
+    }*/
+
     class MyAdapter extends BaseAdapter {
+
+        int[] mTitleResArr = {
+                R.string.info_profile_gallery,
+                R.string.info_profile_camera};
 
         @Override
         public int getCount() {
-            return 200;
+            return mTitleResArr.length;
         }
 
         @Override
         public String getItem(int position) {
-            return position + "";
+            return getString(mTitleResArr[position]);
         }
 
         @Override
         public long getItemId(int position) {
-            return position;
+            return mTitleResArr[position];
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            TextView tv = new TextView(StudioActivity.this);
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            convertView = LayoutInflater.from(StudioActivity.this).inflate(R.layout.layout_list_dialog_item, null);
+            TextView tv = (TextView)convertView.findViewById(R.id.list_dialog_item);
             tv.setText(getItem(position));
-            tv.setOnClickListener(new View.OnClickListener() {
+            convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    switch (mTitleResArr[position]) {
+                        case R.string.info_profile_gallery:
+                            break;
+                        case R.string.info_profile_camera:
+                            break;
+                    }
+                    ListDialogFragment.getInstance().dismiss();
                 }
             });
             return tv;
         }
+
     }
 
     class NewAdapter extends BaseAdapter {
