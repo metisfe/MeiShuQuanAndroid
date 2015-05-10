@@ -90,7 +90,9 @@ public class MomentsFragment extends CircleBaseFragment {
 //                Bundle args = new Bundle();
 //                args.putInt("newsId", newsId);
 //                itemInfoFragment.setArguments(args);
-                GlobalData.moment = list.get(position);
+
+                // refresh load more listview has header
+                GlobalData.moment = list.get(position - 1);
 
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();

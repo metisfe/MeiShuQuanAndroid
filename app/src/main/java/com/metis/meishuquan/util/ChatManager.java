@@ -115,7 +115,10 @@ public class ChatManager {
     public static void putUserInfos(List<CUserModel> userModels) {
         if (userModels == null) return;
         for (CUserModel model : userModels) {
-            contacts.put(model.rongCloud, model);
+            if (model != null)
+            {
+                contacts.put(model.rongCloud, model);
+            }
         }
         //TODO: save to DB
     }
@@ -158,8 +161,9 @@ public class ChatManager {
     public static void putFriendList(List<CUserModel> models) {
         List<String> ids = new ArrayList<>();
         for (CUserModel model : models) {
-            Log.d("circle", "frind id:" + model.userId + "name:" + model.name + "rid:" + model.rongCloud);
-            if (!TextUtils.isEmpty(model.rongCloud)) ids.add(model.rongCloud);
+//            Log.d("circle", "frind id:" + model.userId + "name:" + model.name + "rid:" + model.rongCloud);
+            if (model != null && !TextUtils.isEmpty(model.rongCloud))
+                ids.add(model.rongCloud);
         }
 
         friends = ids;
