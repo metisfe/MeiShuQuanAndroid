@@ -2,16 +2,19 @@ package com.metis.meishuquan.activity.info.homepage;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.BaseActivity;
 import com.metis.meishuquan.model.BLL.WorkInfo;
+import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.tonicartos.widget.stickygridheaders.StickyGridHeadersGridView;
 import com.tonicartos.widget.stickygridheaders.StickyGridHeadersSimpleAdapter;
 
@@ -37,7 +40,7 @@ public class StudioAlbumActivity extends BaseActivity {
         for (int i = 0; i < 300; i++) {
             WorkInfo info = new WorkInfo();
             info.setCreateTime(('A' + i % 26) + "T");
-            info.setPhotoThumbnail(('A' + i % 26) + "T " + i);
+            info.setPhotoThumbnail("http://ww3.sinaimg.cn/bmiddle/005Fn4qEjw1erziclf4g0j30dc0a00u3.jpg");
             mDatalist.add(info);
         }
         mAdapter = new AlbumAdapter(mDatalist);
@@ -96,9 +99,21 @@ public class StudioAlbumActivity extends BaseActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            TextView tv = new TextView(StudioAlbumActivity.this);
-            tv.setText(mWorkList.get(position).getPhotoThumbnail());
-            return tv;
+            ViewHolder holder = null;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(StudioAlbumActivity.this).inflate(R.layout.layout_studio_album_item, null);
+                holder = new ViewHolder();
+                holder.image = (ImageView)convertView.findViewById(R.id.album_item_img);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder)convertView.getTag();
+            }
+            WorkInfo info = getItem(position);
+            ImageLoaderUtils.getImageLoader(StudioAlbumActivity.this).displayImage(
+                    info.getPhotoThumbnail(), holder.image,
+                    ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
+            );
+            return convertView;
         }
 
         public void parseWorkList (List<WorkInfo> infoList) {
@@ -132,6 +147,10 @@ public class StudioAlbumActivity extends BaseActivity {
             }
             return "#";
         }
+    }
+
+    private class ViewHolder {
+        public ImageView image;
     }
 
 }
