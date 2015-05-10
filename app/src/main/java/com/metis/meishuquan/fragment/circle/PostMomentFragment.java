@@ -5,12 +5,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.BLL.CircleOperator;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
@@ -33,8 +37,9 @@ public class PostMomentFragment extends Fragment {
     private RelativeLayout rl_emotion;
     private EditText etContent;
 
-    private List<Integer> lstUserId=null;//@好友
+    private List<Integer> lstUserId = null;//@好友
 
+    private FragmentManager fm = null;
     private boolean isSend;
 
     @Override
@@ -53,6 +58,8 @@ public class PostMomentFragment extends Fragment {
         this.rl_choose_pic = (RelativeLayout) rootView.findViewById(R.id.id_rl_post_moment_pic);
         this.rl_at = (RelativeLayout) rootView.findViewById(R.id.id_rl_post_moment_at);
         this.rl_emotion = (RelativeLayout) rootView.findViewById(R.id.id_rl_post_moment_emotion);
+
+        this.fm = getActivity().getSupportFragmentManager();
     }
 
     private void initTitleBar() {
@@ -63,19 +70,12 @@ public class PostMomentFragment extends Fragment {
                 if (!isSend) {
                     String content = etContent.getText().toString();
 
-
                     CirclePushBlogParm parm = new CirclePushBlogParm();
                     parm.setContent(content);
                     parm.setDevice("美术圈");
                     parm.setType(SupportTypeEnum.Circle.getVal());
 
-                    CircleOperator.getInstance().pushBlog(parm, new ApiOperationCallback<ReturnInfo<CCircleDetailModel>>() {
-                        @Override
-                        public void onCompleted(ReturnInfo<CCircleDetailModel> result, Exception exception, ServiceFilterResponse response) {
-
-                        }
-                    });
-
+                    send(parm);
                     isSend = true;
                 }
             }
@@ -89,6 +89,29 @@ public class PostMomentFragment extends Fragment {
                 ft.commit();
             }
         });
+    }
+
+    private void send(CirclePushBlogParm parm) {
+        CircleOperator.getInstance().pushBlog(parm, new ApiOperationCallback<ReturnInfo<CCircleDetailModel>>() {
+            @Override
+            public void onCompleted(ReturnInfo<CCircleDetailModel> result, Exception exception, ServiceFilterResponse response) {
+                if (result != null && result.isSuccess()) {
+                    String json = new Gson().toJson(result);
+                    Log.i("pushBlog", json);
+
+                    Toast.makeText(MainApplication.UIContext, "发送成功", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else if (exception != null) {
+                    Log.i("pushBlog", "exception:cause:" + exception.getCause() + "  message:" + exception.getMessage());
+                }
+            }
+        });
+    }
+
+    private void finish() {
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.remove(this);
+        ft.commit();
     }
 
     private void initEvent() {

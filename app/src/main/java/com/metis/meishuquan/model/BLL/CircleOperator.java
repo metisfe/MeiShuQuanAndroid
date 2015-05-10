@@ -9,6 +9,7 @@ import com.metis.meishuquan.util.SystemUtil;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 
 /**
  * Created by wangjin on 15/4/13.
@@ -18,7 +19,7 @@ public class CircleOperator {
     private static final String URL_PUSHBLOG = "v1.1/Circle/PushBlog?";
 
     private static CircleOperator operator = null;
-    private final String SESSION = MainApplication.userInfo.getCookie();
+    private static final String SESSION = MainApplication.userInfo.getCookie();
     private boolean flag;
 
     private CircleOperator() {
@@ -43,7 +44,7 @@ public class CircleOperator {
             if (flag) {
                 StringBuffer PATH = new StringBuffer(URL_PUSHBLOG);
                 PATH.append("session=" + SESSION);
-                ApiDataProvider.getmClient().invokeApi(PATH.toString(), param, HttpGet.METHOD_NAME, null,
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), param, HttpPost.METHOD_NAME, null,
                         (Class<ReturnInfo<CCircleDetailModel>>) new ReturnInfo<CCircleDetailModel>().getClass(), callback);
             }
         }

@@ -1,6 +1,7 @@
 package com.metis.meishuquan.model.circle;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +34,9 @@ public class CirclePushBlogParm implements Serializable {
     }
 
     public List<Integer> getUserIds() {
+        if (UserIds == null) {
+            UserIds = new ArrayList<Integer>();
+        }
         return UserIds;
     }
 
@@ -41,6 +45,9 @@ public class CirclePushBlogParm implements Serializable {
     }
 
     public List<CircleImage> getImages() {
+        if (Images == null) {
+            Images = new ArrayList<CircleImage>();
+        }
         return Images;
     }
 

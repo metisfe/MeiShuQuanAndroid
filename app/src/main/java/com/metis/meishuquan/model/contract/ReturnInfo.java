@@ -33,6 +33,10 @@ public class ReturnInfo<E> {
         return "";
     }
 
+    public boolean isSuccess(){
+        return option.isSuccess();
+    }
+
     public E getData() {
         return data;
     }
