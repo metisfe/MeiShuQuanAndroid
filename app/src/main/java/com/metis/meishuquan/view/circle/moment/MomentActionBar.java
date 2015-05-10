@@ -3,6 +3,7 @@ package com.metis.meishuquan.view.circle.moment;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,6 +15,13 @@ import com.metis.meishuquan.R;
 public class MomentActionBar extends LinearLayout {
     private LinearLayout repostActionLayout, commentActionLayout, likeActionLayout;
     private TextView tvRepostCount, tvCommentCount, tvLikeCount;
+    private OnActionButtonClickListener onActionButtonClickListener;
+
+    public interface OnActionButtonClickListener
+    {
+        public void onComment();
+        public void onLike();
+    }
 
     public MomentActionBar(Context context) {
         super(context);
@@ -23,6 +31,11 @@ public class MomentActionBar extends LinearLayout {
     public MomentActionBar(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
+    }
+
+    public void setOnActionButtonClickListener(OnActionButtonClickListener onActionButtonClickListener)
+    {
+        this.onActionButtonClickListener = onActionButtonClickListener;
     }
 
     public void setData(int repostCount, int commentCount, int likeCount)
@@ -42,5 +55,25 @@ public class MomentActionBar extends LinearLayout {
         tvRepostCount = (TextView) this.findViewById(R.id.tv_repost_count);
         tvCommentCount = (TextView) this.findViewById(R.id.tv_comment_count);
         tvLikeCount = (TextView) this.findViewById(R.id.tv_like_count);
+
+        commentActionLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onActionButtonClickListener != null)
+                {
+                    onActionButtonClickListener.onComment();
+                }
+            }
+        });
+
+        likeActionLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onActionButtonClickListener != null)
+                {
+                    onActionButtonClickListener.onLike();
+                }
+            }
+        });
     }
 }
