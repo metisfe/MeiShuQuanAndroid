@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * Created by wudi on 4/2/2015.
  */
-public class CircleFragment extends Fragment {
+public class CircleFragment extends CircleBaseFragment {
 
     private TabBar tabBar;
     private CircleTitleBar titleBar;
@@ -43,8 +43,8 @@ public class CircleFragment extends Fragment {
         this.tabBar.setTabSelectedListener(MainApplication.MainActivity);
         this.titleBar = (CircleTitleBar) rootView.findViewById(R.id.fragment_shared_circlefragment_title_bar);
 
-//        titleBar.setText("user name");
-//        titleBar.setRightButton("post", 0, new View.OnClickListener() {
+//        titleBar.setText("微博");
+//        titleBar.setRightButton("", R.drawable.icon_pic, new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
 //                PostMomentFragment postMomentFragment = new PostMomentFragment();
@@ -93,6 +93,21 @@ public class CircleFragment extends Fragment {
         this.viewPager.setAdapter(fragmentPagerAdapter);
         this.indicator.setViewPager(viewPager);
         return rootView;
+    }
+
+    @Override
+    public void timeToSetTitleBar() {
+        getTitleBar().setText("微博");
+        getTitleBar().setRightButton("", R.drawable.icon_pic, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PostMomentFragment postMomentFragment = new PostMomentFragment();
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.add(R.id.content_container, postMomentFragment);
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
     }
 
     class TabPageIndicatorAdapter extends FragmentStatePagerAdapter {

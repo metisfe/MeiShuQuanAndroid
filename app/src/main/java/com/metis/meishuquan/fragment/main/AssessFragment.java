@@ -38,6 +38,7 @@ import com.metis.meishuquan.fragment.assess.AssessListItemFragment;
 import com.metis.meishuquan.fragment.assess.AssessPublishFragment;
 import com.metis.meishuquan.fragment.assess.ChooseCityFragment;
 import com.metis.meishuquan.fragment.assess.FilterConditionForAssessListFragment;
+import com.metis.meishuquan.fragment.circle.CircleBaseFragment;
 import com.metis.meishuquan.model.BLL.AssessOperator;
 import com.metis.meishuquan.model.assess.AllAssess;
 import com.metis.meishuquan.model.assess.Assess;
