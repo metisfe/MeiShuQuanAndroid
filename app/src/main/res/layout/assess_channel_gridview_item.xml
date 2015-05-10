@@ -11,10 +11,10 @@
         android:layout_centerInParent="true"
         android:orientation="vertical">
 
-        <com.loopj.android.image.SmartImageView
+        <ImageView
             android:id="@+id/id_assess_channel_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/ic_launcher" />
 
         <TextView
@@ -23,7 +23,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/id_assess_channel_img"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
+            android:textColor="#424242"
+            android:textSize="14sp"
             android:text="测试" />
     </LinearLayout>
 

@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.common.reflect.TypeToken;
@@ -22,6 +23,7 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.BLL.AssessOperator;
 import com.metis.meishuquan.model.assess.Channel;
 import com.metis.meishuquan.model.assess.ChannelAndGradeData;
+import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 
 import java.util.ArrayList;
@@ -109,7 +111,7 @@ public class PublishAssessChooseTypeFragment extends Fragment {
         }
 
         class ViewHolder {
-            SmartImageView imgView;
+            ImageView imgView;
             TextView textView;
         }
 
@@ -134,20 +136,20 @@ public class PublishAssessChooseTypeFragment extends Fragment {
             if (view == null) {
                 view = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.assess_channel_gridview_item, null, false);
                 holder = new ViewHolder();
-                holder.imgView = (SmartImageView) view.findViewById(R.id.id_assess_channel_img);
+                holder.imgView = (ImageView) view.findViewById(R.id.id_assess_channel_img);
                 holder.textView = (TextView) view.findViewById(R.id.id_assess_channel_textview);
                 view.setTag(holder);
             } else {
                 holder = (ViewHolder) view.getTag();
             }
             Channel channel = channels.get(i);
-//            holder.imgView.setImageUrl();
+            ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(channels.get(i).getThumbnails(), holder.imgView, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height)));
             holder.textView.setText(channel.getChannelName());
             return view;
         }
     }
 
-    interface OnSeletedChannelListener{
+    interface OnSeletedChannelListener {
         void setChannel(Channel channel);
     }
 }

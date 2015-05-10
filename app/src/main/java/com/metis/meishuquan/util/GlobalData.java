@@ -8,6 +8,7 @@ import com.metis.meishuquan.ui.SelectedTabType;
  */
 public class GlobalData {
     private static GlobalData instance = new GlobalData();
+    public static int AssessIndex = 0;
     public static CCircleDetailModel moment; //for data between moment list and moment detail
 
     private SelectedTabType tabTypeSelected;

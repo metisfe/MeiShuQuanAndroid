@@ -11,6 +11,8 @@ public class Channel implements Serializable {
 
     private String channelName = "";
 
+    private String thumbnails="";
+
     private boolean isChecked;//辅助字段
 
     public int getChannelId() {
@@ -27,6 +29,14 @@ public class Channel implements Serializable {
 
     public void setChannelName(String channelName) {
         this.channelName = channelName;
+    }
+
+    public String getThumbnails() {
+        return thumbnails;
+    }
+
+    public void setThumbnails(String thumbnails) {
+        this.thumbnails = thumbnails;
     }
 
     public boolean isChecked() {

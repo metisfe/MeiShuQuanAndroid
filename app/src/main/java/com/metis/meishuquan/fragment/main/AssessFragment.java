@@ -46,6 +46,7 @@ import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.AssessStateEnum;
 import com.metis.meishuquan.model.enums.QueryTypeEnum;
 import com.metis.meishuquan.model.topline.ChannelItem;
+import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.popup.AssessChoosePhotoPopupWindow;
@@ -100,6 +101,12 @@ public class AssessFragment extends Fragment {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_commentfragment, container, false);
         initView(rootView);
         initEvent();
+
+        if (GlobalData.AssessIndex > 0)
+        {
+            indicator.setCurrentItem(GlobalData.AssessIndex);
+            GlobalData.AssessIndex = 0;
+        }
         return rootView;
     }
 
@@ -168,6 +175,12 @@ public class AssessFragment extends Fragment {
         ft.addToBackStack(null);
         ft.commit();
         this.photoPath = "";
+        assessPublishFragment.setOnAssessPublishedListner(new AssessPublishFragment.OnAssessPublishedListner() {
+            @Override
+            public void refreshSescondTab(int index) {
+                GlobalData.AssessIndex = index;
+            }
+        });
     }
 
     private void initView(ViewGroup rootView) {

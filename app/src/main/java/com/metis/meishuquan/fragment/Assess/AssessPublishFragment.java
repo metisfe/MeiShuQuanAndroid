@@ -79,6 +79,16 @@ public class AssessPublishFragment extends Fragment {
     private static final int PICK_PICTURE = 2;
     private String photoPath = "";
 
+    private OnAssessPublishedListner onAssessPublishedListner;
+
+    public void setOnAssessPublishedListner(OnAssessPublishedListner onAssessPublishedListner) {
+        this.onAssessPublishedListner = onAssessPublishedListner;
+    }
+
+    public interface OnAssessPublishedListner {
+        void refreshSescondTab(int index);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_assess_publish, null);
@@ -217,6 +227,7 @@ public class AssessPublishFragment extends Fragment {
                         FragmentTransaction ft = fm.beginTransaction();
                         ft.replace(R.id.content_container, new AssessFragment());
                         ft.commit();
+                        onAssessPublishedListner.refreshSescondTab(1);
                     }
                 }
             });
@@ -268,11 +279,12 @@ public class AssessPublishFragment extends Fragment {
                                 FragmentTransaction ft = fm.beginTransaction();
                                 ft.replace(R.id.content_container, new AssessFragment());
                                 ft.commit();
+                                Bimp.getInstance().drr.clear();
+                                onAssessPublishedListner.refreshSescondTab(1);
                             }
                         }
                     });
                 }
-
             }
         });
     }
