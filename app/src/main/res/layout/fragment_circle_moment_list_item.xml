@@ -80,7 +80,7 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <TextView
+    <com.metis.meishuquan.view.circle.moment.comment.EmotionTextView
         android:id="@+id/id_tv_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

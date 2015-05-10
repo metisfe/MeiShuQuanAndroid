@@ -23,6 +23,8 @@ import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
+import com.metis.meishuquan.view.circle.moment.comment.EmotionEditText;
+import com.metis.meishuquan.view.circle.moment.comment.EmotionSelectView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
@@ -36,12 +38,18 @@ public class PostMomentFragment extends Fragment {
     private RelativeLayout rl_choose_pic;
     private RelativeLayout rl_at;
     private RelativeLayout rl_emotion;
-    private EditText etContent;
+    private EmotionEditText editText;
 
     private List<Integer> lstUserId = null;//@好友
 
     private FragmentManager fm = null;
     private boolean isSend;
+
+    private static final int ScreenHeight = MainApplication.getDisplayMetrics().heightPixels;
+    private static final int EmotionSelectViewHeight = MainApplication.Resources.getDimensionPixelSize(R.dimen.emotion_input_height);
+    private static final int EmotionSwitchContainerHeight = MainApplication.Resources.getDimensionPixelSize(R.dimen.switch_emotion_container_height);
+    private int MarginTopForEmotionSwitch = ScreenHeight - EmotionSelectViewHeight - EmotionSwitchContainerHeight;
+    private EmotionSelectView emotionSelectView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -54,7 +62,19 @@ public class PostMomentFragment extends Fragment {
 
     private void initView(ViewGroup rootView) {
         this.titleBar = (CircleTitleBar) rootView.findViewById(R.id.fragment_circle_postmoment_title_bar);
-        this.etContent = (EditText) rootView.findViewById(R.id.id_et_input_cirle_post_moment);
+        this.editText = (EmotionEditText) rootView.findViewById(R.id.id_et_input_cirle_post_moment);
+        editText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (emotionSelectView.isShown()) {
+                    emotionSelectView.setVisibility(View.GONE);
+//                    emotionKeyboardSwitchButton.setImageResource(EMOTION_DRAWABLE_RESOURCE_ID);
+                }
+            }
+        });
+        editText.requestFocus();
+        emotionSelectView = (EmotionSelectView) rootView.findViewById(R.id.postmoment_emotion_input);
+        emotionSelectView.setEditText(editText);
 
         this.rl_choose_pic = (RelativeLayout) rootView.findViewById(R.id.id_rl_post_moment_pic);
         this.rl_at = (RelativeLayout) rootView.findViewById(R.id.id_rl_post_moment_at);
@@ -69,7 +89,7 @@ public class PostMomentFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (!isSend) {
-                    String content = etContent.getText().toString();
+                    String content = editText.getText().toString();
 
                     CirclePushBlogParm parm = new CirclePushBlogParm();
                     parm.setContent(content);
@@ -104,14 +124,14 @@ public class PostMomentFragment extends Fragment {
                 }
             }
         });
-        Utils.hideInputMethod(MainApplication.UIContext, etContent);
+        Utils.hideInputMethod(MainApplication.UIContext, editText);
     }
 
     private void finish() {
         FragmentTransaction ft = fm.beginTransaction();
         ft.remove(this);
         ft.commit();
-        Utils.hideInputMethod(MainApplication.UIContext, etContent);
+        Utils.hideInputMethod(MainApplication.UIContext, editText);
     }
 
     private void initEvent() {
@@ -135,7 +155,8 @@ public class PostMomentFragment extends Fragment {
         this.rl_emotion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                emotionSelectView.setVisibility(View.VISIBLE);
+                Utils.hideInputMethod(MainApplication.UIContext, editText);
             }
         });
     }

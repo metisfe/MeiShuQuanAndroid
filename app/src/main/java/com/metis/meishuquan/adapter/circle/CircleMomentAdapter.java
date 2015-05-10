@@ -13,6 +13,7 @@ import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.assess.Assess;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.view.circle.moment.MomentActionBar;
+import com.metis.meishuquan.view.circle.moment.comment.EmotionTextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,7 +34,7 @@ public class CircleMomentAdapter extends BaseAdapter {
         TextView name;
         TextView grade;
         TextView createTime;
-        TextView content;
+        EmotionTextView content;
         TextView device;
         SmartImageView imageView;
         MomentActionBar momentActionBar;
@@ -66,7 +67,7 @@ public class CircleMomentAdapter extends BaseAdapter {
             viewHolder.name = (TextView) convertView.findViewById(R.id.id_username);
             viewHolder.grade = (TextView) convertView.findViewById(R.id.id_tv_grade);
             viewHolder.createTime = (TextView) convertView.findViewById(R.id.id_createtime);
-            viewHolder.content = (TextView) convertView.findViewById(R.id.id_tv_content);
+            viewHolder.content = (EmotionTextView) convertView.findViewById(R.id.id_tv_content);
             viewHolder.device = (TextView) convertView.findViewById(R.id.tv_device);
             viewHolder.imageView = (SmartImageView) convertView.findViewById(R.id.id_img_content);
             viewHolder.momentActionBar = (MomentActionBar) convertView.findViewById(R.id.moment_action_bar);
