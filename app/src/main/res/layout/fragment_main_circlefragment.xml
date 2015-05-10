@@ -33,7 +33,7 @@
         android:layout_height="match_parent"
         android:background="@color/bg_listview"
         android:layout_marginBottom="44dp"
-        android:layout_above="@id/fragment_shared_circlefragment_tab_bar"
+        android:layout_above="@+id/fragment_shared_circlefragment_tab_bar"
         android:layout_below="@id/fragment_shared_circlefragment_topbar_indicator" />
 
     <!--<com.metis.meishuquan.view.shared.TabBar-->

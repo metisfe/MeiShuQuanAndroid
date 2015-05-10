@@ -33,6 +33,8 @@ public class AssessChoosePhotoPopupWindow extends PopupWindow {
 
     private static final int TAKE_PHOTO = 1;
     private static final int PICK_PICTURE = 2;
+
+
     private AssessFragment.OnPathChannedListner listner;
 
     private AssessFragment.OnWordCheckedListner wordCheckedListner;
