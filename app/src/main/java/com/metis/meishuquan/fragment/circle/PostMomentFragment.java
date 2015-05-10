@@ -21,6 +21,7 @@ import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CirclePushBlogParm;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
+import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
@@ -83,10 +84,7 @@ public class PostMomentFragment extends Fragment {
         titleBar.setLeftButton("取消", 0, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.remove(PostMomentFragment.this);
-                ft.commit();
+                finish();
             }
         });
     }
@@ -106,12 +104,14 @@ public class PostMomentFragment extends Fragment {
                 }
             }
         });
+        Utils.hideInputMethod(MainApplication.UIContext, etContent);
     }
 
     private void finish() {
         FragmentTransaction ft = fm.beginTransaction();
         ft.remove(this);
         ft.commit();
+        Utils.hideInputMethod(MainApplication.UIContext, etContent);
     }
 
     private void initEvent() {
