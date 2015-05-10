@@ -408,6 +408,12 @@ public class MomentDetailFragment extends Fragment {
                 int padding = (int) ((MainApplication.Resources.getDisplayMetrics().widthPixels - density * 40 * columnCount) / (columnCount * 2));
                 padding = Math.min(padding, 20);
                 params.setMargins(padding, 0 , padding , 0);
+
+                image.setLayoutParams(params);
+                image.setBackgroundResource(R.drawable.ic_launcher);
+                image.setImageUrl(user.avatar);
+
+                viewHolder.container.addView(image);
             }
 
             return convertView;
