@@ -71,7 +71,7 @@ public class CircleTitleBar extends RelativeLayout {
             this.rightTextView.setVisibility(GONE);
         }
 
-        if (resourceId > 0) {
+        if (resourceId != 0) {
             this.rightImageView.setImageResource(resourceId);
         }
         else

@@ -461,12 +461,7 @@ public class AssessInfoActivity extends FragmentActivity {
                         if (selectedAssessComment != null) {
                             param.setReplyUserId(selectedAssessComment.getUser().getUserId());
                         }
-<<<<<<< Updated upstream
                         param.setVoiceLength((int) seconds);
-
-=======
-                        //param.setSession(MainApplication.getSession());
->>>>>>> Stashed changes
 
                         //发表评论
                         AssessOperator.getInstance().pushComment(param, new ApiOperationCallback<ReturnInfo<AssessComment>>() {

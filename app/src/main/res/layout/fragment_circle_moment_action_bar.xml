@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:padding="10dp"
-    android:background="#f1f1f1"
+    android:background="#e2e2e2"
+    android:padding="5dp"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -16,8 +16,8 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:gravity="center"
             android:src="@drawable/circle_moment_detail_share" />
 
@@ -40,8 +40,8 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:gravity="center"
             android:src="@drawable/ic_action_topline_comment_count" />
 
@@ -64,8 +64,8 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:gravity="center"
             android:src="@drawable/icon_unsupport" />
 
