@@ -2,7 +2,6 @@ package com.metis.meishuquan.fragment.course;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -16,7 +15,6 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,15 +30,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.activity.course.CourseInfoActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.course.CourseInfo;
-import com.metis.meishuquan.model.enums.SupportStepTypeEnum;
+import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.model.topline.ContentInfo;
 import com.metis.meishuquan.model.topline.Urls;
 import com.metis.meishuquan.util.ImageLoaderUtils;
@@ -133,7 +129,7 @@ public class CourseWordAndPhontoInfoFragment extends Fragment {
                 //点赞加1效果
                 supportOrStep(tvSupportCount, tvSupportAddOne, imgSupport, count, true);
 
-                CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), courseInfo.getData().getCourseId(), SupportStepTypeEnum.Course, 1, new ApiOperationCallback<ReturnInfo<String>>() {
+                CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), courseInfo.getData().getCourseId(), SupportTypeEnum.Course, 1, new ApiOperationCallback<ReturnInfo<String>>() {
                     @Override
                     public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                         if (result != null && result.getInfo().equals(String.valueOf(0))) {
@@ -170,7 +166,7 @@ public class CourseWordAndPhontoInfoFragment extends Fragment {
                 }
                 supportOrStep(tvStepCount, tvStepAddOne, imgStep, count, false);
 
-                CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), courseInfo.getData().getCourseId(), SupportStepTypeEnum.Course, 1, new ApiOperationCallback<ReturnInfo<String>>() {
+                CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), courseInfo.getData().getCourseId(), SupportTypeEnum.Course, 1, new ApiOperationCallback<ReturnInfo<String>>() {
                     @Override
                     public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                         if (result != null && result.getInfo().equals(String.valueOf(0))) {

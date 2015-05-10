@@ -104,8 +104,8 @@ public class CommentTypeVoiceView extends RelativeLayout {
             this.tvCommentTime.setText(assessComment.getCommentDateTime());//评论时间
 
             ViewGroup.LayoutParams lp = this.btnPlayVoice.getLayoutParams();
-            lp.width = (int) (mMinVoiceWidth + (mMaxVoiceWidth / 60f + assessComment.getTime()));
-            this.tvVoiceTime.setText(Math.round(assessComment.getTime()) + "\"");
+            lp.width = (int) (mMinVoiceWidth + (mMaxVoiceWidth / 60f + assessComment.getVoiceLength()));
+            this.tvVoiceTime.setText(Math.round(assessComment.getVoiceLength()) + "\"");
         }
     }
 

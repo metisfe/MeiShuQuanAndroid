@@ -7,23 +7,23 @@ import com.google.gson.annotations.SerializedName;
  */
 public class CircleImage {
     @SerializedName("id")
-    public int id;
+    public int Id;
 
     @SerializedName("originalImage")
-    public String originalImage;
+    public String OriginalImage;
 
     @SerializedName("thumbnails")
-    public String thumbnails ;
+    public String Thumbnails ;
 
     @SerializedName("voiceUrl")
-    public String voiceUrl ;
+    public String VoiceUrl ;
 
     @SerializedName("thumbnailsHeight")
-    public int thumbnailsHeight ;
+    public int ThumbnailsHeight ;
 
     @SerializedName("thumbnailsWidth")
-    public int thumbnailsWidth ;
+    public int ThumbnailsWidth ;
 
     @SerializedName("circleId")
-    public int circleId ;
+    public int CircleId ;
 }

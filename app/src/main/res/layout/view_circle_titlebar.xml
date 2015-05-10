@@ -6,20 +6,23 @@
 
     <RelativeLayout
         android:id="@+id/views_circle_titlebar_leftbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:minWidth="50dp">
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_alignParentLeft="true">
 
         <TextView
             android:id="@+id/views_circle_titlebar_leftbuttontext"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/common_color_cfd5e0"
+            android:textSize="18sp" />
 
         <ImageView
             android:id="@+id/views_circle_titlebar_leftbuttonimage"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_width="22.5dp"
+            android:layout_height="22.5dp"
+            android:layout_centerInParent="true"/>
     </RelativeLayout>
 
     <TextView
@@ -34,20 +37,26 @@
 
     <RelativeLayout
         android:id="@+id/views_circle_titlebar_rightbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
         android:layout_alignParentRight="true"
-        android:minWidth="50dp">
+        android:paddingRight="5dp">
 
         <TextView
             android:id="@+id/views_circle_titlebar_rightbuttontext"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:textColor="@color/common_color_cfd5e0"
+            android:layout_alignParentRight="true"
+            android:textSize="18sp"
+            android:layout_centerVertical="true" />
 
         <ImageView
             android:id="@+id/views_circle_titlebar_rightbuttonimage"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_width="22.5dp"
+            android:layout_alignParentRight="true"
+            android:layout_height="22.5dp"
+            android:layout_centerVertical="true" />
     </RelativeLayout>
 
 </RelativeLayout>

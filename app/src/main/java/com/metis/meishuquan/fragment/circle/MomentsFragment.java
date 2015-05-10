@@ -41,17 +41,28 @@ import java.util.List;
 public class MomentsFragment extends CircleBaseFragment {
     @Override
     public void timeToSetTitleBar() {
-        getTitleBar().setText("个人主页");
-        getTitleBar().setRightButton("", 0, null);
+        getTitleBar().setText("微博");
+        getTitleBar().setRightButton("", R.drawable.icon_pic, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PostMomentFragment postMomentFragment = new PostMomentFragment();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.add(R.id.content_container, postMomentFragment);
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
     }
 
     private DragListView listView;
     private List<CCircleDetailModel> list = new ArrayList<>();
     private CircleMomentAdapter circleMomentAdapter;
+    private FragmentManager fm = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View contextView = inflater.inflate(R.layout.fragment_circle_momentsfragment, container, false);
+        fm = getActivity().getSupportFragmentManager();
         this.listView = (DragListView) contextView.findViewById(R.id.fragment_circle_moments_list);
         circleMomentAdapter = new CircleMomentAdapter(list);
         this.listView.setAdapter(circleMomentAdapter);

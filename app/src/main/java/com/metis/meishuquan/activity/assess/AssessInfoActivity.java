@@ -5,17 +5,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -35,31 +31,26 @@ import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.ImagePreviewActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
-import com.metis.meishuquan.fragment.main.AssessFragment;
 import com.metis.meishuquan.manager.common.MediaManager;
 import com.metis.meishuquan.manager.common.RecorderManager;
 import com.metis.meishuquan.model.BLL.AssessOperator;
 import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.assess.Assess;
 import com.metis.meishuquan.model.assess.AssessComment;
-import com.metis.meishuquan.model.assess.AssessCommentImg;
 import com.metis.meishuquan.model.assess.AssessCommentImgData;
 import com.metis.meishuquan.model.assess.AssessSupportAndComment;
 import com.metis.meishuquan.model.assess.Bimp;
-import com.metis.meishuquan.model.assess.ImgOrVoiceUrl;
 import com.metis.meishuquan.model.assess.PushCommentParam;
 import com.metis.meishuquan.model.commons.SimpleUser;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.CommentTypeEnum;
 import com.metis.meishuquan.model.enums.FileUploadTypeEnum;
-import com.metis.meishuquan.model.enums.SupportStepTypeEnum;
+import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.util.FileUtil;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.Utils;
@@ -76,8 +67,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -201,6 +190,7 @@ public class AssessInfoActivity extends FragmentActivity {
                             if (result != null && result.getInfo().equals(String.valueOf(0))) {
                                 Gson gson = new Gson();
                                 String json = gson.toJson(result);
+                                Log.i("pushComment", "返回数据：" + json);
                                 refreshList(json);
                                 Bimp.getInstance().drr.clear();
                             }
@@ -443,7 +433,7 @@ public class AssessInfoActivity extends FragmentActivity {
         });
     }
 
-    private void sendRecordVoice(float seconds, String filePath) {
+    private void sendRecordVoice(final float seconds, String filePath) {
         //上传录音
         byte[] data = FileUtil.getBytesFromFile(filePath);
 
@@ -456,7 +446,6 @@ public class AssessInfoActivity extends FragmentActivity {
                 if (!response.getContent().isEmpty()) {
                     String json = response.getContent();
                     Log.i("fileUpload", json);
-                    String fileStr = "";
                     try {
                         JSONObject object = new JSONObject(json);
                         JSONArray array = object.getJSONArray("data");
@@ -472,7 +461,8 @@ public class AssessInfoActivity extends FragmentActivity {
                         if (selectedAssessComment != null) {
                             param.setReplyUserId(selectedAssessComment.getUser().getUserId());
                         }
-                        param.setSession(MainApplication.getSession());
+                        param.setVoiceLength((int) seconds);
+
 
                         //发表评论
                         AssessOperator.getInstance().pushComment(param, new ApiOperationCallback<ReturnInfo<AssessComment>>() {
@@ -528,7 +518,7 @@ public class AssessInfoActivity extends FragmentActivity {
         if (supportCount != null) {
             int temp = (int) supportCount;
             if (temp == count + 1) {
-                Toast.makeText(MainApplication.UIContext, "已赞", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainApplication.UIContext, "您已赞", Toast.LENGTH_SHORT).show();
                 return;
             }
         }
@@ -547,7 +537,7 @@ public class AssessInfoActivity extends FragmentActivity {
         }, 1000);
 
         //后台执行赞操作
-        CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), assess.getId(), SupportStepTypeEnum.Assess, 1, new ApiOperationCallback<ReturnInfo<String>>() {
+        CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), assess.getId(), SupportTypeEnum.Assess, 1, new ApiOperationCallback<ReturnInfo<String>>() {
             @Override
             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
@@ -619,8 +609,10 @@ public class AssessInfoActivity extends FragmentActivity {
         //点评状态
         if (assess.getCommentCount() > 0) {
             this.tvAssessState.setText("已点评");
+            this.tvAssessState.setTextColor(getResources().getColor(R.color.common_color_fb6d6d));
         } else {
             this.tvAssessState.setText("未点评");
+            this.tvAssessState.setTextColor(getResources().getColor(R.color.common_color_7e7e7e));
         }
         //类型
         this.tvType.setText(assess.getAssessChannel().getChannelName().isEmpty() ? "" : assess.getAssessChannel().getChannelName());

@@ -178,7 +178,8 @@
             <LinearLayout
                 android:id="@+id/id_ll_triangle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="-2dp">
 
                 <ImageView
                     android:id="@+id/id_img_triangle"
@@ -186,15 +187,14 @@
                     android:layout_height="15dp"
                     android:layout_marginLeft="50dp"
                     android:src="@drawable/icon_triangle_up"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
             </LinearLayout>
 
             <com.metis.meishuquan.view.course.FlowLayout
                 android:id="@+id/id_flow_user_portrait"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-2dp"
-                android:background="#e3e0e0" />
+                android:background="#f0f0f0" />
 
             <View
                 android:layout_width="match_parent"

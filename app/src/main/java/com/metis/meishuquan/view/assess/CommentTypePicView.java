@@ -75,6 +75,7 @@ public class CommentTypePicView extends RelativeLayout {
     }
 
     private void initData(AssessComment assessComment) {
+        llImgs.removeAllViews();
         if (assessComment.getUser() != null) {
 
             ImageLoaderUtils.getImageLoader(this.context).

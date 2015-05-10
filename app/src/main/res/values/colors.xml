@@ -223,4 +223,8 @@
     <color name="tv_title_bar">#fb6d6d</color>
     <!--头条频道管理-->
     <color name="tv_channel_item">#7e7e7e</color>
+    <!--公用颜色-->
+    <color name="common_color_7e7e7e">#7e7e7e</color>
+    <color name="common_color_fb6d6d">#fb6d6d</color>
+    <color name="common_color_cfd5e0">#CFD5E0</color>
 </resources>

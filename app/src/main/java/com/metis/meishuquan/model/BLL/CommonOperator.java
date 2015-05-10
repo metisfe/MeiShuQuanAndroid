@@ -9,7 +9,7 @@ import com.metis.meishuquan.model.enums.BlockTypeEnum;
 import com.metis.meishuquan.model.enums.FileUploadTypeEnum;
 import com.metis.meishuquan.model.enums.PrivateResultEnum;
 import com.metis.meishuquan.model.enums.PrivateTypeEnum;
-import com.metis.meishuquan.model.enums.SupportStepTypeEnum;
+import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.SystemUtil;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -55,7 +55,7 @@ public class CommonOperator {
      * @param result   1:赞  2:踩
      * @param callback 回调
      */
-    public void supportOrStep(int userid, int id, SupportStepTypeEnum type, int result, ApiOperationCallback<ReturnInfo<String>> callback) {
+    public void supportOrStep(int userid, int id, SupportTypeEnum type, int result, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuffer path = new StringBuffer(URL_SUPPORTORSTEP);

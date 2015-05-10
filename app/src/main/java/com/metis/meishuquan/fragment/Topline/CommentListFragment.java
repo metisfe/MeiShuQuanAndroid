@@ -29,7 +29,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.login.LoginActivity;
@@ -40,7 +39,7 @@ import com.metis.meishuquan.model.enums.BlockTypeEnum;
 import com.metis.meishuquan.model.enums.LoginStateEnum;
 import com.metis.meishuquan.model.enums.PrivateResultEnum;
 import com.metis.meishuquan.model.enums.PrivateTypeEnum;
-import com.metis.meishuquan.model.enums.SupportStepTypeEnum;
+import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.model.topline.AllComments;
 import com.metis.meishuquan.model.topline.Comment;
 import com.metis.meishuquan.util.ImageLoaderUtils;
@@ -441,7 +440,7 @@ public class CommentListFragment extends Fragment {
 
                     //后台提交赞加1
                     CommonOperator operator = CommonOperator.getInstance();
-                    operator.supportOrStep(MainApplication.userInfo.getUserId(), comment.getId(), SupportStepTypeEnum.NewsComment, 1, new ApiOperationCallback<ReturnInfo<String>>() {
+                    operator.supportOrStep(MainApplication.userInfo.getUserId(), comment.getId(), SupportTypeEnum.NewsComment, 1, new ApiOperationCallback<ReturnInfo<String>>() {
                         @Override
                         public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                             if (result != null && result.getInfo().equals(String.valueOf(0))) {

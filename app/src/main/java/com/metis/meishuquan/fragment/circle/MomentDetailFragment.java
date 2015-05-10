@@ -154,7 +154,7 @@ public class MomentDetailFragment extends Fragment {
         ((TextView) headerView.findViewById(R.id.id_tv_content)).setText(moment.content);
         ((TextView) headerView.findViewById(R.id.tv_device)).setText(moment.getDeviceText());
         if (moment.images.size() > 0) {
-            ((SmartImageView) headerView.findViewById(R.id.id_img_content)).setImageUrl(moment.images.get(0).thumbnails);
+            ((SmartImageView) headerView.findViewById(R.id.id_img_content)).setImageUrl(moment.images.get(0).Thumbnails);
         } else {
             ((SmartImageView) headerView.findViewById(R.id.id_img_content)).setVisibility(View.GONE);
         }

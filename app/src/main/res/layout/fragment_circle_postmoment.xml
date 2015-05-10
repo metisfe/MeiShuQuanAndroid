@@ -14,74 +14,119 @@
         android:layout_alignParentBottom="true"
         android:id="@+id/fragment_circle_postmoment_bottom_container"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="44dp"
         android:orientation="horizontal"
         android:background="@drawable/fragment_circle_postmoment_bottom_container_shape">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="take picture" />
 
-        <Button
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/id_rl_post_moment_pic"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="at somebody" />
+            android:layout_weight="1">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="emotion" />
+            <ImageView
+                android:layout_width="22.5dp"
+                android:layout_height="22.5dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/icon_pic"
+                android:text="take picture" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/id_rl_post_moment_at"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="22.5dp"
+                android:layout_height="22.5dp"
+                android:src="@drawable/icon_at"
+                android:layout_centerInParent="true"
+                android:text="take picture" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/id_rl_post_moment_emotion"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="22.5dp"
+                android:layout_height="22.5dp"
+                android:src="@drawable/icon_emotion"
+                android:layout_centerInParent="true"
+                android:text="take picture" />
+        </RelativeLayout>
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/fragment_circle_postmoment_bottom_container2"
-        android:layout_above="@id/fragment_circle_postmoment_bottom_container"
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/fragment_circle_postmoment_bottom_container2"-->
+        <!--android:layout_above="@id/fragment_circle_postmoment_bottom_container"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="50dp">-->
 
-        <CheckBox
-            android:id="@+id/fragment_circle_postmoment_bottom_container_cb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <!--<CheckBox-->
+            <!--android:id="@+id/fragment_circle_postmoment_bottom_container_cb"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content" />-->
 
-        <TextView
-            android:layout_toRightOf="@id/fragment_circle_postmoment_bottom_container_cb"
-            android:layout_centerVertical="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="as comment" />
+        <!--<TextView-->
+            <!--android:layout_toRightOf="@id/fragment_circle_postmoment_bottom_container_cb"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="as comment" />-->
 
-        <LinearLayout
-            android:id="@+id/fragment_circle_postmoment_open_area"
-            android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:background="@drawable/fragment_circle_postmoment_openchoice">
+        <!--<LinearLayout-->
+            <!--android:id="@+id/fragment_circle_postmoment_open_area"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:background="@drawable/fragment_circle_postmoment_openchoice">-->
 
-            <View
-                android:id="@+id/fragment_circle_postmoment_open_image"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/fragment_circle_postmoment_choice_false" />
+            <!--<View-->
+                <!--android:id="@+id/fragment_circle_postmoment_open_image"-->
+                <!--android:layout_width="30dp"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:background="@drawable/fragment_circle_postmoment_choice_false" />-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="open" />
-        </LinearLayout>
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:text="open" />-->
+        <!--</LinearLayout>-->
 
-    </RelativeLayout>
+    <!--</RelativeLayout>-->
 
     <EditText
+        android:id="@+id/id_et_input_cirle_post_moment"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/fragment_circle_postmoment_title_bar"
-        android:layout_above="@id/fragment_circle_postmoment_bottom_container2"
         android:singleLine="false"
+        android:paddingTop="20dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:minHeight="100dp"
         android:gravity="top"
-        android:hint="at this time, your thoughts..." />
+        android:hint="分享新鲜事…" />
+
+    <!--<GridView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:numColumns="4" />-->
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/img_topline_default"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:scaleType="centerCrop"
+        android:layout_below="@id/id_et_input_cirle_post_moment" />
 </RelativeLayout>

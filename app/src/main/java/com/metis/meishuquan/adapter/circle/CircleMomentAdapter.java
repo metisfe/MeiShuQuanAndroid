@@ -85,7 +85,7 @@ public class CircleMomentAdapter extends BaseAdapter {
         if (moment.images.size() > 0)
         {
             viewHolder.imageView.setVisibility(View.VISIBLE);
-            viewHolder.imageView.setImageUrl(moment.images.get(0).thumbnails);
+            viewHolder.imageView.setImageUrl(moment.images.get(0).Thumbnails);
         }
         else{
             viewHolder.imageView.setVisibility(View.GONE);

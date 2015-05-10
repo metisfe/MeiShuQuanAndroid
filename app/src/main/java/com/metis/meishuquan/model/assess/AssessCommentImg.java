@@ -1,70 +1,33 @@
 package com.metis.meishuquan.model.assess;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by wangjin on 15/4/24.
  */
 public class AssessCommentImg {
-    private int imgId;
-    private int assessCommnetID;
-    private String originalImage = "";
-    private String thumbnails = "";
-    private String voiceUrl = "";
-    private int thumbnailsHeight;
-    private int thumbnailsWidth;
 
-    public int getImgId() {
-        return imgId;
-    }
+    @SerializedName("imgId")
+    public int ImgId;
 
-    public void setImgId(int imgId) {
-        this.imgId = imgId;
-    }
+    @SerializedName("assessCommnetID")
+    public int AssessCommnetID;
 
-    public int getAssessCommnetID() {
-        return assessCommnetID;
-    }
+    @SerializedName("originalImage")
+    public String OriginalImage = "";
 
-    public void setAssessCommnetID(int assessCommnetID) {
-        this.assessCommnetID = assessCommnetID;
-    }
+    @SerializedName("thumbnails")
+    public String Thumbnails = "";
 
-    public String getOriginalImage() {
-        return originalImage;
-    }
+    @SerializedName("voiceUrl")
+    public String VoiceUrl = "";
 
-    public void setOriginalImage(String originalImage) {
-        this.originalImage = originalImage;
-    }
+    @SerializedName("thumbnailsHeight")
+    public int ThumbnailsHeight;
 
-    public String getThumbnails() {
-        return thumbnails;
-    }
+    @SerializedName("thumbnailsWidth")
+    public int ThumbnailsWidth;
 
-    public void setThumbnails(String thumbnails) {
-        this.thumbnails = thumbnails;
-    }
-
-    public String getVoiceUrl() {
-        return voiceUrl;
-    }
-
-    public void setVoiceUrl(String voiceUrl) {
-        this.voiceUrl = voiceUrl;
-    }
-
-    public int getThumbnailsHeight() {
-        return thumbnailsHeight;
-    }
-
-    public void setThumbnailsHeight(int thumbnailsHeight) {
-        this.thumbnailsHeight = thumbnailsHeight;
-    }
-
-    public int getThumbnailsWidth() {
-        return thumbnailsWidth;
-    }
-
-    public void setThumbnailsWidth(int thumbnailsWidth) {
-        this.thumbnailsWidth = thumbnailsWidth;
-    }
+    @SerializedName("voiceLength")
+    public int VoiceLength;
 }

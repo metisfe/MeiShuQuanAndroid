@@ -11,11 +11,12 @@ public class PushCommentParam {
     private int UserId = 0;
     private int ReplyUserId = 0;
     private String Content = "";
-//    private int score = 0;
+    //    private int score = 0;
 //    private String points = "";
     private List<AssessCommentImg> Imgs;
     private String Voice = "";
     private int CommentType = 0;
+    private int VoiceLength = 0;
 //    private String session = "";
 
 
@@ -52,6 +53,9 @@ public class PushCommentParam {
     }
 
     public List<AssessCommentImg> getImgs() {
+        if (Imgs == null) {
+            Imgs = new ArrayList<AssessCommentImg>();
+        }
         return Imgs;
     }
 
@@ -73,5 +77,13 @@ public class PushCommentParam {
 
     public void setCommentType(int commentType) {
         CommentType = commentType;
+    }
+
+    public int getVoiceLength() {
+        return VoiceLength;
+    }
+
+    public void setVoiceLength(int voiceLength) {
+        VoiceLength = voiceLength;
     }
 }

@@ -42,6 +42,7 @@ public class CircleFragment extends Fragment {
         this.tabBar = (TabBar) rootView.findViewById(R.id.fragment_shared_circlefragment_tab_bar);
         this.tabBar.setTabSelectedListener(MainApplication.MainActivity);
         this.titleBar = (CircleTitleBar) rootView.findViewById(R.id.fragment_shared_circlefragment_title_bar);
+
 //        titleBar.setText("user name");
 //        titleBar.setRightButton("post", 0, new View.OnClickListener() {
 //            @Override

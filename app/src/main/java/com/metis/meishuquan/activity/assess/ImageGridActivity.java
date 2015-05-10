@@ -69,21 +69,23 @@ public class ImageGridActivity extends Activity {
                     list.add(it.next());
                 }
 
-//                if (Bimp.act_bool) {
-////                    Intent intent = new Intent(ImageGridActivity.this,
-////                            PublishedActivity.class);
-////                    startActivity(intent);
-//                    Bimp.act_bool = false;
-//                }
-                for (int i = 0; i < list.size(); i++) {
-                    if (Bimp.getInstance().drr.size() < 9) {
-                        Bimp.getInstance().drr.add(list.get(i));
+                if (list.size() > 0) {
+                    for (int i = 0; i < list.size(); i++) {
+                        if (Bimp.getInstance().drr.size() < 9) {
+                            Bimp.getInstance().drr.add(list.get(i));
+                        }
                     }
                 }
                 finish();
             }
 
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Bimp.getInstance().drr.clear();
     }
 
     private void initView() {

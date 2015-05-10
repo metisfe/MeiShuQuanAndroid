@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -18,7 +17,6 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,8 +38,6 @@ import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.loopj.android.image.SmartImageView;
-import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.ImagePreviewActivity;
@@ -52,17 +48,15 @@ import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.BlockTypeEnum;
-import com.metis.meishuquan.model.enums.LoginStateEnum;
 import com.metis.meishuquan.model.enums.PrivateResultEnum;
 import com.metis.meishuquan.model.enums.PrivateTypeEnum;
-import com.metis.meishuquan.model.enums.SupportStepTypeEnum;
+import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.model.topline.ContentInfo;
 import com.metis.meishuquan.model.topline.RelatedRead;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
 import com.metis.meishuquan.model.topline.Urls;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.ImageUtil;
-import com.metis.meishuquan.view.Common.MatchParentImageView;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.metis.meishuquan.view.topline.MeasureableListView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -401,7 +395,7 @@ public class ItemInfoFragment extends Fragment {
 
                 //判断登录状态
                 if (MainApplication.isLogin()) {
-                    CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), newsId, SupportStepTypeEnum.News, 1, new ApiOperationCallback<ReturnInfo<String>>() {
+                    CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), newsId, SupportTypeEnum.News, 1, new ApiOperationCallback<ReturnInfo<String>>() {
                         @Override
                         public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                             if (result != null && result.getInfo().equals(String.valueOf(0))) {
@@ -440,7 +434,7 @@ public class ItemInfoFragment extends Fragment {
 
                 //判断登录状态
                 if (MainApplication.isLogin()) {
-                    CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), newsId, SupportStepTypeEnum.News, 1, new ApiOperationCallback<ReturnInfo<String>>() {
+                    CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), newsId, SupportTypeEnum.News, 1, new ApiOperationCallback<ReturnInfo<String>>() {
                         @Override
                         public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                             if (result != null && result.getInfo().equals(String.valueOf(0))) {
