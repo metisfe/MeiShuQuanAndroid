@@ -18,6 +18,8 @@ public class CircleListAdapter extends BaseAdapter {
     private List<CCircleDetailModel> momentList = new ArrayList<CCircleDetailModel>();
     private ViewHolder holder;
 
+    private OnCircleClickListener mListener = null;
+
     public CircleListAdapter(List<CCircleDetailModel> momentList) {
         this.momentList = momentList;
     }
@@ -51,7 +53,7 @@ public class CircleListAdapter extends BaseAdapter {
     @Override
     public View getView(final int i, View convertView, ViewGroup view) {
         ViewHolder viewHolder = new ViewHolder();
-        CCircleDetailModel moment =  momentList.get(i);
+        final CCircleDetailModel moment =  momentList.get(i);
         if (convertView == null)
         {
             convertView = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_circle_moment_list_item, null);
@@ -72,6 +74,15 @@ public class CircleListAdapter extends BaseAdapter {
         }
 
         viewHolder.avatar.setImageUrl(moment.user.avatar);
+        viewHolder.avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.OnClick(v, i, moment);
+                }
+            }
+        });
+
         viewHolder.name.setText(moment.user.name);
         viewHolder.grade.setText(moment.user.grade);
         viewHolder.createTime = (TextView) convertView.findViewById(R.id.id_createtime);
@@ -89,6 +100,28 @@ public class CircleListAdapter extends BaseAdapter {
         viewHolder.device.setText(moment.getDeviceText());
         viewHolder.momentActionBar.setData(moment.relayCount, moment.comentCount, moment.supportCount);
 
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.OnClick(v, i, moment);
+                }
+            }
+        });
         return convertView;
+    }
+
+    public void setOnCircleClickListener (OnCircleClickListener listener) {
+        mListener = listener;
+    }
+
+    public static interface OnCircleClickListener {
+        public void OnClick (View view, int index, CCircleDetailModel model);
     }
 }

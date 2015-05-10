@@ -3,5 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.metis.meishuquan.activity.info.homepage.StudioAlbumActivity">
-
+    <com.tonicartos.widget.stickygridheaders.StickyGridHeadersGridView
+        android:id="@+id/album_grid"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:numColumns="3"
+        />
 </RelativeLayout>
