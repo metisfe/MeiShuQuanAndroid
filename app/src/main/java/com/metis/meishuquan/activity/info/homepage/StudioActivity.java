@@ -152,6 +152,7 @@ public class StudioActivity extends BaseActivity implements
                     //TODO
                     mUser.setUserRole(3);
                     mUser.setUserId(100090);
+                    loadFirstTab();
                     fillUser(user);
                     if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
                         loadStudioInfo(mUser.getUserId(), new UserInfoOperator.OnGetListener<StudioBaseInfo>() {
@@ -245,53 +246,57 @@ public class StudioActivity extends BaseActivity implements
         UserInfoOperator.getInstance().getUserInfo(userId, listener);
     }
 
+    private void loadFirstTab () {
+        if (mUser != null) {
+            if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
+                if (mNewsList == null) {
+                    mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
+                    StudioOperator.getInstance().getMyNewsList(mUser.getUserId(), 0, new UserInfoOperator.OnGetListener<List<News>>() {
+                        @Override
+                        public void onGet(boolean succeed, List<News> newses) {
+                            if (succeed) {
+                                mNewsList = newses;
+                                if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab1) {
+                                    mAdapter = new ToplineCustomAdapter(StudioActivity.this, mNewsList);
+                                    mStudioFragment.setAdapter(mAdapter);
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    mAdapter = new ToplineCustomAdapter(StudioActivity.this, mNewsList);
+                }
+            } else {
+                if (mCircleList == null) {
+                    mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
+                    StudioOperator.getInstance().getMyCircleList(new UserInfoOperator.OnGetListener<List<CCircleDetailModel>>() {
+                        @Override
+                        public void onGet(boolean succeed, List<CCircleDetailModel> cCircleDetailModels) {
+                            if (succeed) {
+                                mCircleList = cCircleDetailModels;
+                                if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab1) {
+                                    mAdapter = new CircleListAdapter(cCircleDetailModels);
+                                    mStudioFragment.setAdapter(mAdapter);
+                                }
+
+                            }
+                        }
+                    });
+                } else {
+                    mAdapter = new CircleListAdapter(mCircleList);
+                }
+
+            }
+        } else {
+            mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
+        }
+    }
+
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
             case R.id.studio_list_header_tab1:
-                if (mUser != null) {
-                    if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
-                        if (mNewsList == null) {
-                            mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
-                            StudioOperator.getInstance().getMyNewsList(mUser.getUserId(), 0, new UserInfoOperator.OnGetListener<List<News>>() {
-                                @Override
-                                public void onGet(boolean succeed, List<News> newses) {
-                                    if (succeed) {
-                                        mNewsList = newses;
-                                        if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab1) {
-                                            mAdapter = new ToplineCustomAdapter(StudioActivity.this, mNewsList);
-                                            mStudioFragment.setAdapter(mAdapter);
-                                        }
-                                    }
-                                }
-                            });
-                        } else {
-                            mAdapter = new ToplineAdapter(StudioActivity.this);
-                        }
-                    } else {
-                        if (mCircleList == null) {
-                            mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
-                            StudioOperator.getInstance().getMyCircleList(new UserInfoOperator.OnGetListener<List<CCircleDetailModel>>() {
-                                @Override
-                                public void onGet(boolean succeed, List<CCircleDetailModel> cCircleDetailModels) {
-                                    if (succeed) {
-                                        mCircleList = cCircleDetailModels;
-                                        if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab1) {
-                                            mAdapter = new CircleListAdapter(cCircleDetailModels);
-                                            mStudioFragment.setAdapter(mAdapter);
-                                        }
-
-                                    }
-                                }
-                            });
-                        } else {
-                            mAdapter = new CircleListAdapter(mCircleList);
-                        }
-
-                    }
-                } else {
-                    mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
-                }
+                loadFirstTab();
                 break;
             case R.id.studio_list_header_tab2:
                 if (mUser != null) {

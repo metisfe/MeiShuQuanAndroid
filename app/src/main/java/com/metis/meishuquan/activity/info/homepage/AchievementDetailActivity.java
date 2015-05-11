@@ -4,6 +4,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.BaseActivity;
@@ -15,16 +16,22 @@ public class AchievementDetailActivity extends BaseActivity {
 
     public static final String KEY_ACHIEVEMENT_ID = "achievementId";
 
+    private TextView mInfoTv = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_achievement_detail);
 
-        int achievementId = getIntent().getIntExtra(KEY_ACHIEVEMENT_ID, 0);
+        mInfoTv = (TextView)findViewById(R.id.details_info);
+
+        final int achievementId = getIntent().getIntExtra(KEY_ACHIEVEMENT_ID, 0);
         StudioOperator.getInstance().getAchievementDetail(achievementId, new UserInfoOperator.OnGetListener<Achievement>() {
             @Override
             public void onGet(boolean succeed, Achievement achievement) {
-
+                if (succeed) {
+                    mInfoTv.setText(achievement.getAchievementTitle() + "\n" + achievement.getAchievementInfo());
+                }
             }
         });
     }
