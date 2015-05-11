@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="40dp"
     android:gravity="center_vertical"
     android:background="#e2e2e2"
-    android:padding="5dp"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -13,11 +12,11 @@
         android:layout_width="0dp"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:gravity="center"
             android:src="@drawable/circle_moment_detail_share" />
 
@@ -37,11 +36,11 @@
         android:layout_width="0dp"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:gravity="center"
             android:src="@drawable/ic_action_topline_comment_count" />
 
@@ -61,11 +60,11 @@
         android:layout_width="0dp"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:gravity="center"
             android:src="@drawable/icon_unsupport" />
 

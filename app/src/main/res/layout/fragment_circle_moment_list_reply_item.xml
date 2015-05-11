@@ -12,7 +12,7 @@
         android:background="#f0f0f0"
         android:padding="10dp">
 
-        <ImageView
+        <com.loopj.android.image.SmartImageView
             android:id="@+id/id_img_portrait"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -50,6 +50,16 @@
             android:layout_alignParentRight="true"
             android:src="@drawable/bg_choose_huashi"
             android:visibility="gone" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="阅读(100)"
+            android:textSize="12sp"
+            android:textColor="#424242"
+            android:layout_alignTop="@+id/id_username"
+            android:layout_alignParentRight="true"
+            android:visibility="visible" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -109,7 +119,6 @@
             android:layout_width="125dp"
             android:layout_height="125dp"
             android:layout_below="@+id/id_tv_content"
-            android:clickable="false"
             android:scaleType="centerCrop"
             android:background="#e2e2e2" />
 
@@ -117,11 +126,9 @@
             android:layout_width="match_parent"
             android:layout_height="125dp"
             android:padding="10dp"
-            android:clickable="false"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/id_tv_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
@@ -130,7 +137,6 @@
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/id_tv_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="2"

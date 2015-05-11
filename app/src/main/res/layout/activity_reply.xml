@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/common_color_f0f0f0">
 
     <RelativeLayout
         android:id="@+id/id_rl_title_bar"
@@ -60,17 +61,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/id_rl_title_bar"
-        android:minHeight="100dp"
+        android:minHeight="150dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="20dp"
         android:gravity="top"
-        android:hint="说点什么…" />
+        android:textSize="16sp"
+        android:hint="说说分享心得…" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/id_et_input_reply"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp">
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp">
 
         <ImageView
             android:id="@+id/id_img_pic"

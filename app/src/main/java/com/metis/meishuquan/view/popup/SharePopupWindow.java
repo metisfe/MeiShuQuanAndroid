@@ -75,7 +75,6 @@ public class SharePopupWindow extends PopupWindow {
         btnMeishuquan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 dismiss();
             }
         });

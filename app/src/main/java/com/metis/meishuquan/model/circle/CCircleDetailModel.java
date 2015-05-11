@@ -22,8 +22,10 @@ public class CCircleDetailModel {
 
     @SerializedName("comentCount")
     public int comentCount;
+
     @SerializedName("relayCount")
     public int relayCount;
+
     @SerializedName("supportCount")
     public int supportCount;
 
@@ -39,20 +41,21 @@ public class CCircleDetailModel {
     @SerializedName("images")
     public List<CircleImage> images;
 
-    public String getTimeText()
-    {
+    @SerializedName("relayCircle")
+    public CRelayDetailModel relayCircle;//等于null时，为非转发类型，不为null时，为转发类型
+
+    @SerializedName("userMark")
+    public CUserMarkModel userMark;
+
+    public String getTimeText() {
         return Utils.getDateFromNow(Utils.getDate(createTime, null));
     }
 
-    public String getDeviceText()
-    {
+    public String getDeviceText() {
         return !TextUtils.isEmpty(device) ? "来自 " + device : "";
     }
 
-    public boolean isValid()
-    {
-        return user != null && user.name != null /* && user.grade != null */&& createTime != null && content != null;
+    public boolean isValid() {
+        return user != null && user.name != null /* && user.grade != null */ && createTime != null && content != null;
     }
-
-    //TODO: r
 }

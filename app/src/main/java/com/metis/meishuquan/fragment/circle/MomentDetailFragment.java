@@ -53,6 +53,7 @@ import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
 import com.metis.meishuquan.util.GlobalData;
+import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.util.ViewUtils;
@@ -99,6 +100,7 @@ public class MomentDetailFragment extends Fragment {
     List<CCircleCommentModel> commentList = new ArrayList<CCircleCommentModel>();
     List<CUserModel> likeList = new ArrayList<CUserModel>();
     private boolean isCommentShown = true;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_circle_moment_detail, null, false);
@@ -134,8 +136,7 @@ public class MomentDetailFragment extends Fragment {
         MomentActionBar.OnActionButtonClickListener OnActionButtonClickListener = new MomentActionBar.OnActionButtonClickListener() {
             @Override
             public void onComment() {
-                if (!isCommentShown)
-                {
+                if (!isCommentShown) {
                     circleMomentCommentAdapter = new CircleMomentDetailCommentAdapter(commentList);
                     listView.setAdapter(circleMomentCommentAdapter);
                     circleMomentCommentAdapter.notifyDataSetChanged();
@@ -146,8 +147,7 @@ public class MomentDetailFragment extends Fragment {
 
             @Override
             public void onLike() {
-                if (isCommentShown)
-                {
+                if (isCommentShown) {
                     circleMomentLikeAdapter = new CircleMomentDetailLikeAdapter(likeList);
                     listView.setAdapter(circleMomentLikeAdapter);
                     circleMomentLikeAdapter.notifyDataSetChanged();
@@ -180,16 +180,18 @@ public class MomentDetailFragment extends Fragment {
     private View getHeaderView(CCircleDetailModel moment, MomentActionBar.OnActionButtonClickListener OnActionButtonClickListener) {
         View headerView = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_circle_moment_list_item, null);
 
-        ((SmartImageView) headerView.findViewById(R.id.id_img_portrait)).setImageUrl(moment.user.avatar);
+        ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.user.avatar, (ImageView) headerView.findViewById(R.id.id_img_portrait), ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height)));
+//        ((ImageView) headerView.findViewById(R.id.id_img_portrait)).setImageUrl(moment.user.avatar);
+
         ((TextView) headerView.findViewById(R.id.id_username)).setText(moment.user.name);
         ((TextView) headerView.findViewById(R.id.id_tv_grade)).setText(moment.user.grade);
         ((TextView) headerView.findViewById(R.id.id_createtime)).setText(moment.getTimeText());
         ((TextView) headerView.findViewById(R.id.id_tv_content)).setText(moment.content);
         ((TextView) headerView.findViewById(R.id.tv_device)).setText(moment.getDeviceText());
         if (moment.images.size() > 0) {
-            ((SmartImageView) headerView.findViewById(R.id.id_img_content)).setImageUrl(moment.images.get(0).Thumbnails);
+            ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.images.get(0).Thumbnails, (ImageView) headerView);
         } else {
-            ((SmartImageView) headerView.findViewById(R.id.id_img_content)).setVisibility(View.GONE);
+            ((ImageView) headerView.findViewById(R.id.id_img_for_circle)).setVisibility(View.GONE);
         }
 
         MomentActionBar actionBar = (MomentActionBar) headerView.findViewById(R.id.moment_action_bar);
@@ -328,7 +330,7 @@ public class MomentDetailFragment extends Fragment {
             if (convertView == null) {
                 convertView = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_circle_moment_detail_comment_list_item, null);
 
-                viewHolder.avatar = (SmartImageView) convertView.findViewById(R.id.comment_list_item_avatar);
+                viewHolder.avatar = (ImageView) convertView.findViewById(R.id.comment_list_item_avatar);
                 viewHolder.name = (TextView) convertView.findViewById(R.id.comment_list_item_username);
                 viewHolder.grade = (TextView) convertView.findViewById(R.id.comment_list_item_grade);
                 viewHolder.time = (TextView) convertView.findViewById(R.id.comment_list_item_time);
@@ -341,7 +343,7 @@ public class MomentDetailFragment extends Fragment {
             }
 
             CCircleCommentModel comment = commentList.get(i);
-            viewHolder.avatar.setImageUrl(comment.user.avatar);
+            ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(comment.user.avatar, viewHolder.avatar, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height)));
             viewHolder.name.setText(comment.user.name);
             viewHolder.grade.setText(comment.user.grade);
             viewHolder.time.setText(Utils.getDisplayTime(comment.createTime));
@@ -351,7 +353,7 @@ public class MomentDetailFragment extends Fragment {
         }
 
         private class ViewHolder {
-            SmartImageView avatar;
+            ImageView avatar;
             TextView name;
             TextView grade;
             TextView time;
@@ -364,13 +366,14 @@ public class MomentDetailFragment extends Fragment {
         private List<CUserModel> likeList = new ArrayList<CUserModel>();
         private ViewHolder holder;
         private int columnCount = 4;
+
         public CircleMomentDetailLikeAdapter(List<CUserModel> momentList) {
             this.likeList = momentList;
         }
 
         @Override
         public int getCount() {
-            return this.likeList == null ? 0 : (int) Math.ceil((float)this.likeList.size() / columnCount);
+            return this.likeList == null ? 0 : (int) Math.ceil((float) this.likeList.size() / columnCount);
         }
 
         @Override
@@ -399,19 +402,18 @@ public class MomentDetailFragment extends Fragment {
             }
 
             viewHolder.container.removeAllViews();
-            for (int j = columnCount*i; j< columnCount*(i+1) && j<likeList.size() ; j++)
-            {
+            for (int j = columnCount * i; j < columnCount * (i + 1) && j < likeList.size(); j++) {
                 CUserModel user = likeList.get(j);
-                SmartImageView image = new SmartImageView(MainApplication.UIContext);
+                ImageView image = new ImageView(MainApplication.UIContext);
                 float density = MainApplication.Resources.getDisplayMetrics().density;
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int)(density * 40), (int)(density *40));
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) (density * 40), (int) (density * 40));
                 int padding = (int) ((MainApplication.Resources.getDisplayMetrics().widthPixels - density * 40 * columnCount) / (columnCount * 2));
                 padding = Math.min(padding, 20);
-                params.setMargins(padding, 0 , padding , 0);
+                params.setMargins(padding, 0, padding, 0);
 
                 image.setLayoutParams(params);
                 image.setBackgroundResource(R.drawable.ic_launcher);
-                image.setImageUrl(user.avatar);
+                ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(user.avatar, image, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height)));
 
                 viewHolder.container.addView(image);
             }
