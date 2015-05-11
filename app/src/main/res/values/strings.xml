@@ -73,4 +73,5 @@
     <string name="id_type_parent">家长</string>
     <string name="id_type_other">其他</string>
     <string name="title_activity_reply">ReplyActivity</string>
+    <string name="title_activity_contact_us">ContactUsActivity</string>
 </resources>

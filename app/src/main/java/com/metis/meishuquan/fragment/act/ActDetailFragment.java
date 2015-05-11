@@ -1,5 +1,6 @@
 package com.metis.meishuquan.fragment.act;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,9 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.circle.ReplyActivity;
 import com.metis.meishuquan.model.BLL.ActiveOperator;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
+import com.metis.meishuquan.model.circle.CirclePushBlogParm;
 import com.metis.meishuquan.model.commons.ActiveInfo;
+import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 
 /**
@@ -84,6 +88,8 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
         mDescTv.setText(info.getDesc());
         mAwardTv.setText(info.getActivityAward());
         mDetailTv.setText(info.getContent());
+        /*mJoinBtn.setEnabled(!info.isUseState());
+        mJoinBtn.setText(info.isUseState() ? );*/
     }
 
     @Override
@@ -91,8 +97,17 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
         switch (view.getId()) {
             case R.id.act_detail_join:
                 if (mInfo != null) {
+                    Intent it = new Intent(getActivity(), ReplyActivity.class);
+                    CirclePushBlogParm parm = new CirclePushBlogParm();
+                    parm.setType(SupportTypeEnum.Activity.getVal());
+                    parm.setRelayId(mInfo.getpId());
+                    it.putExtra(ReplyActivity.PARM, parm);
+                    it.putExtra(ReplyActivity.TITLE, mInfo.getTitle());
+                    it.putExtra(ReplyActivity.CONTENT, mInfo.getContent());
+                    it.putExtra(ReplyActivity.IMAGEURL, mInfo.getImage());
+                    startActivity(it);
                     Toast.makeText(getActivity(), "onClick " + mInfo.getpId(), Toast.LENGTH_SHORT).show();
-                    ActiveOperator.getInstance().joinActivity(mInfo.getpId());
+
                 }
                 break;
         }

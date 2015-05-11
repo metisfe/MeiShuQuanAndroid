@@ -31,7 +31,8 @@ public class User implements Serializable {
             KEY_ACCOUNT = "Account",
             KEY_USER_ROLE = "userRole",
             KEY_USER_RESUME = "UserResume",
-            KEY_LOCATION_STUDIO = "LocationStudio";
+            KEY_LOCATION_STUDIO = "LocationStudio",
+            KEY_LOCATION_SCHOOL = "LocationSchool";
 
     @SerializedName("userId")
     private int userId = -1;
@@ -99,6 +100,9 @@ public class User implements Serializable {
     @SerializedName("LocationStudio")
     private int LocationStudio;
 
+    @SerializedName("locationSchool")
+    private String locationSchool;
+
     @SerializedName("locationAddress")
     private String locationAddress = "";
 
@@ -110,6 +114,9 @@ public class User implements Serializable {
 
     @SerializedName("userResume")
     private String userResume;
+
+    @SerializedName("studio")
+    private Studio studio;
 
     private LoginStateEnum appLoginState = LoginStateEnum.NO;
 
@@ -311,6 +318,14 @@ public class User implements Serializable {
         this.locationAddress = locationAddress;
     }
 
+    public String getLocationSchool() {
+        return locationSchool;
+    }
+
+    public void setLocationSchool(String locationSchool) {
+        this.locationSchool = locationSchool;
+    }
+
     public String getGoodSubjects() {
         return goodSubjects;
     }
@@ -333,6 +348,14 @@ public class User implements Serializable {
 
     public void setUserResume(String userResume) {
         this.userResume = userResume;
+    }
+
+    public Studio getStudio() {
+        return studio;
+    }
+
+    public void setStudio(Studio studio) {
+        this.studio = studio;
     }
 
     /*public List<CourseChannelItem> getGoodSubjectsList () {

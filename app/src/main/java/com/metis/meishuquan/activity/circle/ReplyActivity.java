@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.model.BLL.ActiveOperator;
 import com.metis.meishuquan.model.BLL.CircleOperator;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CirclePushBlogParm;
@@ -33,10 +34,10 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
  */
 public class ReplyActivity extends FragmentActivity {
 
-    private static final String PARM = "parm";
-    private static final String TITLE = "title";
-    private static final String CONTENT = "content";
-    private static final String IMAGEURL = "imgUrl";
+    public static final String PARM = "parm";
+    public static final String TITLE = "title";
+    public static final String CONTENT = "content";
+    public static final String IMAGEURL = "imgUrl";
 
     private Button btnBack;
     private Button btnSend;
@@ -129,11 +130,14 @@ public class ReplyActivity extends FragmentActivity {
         });
     }
 
-    private void send(CirclePushBlogParm parm) {
+    private void send(final CirclePushBlogParm parm) {
         CircleOperator.getInstance().pushBlog(parm, new ApiOperationCallback<ReturnInfo<CCircleDetailModel>>() {
             @Override
             public void onCompleted(ReturnInfo<CCircleDetailModel> result, Exception exception, ServiceFilterResponse response) {
                 if (result != null && result.isSuccess()) {
+                    if (parm.getType() == SupportTypeEnum.Activity.getVal()) {
+                        ActiveOperator.getInstance().joinActivity(parm.getRelayId());
+                    }
                     String json = new Gson().toJson(result);
                     Log.i("pushBlog", json);
 

@@ -431,6 +431,10 @@
             android:name=".activity.circle.ReplyActivity"
             android:label="@string/title_activity_reply" >
         </activity>
+        <activity
+            android:name=".activity.info.homepage.ContactUsActivity"
+            android:label="@string/title_activity_contact_us" >
+        </activity>
     </application>
 
 </manifest>
