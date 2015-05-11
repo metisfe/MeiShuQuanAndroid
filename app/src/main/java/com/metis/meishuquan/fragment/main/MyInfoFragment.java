@@ -175,6 +175,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 if (MainApplication.isLogin()) {
                     startActivity(new Intent(getActivity(), MyFavoritesActivity.class));
                 } else {
+                    startActivity(new Intent (getActivity(), LoginActivity.class));
                     Toast.makeText(getActivity(), R.string.my_info_toast_not_login, Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -182,6 +183,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 if (MainApplication.isLogin()) {
                     startActivity(new Intent(getActivity(), MyCommentsActivity.class));
                 } else {
+                    startActivity(new Intent (getActivity(), LoginActivity.class));
                     Toast.makeText(getActivity(), R.string.my_info_toast_not_login, Toast.LENGTH_SHORT).show();
                 }
 
@@ -190,6 +192,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 if (MainApplication.isLogin()) {
                     startActivity(new Intent(getActivity(), MyCourseActivity.class));
                 } else {
+                    startActivity(new Intent (getActivity(), LoginActivity.class));
                     Toast.makeText(getActivity(), R.string.my_info_toast_not_login, Toast.LENGTH_SHORT).show();
                 }
 
@@ -199,6 +202,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                     Intent it = new Intent (getActivity(), NameCardQrActivity.class);
                     startActivity(it);
                 } else {
+                    startActivity(new Intent (getActivity(), LoginActivity.class));
                     Toast.makeText(getActivity(), R.string.my_info_toast_not_login, Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -206,6 +210,11 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 startActivity(new Intent(getActivity(), AdvanceActivity.class));
                 break;
             case R.id.my_info_setting:
+                if (!MainApplication.isLogin()) {
+                    startActivity(new Intent (getActivity(), LoginActivity.class));
+                    Toast.makeText(getActivity(), R.string.my_info_toast_not_login, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 startActivity(new Intent(getActivity(), SettingActivity.class));
                 break;
         }

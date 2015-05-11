@@ -215,15 +215,6 @@
             </com.metis.meishuquan.view.shared.MyInfoBtn>
 
             <com.metis.meishuquan.view.shared.MyInfoBtn
-                android:id="@+id/my_info_advances"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                bs:src="@drawable/my_info_advance"
-                bs:text="@string/my_info_advaces"
-                bs:secondaryTextVisible="false"
-                android:layout_marginTop="@dimen/px_to_dip_10" />
-
-            <com.metis.meishuquan.view.shared.MyInfoBtn
                 android:id="@+id/my_info_setting"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -244,6 +235,15 @@
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true" />
             </com.metis.meishuquan.view.shared.MyInfoBtn>
+
+            <com.metis.meishuquan.view.shared.MyInfoBtn
+                android:id="@+id/my_info_advances"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                bs:src="@drawable/my_info_advance"
+                bs:text="@string/my_info_advaces"
+                bs:secondaryTextVisible="false"
+                android:layout_marginTop="@dimen/px_to_dip_10" />
 
         </LinearLayout>
     </ScrollView>

@@ -155,7 +155,10 @@ public class StudioFragment extends Fragment{
     }
 
     public void setTabTitle (int titleRes1, int titleRes2, int titleRes3) {
-        setTabTitle(getString(titleRes1), getString(titleRes2), getString(titleRes3));
+        setTabTitle(
+                MainApplication.UIContext.getString(titleRes1),
+                MainApplication.UIContext.getString(titleRes2),
+                MainApplication.UIContext.getString(titleRes3));
     }
 
     public void setSelfIntroduce (String introduce) {
@@ -178,15 +181,15 @@ public class StudioFragment extends Fragment{
     public void setAdapter (BaseAdapter adapter) {
         mAdapter = adapter;
         if (mListView != null) {
+            if (mListView.getHeaderViewsCount() <= 0) {
+                mListView.addHeaderView(mHeaderView, null, false);
+            }
             if (mAdapter == null) {
                 mAdapter = EmptyAdapter.getInstance(getActivity());
             }
 
             mListView.setAdapter(mAdapter);
 
-            if (mListView.getHeaderViewsCount() <= 0) {
-                mListView.addHeaderView(mHeaderView, null, false);
-            }
         }
     }
 

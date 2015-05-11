@@ -30,7 +30,8 @@ public class User implements Serializable {
             KEY_USER_ID = "userId",
             KEY_ACCOUNT = "Account",
             KEY_USER_ROLE = "userRole",
-            KEY_USER_RESUME = "UserResume";
+            KEY_USER_RESUME = "UserResume",
+            KEY_LOCATION_STUDIO = "LocationStudio";
 
     @SerializedName("userId")
     private int userId = -1;
@@ -94,6 +95,9 @@ public class User implements Serializable {
 
     @SerializedName("horoscope")
     private String horoscope = "";
+
+    @SerializedName("LocationStudio")
+    private int LocationStudio;
 
     @SerializedName("locationAddress")
     private String locationAddress = "";
@@ -289,6 +293,14 @@ public class User implements Serializable {
 
     public void setHoroscope(String horoscope) {
         this.horoscope = horoscope;
+    }
+
+    public int getLocationStudio() {
+        return LocationStudio;
+    }
+
+    public void setLocationStudio(int locationStudio) {
+        LocationStudio = locationStudio;
     }
 
     public String getLocationAddress() {

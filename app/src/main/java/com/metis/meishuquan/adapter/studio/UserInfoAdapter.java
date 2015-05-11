@@ -24,6 +24,7 @@ import com.metis.meishuquan.model.commons.Result;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.course.CourseChannel;
 import com.metis.meishuquan.model.course.CourseChannelItem;
+import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.shared.MyInfoBtn;
@@ -42,6 +43,8 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
     private Context mContext = null;
     private User mUser = null;
     private boolean canEdit = false;
+
+    private String mDepartmentName = null;
 
     private View.OnClickListener mOnClickListener = null;
 
@@ -102,24 +105,34 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
         mNickView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
 
         mMeishuquanIdView.setSecondaryText(mUser.getAccout());
-        mMeishuquanIdView.setArrowVisible(canEdit && TextUtils.isEmpty(mUser.getAccout())? View.VISIBLE : View.INVISIBLE);
+        mMeishuquanIdView.setArrowVisible(canEdit && TextUtils.isEmpty(mUser.getAccout()) ? View.VISIBLE : View.INVISIBLE);
 
         mGenderView.setSecondaryText(mUser.getGender());
         mGenderView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
 
         mConstellationView.setSecondaryText(mUser.getHoroscope());
         mConstellationView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
-        //mGradeView
+        mGradeView.setSecondaryText(mContext.getString(mUser.getUserRoleEnum().getStringResource()));
+
         mProvienceView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
         mAgeView.setSecondaryText(UserManager.caculateAgeByBirthday(mUser.getBirthday()) + "");
         mAgeView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
 
+        mCvView.setVisibility(mUser.getUserRoleEnum() == IdTypeEnum.TEACHER ? View.VISIBLE : View.GONE);
         mCvView.setSecondaryText(mUser.getUserResume());
         mCvView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
 
+        mDepartmentView.setText(mUser.getUserRoleEnum() == IdTypeEnum.STUDENT ? R.string.info_school : R.string.info_department);
+        if (mDepartmentName != null) {
+            mDepartmentView.setSecondaryText(mDepartmentName);
+        } else {
+            //TODO
+        }
+        mDepartmentAddrView.setVisibility(mUser.getUserRoleEnum() == IdTypeEnum.TEACHER ? View.VISIBLE : View.GONE);
         mDepartmentAddrView.setSecondaryText(mUser.getLocationAddress());
         mDepartmentAddrView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
 
+        mGoodAtView.setVisibility(mUser.getUserRoleEnum() == IdTypeEnum.TEACHER ? View.VISIBLE : View.GONE);
         String subjectsId = mUser.getGoodSubjects();
         if (!TextUtils.isEmpty(subjectsId)) {
             String allCourse = SharedPreferencesUtil.getInstanse(mContext).getStringByKey(SharedPreferencesUtil.COURSE_CHANNEL_LIST);
@@ -153,6 +166,7 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
             }
 
         }
+        mAchievementView.setVisibility(mUser.getUserRoleEnum() == IdTypeEnum.TEACHER ? View.VISIBLE : View.GONE);
         mAchievementView.setSecondaryText(mUser.getAchievement());
         mAchievementView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
 
@@ -174,6 +188,11 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
         mAchievementView.setOnClickListener(this);
 
         return view;
+    }
+
+    public void setUserDepartment (int id, String name) {
+        mUser.setLocationStudio(id);
+        mDepartmentName = name;
     }
 
     private CourseChannelItem getCourseChannelItem (List<CourseChannel> channelsList, int channelId) {

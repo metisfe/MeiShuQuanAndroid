@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -57,7 +58,9 @@ public class UserInfoOperator {
                             URL_QUESTION = "v1.1/UserCenter/MyQuestion?",
                             URL_UPDATE_USER_INFO = "v1.1/UserCenter/UpdateUserInfo?param=",
                             URL_CHANGE_PWD = "v1.1/UserCenter/ChangePassword?",
-                            URL_FEEDBACK = "v1.1/Instrument/FeedBack";
+                            URL_FEEDBACK = "v1.1/Instrument/FeedBack",
+                            URL_SEARCH_STUDIO = "v1.1/UserCenter/StudioList?query=",
+                            URL_PROVINCE = "v1.1/UserCenter/Province";
 
     private static String KEY_USER_ID = "userId",
                         KEY_INDEX = "index",
@@ -478,6 +481,43 @@ public class UserInfoOperator {
             });
         }
     }
+
+    public void searchDepartment (String key, final OnGetListener<List<User>> listener) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            StringBuilder sb = new StringBuilder(URL_SEARCH_STUDIO);
+            sb.append(URLEncoder.encode(key));
+            sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+            Log.v(TAG, "searchDepartment request=" + sb.toString());
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    Log.v(TAG, "searchDepartment callback=" + response.getContent());
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String json = gson.toJson(result);
+                        Log.v(TAG, "searchDepartment result=" + json);
+                        Result<List<User>> listResult = gson.fromJson(json, new TypeToken<Result<List<User>>>(){}.getType());
+                        if (listener != null) {
+                            if (listResult.getOption().getStatus() == 0) {
+                                listener.onGet(true, listResult.getData());
+                            } else {
+                                listener.onGet(false, null);
+                            }
+                        }
+
+                    } else {
+                        if (listener != null) {
+                            listener.onGet(false, null);
+                        }
+                    }
+
+                }
+            });
+        }
+    }
+
+    //public void
 
     public interface OnGetListener<T> {
         public void onGet (boolean succeed, T t);

@@ -26,6 +26,7 @@
         android:layout_centerVertical="true"
         android:text="济南季风画室\n2001年"
         android:layout_marginLeft="27dp"
+        android:visibility="invisible"
         />
     <ImageView
         android:id="@+id/department_item_arrow"
@@ -35,5 +36,6 @@
         android:layout_centerVertical="true"
         android:src="@drawable/btn_right_arrow"
         android:layout_marginRight="10dp"
+        android:visibility="gone"
         />
 </RelativeLayout>

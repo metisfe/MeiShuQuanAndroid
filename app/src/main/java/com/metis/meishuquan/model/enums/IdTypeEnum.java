@@ -34,4 +34,8 @@ public enum IdTypeEnum {
         return OTHER;
     }
 
+    public int getStringResource () {
+        return stringRes;
+    }
+
 }

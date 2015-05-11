@@ -5,9 +5,24 @@
     android:layout_height="match_parent"
     android:background="#cccccc"
     tools:context="com.metis.meishuquan.activity.info.DepartmentActivity">
+    <EditText
+        android:id="@+id/department_search_input"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:layout_toLeftOf="@+id/department_search_btn"
+        />
+    <ImageView
+        android:id="@+id/department_search_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/umeng_socialize_search_icon"
+        android:layout_alignParentRight="true"
+        />
     <ListView
         android:id="@+id/department_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_below="@+id/department_search_input"
         />
 </RelativeLayout>

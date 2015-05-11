@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,24 +13,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.InputActivity;
 import com.metis.meishuquan.activity.WebActivity;
-import com.metis.meishuquan.activity.course.ChooseCourseActivity;
 import com.metis.meishuquan.activity.info.BaseActivity;
-import com.metis.meishuquan.activity.info.ConstellationActivity;
 import com.metis.meishuquan.activity.info.DepartmentActivity;
 import com.metis.meishuquan.activity.info.TextActivity;
-import com.metis.meishuquan.adapter.circle.CircleMomentAdapter;
 import com.metis.meishuquan.adapter.commons.ConstellationAdapter;
 import com.metis.meishuquan.adapter.commons.SimplePrvsAdapter;
 import com.metis.meishuquan.adapter.studio.AchievementAdapter;
@@ -53,15 +47,11 @@ import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.contract.Moment;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
-import com.metis.meishuquan.model.topline.News;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.PatternUtils;
 
-import java.io.Serializable;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class StudioActivity extends BaseActivity implements
         StudioFragment.OnMenuItemClickListener,
@@ -73,6 +63,8 @@ public class StudioActivity extends BaseActivity implements
 
     public static final String KEY_USER_ID = User.KEY_USER_ID,
                                 KEY_USER_ROLE = User.KEY_USER_ROLE;
+
+    private static final int REQUEST_CODE_DEPARTMENT = 600;
 
     private View mTitleView = null;
     private ImageView mTitleProfile = null;
@@ -389,6 +381,17 @@ public class StudioActivity extends BaseActivity implements
                         adapter.setDepartmentAddress(address);
                     }
                     break;
+                case REQUEST_CODE_DEPARTMENT:
+                    if (resultCode == RESULT_OK) {
+                        long id = data.getIntExtra(User.KEY_USER_ID, 0);
+                        String name = data.getStringExtra(User.KEY_NICK_NAME);
+                        if (mAdapter instanceof UserInfoAdapter) {
+                            ((UserInfoAdapter)mAdapter).setUserDepartment((int)id, name);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                        UserManager.updateMyInfo(User.KEY_LOCATION_STUDIO, id+"");
+                    }
+                    break;
             }
         }
     }
@@ -614,6 +617,9 @@ public class StudioActivity extends BaseActivity implements
                             mUser.setAchievement(cs.toString());
                         }
                     });
+                    break;
+                case R.id.info_department:
+                    startActivityForResult(new Intent(StudioActivity.this, DepartmentActivity.class), REQUEST_CODE_DEPARTMENT);
                     break;
                 /*case R.id.info_provience:
                     showCityFragment();
