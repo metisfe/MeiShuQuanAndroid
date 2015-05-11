@@ -1,0 +1,141 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/id_rl_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="#2c2c3f">
+
+        <Button
+            android:id="@+id/id_btn_back"
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_btn_arrow_left" />
+
+        <RelativeLayout
+            android:id="@+id/id_rl_title"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:id="@+id/id_tv_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/id_img_dynamic"
+                android:text="转发"
+                android:textColor="#fb6d6d"
+                android:textSize="20sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/id_rl_right"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_alignParentRight="true">
+
+            <Button
+                android:id="@+id/id_tv_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:background="@color/transparent"
+                android:layout_toRightOf="@+id/id_img_dynamic"
+                android:text="发送"
+                android:layout_marginRight="5dp"
+                android:textColor="@color/common_color_cfd5e0"
+                android:textSize="18sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/id_et_input_reply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/id_rl_title_bar"
+        android:minHeight="100dp"
+        android:gravity="top"
+        android:hint="说点什么…" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/id_et_input_reply"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp">
+
+        <ImageView
+            android:id="@+id/id_img_pic"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/icon" />
+
+        <TextView
+            android:id="@+id/id_tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/id_img_pic"
+            android:layout_marginLeft="5dp"
+            android:textSize="14sp"
+            android:textColor="#424242"
+            android:text="标题" />
+
+        <TextView
+            android:id="@+id/id_tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/id_img_pic"
+            android:layout_below="@+id/id_tv_title"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:textSize="12sp"
+            android:textColor="#7e7e7e"
+            android:text="详情" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/fragment_circle_postmoment_bottom_container"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/fragment_circle_postmoment_bottom_container_shape">
+
+        <RelativeLayout
+            android:id="@+id/id_rl__at"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="22.5dp"
+                android:layout_height="22.5dp"
+                android:src="@drawable/icon_at"
+                android:layout_centerInParent="true"
+                android:text="take picture" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/id_rl_emotion"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="22.5dp"
+                android:layout_height="22.5dp"
+                android:src="@drawable/icon_emotion"
+                android:layout_centerInParent="true"
+                android:text="take picture" />
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

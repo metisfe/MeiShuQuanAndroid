@@ -75,6 +75,7 @@ public class SharePopupWindow extends PopupWindow {
         btnMeishuquan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 dismiss();
             }
         });
@@ -156,7 +157,7 @@ public class SharePopupWindow extends PopupWindow {
 
     }
 
-    private void initYM (Activity context) {
+    private void initYM(Activity context) {
         mController = UMServiceFactory.getUMSocialService("www.baidu.com");
         mController.getConfig().removePlatform(SHARE_MEDIA.TENCENT);
 
@@ -165,24 +166,24 @@ public class SharePopupWindow extends PopupWindow {
         isInited = true;
     }
 
-    private void initQZ (Activity context) {
+    private void initQZ(Activity context) {
         QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(context, "1104485283", "k9f8JhWppP5r1N5t");
         qZoneSsoHandler.addToSocialSDK();
     }
 
-    private void initWX (Context context) {
+    private void initWX(Context context) {
         String appID = "wx144663d4ae48cdcf";
         String appSecret = "81daa257f2c448725dc737d656aa947d";
         // 添加微信平台
-        UMWXHandler wxHandler = new UMWXHandler(context,appID,appSecret);
+        UMWXHandler wxHandler = new UMWXHandler(context, appID, appSecret);
         wxHandler.addToSocialSDK();
         // 添加微信朋友圈
-        UMWXHandler wxCircleHandler = new UMWXHandler(context,appID,appSecret);
+        UMWXHandler wxCircleHandler = new UMWXHandler(context, appID, appSecret);
         wxCircleHandler.setToCircle(true);
         wxCircleHandler.addToSocialSDK();
     }
 
-    public void setShareInfo (String title, String content, String targetUrl, String imageUrl) {
+    public void setShareInfo(String title, String content, String targetUrl, String imageUrl) {
         if (TextUtils.isEmpty(title) || TextUtils.isEmpty(targetUrl) || TextUtils.isEmpty(content) || TextUtils.isEmpty(imageUrl)) {
             throw new IllegalArgumentException("title or targetUrl is Empty");
         }
@@ -196,7 +197,7 @@ public class SharePopupWindow extends PopupWindow {
         Log.v(TAG, "setShareInfo mImageUrl=" + mImageUrl);*/
     }
 
-    private void fillShareContent (Activity activity, BaseShareContent content) {
+    private void fillShareContent(Activity activity, BaseShareContent content) {
         content.setTitle(mTitle);
         content.setShareContent(mContent);
         content.setTargetUrl(mTargetUrl);

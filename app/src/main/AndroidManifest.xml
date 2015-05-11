@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.metis.meishuquan">
+    package="com.metis.meishuquan" >
 
     <!-- App Required -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -43,11 +43,11 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/StyledIndicators">
+        android:theme="@style/StyledIndicators" >
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -109,15 +109,14 @@
 
         <!-- Begin UMeng -->
         <!-- ###################注册SDK使用的Activity###################### -->
-        <!--分享编辑页-->
+        <!-- 分享编辑页 -->
         <activity
             android:name="com.umeng.socialize.view.ShareActivity"
             android:configChanges="orientation|keyboard"
             android:launchMode="singleTask"
             android:noHistory="true"
             android:theme="@style/Theme.UMDialog"
-            android:windowSoftInputMode="stateVisible|adjustResize"></activity>
-
+            android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -129,24 +128,24 @@
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
-            android:noHistory="true">
+            android:noHistory="true" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!-- 100424468，如果你使用的公用账号，则不需要修改；否则修改成你在QQ开放平台申请的 APP ID-->
+                <!-- 100424468，如果你使用的公用账号，则不需要修改；否则修改成你在QQ开放平台申请的 APP ID -->
                 <data android:scheme="tencent100424468" />
             </intent-filter>
         </activity>
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <!-- ###################添加UmengAppkey###################### -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="552b2a72fd98c5799c000966"></meta-data>
+            android:value="552b2a72fd98c5799c000966" />
 
         <!-- Begin Rong Cloud -->
         <meta-data
@@ -157,7 +156,7 @@
 
         <activity
             android:name="io.rong.imkit.RongActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -202,7 +201,7 @@
         <activity
             android:name="io.rong.imkit.RongSingleActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -217,7 +216,7 @@
         <activity
             android:name="io.rong.imkit.RongSecActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -275,7 +274,7 @@
         <activity
             android:name="io.rong.voipkit.activity.CalledSideActivity"
             android:excludeFromRecents="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="io.rong.voipkit.calledSideActivity.action" />
 
@@ -295,7 +294,7 @@
             android:priority="1000" />
         <service
             android:name="io.rong.imlib.push.PushService"
-            android:process="io.rong.push">
+            android:process="io.rong.push" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -304,7 +303,7 @@
         </service>
         <service
             android:name="io.rong.imlib.push.CommandService"
-            android:process="io.rong.push">
+            android:process="io.rong.push" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -314,7 +313,7 @@
 
         <receiver
             android:name="io.rong.imlib.push.PushReceiver"
-            android:process="io.rong.push">
+            android:process="io.rong.push" >
             <intent-filter>
                 <action android:name="io.rong.imlib.action.push.heartbeat" />
             </intent-filter>
@@ -325,7 +324,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name="io.rong.imlib.push.PushMessageReceiver">
+        <receiver android:name="io.rong.imlib.push.PushMessageReceiver" >
             <intent-filter>
                 <action android:name="io.rong.push.message" />
             </intent-filter>
@@ -403,7 +402,6 @@
         <activity
             android:name=".activity.act.ActDetailActivity"
             android:label="@string/title_activity_act_detail" />
-
         <activity
             android:name=".activity.assess.ImageGridActivity"
             android:theme="@android:style/Theme.NoTitleBar" />
@@ -428,6 +426,10 @@
         <activity
             android:name=".activity.WebActivity"
             android:label="@string/title_activity_web" >
+        </activity>
+        <activity
+            android:name=".activity.circle.ReplyActivity"
+            android:label="@string/title_activity_reply" >
         </activity>
     </application>
 

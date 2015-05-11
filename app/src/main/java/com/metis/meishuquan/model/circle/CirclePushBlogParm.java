@@ -11,7 +11,7 @@ public class CirclePushBlogParm implements Serializable {
 
     private String Region = "";
     private String Content = "";
-    private List<Integer> UserIds = null;
+    private List<Integer> UserIds = null;//@谁集合
     private List<CircleImage> Images = null;
     private String Device = "";
     private int RelayId = 0;

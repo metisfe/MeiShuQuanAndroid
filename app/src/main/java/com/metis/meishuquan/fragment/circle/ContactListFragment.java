@@ -39,7 +39,7 @@ public class ContactListFragment extends CircleBaseFragment {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_circle_contactlistfragment, container, false);
         this.listView = (ExpandableListView) rootView.findViewById(R.id.fragment_circle_contactlistfragment_list);
         this.listView.setGroupIndicator(null);
-        this.listView.setBackgroundColor(Color.rgb(255, 255, 255));
+        this.listView.setBackgroundColor(getResources().getColor(R.color.bg_listview));
         this.listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
@@ -80,8 +80,8 @@ public class ContactListFragment extends CircleBaseFragment {
 
         this.adapter = new CircleFriendListAdapter();
         this.adapter.friendList = ChatManager.getGroupedFriendList();
-        this.adapter.fakeItems.add(new UserAdvanceInfo("新的朋友", R.drawable.view_circle_newfriend));
-        this.adapter.fakeItems.add(new UserAdvanceInfo("群聊", R.drawable.view_circle_groupchat));
+        this.adapter.fakeItems.add(new UserAdvanceInfo("新的朋友", R.drawable.icon_add_friend));
+        this.adapter.fakeItems.add(new UserAdvanceInfo("群聊", R.drawable.icon_chat_group));
         this.listView.setAdapter(adapter);
         expandAll();
 
@@ -114,7 +114,7 @@ public class ContactListFragment extends CircleBaseFragment {
     @Override
     public void timeToSetTitleBar() {
         getTitleBar().setText("选择联系人");
-        getTitleBar().setRightButton("Add", 0, new View.OnClickListener() {
+        getTitleBar().setRightButton("", R.drawable.icon_circle_add_, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AddFriendFragment addFriendFragment = new AddFriendFragment();

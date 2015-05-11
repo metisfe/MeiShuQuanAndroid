@@ -58,7 +58,7 @@ public class ChatListFragment extends CircleBaseFragment {
     @Override
     public void timeToSetTitleBar() {
         getTitleBar().setText("消息");
-        getTitleBar().setRightButton("Add", 0, new View.OnClickListener() {
+        getTitleBar().setRightButton("", R.drawable.icon_circle_add_, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PopupAddWindow addWindow = new PopupAddWindow(getActivity(), new View.OnClickListener() {
