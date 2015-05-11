@@ -53,6 +53,8 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        //Thread.setDefaultUncaughtExceptionHandler(CrashHandler.getInstance(this));
+
         //set UMeng debugable false
         com.umeng.socialize.utils.Log.LOG = false;
 

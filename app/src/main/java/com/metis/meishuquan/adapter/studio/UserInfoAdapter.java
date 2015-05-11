@@ -45,9 +45,6 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
     private User mUser = null;
     private boolean canEdit = false;
 
-    private String mDepartmentName = null;
-    private String mAddress = null;
-
     private View.OnClickListener mOnClickListener = null;
 
     public UserInfoAdapter (Context context, User user) {
@@ -92,6 +89,8 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
         MyInfoBtn mCvView = (MyInfoBtn)view.findViewById(R.id.info_cv);
         MyInfoBtn mDepartmentView = (MyInfoBtn)view.findViewById(R.id.info_department);
         MyInfoBtn mDepartmentAddrView = (MyInfoBtn)view.findViewById(R.id.info_department_address);
+        MyInfoBtn mSchoolView = (MyInfoBtn)view.findViewById(R.id.info_school);
+        MyInfoBtn mStudiolView = (MyInfoBtn)view.findViewById(R.id.info_studio);
         MyInfoBtn mGoodAtView = (MyInfoBtn)view.findViewById(R.id.info_good_at);
         MyInfoBtn mAchievementView = (MyInfoBtn)view.findViewById(R.id.info_achievement);
 
@@ -126,14 +125,17 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
         mCvView.setSecondaryText(mUser.getUserResume());
         mCvView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
 
-        mDepartmentView.setText(mUser.getUserRoleEnum() == IdTypeEnum.STUDENT ? R.string.info_school : R.string.info_department);
-        if (mDepartmentName != null) {
-            mDepartmentView.setSecondaryText(mDepartmentName);
+        mSchoolView.setVisibility(mUser.getUserRoleEnum() == IdTypeEnum.STUDENT ? View.VISIBLE : View.GONE);
+        mSchoolView.setSecondaryText(mUser.getLocationSchool());
+
+        if (mStudioName != null) {
+            mStudiolView.setSecondaryText(mStudioName);
         } else {
+            mStudiolView.setSecondaryText(mUser.getStudio().getName());
             //TODO
         }
         mDepartmentAddrView.setVisibility(mUser.getUserRoleEnum() == IdTypeEnum.TEACHER ? View.VISIBLE : View.GONE);
-        mDepartmentAddrView.setSecondaryText(mUser.getLocationAddress());
+        mDepartmentAddrView.setSecondaryText(/*mUser.getLocationAddress()*/mUser.getStudio().getAddress());
         mDepartmentAddrView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
 
         mGoodAtView.setVisibility(mUser.getUserRoleEnum() == IdTypeEnum.TEACHER ? View.VISIBLE : View.GONE);
@@ -185,6 +187,8 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
         mProvienceView.setOnClickListener(this);
         mConstellationView.setOnClickListener(this);
         mAgeView.setOnClickListener(this);
+        mSchoolView.setOnClickListener(this);
+        mStudiolView.setOnClickListener(this);
         mDepartmentView.setOnClickListener(this);
         mDepartmentAddrView.setOnClickListener(this);
         mGoodAtView.setOnClickListener(this);
@@ -194,10 +198,9 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
         return view;
     }
 
-    public void setUserDepartment (int id, String name, String address) {
-        mUser.setLocationStudio(id);
-        mDepartmentName = name;
-        mAddress = address;
+    private String mStudioName = null;
+    public void setStudioName (String studio) {
+        mStudioName = studio;
     }
 
     private CourseChannelItem getCourseChannelItem (List<CourseChannel> channelsList, int channelId) {

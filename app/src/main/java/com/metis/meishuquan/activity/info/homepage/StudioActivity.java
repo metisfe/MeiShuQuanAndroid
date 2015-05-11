@@ -147,6 +147,8 @@ public class StudioActivity extends BaseActivity implements
             public void onGet(boolean succeed, User user) {
                 if (succeed) {
                     mUser = user;
+                    //TODO
+                    //mUser.setUserRole(3);
                     fillUser(user);
                     if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
                         loadStudioInfo(mUserId, new UserInfoOperator.OnGetListener<StudioBaseInfo>() {
@@ -155,6 +157,8 @@ public class StudioActivity extends BaseActivity implements
                                 if (succeed) {
                                     mInfo = o;
                                     fillStudioInfo(mInfo);
+                                } else {
+
                                 }
                             }
                         });
@@ -226,7 +230,7 @@ public class StudioActivity extends BaseActivity implements
                 it = new Intent(this, TextActivity.class);
                 break;
         }
-        it.putExtra(StudioBaseInfo.KEY_STUDIO_ID, mInfo.getStudioId());
+        it.putExtra(StudioBaseInfo.KEY_STUDIO_ID, mUser.getUserId());
         startActivity(it);
     }
 
@@ -251,8 +255,10 @@ public class StudioActivity extends BaseActivity implements
                                 public void onGet(boolean succeed, List<Moment> newses) {
                                     if (succeed) {
                                         mNewsList = newses;
-                                        mAdapter = new ToplineAdapter(StudioActivity.this);
-                                        mStudioFragment.setAdapter(mAdapter);
+                                        if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab1) {
+                                            mAdapter = new ToplineAdapter(StudioActivity.this);
+                                            mStudioFragment.setAdapter(mAdapter);
+                                        }
                                     }
                                 }
                             });
@@ -267,8 +273,11 @@ public class StudioActivity extends BaseActivity implements
                                 public void onGet(boolean succeed, List<CCircleDetailModel> cCircleDetailModels) {
                                     if (succeed) {
                                         mCircleList = cCircleDetailModels;
-                                        mAdapter = new CircleListAdapter(cCircleDetailModels);
-                                        mStudioFragment.setAdapter(mAdapter);
+                                        if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab1) {
+                                            mAdapter = new CircleListAdapter(cCircleDetailModels);
+                                            mStudioFragment.setAdapter(mAdapter);
+                                        }
+
                                     }
                                 }
                             });
@@ -291,8 +300,11 @@ public class StudioActivity extends BaseActivity implements
                                 @Override
                                 public void onGet(boolean succeed, List<Achievement> achievements) {
                                     mAchievementList = achievements;
-                                    mAdapter = new AchievementAdapter(StudioActivity.this, achievements);
-                                    mStudioFragment.setAdapter(mAdapter);
+                                    if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab2) {
+                                        mAdapter = new AchievementAdapter(StudioActivity.this, achievements);
+                                        mStudioFragment.setAdapter(mAdapter);
+                                    }
+
                                 }
                             });
                         } else {
@@ -310,9 +322,12 @@ public class StudioActivity extends BaseActivity implements
                                 public void onGet(boolean succeed, List<WorkInfo> workInfo) {
                                     if (succeed) {
                                         mWorkInfoList = workInfo;
+                                        if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab2) {
+                                            mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
+                                            mStudioFragment.setAdapter(mAdapter);
+                                        }
                                         Log.v(TAG, "2 getWorks mWorkInfoList == null " + (mWorkInfoList == null));
-                                        mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
-                                        mStudioFragment.setAdapter(mAdapter);
+
                                     }
                                 }
                             });
@@ -336,6 +351,9 @@ public class StudioActivity extends BaseActivity implements
                                 public void onGet(boolean succeed, List<WorkInfo> workInfo) {
                                     if (succeed) {
                                         mWorkInfoList = workInfo;
+                                        if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab3) {
+
+                                        }
                                         mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
                                         mStudioFragment.setAdapter(mAdapter);
                                     }
@@ -401,10 +419,10 @@ public class StudioActivity extends BaseActivity implements
                     String address = data.getStringExtra(User.KEY_LOCATIONADDRESS);
                     mUser.setLocationAddress(address);
                     if (mAdapter instanceof UserInfoAdapter) {
-                        ((UserInfoAdapter)mAdapter).setUserDepartment((int)id, name, address);
+                        ((UserInfoAdapter)mAdapter).setStudioName(name);
                         mAdapter.notifyDataSetChanged();
                     }
-                    UserManager.updateMyInfo(User.KEY_LOCATION_STUDIO, id+"");
+                    UserManager.updateMyInfo(User.KEY_LOCATION_STUDIO, id + "");
                 }
                 break;
             case REQUEST_CODE_SCHOOL:
@@ -412,12 +430,13 @@ public class StudioActivity extends BaseActivity implements
                     long id = data.getIntExtra(User.KEY_USER_ID, 0);
                     String name = data.getStringExtra(User.KEY_NICK_NAME);
                     String address = data.getStringExtra(User.KEY_LOCATIONADDRESS);
+                    mUser.setLocationSchool(name);
                     mUser.setLocationAddress(address);
-                    if (mAdapter instanceof UserInfoAdapter) {
+                    /*if (mAdapter instanceof UserInfoAdapter) {
                         ((UserInfoAdapter)mAdapter).setUserDepartment((int)id, name, address);
                         mAdapter.notifyDataSetChanged();
-                    }
-                    UserManager.updateMyInfo(User.KEY_LOCATION_STUDIO, id+"");
+                    }*/
+                    UserManager.updateMyInfo(User.KEY_LOCATION_SCHOOL, name);
                 }
                 break;
             case REQUEST_CODE_CAMERA:
@@ -703,6 +722,16 @@ public class StudioActivity extends BaseActivity implements
                     Intent departIt = new Intent(StudioActivity.this, DepartmentActivity.class);
                     departIt.putExtra(DepartmentActivity.KEY_REQUEST_CODE, requestCode);
                     startActivityForResult(departIt, requestCode);
+                    break;
+                case R.id.info_school:
+                    Intent schoolIt = new Intent(StudioActivity.this, DepartmentActivity.class);
+                    schoolIt.putExtra(DepartmentActivity.KEY_REQUEST_CODE, REQUEST_CODE_SCHOOL);
+                    startActivityForResult(schoolIt, REQUEST_CODE_SCHOOL);
+                    break;
+                case R.id.info_studio:
+                    Intent studioIt = new Intent (StudioActivity.this, DepartmentActivity.class);
+                    studioIt.putExtra(DepartmentActivity.KEY_REQUEST_CODE, REQUEST_CODE_DEPARTMENT);
+                    startActivityForResult(studioIt, REQUEST_CODE_DEPARTMENT);
                     break;
                 case R.id.info_provience:
                     ListDialogFragment provinceFragment = ListDialogFragment.getInstance();

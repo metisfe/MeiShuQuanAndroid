@@ -222,6 +222,36 @@
             />
     </com.metis.meishuquan.view.shared.MyInfoBtn>
     <com.metis.meishuquan.view.shared.MyInfoBtn
+        android:id="@+id/info_school"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        bs:text="@string/info_school"
+        bs:imageVisible="false"
+        >
+        <include
+            layout="@layout/divider_horizontail"
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            />
+    </com.metis.meishuquan.view.shared.MyInfoBtn>
+    <com.metis.meishuquan.view.shared.MyInfoBtn
+        android:id="@+id/info_studio"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        bs:text="@string/info_workspace"
+        bs:imageVisible="false"
+        >
+        <include
+            layout="@layout/divider_horizontail"
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            />
+    </com.metis.meishuquan.view.shared.MyInfoBtn>
+    <com.metis.meishuquan.view.shared.MyInfoBtn
         android:id="@+id/info_good_at"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
