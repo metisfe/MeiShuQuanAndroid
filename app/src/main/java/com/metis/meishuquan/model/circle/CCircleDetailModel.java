@@ -58,10 +58,4 @@ public class CCircleDetailModel {
     public boolean isValid() {
         return user != null && user.name != null /* && user.grade != null */ && createTime != null && content != null;
     }
-<<<<<<< HEAD
-=======
-
-    //TODO: add type
-    //TODO: add original CCircleDetailModel if it's repost
->>>>>>> origin/master
 }
