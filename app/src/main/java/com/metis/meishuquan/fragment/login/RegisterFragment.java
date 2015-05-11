@@ -197,7 +197,7 @@ public class RegisterFragment extends Fragment {
                     @Override
                     public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                         if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                            Log.i(getClass().getSimpleName(), "验证码已发送");
+                            Log.i(getClass().getSimpleName(), "验证码已发送:"+new Gson().toJson(result));
                         } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
                             Toast.makeText(MainApplication.UIContext, result.getMessage(), Toast.LENGTH_SHORT).show();
                         }

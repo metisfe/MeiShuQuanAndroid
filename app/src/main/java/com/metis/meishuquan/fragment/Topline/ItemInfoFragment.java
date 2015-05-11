@@ -523,6 +523,9 @@ public class ItemInfoFragment extends Fragment {
                 if (newsInfo != null && newsInfo.getData() != null) {
                     SharePopupWindow sharePopupWindow = new SharePopupWindow(getActivity(), rootView);
                     Log.i("分享的图片地址", shareImgUrl);
+                    if(shareImgUrl.isEmpty()){
+                        shareImgUrl="";
+                    }
                     sharePopupWindow.setShareInfo(newsInfo.getData().getTitle(), newsInfo.getData().getTitle(), newsInfo.getData().getShareUrl(), shareImgUrl);
                     Log.i("share_content", newsInfo.getData().getShareUrl());
                 }
