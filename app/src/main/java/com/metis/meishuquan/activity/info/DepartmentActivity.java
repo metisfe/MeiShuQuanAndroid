@@ -17,7 +17,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.info.homepage.StudioActivity;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
+import com.metis.meishuquan.model.commons.School;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.view.shared.TitleView;
 
@@ -26,7 +28,7 @@ import java.util.List;
 
 public class DepartmentActivity extends BaseActivity implements View.OnClickListener{
 
-    public static final int REQUEST_CODE_ = 102;
+    public static final String KEY_REQUEST_CODE = "request_code";
 
     private EditText mSearchInput = null;
     private ImageView mSearchBtn = null;
@@ -34,7 +36,9 @@ public class DepartmentActivity extends BaseActivity implements View.OnClickList
 
     /*private List<DepartmentDelegate> mDepartments = new ArrayList<DepartmentDelegate>();*/
     private DepartmentAdapter mAdapter = null;
-    private List<User> mDataList = new ArrayList<User>();
+    private List<DepartmentDelegate> mDataList = new ArrayList<DepartmentDelegate>();
+
+    private int mRequestCode = StudioActivity.REQUEST_CODE_DEPARTMENT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +53,14 @@ public class DepartmentActivity extends BaseActivity implements View.OnClickList
 
         mAdapter = new DepartmentAdapter(mDataList);
         mDepartmentLv.setAdapter(mAdapter);
+
+        mRequestCode = getIntent().getIntExtra(KEY_REQUEST_CODE, mRequestCode);
+        if (mRequestCode == StudioActivity.REQUEST_CODE_DEPARTMENT) {
+            setTitleCenter(getString(R.string.info_department));
+        } else if (mRequestCode == StudioActivity.REQUEST_CODE_SCHOOL) {
+            setTitleCenter(getString(R.string.info_school));
+        }
+
     }
 
     @Override
@@ -65,26 +77,46 @@ public class DepartmentActivity extends BaseActivity implements View.OnClickList
                     Toast.makeText(this, R.string.input_not_empty, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                UserInfoOperator.getInstance().searchDepartment(key, new UserInfoOperator.OnGetListener<List<User>>() {
-                    @Override
-                    public void onGet(boolean succeed, List<User> users) {
-                        if (succeed) {
+                if (mRequestCode == StudioActivity.REQUEST_CODE_DEPARTMENT) {
+                    UserInfoOperator.getInstance().searchDepartment(key, new UserInfoOperator.OnGetListener<List<User>>() {
+                        @Override
+                        public void onGet(boolean succeed, List<User> users) {
+                            if (succeed) {
+                                mDataList.clear();
+                                List<DepartmentDelegate> delegates = new ArrayList<DepartmentDelegate>();
+                                for (User u : users) {
+                                    delegates.add(new DepartmentDelegate(u));
+                                }
+                                mDataList.addAll(delegates);
+                                mAdapter.notifyDataSetChanged();
+                            }
+
+                        }
+                    });
+                } else if (mRequestCode == StudioActivity.REQUEST_CODE_SCHOOL) {
+                    UserInfoOperator.getInstance().searchSchool(key, new UserInfoOperator.OnGetListener<List<School>>() {
+                        @Override
+                        public void onGet(boolean succeed, List<School> users) {
                             mDataList.clear();
-                            mDataList.addAll(users);
+                            List<DepartmentDelegate> delegates = new ArrayList<DepartmentDelegate>();
+                            for (School s : users) {
+                                delegates.add(new DepartmentDelegate(s));
+                            }
+                            mDataList.addAll(delegates);
                             mAdapter.notifyDataSetChanged();
                         }
+                    });
+                }
 
-                    }
-                });
                 break;
         }
     }
 
     private class DepartmentAdapter extends BaseAdapter {
 
-        private List<User> mUserList = null;
+        private List<DepartmentDelegate> mUserList = null;
 
-        public DepartmentAdapter (List<User> users) {
+        public DepartmentAdapter (List<DepartmentDelegate> users) {
             mUserList = users;
         }
 
@@ -94,7 +126,7 @@ public class DepartmentActivity extends BaseActivity implements View.OnClickList
         }
 
         @Override
-        public User getItem(int i) {
+        public DepartmentDelegate getItem(int i) {
             return mUserList.get(i);
         }
 
@@ -114,14 +146,15 @@ public class DepartmentActivity extends BaseActivity implements View.OnClickList
             } else {
                 holder = (ViewHolder)view.getTag();
             }
-            final User user = mUserList.get(i);
-            holder.titleTv.setText(user.getName());
+            final DepartmentDelegate user = mUserList.get(i);
+            holder.titleTv.setText(user.title);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent it = new Intent ();
-                    it.putExtra(User.KEY_USER_ID, user.getUserId());
-                    it.putExtra(User.KEY_NICK_NAME, user.getName());
+                    it.putExtra(User.KEY_USER_ID, user.id);
+                    it.putExtra(User.KEY_NICK_NAME, user.title);
+                    it.putExtra(User.KEY_LOCATIONADDRESS, user.address);
                     setResult(RESULT_OK, it);
                     finish();
                 }
@@ -199,17 +232,22 @@ public class DepartmentActivity extends BaseActivity implements View.OnClickList
 
     private class ViewHolder {
         public TextView detailsTv;
-    }
+    }*/
 
     private class DepartmentDelegate {
-        public String name;
-        public String durationStart;
-        public String durationEnd;
+        public int id;
+        public String title;
+        public String address;
 
-        public DepartmentDelegate (String name, String durationStart, String durationEnd) {
-            this.name = name;
-            this.durationStart = durationStart;
-            this.durationEnd = durationEnd;
+        public DepartmentDelegate (User user) {
+            id = user.getUserId();
+            title = user.getName();
         }
-    }*/
+
+        public DepartmentDelegate (School school) {
+            id = school.getSchoolId();
+            title = school.getSchoolName();
+            address = school.getSchoolLoction();
+        }
+    }
 }

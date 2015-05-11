@@ -20,6 +20,7 @@ import com.metis.meishuquan.activity.course.ChooseCourseActivity;
 import com.metis.meishuquan.activity.info.ConstellationActivity;
 import com.metis.meishuquan.activity.info.DepartmentActivity;
 import com.metis.meishuquan.manager.common.UserManager;
+import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.Result;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.course.CourseChannel;
@@ -45,6 +46,7 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
     private boolean canEdit = false;
 
     private String mDepartmentName = null;
+    private String mAddress = null;
 
     private View.OnClickListener mOnClickListener = null;
 
@@ -115,6 +117,8 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
         mGradeView.setSecondaryText(mContext.getString(mUser.getUserRoleEnum().getStringResource()));
 
         mProvienceView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
+        mProvienceView.setSecondaryText(UserInfoOperator.getInstance().getProvinceName(mUser.getRegion()));
+
         mAgeView.setSecondaryText(UserManager.caculateAgeByBirthday(mUser.getBirthday()) + "");
         mAgeView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
 
@@ -190,9 +194,10 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
         return view;
     }
 
-    public void setUserDepartment (int id, String name) {
+    public void setUserDepartment (int id, String name, String address) {
         mUser.setLocationStudio(id);
         mDepartmentName = name;
+        mAddress = address;
     }
 
     private CourseChannelItem getCourseChannelItem (List<CourseChannel> channelsList, int channelId) {

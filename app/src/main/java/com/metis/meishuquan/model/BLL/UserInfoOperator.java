@@ -1,10 +1,13 @@
 package com.metis.meishuquan.model.BLL;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
@@ -17,11 +20,13 @@ import com.metis.meishuquan.model.commons.Item;
 import com.metis.meishuquan.model.commons.Option;
 import com.metis.meishuquan.model.commons.Profile;
 import com.metis.meishuquan.model.commons.Result;
+import com.metis.meishuquan.model.commons.School;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.FileUploadTypeEnum;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.ImageLoaderUtils;
+import com.metis.meishuquan.util.PatternUtils;
 import com.metis.meishuquan.util.SystemUtil;
 import com.metis.meishuquan.util.Utils;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -35,6 +40,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -60,7 +66,8 @@ public class UserInfoOperator {
                             URL_CHANGE_PWD = "v1.1/UserCenter/ChangePassword?",
                             URL_FEEDBACK = "v1.1/Instrument/FeedBack",
                             URL_SEARCH_STUDIO = "v1.1/UserCenter/StudioList?query=",
-                            URL_PROVINCE = "v1.1/UserCenter/Province";
+                            URL_PROVINCE = "v1.1/UserCenter/Province",
+                            URL_SCHOOL = "v1.1/UserCenter/SchoolList?query=";
 
     private static String KEY_USER_ID = "userId",
                         KEY_INDEX = "index",
@@ -90,7 +97,7 @@ public class UserInfoOperator {
     public void updateUserProfile (final long userId, Bitmap bmp) {
         byte[] data = ImageLoaderUtils.BitmapToByteArray(bmp);
         String defineStr = data.length + "," + 1 + "," + data.length;
-        AssessOperator.getInstance().fileUpload(FileUploadTypeEnum.IMG, defineStr, data, new ServiceFilterResponseCallback () {
+        AssessOperator.getInstance().fileUpload(FileUploadTypeEnum.IMG, defineStr, data, new ServiceFilterResponseCallback() {
 
             @Override
             public void onResponse(ServiceFilterResponse response, Exception exception) {
@@ -98,7 +105,8 @@ public class UserInfoOperator {
                     String result = response.getContent();
                     Log.v(TAG, "updateUserProfile " + result);
                     Gson gson = new Gson();
-                    Result<List<Profile>> profileResult = gson.fromJson(result, new TypeToken<Result<List<Profile>>>(){}.getType());
+                    Result<List<Profile>> profileResult = gson.fromJson(result, new TypeToken<Result<List<Profile>>>() {
+                    }.getType());
                     if (profileResult.getOption().getStatus() == 0) {
                         updateUserProfileByUrl(userId, profileResult.getData().get(0).getOriginalImage());
                     }
@@ -118,7 +126,7 @@ public class UserInfoOperator {
 
     public void updateUserProfileByUrl (long userId, String url) {
         Map<String, String> map = new HashMap<String, String>();
-        map.put(User.KEY_USERAVATAR, URLEncoder.encode(url));
+        map.put(User.KEY_USERAVATAR, url);
         updateUserInfo(userId, map);
     }
 
@@ -128,7 +136,12 @@ public class UserInfoOperator {
             json.addProperty(KEY_USER_ID, uid);
             Set<String> set = map.keySet();
             for (String key : set) {
-                json.addProperty(key, URLEncoder.encode(map.get(key)));
+                String value = map.get(key);
+                value = URLEncoder.encode(value);
+                /*if (!Patterns.WEB_URL.matcher(value).matches()) {
+                    value = URLEncoder.encode(value);
+                }*/
+                json.addProperty(key, value);
             }
             StringBuilder sb = new StringBuilder(json.toString());
             sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
@@ -517,7 +530,144 @@ public class UserInfoOperator {
         }
     }
 
-    //public void
+    public void searchSchool (String key, final OnGetListener<List<School>> listener) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            StringBuilder sb = new StringBuilder(URL_SCHOOL);
+            sb.append(URLEncoder.encode(key));
+            sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+            Log.v(TAG, "searchSchool request=" + sb.toString());
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    Log.v(TAG, "searchSchool callback=" + response.getContent());
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String json = gson.toJson(result);
+                        Log.v(TAG, "searchSchool result=" + json);
+                        Result<List<School>> listResult = gson.fromJson(json, new TypeToken<Result<List<School>>>(){}.getType());
+                        if (listener != null) {
+                            if (listResult.getOption().getStatus() == 0) {
+                                listener.onGet(true, listResult.getData());
+                            } else {
+                                listener.onGet(false, null);
+                            }
+                        }
+
+                    } else {
+                        if (listener != null) {
+                            listener.onGet(false, null);
+                        }
+                    }
+
+                }
+            });
+        }
+    }
+
+    private static final String SHARE_PROVINCE_LIST = TAG + "_province_list";
+    private List<SimpleProvince> mProvinceList = null;
+
+    public String getProvinceName (int id) {
+        final SharedPreferences shared = MainApplication.UIContext.getSharedPreferences(SHARE_PROVINCE_LIST, Context.MODE_PRIVATE);
+        String json = shared.getString(SHARE_PROVINCE_LIST, null);
+        if (!TextUtils.isEmpty(json)) {
+            Gson gson = new Gson();
+            Result<List<SimpleProvince>> listResult = gson.fromJson(json, new TypeToken<Result<List<SimpleProvince>>>(){}.getType());
+            mProvinceList = listResult.getData();
+        }
+        if (mProvinceList == null || mProvinceList.isEmpty()) {
+            getProvinceList(null);
+        }
+        if (mProvinceList == null) {
+            return null;
+        }
+        for (SimpleProvince province : mProvinceList) {
+            if (province.provinceId == id) {
+                return province.getName();
+            }
+        }
+        return null;
+    }
+
+    public void getProvinceList (final OnGetListener<List<SimpleProvince>> listener) {
+        if (mProvinceList != null) {
+            if (listener != null) {
+                listener.onGet(true, mProvinceList);
+            }
+            return;
+        }
+        final SharedPreferences shared = MainApplication.UIContext.getSharedPreferences(SHARE_PROVINCE_LIST, Context.MODE_PRIVATE);
+        String json = shared.getString(SHARE_PROVINCE_LIST, null);
+        if (!TextUtils.isEmpty(json)) {
+            Gson gson = new Gson();
+            Result<List<SimpleProvince>> listResult = gson.fromJson(json, new TypeToken<Result<List<SimpleProvince>>>(){}.getType());
+            mProvinceList = listResult.getData();
+            if (listener != null) {
+                listener.onGet(true, listResult.getData());
+            }
+            return;
+        }
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            StringBuilder sb = new StringBuilder(URL_PROVINCE);
+            //sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+            Log.v(TAG, "getProvinceList request=" + sb.toString());
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                Log.v(TAG, "getProvinceList callback=" + response.getContent());
+                if (result != null) {
+                    Gson gson = new Gson();
+                    String json = gson.toJson(result);
+                    Log.v(TAG, "getProvinceList result=" + json);
+                    Result<List<SimpleProvince>> listResult = gson.fromJson(json, new TypeToken<Result<List<SimpleProvince>>>(){}.getType());
+                    if (listResult.getOption().getStatus() == 0) {
+                        SharedPreferences.Editor editor = shared.edit();
+                        editor.putString(SHARE_PROVINCE_LIST, json);
+                        editor.commit();
+                    }
+
+                    mProvinceList = listResult.getData();
+                    if (listener != null) {
+                        if (listResult.getOption().getStatus() == 0) {
+                            listener.onGet(true, listResult.getData());
+                        } else {
+                            listener.onGet(false, null);
+                        }
+                    }
+
+                } else {
+                    if (listener != null) {
+                        listener.onGet(false, null);
+                    }
+                }
+
+                }
+            });
+        }
+    }
+
+    public class SimpleProvince implements Serializable{
+        int provinceId;
+        String name;
+
+        public int getProvinceId() {
+            return provinceId;
+        }
+
+        public void setProvinceId(int provinceId) {
+            this.provinceId = provinceId;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
 
     public interface OnGetListener<T> {
         public void onGet (boolean succeed, T t);

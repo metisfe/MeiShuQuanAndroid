@@ -55,7 +55,7 @@ public class User implements Serializable {
     private String grade = "";
 
     @SerializedName("region")
-    private String region = "";
+    private int region;
 
     @SerializedName("userAvatar")
     private String userAvatar = "";
@@ -179,11 +179,11 @@ public class User implements Serializable {
         this.grade = grade;
     }
 
-    public String getRegion() {
+    public int getRegion() {
         return region;
     }
 
-    public void setRegion(String region) {
+    public void setRegion(int region) {
         this.region = region;
     }
 

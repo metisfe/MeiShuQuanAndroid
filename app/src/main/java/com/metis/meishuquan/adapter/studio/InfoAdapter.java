@@ -145,7 +145,7 @@ public class InfoAdapter extends BaseAdapter {
             ));
             itemList.add(new Item(
                     mContext.getString(R.string.info_provience),
-                    user.getRegion(), canEdit
+                    user.getRegion() + "", canEdit
             ));
             itemList.add(new Item(
                     mContext.getString(R.string.info_school),
@@ -183,7 +183,7 @@ public class InfoAdapter extends BaseAdapter {
             ));
             itemList.add(new Item(
                     mContext.getString(R.string.info_provience),
-                    user.getRegion(), canEdit
+                    user.getRegion() + "", canEdit
             ));
             itemList.add(new Item(
                     mContext.getString(R.string.info_department),

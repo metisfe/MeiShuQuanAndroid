@@ -5,7 +5,12 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,6 +39,7 @@ import com.metis.meishuquan.adapter.studio.InfoAdapter;
 import com.metis.meishuquan.adapter.studio.UserInfoAdapter;
 import com.metis.meishuquan.adapter.studio.WorkAdapter;
 import com.metis.meishuquan.adapter.topline.ToplineAdapter;
+import com.metis.meishuquan.fragment.assess.ChooseCityFragment;
 import com.metis.meishuquan.fragment.commons.InputDialogFragment;
 import com.metis.meishuquan.fragment.commons.ListDialogFragment;
 import com.metis.meishuquan.fragment.commons.StudioFragment;
@@ -43,13 +49,16 @@ import com.metis.meishuquan.model.BLL.StudioBaseInfo;
 import com.metis.meishuquan.model.BLL.StudioOperator;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.BLL.WorkInfo;
+import com.metis.meishuquan.model.assess.City;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.contract.Moment;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.PatternUtils;
+import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.List;
 
@@ -64,7 +73,11 @@ public class StudioActivity extends BaseActivity implements
     public static final String KEY_USER_ID = User.KEY_USER_ID,
                                 KEY_USER_ROLE = User.KEY_USER_ROLE;
 
-    private static final int REQUEST_CODE_DEPARTMENT = 600;
+    public static final int
+            REQUEST_CODE_DEPARTMENT = 600,
+            REQUEST_CODE_SCHOOL = 601,
+            REQUEST_CODE_CAMERA = 222,
+            REQUEST_CODE_GALLERY = 333;
 
     private View mTitleView = null;
     private ImageView mTitleProfile = null;
@@ -83,15 +96,17 @@ public class StudioActivity extends BaseActivity implements
     private List<Moment> mNewsList = null;
     private List<CCircleDetailModel> mCircleList = null;
 
+    private String mCameraOutputPath = null;
+
     private SimplePrvsAdapter.OnPrvsItemClickListener mPrvsListener = new SimplePrvsAdapter.OnPrvsItemClickListener() {
 
         @Override
-        public void onItemClick(View view, String name) {
+        public void onItemClick(View view, UserInfoOperator.SimpleProvince province) {
             ListDialogFragment.getInstance().dismiss();
-            UserManager.updateMyInfo(User.KEY_REGION, name);
-            if (mAdapter != null && mAdapter instanceof InfoAdapter) {
-                InfoAdapter adapter = (InfoAdapter)mAdapter;
-                adapter.setProvince(name);
+            UserManager.updateMyInfo(User.KEY_REGION, province.getProvinceId() + "");
+            mUser.setRegion(province.getProvinceId());
+            if (mAdapter instanceof UserInfoAdapter) {
+                mAdapter.notifyDataSetChanged();
             }
         }
     };
@@ -345,54 +360,87 @@ public class StudioActivity extends BaseActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (mAdapter != null && mAdapter instanceof InfoAdapter) {
-            InfoAdapter adapter = (InfoAdapter)mAdapter;
-            switch (requestCode) {
-                case InputActivity.REQUEST_CODE_NICK:
-                    if (resultCode == RESULT_OK) {
-                        CharSequence nick = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR);
-                        adapter.setNickName(nick.toString());
-                        UserManager.updateMyInfo(User.KEY_NICK_NAME, nick.toString());
+        switch (requestCode) {
+            /*case InputActivity.REQUEST_CODE_NICK:
+                if (resultCode == RESULT_OK) {
+                    CharSequence nick = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR);
+                    adapter.setNickName(nick.toString());
+                    UserManager.updateMyInfo(User.KEY_NICK_NAME, nick.toString());
+                }
+                break;
+            case InputActivity.REQUEST_CODE_RECENTS:
+                if (resultCode == RESULT_OK) {
+                    String recents = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR).toString();
+                    UserManager.updateMyInfo(User.KEY_NICK_NAME, recents);
+                    adapter.setSelfSignature(recents);
+                }
+                break;
+            case InputActivity.REQUEST_CODE_MEISHUQUAN_ID:
+                if (resultCode == RESULT_OK) {
+                    String id = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR).toString();
+                    //Pattern pattern = new Pattern("");
+                    if (!PatternUtils.PATTERN_MEISHUQUAN_ID.matcher(id.toString()).matches()) {
+                        Toast.makeText(this, R.string.info_meishuquan_id_illegal, Toast.LENGTH_SHORT).show();
+                        return;
                     }
-                    break;
-                case InputActivity.REQUEST_CODE_RECENTS:
-                    if (resultCode == RESULT_OK) {
-                        String recents = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR).toString();
-                        UserManager.updateMyInfo(User.KEY_NICK_NAME, recents);
-                        adapter.setSelfSignature(recents);
+                    UserManager.updateMyInfo(User.KEY_ACCOUNT, id);
+                    adapter.setMeishuquanId(id);
+                }
+                break;
+            case InputActivity.REQUEST_CODE_DEPARTMENT_ADDRESS:
+                if (resultCode == RESULT_OK) {
+                    String address = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR).toString();
+                    UserManager.updateMyInfo(User.KEY_LOCATIONADDRESS, address);
+                    adapter.setDepartmentAddress(address);
+                }
+                break;*/
+            case REQUEST_CODE_DEPARTMENT:
+                if (resultCode == RESULT_OK) {
+                    long id = data.getIntExtra(User.KEY_USER_ID, 0);
+                    String name = data.getStringExtra(User.KEY_NICK_NAME);
+                    String address = data.getStringExtra(User.KEY_LOCATIONADDRESS);
+                    mUser.setLocationAddress(address);
+                    if (mAdapter instanceof UserInfoAdapter) {
+                        ((UserInfoAdapter)mAdapter).setUserDepartment((int)id, name, address);
+                        mAdapter.notifyDataSetChanged();
                     }
-                    break;
-                case InputActivity.REQUEST_CODE_MEISHUQUAN_ID:
-                    if (resultCode == RESULT_OK) {
-                        String id = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR).toString();
-                        //Pattern pattern = new Pattern("");
-                        if (!PatternUtils.PATTERN_MEISHUQUAN_ID.matcher(id.toString()).matches()) {
-                            Toast.makeText(this, R.string.info_meishuquan_id_illegal, Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        UserManager.updateMyInfo(User.KEY_ACCOUNT, id);
-                        adapter.setMeishuquanId(id);
+                    UserManager.updateMyInfo(User.KEY_LOCATION_STUDIO, id+"");
+                }
+                break;
+            case REQUEST_CODE_SCHOOL:
+                if (resultCode == RESULT_OK) {
+                    long id = data.getIntExtra(User.KEY_USER_ID, 0);
+                    String name = data.getStringExtra(User.KEY_NICK_NAME);
+                    String address = data.getStringExtra(User.KEY_LOCATIONADDRESS);
+                    mUser.setLocationAddress(address);
+                    if (mAdapter instanceof UserInfoAdapter) {
+                        ((UserInfoAdapter)mAdapter).setUserDepartment((int)id, name, address);
+                        mAdapter.notifyDataSetChanged();
                     }
-                    break;
-                case InputActivity.REQUEST_CODE_DEPARTMENT_ADDRESS:
-                    if (resultCode == RESULT_OK) {
-                        String address = data.getCharSequenceExtra(InputActivity.KEY_DEFAULT_STR).toString();
-                        UserManager.updateMyInfo(User.KEY_LOCATIONADDRESS, address);
-                        adapter.setDepartmentAddress(address);
-                    }
-                    break;
-                case REQUEST_CODE_DEPARTMENT:
-                    if (resultCode == RESULT_OK) {
-                        long id = data.getIntExtra(User.KEY_USER_ID, 0);
-                        String name = data.getStringExtra(User.KEY_NICK_NAME);
-                        if (mAdapter instanceof UserInfoAdapter) {
-                            ((UserInfoAdapter)mAdapter).setUserDepartment((int)id, name);
-                            mAdapter.notifyDataSetChanged();
-                        }
-                        UserManager.updateMyInfo(User.KEY_LOCATION_STUDIO, id+"");
-                    }
-                    break;
-            }
+                    UserManager.updateMyInfo(User.KEY_LOCATION_STUDIO, id+"");
+                }
+                break;
+            case REQUEST_CODE_CAMERA:
+                if (resultCode == RESULT_OK) {
+                    Log.v(TAG, "onActivityResult mCameraPath=" + mCameraOutputPath);
+                    mUser.setUserAvatar(ImageDownloader.Scheme.FILE.wrap(mCameraOutputPath));
+                    final int size = getResources().getDimensionPixelSize(R.dimen.studio_profile_size);
+                    UserInfoOperator.getInstance().updateUserProfile(MainApplication.userInfo.getUserId(), mCameraOutputPath);
+                    ImageLoaderUtils.getImageLoader(this).displayImage(ImageDownloader.Scheme.FILE.wrap(mCameraOutputPath), mTitleProfile, ImageLoaderUtils.getRoundDisplayOptions(size));
+                    mAdapter.notifyDataSetChanged();
+                }
+                break;
+            case REQUEST_CODE_GALLERY:
+                if (resultCode == RESULT_OK) {
+                    final String path = ImageLoaderUtils.getRealFilePath(this, data.getData());
+                    Log.v(TAG, "onActivityResult " + path);
+                    final int profileSize = getResources().getDimensionPixelSize(R.dimen.studio_profile_size);
+                    mUser.setUserAvatar(ImageDownloader.Scheme.FILE.wrap(path));
+                    ImageLoaderUtils.getImageLoader(this).displayImage(ImageDownloader.Scheme.FILE.wrap(path), mTitleProfile, ImageLoaderUtils.getRoundDisplayOptions(profileSize));
+                    UserInfoOperator.getInstance().updateUserProfile(MainApplication.userInfo.getUserId(), path);
+                    mAdapter.notifyDataSetChanged();
+                }
+                break;
         }
     }
 
@@ -434,6 +482,35 @@ public class StudioActivity extends BaseActivity implements
             startInputActivityForResult(getString(R.string.info_department_address), item.content, false, InputActivity.REQUEST_CODE_DEPARTMENT_ADDRESS);
         }
     }*/
+
+    public String camera() {
+        Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File dir = new File(Environment.getExternalStorageDirectory()
+                + "/myimage/");
+        if (!dir.exists()) {
+            dir.mkdir();
+        } else {
+            File[] files = dir.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].isFile()) {
+                    files[i].delete();
+                }
+            }
+        }
+        File file = new File(dir, String.valueOf(System.currentTimeMillis())
+                + ".jpg");
+        //path = file.getPath();
+        Uri imageUri = Uri.fromFile(file);
+        openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(openCameraIntent, REQUEST_CODE_CAMERA);
+        return file.getAbsolutePath();
+    }
+
+    public void pickFromGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);//调用android的图库
+        startActivityForResult(intent, REQUEST_CODE_GALLERY);
+    }
 
     private Dialog mDialog = null;
     private String mGender = null;
@@ -619,7 +696,20 @@ public class StudioActivity extends BaseActivity implements
                     });
                     break;
                 case R.id.info_department:
-                    startActivityForResult(new Intent(StudioActivity.this, DepartmentActivity.class), REQUEST_CODE_DEPARTMENT);
+                    int requestCode = REQUEST_CODE_SCHOOL;
+                    if (mUser.getUserRoleEnum() != IdTypeEnum.STUDENT) {
+                        requestCode = REQUEST_CODE_DEPARTMENT;
+                    }
+                    Intent departIt = new Intent(StudioActivity.this, DepartmentActivity.class);
+                    departIt.putExtra(DepartmentActivity.KEY_REQUEST_CODE, requestCode);
+                    startActivityForResult(departIt, requestCode);
+                    break;
+                case R.id.info_provience:
+                    ListDialogFragment provinceFragment = ListDialogFragment.getInstance();
+                    SimplePrvsAdapter provinceAdapter = SimplePrvsAdapter.getInstance(StudioActivity.this, mUser.getRegion());
+                    provinceAdapter.setOnItemClickListener(mPrvsListener);
+                    provinceFragment.setAdapter(provinceAdapter);
+                    provinceFragment.show(getSupportFragmentManager(), TAG);
                     break;
                 /*case R.id.info_provience:
                     showCityFragment();
@@ -700,8 +790,10 @@ public class StudioActivity extends BaseActivity implements
                 public void onClick(View v) {
                     switch (mTitleResArr[position]) {
                         case R.string.info_profile_gallery:
+                            pickFromGallery();
                             break;
                         case R.string.info_profile_camera:
+                            mCameraOutputPath = camera();
                             break;
                     }
                     ListDialogFragment.getInstance().dismiss();
