@@ -125,6 +125,11 @@ public class ActListFragment extends ActiveListFragment {
         });
     }
 
+    @Override
+    public void needReloadData(int selectedIndex1, int selectedIndex2, int selectedIndex3) {
+
+    }
+
     private void reLoadDataList () {
         mIndex = 1;
         loadDataList(mIndex, new UserInfoOperator.OnGetListener<List<TopListItem>>() {
