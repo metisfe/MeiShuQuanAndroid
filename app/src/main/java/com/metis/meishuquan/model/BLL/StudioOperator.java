@@ -6,6 +6,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
+import com.metis.meishuquan.model.commons.CourseArrangeInfo;
 import com.metis.meishuquan.model.commons.Result;
 import com.metis.meishuquan.model.contract.Moment;
 import com.metis.meishuquan.model.contract.ReturnInfo;
@@ -35,7 +36,8 @@ public class StudioOperator {
             URL_STUDIO_ACHIEVEMENT_DETAIL = "v1.1/Studio/AchievementDetial?achievementId=",
             URL_STUDIO_WORK_LIST = "v1.1/Studio/StudioPhotos?studioId=",
             URL_STUDIO_MY_NEWS_LIST = "v1.1/News/MyNewsList?userId=",
-            URL_STUDIO_MY_CIRCLE_LIST = "v1.1/UserCenter/MyCircle";
+            URL_STUDIO_MY_CIRCLE_LIST = "v1.1/UserCenter/MyCircle",
+            URL_STUDIO_COURSE_ARRANGEMENT = "v1.1/Studio/StudioCoruselist?studioId=";
 
     private static final String
             KEY_SESSION = "session",
@@ -45,7 +47,8 @@ public class StudioOperator {
             KEY_LAST_PHOTO_ID = "lastPhotoId",
             KEY_PHOTO_TYPE = "photoType",
             KEY_LAST_NEWS_ID = "lastNewsId",
-            KEY_USER_ID = "userId";
+            KEY_USER_ID = "userId",
+            KEY_LAST_COURSE_ID = "lastCourseId";
 
     private static StudioOperator sOperator = new StudioOperator();
 
@@ -266,7 +269,7 @@ public class StudioOperator {
         }
     }
 
-    public void getMyNewsList (long userId, int lastNewsId, final UserInfoOperator.OnGetListener<List<Moment>> listener) {
+    public void getMyNewsList (long userId, int lastNewsId, final UserInfoOperator.OnGetListener<List<News>> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_STUDIO_MY_NEWS_LIST);
             sb.append(userId);
@@ -282,7 +285,7 @@ public class StudioOperator {
                     if (result != null) {
                         Gson gson = new Gson();
                         String resultJson = gson.toJson(result);
-                        Result<List<Moment>> resultInfo = gson.fromJson(resultJson, new TypeToken<Result<List<Moment>>>() {
+                        Result<List<News>> resultInfo = gson.fromJson(resultJson, new TypeToken<Result<List<News>>>() {
                         }.getType());
                         if (listener != null) {
                             if (resultInfo.getOption().getStatus() == 0) {
@@ -322,6 +325,38 @@ public class StudioOperator {
                             }
                         }
                         Log.v(TAG, "getMyCircleList resultJson=" + resultJson);
+                    }
+                }
+            });
+        }
+    }
+
+    public void getCourseArrangeList (long userId, int lastId, final UserInfoOperator.OnGetListener<List<CourseArrangeInfo>> listener) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            StringBuilder sb = new StringBuilder(URL_STUDIO_COURSE_ARRANGEMENT);
+            sb.append(userId);
+            sb.append("&" + KEY_LAST_COURSE_ID + "=" + lastId);
+            sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+
+            Log.v(TAG, "getCourseArrangeList request=" + sb.toString());
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    Log.v(TAG, "getCourseArrangeList callback=" + response.getContent());
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String resultJson = gson.toJson(result);
+                        Result<List<CourseArrangeInfo>> resultInfo = gson.fromJson(resultJson, new TypeToken<Result<List<CourseArrangeInfo>>>() {
+                        }.getType());
+                        if (listener != null) {
+                            if (resultInfo.getOption().getStatus() == 0) {
+                                listener.onGet(true, resultInfo.getData());
+                            } else {
+                                listener.onGet(false, null);
+                            }
+                        }
+                        Log.v(TAG, "getCourseArrangeList resultJson=" + resultJson);
                     }
                 }
             });

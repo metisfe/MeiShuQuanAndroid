@@ -6,15 +6,29 @@
     <ImageView
         android:id="@+id/img_title_sub_profile"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="150dp"
+        android:scaleType="centerCrop"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="2dp"
+        />
     <TextView
         android:id="@+id/img_title_sub_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:singleLine="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        style="@style/info_textStyle"
         />
     <TextView
         android:id="@+id/img_title_sub_sub"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        style="@style/info_secondaryTextStyle"
+        />
 </LinearLayout>

@@ -13,6 +13,9 @@ import android.widget.TextView;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.BaseActivity;
+import com.metis.meishuquan.model.BLL.StudioBaseInfo;
+import com.metis.meishuquan.model.BLL.StudioOperator;
+import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.BLL.WorkInfo;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.tonicartos.widget.stickygridheaders.StickyGridHeadersGridView;
@@ -31,22 +34,41 @@ public class StudioAlbumActivity extends BaseActivity {
     private AlbumAdapter mAdapter = null;
     private List<WorkInfo> mDatalist = new ArrayList<WorkInfo>();
 
+    private int mStudioId = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studio_album);
 
+        mStudioId = getIntent().getIntExtra(StudioBaseInfo.KEY_STUDIO_ID, 0);
+
         mGridView = (StickyGridHeadersGridView)findViewById(R.id.album_grid);
-        for (int i = 0; i < 300; i++) {
+        /*for (int i = 0; i < 300; i++) {
             WorkInfo info = new WorkInfo();
             info.setCreateTime(('A' + i % 26) + "T");
             info.setPhotoThumbnail("http://ww3.sinaimg.cn/bmiddle/005Fn4qEjw1erziclf4g0j30dc0a00u3.jpg");
             mDatalist.add(info);
-        }
+        }*/
         mAdapter = new AlbumAdapter(mDatalist);
         mGridView.setAdapter(mAdapter);
         mGridView.setAreHeadersSticky(false);
 
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        StudioOperator.getInstance().getWorks(mStudioId, 0, 0, new UserInfoOperator.OnGetListener<List<WorkInfo>>() {
+            @Override
+            public void onGet(boolean succeed, List<WorkInfo> workInfos) {
+                if (succeed) {
+                    mDatalist.clear();
+                    mDatalist.addAll(workInfos);
+                    mAdapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
 
     @Override
@@ -78,7 +100,7 @@ public class StudioAlbumActivity extends BaseActivity {
         @Override
         public View getHeaderView(int position, View convertView, ViewGroup parent) {
             TextView tv = new TextView(StudioAlbumActivity.this);
-            tv.setText("header:" + getTimeTitle(getItem(position).getCreateTime()));
+            tv.setText(getTimeTitle(getItem(position).getCreateTime()));
             return tv;
         }
 

@@ -111,8 +111,12 @@ public class WorkAdapter extends BaseAdapter {
         for (; index < length; index += 3) {
             WorkInfoGroup group = new WorkInfoGroup();
             group.mInfo1 = workInfos.get(index);
-            group.mInfo2 = workInfos.get(index + 1);
-            group.mInfo3 = workInfos.get(index + 2);
+            if (index + 1 < length) {
+                group.mInfo2 = workInfos.get(index + 1);
+            }
+            if (index + 2 < length) {
+                group.mInfo3 = workInfos.get(index + 2);
+            }
             groupList.add(group);
         }
         index -= 3;

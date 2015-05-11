@@ -39,6 +39,7 @@ import com.metis.meishuquan.adapter.studio.InfoAdapter;
 import com.metis.meishuquan.adapter.studio.UserInfoAdapter;
 import com.metis.meishuquan.adapter.studio.WorkAdapter;
 import com.metis.meishuquan.adapter.topline.ToplineAdapter;
+import com.metis.meishuquan.adapter.topline.ToplineCustomAdapter;
 import com.metis.meishuquan.fragment.assess.ChooseCityFragment;
 import com.metis.meishuquan.fragment.commons.InputDialogFragment;
 import com.metis.meishuquan.fragment.commons.ListDialogFragment;
@@ -54,6 +55,7 @@ import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.contract.Moment;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
+import com.metis.meishuquan.model.topline.News;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.PatternUtils;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
@@ -93,7 +95,7 @@ public class StudioActivity extends BaseActivity implements
 
     private List<Achievement> mAchievementList = null;
     private List<WorkInfo> mWorkInfoList = null;
-    private List<Moment> mNewsList = null;
+    private List<News> mNewsList = null;
     private List<CCircleDetailModel> mCircleList = null;
 
     private String mCameraOutputPath = null;
@@ -148,10 +150,11 @@ public class StudioActivity extends BaseActivity implements
                 if (succeed) {
                     mUser = user;
                     //TODO
-                    //mUser.setUserRole(3);
+                    mUser.setUserRole(3);
+                    mUser.setUserId(100090);
                     fillUser(user);
                     if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
-                        loadStudioInfo(mUserId, new UserInfoOperator.OnGetListener<StudioBaseInfo>() {
+                        loadStudioInfo(mUser.getUserId(), new UserInfoOperator.OnGetListener<StudioBaseInfo>() {
                             @Override
                             public void onGet(boolean succeed, StudioBaseInfo o) {
                                 if (succeed) {
@@ -227,7 +230,7 @@ public class StudioActivity extends BaseActivity implements
                 break;
             case R.id.studio_menu_contact_us:
                 //TODO
-                it = new Intent(this, TextActivity.class);
+                it = new Intent(this, ContactUsActivity.class);
                 break;
         }
         it.putExtra(StudioBaseInfo.KEY_STUDIO_ID, mUser.getUserId());
@@ -250,13 +253,13 @@ public class StudioActivity extends BaseActivity implements
                     if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
                         if (mNewsList == null) {
                             mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
-                            StudioOperator.getInstance().getMyNewsList(mUser.getUserId(), 0, new UserInfoOperator.OnGetListener<List<Moment>>() {
+                            StudioOperator.getInstance().getMyNewsList(mUser.getUserId(), 0, new UserInfoOperator.OnGetListener<List<News>>() {
                                 @Override
-                                public void onGet(boolean succeed, List<Moment> newses) {
+                                public void onGet(boolean succeed, List<News> newses) {
                                     if (succeed) {
                                         mNewsList = newses;
                                         if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab1) {
-                                            mAdapter = new ToplineAdapter(StudioActivity.this);
+                                            mAdapter = new ToplineCustomAdapter(StudioActivity.this, mNewsList);
                                             mStudioFragment.setAdapter(mAdapter);
                                         }
                                     }

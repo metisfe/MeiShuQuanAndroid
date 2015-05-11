@@ -47,6 +47,7 @@ public class TeacherTeamActivity extends BaseActivity {
             public void onGet(boolean succeed, List<TeacherInfo> teacherInfos) {
                 if (succeed) {
                     mAdapter = new ImgTitleSubAdapter(TeacherTeamActivity.this, teacherInfos);
+                    mRecyclerView.setAdapter(mAdapter);
                 }
             }
         });
