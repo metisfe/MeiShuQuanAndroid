@@ -131,11 +131,17 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
         if (mStudioName != null) {
             mStudiolView.setSecondaryText(mStudioName);
         } else {
-            mStudiolView.setSecondaryText(mUser.getStudio().getName());
-            //TODO
+            if (mUser.getStudio() != null) {
+                mStudiolView.setSecondaryText(mUser.getStudio().getName());
+                //TODO
+            }
+
         }
         mDepartmentAddrView.setVisibility(mUser.getUserRoleEnum() == IdTypeEnum.TEACHER ? View.VISIBLE : View.GONE);
-        mDepartmentAddrView.setSecondaryText(/*mUser.getLocationAddress()*/mUser.getStudio().getAddress());
+        if (mUser.getStudio() != null) {
+            mDepartmentAddrView.setSecondaryText(/*mUser.getLocationAddress()*/mUser.getStudio().getAddress());
+        }
+
         mDepartmentAddrView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
 
         mGoodAtView.setVisibility(mUser.getUserRoleEnum() == IdTypeEnum.TEACHER ? View.VISIBLE : View.GONE);

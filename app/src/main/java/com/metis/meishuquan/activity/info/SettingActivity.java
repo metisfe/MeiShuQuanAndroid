@@ -13,11 +13,14 @@ import com.metis.meishuquan.activity.act.SelectStudioActivity;
 import com.metis.meishuquan.activity.info.homepage.StudioActivity;
 import com.metis.meishuquan.model.BLL.ActiveOperator;
 import com.metis.meishuquan.model.BLL.StudioOperator;
+import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.shared.MyInfoBtn;
 import com.nostra13.universalimageloader.cache.disc.DiscCacheAware;
+
+import java.util.List;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
@@ -54,6 +57,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void onTitleRightPressed() {
         super.onTitleRightPressed();
+        UserInfoOperator.getInstance().getProvinceList(null);
         //ActiveOperator.getInstance().getActiveDetail();
         //StudioOperator.getInstance().getStudioBaseInfo(10090);
         /*Intent it = new Intent(this, StudioActivity.class);

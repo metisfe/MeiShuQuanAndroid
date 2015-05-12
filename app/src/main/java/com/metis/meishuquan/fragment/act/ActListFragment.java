@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.adapter.PrvcEnumAdapter;
+import com.metis.meishuquan.adapter.commons.SimplePrvsAdapter;
 import com.metis.meishuquan.model.BLL.ActiveOperator;
 import com.metis.meishuquan.model.BLL.TopListItem;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
@@ -43,22 +45,17 @@ public class ActListFragment extends ActiveListFragment {
 
     private ArrayList<String>
             mFilterData1 = new ArrayList<String>(),
-            mFilterData2 = new ArrayList<String>(),
-            mFilterData3 = new ArrayList<String>();
+            mFilterData2 = new ArrayList<String>();
 
     private int mIndex = 1;
 
-    private List<TopListItem> mDataList = new ArrayList<TopListItem>();
-    private TopListAdapter mAdapter = new TopListAdapter(mDataList);
+    //private List<TopListItem> mDataList = new ArrayList<TopListItem>();
 
     private String mKeyWords = "";
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getListView().setAdapter(mAdapter);
-        /*View emptyView = view.findViewById(R.id.act_empty);
-        mActListView.setEmptyView(emptyView);*/
 
         if (mFilterData1.isEmpty()) {
             String[] filterArr1 = getResources().getStringArray(R.array.act_filter_1);
@@ -74,16 +71,9 @@ public class ActListFragment extends ActiveListFragment {
             }
         }
 
-        if (mFilterData3.isEmpty()) {
-            String[] filterArr3 = getResources().getStringArray(R.array.act_filter_3);
-            for (int i = 0; i < filterArr3.length; i++) {
-                mFilterData3.add(filterArr3[i]);
-            }
-        }
-
         getFilterSpinner1().setAdapter(new SimpleAdapter(mFilterData1));
         getFilterSpinner2().setAdapter(new SimpleAdapter(mFilterData2));
-        getFilterSpinner3().setAdapter(new SimpleAdapter(mFilterData3));
+        getFilterSpinner3().setAdapter(new PrvcEnumAdapter());
 
         getFilterSpinner1().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -127,7 +117,7 @@ public class ActListFragment extends ActiveListFragment {
 
     @Override
     public void needReloadData(int selectedIndex1, int selectedIndex2, int selectedIndex3) {
-
+        reLoadDataList();
     }
 
     private void reLoadDataList () {
@@ -136,16 +126,21 @@ public class ActListFragment extends ActiveListFragment {
             @Override
             public void onGet(boolean succeed, List<TopListItem> topListItems) {
                 if (succeed) {
-                    mDataList.clear();
+                    List<TopListDelegate> delegates = new ArrayList<TopListDelegate>();
+                    for (TopListItem item : topListItems) {
+                        delegates.add(new TopListDelegate(item));
+                    }
+                    onReloadFinished(delegates);
+                    /*mDataList.clear();
                     mDataList.addAll(topListItems);
-                    mAdapter.notifyDataSetChanged();
+                    mAdapter.notifyDataSetChanged();*/
                 }
             }
         });
     }
 
     private void loadDataListNextPage () {
-        loadDataList(mIndex + 1, new UserInfoOperator.OnGetListener<List<TopListItem>>() {
+        /*loadDataList(mIndex + 1, new UserInfoOperator.OnGetListener<List<TopListItem>>() {
             @Override
             public void onGet(boolean succeed, List<TopListItem> topListItems) {
                 if (succeed) {
@@ -154,7 +149,7 @@ public class ActListFragment extends ActiveListFragment {
                     mAdapter.notifyDataSetChanged();
                 }
             }
-        });
+        });*/
     }
 
     private void loadDataList(int index, UserInfoOperator.OnGetListener<List<TopListItem>> listener) {
@@ -164,10 +159,10 @@ public class ActListFragment extends ActiveListFragment {
 
         switch (filter1) {
             case 1:
-                ActiveOperator.getInstance().topListByStudent(filter2, 11, index, mKeyWords, listener);
+                ActiveOperator.getInstance().topListByStudent(filter2, filter3, index, mKeyWords, listener);
                 break;
             case 2:
-                ActiveOperator.getInstance().topListByStudio(filter2, 11, index, mKeyWords, listener);
+                ActiveOperator.getInstance().topListByStudio(filter2, filter3, index, mKeyWords, listener);
                 break;
         }
     }
@@ -182,75 +177,7 @@ public class ActListFragment extends ActiveListFragment {
         reLoadDataList();
     }
 
-    private class TopListAdapter extends BaseAdapter {
-
-        private List<TopListItem> mData = null;
-
-        public TopListAdapter (List<TopListItem> data) {
-            mData = data;
-        }
-
-        @Override
-        public int getCount() {
-            return mData.size();
-        }
-
-        @Override
-        public TopListItem getItem(int i) {
-            return mData.get(i);
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return i;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            ViewHolder holder = null;
-            if (view == null) {
-                holder = new ViewHolder();
-                View v = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.layout_active_top_list_item, null);
-                holder.profileIv = (ImageView)v.findViewById(R.id.top_list_item_profile);
-                holder.nameTv = (TextView)v.findViewById(R.id.top_list_item_name);
-                holder.locationTv = (TextView)v.findViewById(R.id.top_list_item_location);
-                holder.joinCountTv = (TextView)v.findViewById(R.id.top_list_item_join_count);
-                holder.commentCountTv = (TextView)v.findViewById(R.id.top_list_item_comment_count);
-                holder.supportCountTv = (TextView)v.findViewById(R.id.top_list_item_support_count);
-                view.setTag(holder);
-            } else {
-                holder = (ViewHolder)view.getTag();
-            }
-            TopListItem item = getItem(i);
-            holder.nameTv.setText(item.getUserNickName());
-            holder.locationTv.setText(item.getProvince());
-            ImageLoaderUtils.getImageLoader(getActivity()).displayImage(
-                    item.getUserAvatar(),
-                    holder.profileIv,
-                    ImageLoaderUtils.getRoundDisplayOptions(MainApplication.UIContext.getResources().getDimensionPixelSize(R.dimen.active_list_profile_size))
-            );
-            holder.joinCountTv.setText(
-                    MainApplication.UIContext.getString(R.string.act_joined_count, item.getRegisterCount())
-            );
-            holder.commentCountTv.setText(
-                    MainApplication.UIContext.getString(R.string.act_comment_count, item.getCommentCount())
-            );
-            holder.supportCountTv.setText(
-                    MainApplication.UIContext.getString(R.string.act_support_count, item.getUpCount())
-            );
-            return view;
-        }
-    }
-
-    private class ViewHolder {
-        public RadioButton selectBtn;
-        public ImageView profileIv;
-        public TextView nameTv;
-        public TextView locationTv;
-        public TextView joinCountTv, commentCountTv, supportCountTv;
-    }
-
-    private class SimpleAdapter extends BaseAdapter {
+    public class SimpleAdapter extends BaseAdapter {
 
         private ArrayList<String> mNameList = null;
 

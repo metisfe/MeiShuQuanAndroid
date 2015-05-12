@@ -146,8 +146,8 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         }
         final int profilePix = mMainApplication.getResources().getDimensionPixelSize(R.dimen.my_info_profile_size);
         mInfoName.setText(user.getName());
-        mAttentionCountTv.setText(MainApplication.UIContext.getString(R.string.my_info_count, user.getAttCount()));
-        mFollowersCountTv.setText(MainApplication.UIContext.getString(R.string.my_info_count, user.getFollowsCount()));
+        mAttentionCountTv.setText(MainApplication.UIContext.getString(R.string.my_info_count, user.getFocusNum()));
+        mFollowersCountTv.setText(MainApplication.UIContext.getString(R.string.my_info_count, user.getFansNum()));
         if (MainApplication.isLogin()) {
             ImageLoaderUtils.getImageLoader(getActivity()).displayImage(user.getUserAvatar(),
                     mProfileIv,

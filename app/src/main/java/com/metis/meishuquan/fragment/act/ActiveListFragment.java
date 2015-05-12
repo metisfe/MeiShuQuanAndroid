@@ -56,8 +56,6 @@ public abstract class ActiveListFragment extends Fragment implements AdapterView
         mFilter3.setOnItemSelectedListener(this);
     }
 
-
-
     public ListView getListView () {
         return mActListView;
     }
@@ -72,6 +70,10 @@ public abstract class ActiveListFragment extends Fragment implements AdapterView
 
     public Spinner getFilterSpinner3 () {
         return mFilter3;
+    }
+
+    public TopListItem getSelectedStudioItem () {
+        return mAdapter.mSelectedDelegate.mItem;
     }
 
     public abstract void needReloadData (int selectedIndex1, int selectedIndex2, int selectedIndex3);
@@ -92,7 +94,7 @@ public abstract class ActiveListFragment extends Fragment implements AdapterView
 
     }
 
-    private class TopListAdapter extends BaseAdapter {
+    public class TopListAdapter extends BaseAdapter {
 
         private List<TopListDelegate> mData = null;
         private TopListDelegate mSelectedDelegate = null;
@@ -160,7 +162,7 @@ public abstract class ActiveListFragment extends Fragment implements AdapterView
                     }
                     itemDelegate.setChecked(true);
                     mSelectedDelegate = itemDelegate;
-                    ActiveOperator.getInstance().selectStudio(item.getpId());
+
                     getActivity().finish();
                 }
             });

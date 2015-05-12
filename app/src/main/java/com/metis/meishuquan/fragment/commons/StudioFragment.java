@@ -35,6 +35,7 @@ public class StudioFragment extends Fragment{
 
     private View mHeaderView = null;
     private ImageView mHeadCoverIv = null;
+    private TextView mHeaderExtraTv = null;
 
     private BaseAdapter mAdapter = null;
 
@@ -70,6 +71,7 @@ public class StudioFragment extends Fragment{
         mListView = (ListView)view.findViewById(R.id.studio_list_view);
         mHeaderView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_studio_list_header, null);
         mHeadCoverIv = (ImageView)mHeaderView.findViewById(R.id.studio_list_header_cover);
+        mHeaderExtraTv = (TextView)mHeaderView.findViewById(R.id.studio_list_header_extras);
         setAdapter(mAdapter);
 
         mIntroduceTv = (TextView)mHeaderView.findViewById(R.id.studio_list_header_self_introduce);
@@ -118,6 +120,7 @@ public class StudioFragment extends Fragment{
                 user.getBackgroundImg(), mHeadCoverIv,
                 ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
         );
+        mHeaderExtraTv.setText(getString(R.string.studio_fans_and_focus, user.getFansNum(), user.getFocusNum()));
         for (int i = 0; i < mMenuItems.length; i++) {
             final int index = i;
             final MenuItem item = mMenuItems[i];

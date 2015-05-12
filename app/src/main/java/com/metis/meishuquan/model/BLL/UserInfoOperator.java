@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.assess.Assess;
+import com.metis.meishuquan.model.commons.College;
 import com.metis.meishuquan.model.commons.Comment;
 import com.metis.meishuquan.model.commons.Item;
 import com.metis.meishuquan.model.commons.Option;
@@ -67,7 +68,8 @@ public class UserInfoOperator {
                             URL_FEEDBACK = "v1.1/Instrument/FeedBack",
                             URL_SEARCH_STUDIO = "v1.1/UserCenter/StudioList?query=",
                             URL_PROVINCE = "v1.1/UserCenter/Province",
-                            URL_SCHOOL = "v1.1/UserCenter/SchoolList?query=";
+                            URL_SCHOOL = "v1.1/UserCenter/SchoolList?query=",
+                            URL_COLLEGE = "v1.1/UserCenter/CollegeList?query=";
 
     private static String KEY_USER_ID = "userId",
                         KEY_INDEX = "index",
@@ -565,6 +567,41 @@ public class UserInfoOperator {
         }
     }
 
+    public void getCollegeList (String query, final OnGetListener<List<College>> listener) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            StringBuilder sb = new StringBuilder(URL_COLLEGE);
+            sb.append(URLEncoder.encode(query));
+            sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+            Log.v(TAG, "getCollegeList request=" + sb.toString());
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    Log.v(TAG, "getCollegeList callback=" + response.getContent());
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String json = gson.toJson(result);
+                        Log.v(TAG, "getCollegeList result=" + json);
+                        Result<List<College>> listResult = gson.fromJson(json, new TypeToken<Result<List<College>>>(){}.getType());
+                        if (listener != null) {
+                            if (listResult.getOption().getStatus() == 0) {
+                                listener.onGet(true, listResult.getData());
+                            } else {
+                                listener.onGet(false, null);
+                            }
+                        }
+
+                    } else {
+                        if (listener != null) {
+                            listener.onGet(false, null);
+                        }
+                    }
+
+                }
+            });
+        }
+    }
+
     private static final String SHARE_PROVINCE_LIST = TAG + "_province_list";
     private List<SimpleProvince> mProvinceList = null;
 
@@ -599,6 +636,7 @@ public class UserInfoOperator {
         }
         final SharedPreferences shared = MainApplication.UIContext.getSharedPreferences(SHARE_PROVINCE_LIST, Context.MODE_PRIVATE);
         String json = shared.getString(SHARE_PROVINCE_LIST, null);
+        Log.v(TAG, "getProvinceList localjson=" + json);
         if (!TextUtils.isEmpty(json)) {
             Gson gson = new Gson();
             Result<List<SimpleProvince>> listResult = gson.fromJson(json, new TypeToken<Result<List<SimpleProvince>>>(){}.getType());
