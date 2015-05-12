@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/list_dialog_item"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:padding="8dp"
     android:textSize="16sp"
     android:textColor="#424242"
+    android:background="@drawable/single_choose_tv_bg_sel"
     >
-</TextView>
+</CheckedTextView>

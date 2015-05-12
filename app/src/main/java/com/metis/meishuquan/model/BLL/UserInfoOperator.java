@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.assess.Assess;
+import com.metis.meishuquan.model.assess.City;
 import com.metis.meishuquan.model.commons.College;
 import com.metis.meishuquan.model.commons.Comment;
 import com.metis.meishuquan.model.commons.Item;
@@ -69,7 +70,8 @@ public class UserInfoOperator {
                             URL_SEARCH_STUDIO = "v1.1/UserCenter/StudioList?query=",
                             URL_PROVINCE = "v1.1/UserCenter/Province",
                             URL_SCHOOL = "v1.1/UserCenter/SchoolList?query=",
-                            URL_COLLEGE = "v1.1/UserCenter/CollegeList?query=";
+                            URL_COLLEGE = "v1.1/UserCenter/CollegeList?query=",
+                            URL_GET_AREA_LIST = "v1.1/UserCenter/ProvinceLink?id=";
 
     private static String KEY_USER_ID = "userId",
                         KEY_INDEX = "index",
@@ -627,6 +629,60 @@ public class UserInfoOperator {
         return null;
     }
 
+    public void getAreaList (final int id, final OnGetListener<List<City>> listener) {
+        final SharedPreferences shared = MainApplication.UIContext.getSharedPreferences(SHARE_PROVINCE_LIST, Context.MODE_PRIVATE);
+        String json = shared.getString(id + "", null);
+        if (!TextUtils.isEmpty(json)) {
+            Gson gson = new Gson();
+            Result<List<City>> listResult = gson.fromJson(json, new TypeToken<Result<List<City>>>(){}.getType());
+            if (listener != null) {
+                if (listResult.getOption().getStatus() == 0) {
+                    listener.onGet(true, listResult.getData());
+                } else {
+                    listener.onGet(false, null);
+                }
+            }
+            return;
+        }
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            StringBuilder sb = new StringBuilder(URL_GET_AREA_LIST);
+            sb.append(id + "");
+            sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+            Log.v(TAG, "getAreaList request=" + sb.toString());
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    Log.v(TAG, "getAreaList callback=" + response.getContent());
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String json = gson.toJson(result);
+                        Log.v(TAG, "getAreaList result=" + json);
+                        Result<List<City>> listResult = gson.fromJson(json, new TypeToken<Result<List<City>>>(){}.getType());
+                        if (listResult.getOption().getStatus() == 0) {
+                            SharedPreferences.Editor editor = shared.edit();
+                            editor.putString(id + "", json);
+                            editor.commit();
+                        }
+                        if (listener != null) {
+                            if (listResult.getOption().getStatus() == 0) {
+                                listener.onGet(true, listResult.getData());
+                            } else {
+                                listener.onGet(false, null);
+                            }
+                        }
+
+                    } else {
+                        if (listener != null) {
+                            listener.onGet(false, null);
+                        }
+                    }
+
+                }
+            });
+        }
+    }
+
     public void getProvinceList (final OnGetListener<List<SimpleProvince>> listener) {
         if (mProvinceList != null) {
             if (listener != null) {
@@ -686,7 +742,8 @@ public class UserInfoOperator {
         }
     }
 
-    public class SimpleProvince implements Serializable{
+    public static class SimpleProvince implements Serializable{
+
         int provinceId;
         String name;
 

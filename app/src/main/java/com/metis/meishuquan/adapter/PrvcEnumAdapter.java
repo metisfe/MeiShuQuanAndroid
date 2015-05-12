@@ -41,4 +41,6 @@ public class PrvcEnumAdapter extends BaseAdapter{
         tv.setText(getItem(i).getName());
         return view;
     }
+
+
 }

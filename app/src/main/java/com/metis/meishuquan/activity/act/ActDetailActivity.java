@@ -7,19 +7,18 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.BaseActivity;
 import com.metis.meishuquan.fragment.act.ActDetailFragment;
-import com.metis.meishuquan.fragment.act.ActListFragment;
+import com.metis.meishuquan.fragment.act.TopListFragment;
 
 public class ActDetailActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener {
 
     private View mCustomTitle = null;
 
     private ActDetailFragment mDetailFragment = ActDetailFragment.getInstance();
-    private ActListFragment mListFragment = ActListFragment.getInstance();
+    private TopListFragment mListFragment = TopListFragment.getInstance();
 
     private RadioGroup mGroup = null;
     private RadioButton mDetailBtn, mListBtn;

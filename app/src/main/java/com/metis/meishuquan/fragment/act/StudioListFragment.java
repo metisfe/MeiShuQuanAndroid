@@ -4,22 +4,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.adapter.PrvcEnumAdapter;
-import com.metis.meishuquan.adapter.commons.SimplePrvsAdapter;
-import com.metis.meishuquan.model.BLL.ActiveOperator;
 import com.metis.meishuquan.model.BLL.TopListItem;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.College;
-import com.metis.meishuquan.util.ImageLoaderUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,15 +38,11 @@ public class StudioListFragment extends ActiveListFragment {
             mFilterData3.add(array[i]);
         }
 
-        getFilterSpinner1().setAdapter(mAdapter1);
-        getFilterSpinner3().setAdapter(new SimpleAdapter(mFilterData3));
-
         UserInfoOperator.getInstance().getCollegeList("", new UserInfoOperator.OnGetListener<List<College>>() {
             @Override
             public void onGet(boolean succeed, List<College> colleges) {
                 if (succeed) {
                     mCollegeList = colleges;
-                    getFilterSpinner2().setAdapter(new CollegeAdapter(mCollegeList));
                 }
             }
         });
@@ -97,13 +86,39 @@ public class StudioListFragment extends ActiveListFragment {
     }
 
     private void loadDataList (int index, UserInfoOperator.OnGetListener<List<TopListItem>> listener) {
-        int filter1 = (int)getFilterSpinner1().getSelectedItemId();
-        int filter2 = (int)getFilterSpinner2().getSelectedItemId();
-        int filter3 = (int)getFilterSpinner3().getSelectedItemId();
 
-        ActiveOperator.getInstance().getStudioList(11, filter2, filter3, index, listener);
+        //ActiveOperator.getInstance().getStudioList(11, filter2, filter3, index, listener);
     }
 
+
+    @Override
+    public String getFilterTitle1() {
+        return null;
+    }
+
+    @Override
+    public String getFilterTitle2() {
+        return null;
+    }
+
+    @Override
+    public String getFilterTitle3() {
+        return null;
+    }
+
+    @Override
+    public void onFilterClick(View view) {
+        switch (view.getId()) {
+            case R.id.act_list_filter_1:
+                showAreaChooseFragment(new AreaSelectFragment.OnAreaChooseListener() {
+                    @Override
+                    public void onChoose(AreaSelectFragment.Areable area) {
+                        getFilterSpinner1().setText(area.getTitle());
+                    }
+                });
+                break;
+        }
+    }
 
     @Override
     public void needReloadData(int selectedIndex1, int selectedIndex2, int selectedIndex3) {

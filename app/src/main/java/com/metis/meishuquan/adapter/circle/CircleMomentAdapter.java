@@ -115,7 +115,7 @@ public class CircleMomentAdapter extends BaseAdapter {
                         @Override
                         public void onClick(View view) {
                             //TODO:选画室
-                            chooseHuaShi(moment);
+                            chooseHuaShi(view, moment);
                             Toast.makeText(MainApplication.UIContext, "选画室", Toast.LENGTH_SHORT).show();
                         }
                     });

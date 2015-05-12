@@ -6,17 +6,16 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.model.BLL.ActiveOperator;
+import com.metis.meishuquan.activity.info.BaseActivity;
 import com.metis.meishuquan.model.BLL.TopListItem;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 
@@ -26,9 +25,9 @@ import java.util.List;
 /**
  * Created by WJ on 2015/5/6.
  */
-public abstract class ActiveListFragment extends Fragment implements AdapterView.OnItemSelectedListener{
+public abstract class ActiveListFragment extends Fragment implements View.OnClickListener, AreaSelectFragment.OnAreaChooseListener{
 
-    private Spinner mFilter1, mFilter2, mFilter3;
+    private Button mFilter1, mFilter2, mFilter3;
     private ListView mActListView = null;
 
     private List<TopListDelegate> mDataList = new ArrayList<TopListDelegate>();
@@ -42,34 +41,78 @@ public abstract class ActiveListFragment extends Fragment implements AdapterView
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mFilter1 = (Spinner) view.findViewById(R.id.act_list_filter_1);
-        mFilter2 = (Spinner) view.findViewById(R.id.act_list_filter_2);
-        mFilter3 = (Spinner) view.findViewById(R.id.act_list_filter_3);
+        mFilter1 = (Button) view.findViewById(R.id.act_list_filter_1);
+        mFilter2 = (Button) view.findViewById(R.id.act_list_filter_2);
+        mFilter3 = (Button) view.findViewById(R.id.act_list_filter_3);
         mActListView = (ListView) view.findViewById(R.id.act_list);
         //mActListView.setAdapter(mAdapter);
         View emptyView = view.findViewById(R.id.act_empty);
         mActListView.setEmptyView(emptyView);
         mActListView.setAdapter(mAdapter);
 
-        mFilter1.setOnItemSelectedListener(this);
-        mFilter2.setOnItemSelectedListener(this);
-        mFilter3.setOnItemSelectedListener(this);
+        mFilter1.setText(getFilterTitle1());
+        mFilter2.setText(getFilterTitle2());
+        mFilter3.setText(getFilterTitle3());
+
+        mFilter1.setOnClickListener(this);
+        mFilter2.setOnClickListener(this);
+        mFilter3.setOnClickListener(this);
     }
+
+    public abstract String getFilterTitle1 ();
+
+    public abstract String getFilterTitle2 ();
+
+    public abstract String getFilterTitle3 ();
+
+    @Override
+    public void onClick(View view) {
+        onFilterClick(view);
+    }
+
+    public abstract void onFilterClick (View view);
 
     public ListView getListView () {
         return mActListView;
     }
 
-    public Spinner getFilterSpinner1 () {
+    public Button getFilterSpinner1 () {
         return mFilter1;
     }
 
-    public Spinner getFilterSpinner2 () {
+    public Button getFilterSpinner2 () {
         return mFilter2;
     }
 
-    public Spinner getFilterSpinner3 () {
+    public Button getFilterSpinner3 () {
         return mFilter3;
+    }
+
+    private AreaSelectFragment.OnAreaChooseListener mTempListener = null;
+
+    public void addFragment (Fragment fragment) {
+        ((BaseActivity) getActivity()).addFragment(fragment);
+    }
+
+    public void removeFragment (Fragment fragment) {
+        ((BaseActivity)getActivity()).removeFragment(fragment);
+    }
+
+    public void showAreaChooseFragment (AreaSelectFragment.OnAreaChooseListener listener) {
+        mTempListener = listener;
+        AreaSelectFragment.getInstance().setOnAreaChooseListener(this);
+        addFragment(AreaSelectFragment.getInstance());
+    }
+
+    @Override
+    public void onChoose(AreaSelectFragment.Areable area) {
+        AreaSelectFragment.getInstance().setOnAreaChooseListener(null);
+        removeFragment(AreaSelectFragment.getInstance());
+        if (mTempListener != null) {
+            mTempListener.onChoose(area);
+            mTempListener = null;
+        }
+        //needReloadData();
     }
 
     public TopListItem getSelectedStudioItem () {
@@ -82,16 +125,6 @@ public abstract class ActiveListFragment extends Fragment implements AdapterView
         mDataList.clear();
         mDataList.addAll(data);
         mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        needReloadData(mFilter1.getSelectedItemPosition(), mFilter2.getSelectedItemPosition(), mFilter3.getSelectedItemPosition());
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     public class TopListAdapter extends BaseAdapter {
