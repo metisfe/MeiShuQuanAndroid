@@ -3,6 +3,8 @@ package com.metis.meishuquan.adapter.circle;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,8 @@ import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.fragment.circle.MomentDetailFragment;
+import com.metis.meishuquan.activity.act.ActDetailActivity;
+import com.metis.meishuquan.activity.act.SelectStudioActivity;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
@@ -114,7 +118,7 @@ public class CircleMomentAdapter extends BaseAdapter {
                         @Override
                         public void onClick(View view) {
                             //TODO:选画室
-                            chooseHuaShi(moment);
+                            chooseHuaShi(view, moment);
                             Toast.makeText(MainApplication.UIContext, "选画室", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -166,7 +170,7 @@ public class CircleMomentAdapter extends BaseAdapter {
                 public void onClick(View view) {
                     if (moment.relayCircle.type == SupportTypeEnum.Activity.getVal()) {
                         //TODO:跳转至活动详情
-                        navigatToActivityInfo(moment);
+                        navigatToActivityInfo(view, moment);
                     }
                 }
 
@@ -191,16 +195,30 @@ public class CircleMomentAdapter extends BaseAdapter {
         return convertView;
     }
 
+<<<<<<< HEAD
     //进入新闻详情
     private void navigatToNewInfo(int newId) {
 
     }
 
     private void navigatToActivityInfo(CCircleDetailModel moment) {
+=======
+    private static final String TAG = CircleMomentAdapter.class.getSimpleName();
+    private void navigatToActivityInfo(View view, CCircleDetailModel moment) {
+        Toast.makeText(view.getContext(), "navigatToActivityInfo", Toast.LENGTH_SHORT).show();
+        Intent it = new Intent(view.getContext(), ActDetailActivity.class);
+        it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        view.getContext().startActivity(new Intent(view.getContext(), ActDetailActivity.class));
+>>>>>>> origin/master
         //TODO:进入活动详情
     }
 
-    private void chooseHuaShi(CCircleDetailModel moment) {
+    private void chooseHuaShi(View view, CCircleDetailModel moment) {
+        Log.v(TAG, "chooseHuaShi view.getContext=" + view.getContext());
+        Toast.makeText(view.getContext(), "chooseHuaShi", Toast.LENGTH_SHORT).show();
+        Intent it = new Intent(view.getContext(), SelectStudioActivity.class);
+        it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        view.getContext().startActivity(it);
         //TODO:选画室
     }
 

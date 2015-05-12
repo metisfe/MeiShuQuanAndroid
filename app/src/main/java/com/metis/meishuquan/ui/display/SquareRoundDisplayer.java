@@ -8,12 +8,15 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.nostra13.universalimageloader.core.assist.LoadedFrom;
 import com.nostra13.universalimageloader.core.display.BitmapDisplayer;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 
 public class SquareRoundDisplayer implements BitmapDisplayer {
+
+    private static final String TAG = SquareRoundDisplayer.class.getSimpleName();
 	
 	private int mSize, mRound = 0;
 
@@ -34,6 +37,7 @@ public class SquareRoundDisplayer implements BitmapDisplayer {
 		float scale = Math.min((float)wid / mSize, (float)hei / mSize);
 		final int scaleSize = (int)(mSize * scale);
 		Bitmap square = Bitmap.createBitmap(bmp, (wid - scaleSize) / 2, (hei - scaleSize) / 2, scaleSize, scaleSize);
+        //Log.e(TAG, "display " + mSize + " ori bmp = " + square);
         Bitmap scaledBmp = Bitmap.createScaledBitmap(square, mSize, mSize, true);
         //square.recycle();
 		

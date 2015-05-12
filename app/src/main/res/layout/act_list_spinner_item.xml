@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@android:color/transparent"
     >
-    <TextView
+    <CheckedTextView
         android:id="@+id/item_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -12,5 +12,6 @@
         android:textColor="#7f000000"
         android:layout_centerVertical="true"
         android:paddingLeft="10dp"
+        android:background="@drawable/single_choose_tv_bg_sel"
         />
 </RelativeLayout>

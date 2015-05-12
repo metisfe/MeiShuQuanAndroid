@@ -3,12 +3,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
+import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.view.circle.moment.MomentActionBar;
 
 import java.util.ArrayList;
@@ -16,7 +18,6 @@ import java.util.List;
 
 public class CircleListAdapter extends BaseAdapter {
     private List<CCircleDetailModel> momentList = new ArrayList<CCircleDetailModel>();
-    private ViewHolder holder;
 
     private OnCircleClickListener mListener = null;
 
@@ -25,13 +26,13 @@ public class CircleListAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
-        SmartImageView avatar;
+        ImageView avatar;
         TextView name;
         TextView grade;
         TextView createTime;
         TextView content;
         TextView device;
-        SmartImageView imageView;
+        ImageView imageView;
         MomentActionBar momentActionBar;
     }
 
@@ -52,19 +53,19 @@ public class CircleListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int i, View convertView, ViewGroup view) {
-        ViewHolder viewHolder = new ViewHolder();
+        ViewHolder viewHolder = null;
         final CCircleDetailModel moment =  momentList.get(i);
         if (convertView == null)
         {
             convertView = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_circle_moment_list_item, null);
-
-            viewHolder.avatar = (SmartImageView) convertView.findViewById(R.id.id_img_portrait);
+            viewHolder = new ViewHolder();
+            viewHolder.avatar = (ImageView) convertView.findViewById(R.id.id_img_portrait);
             viewHolder.name = (TextView) convertView.findViewById(R.id.id_username);
             viewHolder.grade = (TextView) convertView.findViewById(R.id.id_tv_grade);
             viewHolder.createTime = (TextView) convertView.findViewById(R.id.id_createtime);
             viewHolder.content = (TextView) convertView.findViewById(R.id.id_tv_content);
             viewHolder.device = (TextView) convertView.findViewById(R.id.tv_device);
-            viewHolder.imageView = (SmartImageView) convertView.findViewById(R.id.id_img_content);
+            viewHolder.imageView = (ImageView) convertView.findViewById(R.id.id_img_for_circle);
             viewHolder.momentActionBar = (MomentActionBar) convertView.findViewById(R.id.moment_action_bar);
             convertView.setTag(viewHolder);
         }
@@ -73,7 +74,9 @@ public class CircleListAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.avatar.setImageUrl(moment.user.avatar);
+        ImageLoaderUtils.getImageLoader(convertView.getContext()).displayImage(
+                moment.user.avatar, viewHolder.avatar,
+                ImageLoaderUtils.getRoundDisplayOptions(convertView.getContext().getResources().getDimensionPixelSize(R.dimen.user_portrait_height)));
         viewHolder.avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +93,9 @@ public class CircleListAdapter extends BaseAdapter {
         if (moment.images.size() > 0)
         {
             viewHolder.imageView.setVisibility(View.VISIBLE);
-            viewHolder.imageView.setImageUrl(moment.images.get(0).Thumbnails);
+            ImageLoaderUtils.getImageLoader(convertView.getContext()).displayImage(
+                    moment.images.get(0).Thumbnails, viewHolder.imageView,
+                    ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher));
         }
         else{
             viewHolder.imageView.setVisibility(View.GONE);

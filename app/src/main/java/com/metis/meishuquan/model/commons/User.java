@@ -118,6 +118,12 @@ public class User implements Serializable {
     @SerializedName("studio")
     private Studio studio;
 
+    @SerializedName("FansNum")
+    private int FansNum;
+
+    @SerializedName("FocusNum")
+    private int FocusNum;
+
     private LoginStateEnum appLoginState = LoginStateEnum.NO;
 
     private LoginStateEnum rongLoginState = LoginStateEnum.NO;
@@ -366,13 +372,19 @@ public class User implements Serializable {
         return gson.fromJson(subjects, new TypeToken<List<CourseChannelItem>>(){}.getType());
     }*/
 
-    public int getAttCount() {
-        //TODO
-        return 0;
+    public int getFansNum() {
+        return FansNum;
     }
 
-    public int getFollowsCount() {
-        //TODO
-        return 0;
+    public void setFansNum(int fansNum) {
+        FansNum = fansNum;
+    }
+
+    public int getFocusNum() {
+        return FocusNum;
+    }
+
+    public void setFocusNum(int focusNum) {
+        FocusNum = focusNum;
     }
 }

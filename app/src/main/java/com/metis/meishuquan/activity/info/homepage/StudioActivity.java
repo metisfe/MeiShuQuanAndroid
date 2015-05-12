@@ -150,8 +150,8 @@ public class StudioActivity extends BaseActivity implements
                 if (succeed) {
                     mUser = user;
                     //TODO
-                    mUser.setUserRole(3);
-                    mUser.setUserId(100090);
+                    /*mUser.setUserRole(3);
+                    mUser.setUserId(100090);*/
                     loadFirstTab();
                     fillUser(user);
                     if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {

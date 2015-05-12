@@ -113,6 +113,7 @@
 
     <string name="name_card_scan">扫描</string>
 
+    <string name="studio_fans_and_focus">粉丝%1$d | 关注%2$d</string>
     <string name="studio_send_msg">私信</string>
     <string name="studio_introduce">画室简介</string>
     <string name="studio_album">画室相册</string>
@@ -144,6 +145,10 @@
     <string name="act_support_count">%1$d次</string>
     <string name="act_empty">暂无数据</string>
     <string name="act_select_studio">选画室</string>
+    <string name="act_choose_one_plz">请选择一个画室</string>
+    <string name="act_filter_title_pk">学生PK榜</string>
+    <string name="act_filter_title_spec">推荐</string>
+    <string name="act_filter_title_area">地区</string>
 
     <string-array name="act_filter_1">
         <item>学生PK榜</item>
