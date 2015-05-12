@@ -13,6 +13,7 @@ import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
+import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.view.circle.moment.MomentActionBar;
@@ -104,15 +105,17 @@ public class CircleMomentAdapter extends BaseAdapter {
             viewHolder.ll_circle.setVisibility(View.GONE);
 
             if (moment.relayCircle.type == SupportTypeEnum.Activity.getVal()) {
-                viewHolder.chooseHuashi.setVisibility(View.VISIBLE);
-                viewHolder.chooseHuashi.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //TODO:选画室
-                        chooseHuaShi(moment);
-                        Toast.makeText(MainApplication.UIContext, "选画室", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                if (moment.user.identity == IdTypeEnum.STUDENT.getVal() && moment.user.userId == MainApplication.userInfo.getUserId()) {
+                    viewHolder.chooseHuashi.setVisibility(View.VISIBLE);
+                    viewHolder.chooseHuashi.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //TODO:选画室
+                            chooseHuaShi(moment);
+                            Toast.makeText(MainApplication.UIContext, "选画室", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             } else {
                 viewHolder.chooseHuashi.setVisibility(View.GONE);
             }

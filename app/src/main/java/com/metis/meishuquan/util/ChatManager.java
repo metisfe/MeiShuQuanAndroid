@@ -115,8 +115,7 @@ public class ChatManager {
     public static void putUserInfos(List<CUserModel> userModels) {
         if (userModels == null) return;
         for (CUserModel model : userModels) {
-            if (model != null)
-            {
+            if (model != null) {
                 contacts.put(model.rongCloud, model);
             }
         }
@@ -167,6 +166,12 @@ public class ChatManager {
         }
 
         friends = ids;
+    }
+
+    public static void clear() {
+        friends.clear();
+        myWatchGroup.clear();
+        contacts.clear();
     }
 
     public static List<CUserModel> getFriendList() {
@@ -243,6 +248,7 @@ public class ChatManager {
                     public void onCompleted(MyFriendList result, Exception exception, ServiceFilterResponse response) {
                         if (result != null && result.option != null && result.option.isSuccess() && result.data.myFirends != null) {
                             Log.d("circle", "get flist size:" + result.data.myFirends.size());
+                            ChatManager.clear();
                             ChatManager.putFriendList(result.data.myFirends);
                             ChatManager.putUserInfos(result.data.myFirends);
                             if (onFriendListReceivedListener != null) {

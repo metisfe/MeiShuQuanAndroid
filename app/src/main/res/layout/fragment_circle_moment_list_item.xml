@@ -101,13 +101,13 @@
         android:id="@+id/id_ll_not_circle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="visible"
         android:padding="10dp">
 
         <ImageView
             android:id="@+id/id_img_for_not_circle"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_below="@+id/id_tv_content"
             android:clickable="false"
             android:scaleType="centerCrop"
@@ -115,7 +115,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="125dp"
+            android:layout_height="80dp"
             android:padding="10dp"
             android:clickable="false"
             android:orientation="vertical">

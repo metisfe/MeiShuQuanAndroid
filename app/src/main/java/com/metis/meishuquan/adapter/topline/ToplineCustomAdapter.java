@@ -1,12 +1,16 @@
 package com.metis.meishuquan.adapter.topline;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +20,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loopj.android.image.SmartImageView;
+import com.metis.meishuquan.MainActivity;
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.fragment.Topline.ItemInfoFragment;
 import com.metis.meishuquan.model.topline.News;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 
@@ -69,7 +76,7 @@ public class ToplineCustomAdapter extends ToplineAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup viewGroup) {
+    public View getView(final int position, View convertView, ViewGroup viewGroup) {
 
         if (convertView == null) {
             holder = new ViewHolder();
@@ -92,6 +99,24 @@ public class ToplineCustomAdapter extends ToplineAdapter {
         holder.tv_source.setText(source);
         holder.tv_readCount.setText("阅读(" + news.getPageViewCount() + ")");
         holder.tv_comment_count.setText("评论(" + news.getCommentCount() + ")");
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int newsId = lstData.get(position).getNewsId();//获取新闻Id
+                ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
+                Bundle args = new Bundle();
+                args.putInt("newsId", newsId);
+                itemInfoFragment.setArguments(args);
+
+                FragmentManager fm = ((MainActivity) context).getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+//            ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                ft.add(R.id.content_container, itemInfoFragment);
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
 
         return convertView;
     }
