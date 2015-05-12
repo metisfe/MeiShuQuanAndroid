@@ -19,6 +19,7 @@ import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.circle.ChatActivity;
+import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.util.ViewUtils;
 import com.metis.meishuquan.view.circle.CircleChatListItemView;
@@ -151,7 +152,7 @@ public class ChatListFragment extends CircleBaseFragment {
         if (MainApplication.rongClient != null) {
             adapter.data = MainApplication.rongClient.getConversationList();
         } else {
-            //TODO: tell user to login
+            startActivity(new Intent(getActivity(), LoginActivity.class));
         }
 
         listView.setAdapter(adapter);

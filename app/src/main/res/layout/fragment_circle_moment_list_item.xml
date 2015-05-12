@@ -101,7 +101,7 @@
         android:id="@+id/id_ll_not_circle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:visibility="gone"
         android:padding="10dp">
 
         <ImageView
@@ -152,7 +152,7 @@
             android:id="@+id/id_img_for_circle"
             android:layout_width="125dp"
             android:layout_height="125dp"
-            android:background="#e2e2e2" />
+            android:scaleType="centerCrop" />
     </LinearLayout>
 
     <View

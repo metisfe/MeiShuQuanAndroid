@@ -2,21 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#e2e2e2">
+    android:background="#f0f0f0">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="7.5dp">
 
         <com.loopj.android.image.SmartImageView
             android:id="@+id/id_img_class"
             android:layout_width="100dp"
             android:layout_height="65dp"
-            android:layout_marginBottom="7.5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="7.5dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/img_topline_default" />
+            android:src="#ccc" />
 
         <TextView
             android:id="@+id/id_tv_title"

@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,6 +14,7 @@ import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.circle.CUserModel;
 import com.metis.meishuquan.util.ChatManager;
+import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.ViewUtils;
 
 import io.rong.imlib.RongIMClient;
@@ -21,13 +23,13 @@ import io.rong.imlib.RongIMClient;
  * Created by wudi on 4/6/2015.
  */
 public class CircleChatListItemView extends LinearLayout {
-    private SmartImageView smartImageView;
+    private ImageView smartImageView;
     private TextView titleView, contentView, timeView;
 
     public CircleChatListItemView(Context context, RongIMClient.Conversation conversation) {
         super(context);
         LayoutInflater.from(getContext()).inflate(R.layout.view_circle_circlechatlistitemview, this);
-        this.smartImageView = (SmartImageView) this.findViewById(R.id.views_circle_circlechatlistitemview_image);
+        this.smartImageView = (ImageView) this.findViewById(R.id.views_circle_circlechatlistitemview_image);
         this.titleView = (TextView) this.findViewById(R.id.views_circle_circlechatlistitemview_title);
         this.contentView = (TextView) this.findViewById(R.id.views_circle_circlechatlistitemview_content);
         this.timeView = (TextView) this.findViewById(R.id.views_circle_circlechatlistitemview_time);
@@ -51,7 +53,7 @@ public class CircleChatListItemView extends LinearLayout {
             if (TextUtils.isEmpty(url)){
                 smartImageView.setImageResource(R.drawable.view_circle_defaulticon);
             } else {
-                smartImageView.setImageUrl(url);
+                ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(url,smartImageView,ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height)));
             }
         } else {
             smartImageView.setImageResource(R.drawable.view_circle_groupicon);

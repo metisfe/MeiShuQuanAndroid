@@ -3,11 +3,10 @@
     android:layout_width="50dp"
     android:layout_height="70dp">
 
-    <com.loopj.android.image.SmartImageView
+    <ImageView
         android:id="@+id/view_circle_circlegridicon_image"
         android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:adjustViewBounds="true"/>
+        android:layout_height="50dp" />
 
     <View
         android:id="@+id/view_circle_circlegridicon_deleteicon"
@@ -16,7 +15,7 @@
         android:background="@color/red"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/view_circle_circlegridicon_text"
@@ -25,5 +24,5 @@
         android:text="tesdsdsadawdad"
         android:singleLine="true"
         android:gravity="center"
-        android:layout_below="@id/view_circle_circlegridicon_image"/>
+        android:layout_below="@id/view_circle_circlegridicon_image" />
 </RelativeLayout>

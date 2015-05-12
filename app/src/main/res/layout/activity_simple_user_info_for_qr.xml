@@ -1,0 +1,61 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.metis.meishuquan.activity.circle.SimpleUserInfoForQRActivity">
+
+    <RelativeLayout
+        android:id="@+id/id_rl_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="#2d2a40">
+
+        <Button
+            android:id="@+id/id_btn_assess_info_back"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_btn_arrow_left" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="详细资料"
+            android:textColor="#fb6d6d"
+            android:textSize="20sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/id_rl_topbar"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/id_img_user_portrait"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="#ccc" />
+
+        <TextView
+            android:id="@+id/id_tv_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/id_img_user_portrait"
+            android:layout_marginLeft="10dp"
+            android:textSize="16sp"
+            android:text="昵称" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/id_img_user_portrait"
+            android:layout_marginLeft="10dp"
+            android:textSize="16sp"
+            android:text="昵称" />
+    </RelativeLayout>
+
+</RelativeLayout>

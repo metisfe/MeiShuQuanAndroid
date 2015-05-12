@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.circle.CUserModel;
 import com.metis.meishuquan.util.ChatManager;
+import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.ViewUtils;
 
 import java.util.ArrayList;
@@ -26,24 +28,26 @@ import io.rong.imlib.RongIMClient;
  * Created by wudi on 4/7/2015.
  */
 public class CircleGridIcon extends RelativeLayout {
-    private SmartImageView imageView;
+    private ImageView imageView;
     private TextView textView;
     private View deleteIcon;
+    private Context context;
     public int type;
 
     public CircleGridIcon(Context context) {
         super(context);
+        this.context = context;
         LayoutInflater.from(getContext()).inflate(R.layout.view_circle_circlegridicon, this);
-        this.imageView = (SmartImageView) this.findViewById(R.id.view_circle_circlegridicon_image);
+        this.imageView = (ImageView) this.findViewById(R.id.view_circle_circlegridicon_image);
         this.textView = (TextView) this.findViewById(R.id.view_circle_circlegridicon_text);
         this.deleteIcon = this.findViewById(R.id.view_circle_circlegridicon_deleteicon);
     }
 
     public void setData(String url, String name, final String uid) {
         if (TextUtils.isEmpty(url)) {
-            imageView.setImageResource(R.drawable.view_circle_defaulticon);
+            imageView.setImageResource(R.drawable.default_user_dynamic);
         } else {
-            imageView.setImageUrl(url);
+            ImageLoaderUtils.getImageLoader(context).displayImage(url, imageView, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height)));
         }
 
         textView.setText(name);

@@ -159,7 +159,6 @@ public class ChooseCityFragment extends Fragment {
             mAllCity = gson.fromJson(json, new TypeToken<AllCity>() {
             }.getType());
         }
-
     }
 
     public void setOnCityChooseListener(OnCityChooseListener listener) {

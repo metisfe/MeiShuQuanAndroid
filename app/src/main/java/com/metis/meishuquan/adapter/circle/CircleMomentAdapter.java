@@ -1,5 +1,8 @@
 package com.metis.meishuquan.adapter.circle;
 
+import android.content.Context;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +13,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.image.SmartImageView;
+import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.fragment.circle.MomentDetailFragment;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
+import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.view.circle.moment.MomentActionBar;
 import com.metis.meishuquan.view.circle.moment.comment.EmotionTextView;
@@ -24,16 +30,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CircleMomentAdapter extends BaseAdapter {
-    public enum MomentType {
-        Moment,
-        RepostMoment,
-        Activity
-    }
+    private FragmentManager fm = null;
 
     private List<CCircleDetailModel> momentList = new ArrayList<CCircleDetailModel>();
 
-    public CircleMomentAdapter(List<CCircleDetailModel> momentList) {
+    public CircleMomentAdapter(Context context,List<CCircleDetailModel> momentList) {
         this.momentList = momentList;
+        fm = ((MainActivity) context).getSupportFragmentManager();
     }
 
     private class ViewHolder {
@@ -115,6 +118,14 @@ public class CircleMomentAdapter extends BaseAdapter {
                             Toast.makeText(MainApplication.UIContext, "选画室", Toast.LENGTH_SHORT).show();
                         }
                     });
+                } else if (moment.relayCircle.type == SupportTypeEnum.News.getVal()) {
+                    viewHolder.ll_not_circle.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //进入新闻详情
+                            navigatToNewInfo(moment.relayCircle.id);
+                        }
+                    });
                 }
             } else {
                 viewHolder.chooseHuashi.setVisibility(View.GONE);
@@ -162,7 +173,27 @@ public class CircleMomentAdapter extends BaseAdapter {
 
             });
         }
+
+//        convertView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                MomentDetailFragment momentDetailFragment = new MomentDetailFragment();
+//                GlobalData.moment = moment;
+//
+//                FragmentTransaction ft = fm.beginTransaction();
+//                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+//                ft.add(R.id.content_container, momentDetailFragment);
+//                ft.addToBackStack(null);
+//                ft.commit();
+//            }
+//        });
+
         return convertView;
+    }
+
+    //进入新闻详情
+    private void navigatToNewInfo(int newId) {
+
     }
 
     private void navigatToActivityInfo(CCircleDetailModel moment) {

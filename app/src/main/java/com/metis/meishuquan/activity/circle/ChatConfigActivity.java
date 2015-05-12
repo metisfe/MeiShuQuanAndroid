@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Path;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -46,7 +47,7 @@ import io.rong.imlib.RongIMClient;
 /**
  * Created by wudi on 4/7/2015.
  */
-public class ChatConfigActivity extends Activity {
+public class ChatConfigActivity extends FragmentActivity {
     private CircleTitleBar titleBar;
     private ViewGroup nameGroup, clearGroup, watchGroup;
     private GridView gridView;
@@ -250,7 +251,7 @@ public class ChatConfigActivity extends Activity {
                     editText.requestFocus();
 
                     titleBar.setText("edit group name");
-                    titleBar.setLeftButton("back", 0, new View.OnClickListener() {
+                    titleBar.setLeftButton("返回", 0, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             setData();

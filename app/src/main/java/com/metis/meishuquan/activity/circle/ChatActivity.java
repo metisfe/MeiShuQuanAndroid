@@ -31,7 +31,7 @@ public class ChatActivity extends FragmentActivity {
         setContentView(R.layout.activity_circle_chatactivity);
         this.titleBar = (CircleTitleBar) this.findViewById(R.id.activity_circle_chatactivity_titlebar);
         titleBar.setText(title);
-        titleBar.setRightButton("config", 0, new View.OnClickListener() {
+        titleBar.setRightButton("", R.drawable.icon_circle_chat, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ChatActivity.this, ChatConfigActivity.class);
@@ -41,7 +41,7 @@ public class ChatActivity extends FragmentActivity {
             }
         });
 
-        titleBar.setLeftButton("back", 0, new View.OnClickListener() {
+        titleBar.setLeftButton("返回", 0, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

@@ -189,7 +189,7 @@ public class MomentDetailFragment extends Fragment {
         ((TextView) headerView.findViewById(R.id.id_tv_content)).setText(moment.content);
         ((TextView) headerView.findViewById(R.id.tv_device)).setText(moment.getDeviceText());
         if (moment.images.size() > 0) {
-            ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.images.get(0).Thumbnails, (ImageView) headerView);
+            ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.images.get(0).Thumbnails, (ImageView) headerView.findViewById(R.id.id_img_for_circle));
         } else {
             ((ImageView) headerView.findViewById(R.id.id_img_for_circle)).setVisibility(View.GONE);
         }
@@ -208,9 +208,8 @@ public class MomentDetailFragment extends Fragment {
         this.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//返回
-                CircleFragment momentsFragment = new CircleFragment();
                 FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.content_container, momentsFragment);
+                ft.remove(MomentDetailFragment.this);
                 ft.commit();
             }
         });

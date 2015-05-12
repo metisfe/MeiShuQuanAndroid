@@ -56,6 +56,6 @@ public class CCircleDetailModel {
     }
 
     public boolean isValid() {
-        return user != null && user.name != null /* && user.grade != null */ && createTime != null && content != null;
+        return user != null /*&& user.name != null*/ /* && user.grade != null */ && createTime != null && content != null;
     }
 }
