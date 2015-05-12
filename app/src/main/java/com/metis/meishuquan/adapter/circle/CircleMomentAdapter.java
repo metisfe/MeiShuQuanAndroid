@@ -38,7 +38,7 @@ public class CircleMomentAdapter extends BaseAdapter {
 
     private List<CCircleDetailModel> momentList = new ArrayList<CCircleDetailModel>();
 
-    public CircleMomentAdapter(Context context,List<CCircleDetailModel> momentList) {
+    public CircleMomentAdapter(Context context, List<CCircleDetailModel> momentList) {
         this.momentList = momentList;
         fm = ((MainActivity) context).getSupportFragmentManager();
     }
@@ -195,21 +195,22 @@ public class CircleMomentAdapter extends BaseAdapter {
         return convertView;
     }
 
-<<<<<<< HEAD
     //进入新闻详情
     private void navigatToNewInfo(int newId) {
 
     }
 
     private void navigatToActivityInfo(CCircleDetailModel moment) {
-=======
+
+    }
+
     private static final String TAG = CircleMomentAdapter.class.getSimpleName();
+
     private void navigatToActivityInfo(View view, CCircleDetailModel moment) {
         Toast.makeText(view.getContext(), "navigatToActivityInfo", Toast.LENGTH_SHORT).show();
         Intent it = new Intent(view.getContext(), ActDetailActivity.class);
         it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         view.getContext().startActivity(new Intent(view.getContext(), ActDetailActivity.class));
->>>>>>> origin/master
         //TODO:进入活动详情
     }
 
