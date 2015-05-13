@@ -11,6 +11,8 @@ import com.metis.meishuquan.activity.info.BaseActivity;
 import com.metis.meishuquan.fragment.act.StudioListFragment;
 import com.metis.meishuquan.model.BLL.ActiveOperator;
 import com.metis.meishuquan.model.BLL.TopListItem;
+import com.metis.meishuquan.model.BLL.UserInfoOperator;
+import com.metis.meishuquan.model.commons.ActiveInfo;
 
 public class SelectStudioActivity extends BaseActivity {
 
@@ -36,11 +38,29 @@ public class SelectStudioActivity extends BaseActivity {
 
     @Override
     public void onTitleRightPressed() {
-        TopListItem item = mStudioListFragment.getSelectedStudioItem();
+        final TopListItem item = mStudioListFragment.getSelectedStudioItem();
         if (item == null) {
             Toast.makeText(this, R.string.act_choose_one_plz, Toast.LENGTH_SHORT).show();
             return;
         }
-        ActiveOperator.getInstance().selectStudio(item.getUserId());
+        ActiveOperator.getInstance().getActiveDetail(new UserInfoOperator.OnGetListener<ActiveInfo>() {
+            @Override
+            public void onGet(boolean succeed, ActiveInfo activeInfo) {
+                if (succeed) {
+                    ActiveOperator.getInstance().selectStudio(item.getUserId(), activeInfo.getpId(), new UserInfoOperator.OnGetListener() {
+                        @Override
+                        public void onGet(boolean succeed, Object o) {
+                            if (succeed) {
+                                Toast.makeText(SelectStudioActivity.this, R.string.act_join_success, Toast.LENGTH_SHORT).show();
+                                finish();
+                            } else {
+                                Toast.makeText(SelectStudioActivity.this, R.string.act_join_failed, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
     }
 }

@@ -2,11 +2,31 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/search_container"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/search_content_input"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:layout_toLeftOf="@+id/search_btn"
+            />
+        <ImageView
+            android:id="@+id/search_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rc_ic_atfriend_search"
+            android:layout_alignParentRight="true"
+            />
+    </RelativeLayout>
     <LinearLayout
         android:id="@+id/act_list_spanner_group"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_below="@+id/search_container"
         >
         <Button
             android:id="@+id/act_list_filter_1"

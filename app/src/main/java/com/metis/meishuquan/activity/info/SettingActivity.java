@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.act.ActDetailActivity;
+import com.metis.meishuquan.activity.act.SelectStudioActivity;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
@@ -55,9 +56,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         /*Intent it = new Intent(this, StudioActivity.class);
         it.putExtra(StudioActivity.KEY_USER_ID, 100090);
         startActivity(it);*/
-        /*startActivity(new Intent(this, SelectStudioActivity.class));
-        ActiveOperator.getInstance().selectStudio(0);*/
-        startActivity(new Intent(this, ActDetailActivity.class));
+        startActivity(new Intent(this, SelectStudioActivity.class));
+        /*ActiveOperator.getInstance().selectStudio(0);*/
+        //startActivity(new Intent(this, ActDetailActivity.class));
         //startActivity(new Intent (this, ShareActivity.class));
         /*final UMSocialService mController
                 = UMServiceFactory.getUMSocialService("www.baidu.com");

@@ -40,7 +40,7 @@ public class SpecFragment extends MultiListViewFragment implements AdapterView.O
 
         if (mAdapterList == null) {
             mAdapterList = new ArrayList<BaseAdapter>();
-            mAdapter = new SimpleAdapter(getActivity());
+            mAdapter = new SimpleAdapter(getActivity(), getStringArray());
             mAdapterList.add(mAdapter);
         }
         setAdapterList(mAdapterList);
@@ -58,7 +58,7 @@ public class SpecFragment extends MultiListViewFragment implements AdapterView.O
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Toast.makeText(getActivity(), "onItemClick " + i, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "onItemClick " + i + " mCallback=" + mCallback, Toast.LENGTH_SHORT).show();
         String[] mSpecs = getStringArray();
         if (mCallback != null) {
             mCallback.onCallback(i, mSpecs[i]);
@@ -71,14 +71,14 @@ public class SpecFragment extends MultiListViewFragment implements AdapterView.O
         mCallback = null;
     }
 
-    private class SimpleAdapter extends BaseAdapter {
+    public static class SimpleAdapter extends BaseAdapter {
 
         private Context mContext = null;
         private String[] mSpecs = null;
 
-        public SimpleAdapter (Context context) {
+        public SimpleAdapter (Context context, String[] array) {
             mContext = context;
-            mSpecs = getStringArray();
+            mSpecs = array;
         }
 
         @Override

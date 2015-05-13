@@ -1,5 +1,7 @@
 package com.metis.meishuquan.model.commons;
 
+import android.content.Context;
+
 import com.google.gson.annotations.SerializedName;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.enums.LoginStateEnum;
@@ -386,5 +388,20 @@ public class User implements Serializable {
 
     public void setFocusNum(int focusNum) {
         FocusNum = focusNum;
+    }
+
+    public String getRegisterTimeFormated () {
+        if (registrationDate == null) {
+            return null;
+        }
+        final int index = registrationDate.indexOf('T');
+        if (index >= 0) {
+            return registrationDate.substring(0, index);
+        }
+        return "";
+    }
+
+    public void getGoodAt (Context context) {
+
     }
 }

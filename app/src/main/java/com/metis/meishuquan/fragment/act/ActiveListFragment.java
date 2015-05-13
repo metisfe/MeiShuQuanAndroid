@@ -1,13 +1,17 @@
 package com.metis.meishuquan.fragment.act;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -16,6 +20,7 @@ import android.widget.TextView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.BaseActivity;
+import com.metis.meishuquan.activity.info.homepage.StudioActivity;
 import com.metis.meishuquan.model.BLL.TopListItem;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 
@@ -29,6 +34,8 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
 
     private Button mFilter1, mFilter2, mFilter3;
     private ListView mActListView = null;
+    private ImageView mSearchBtn = null;
+    private EditText mSearchEt = null;
 
     private List<TopListDelegate> mDataList = new ArrayList<TopListDelegate>();
     private TopListAdapter mAdapter = new TopListAdapter(mDataList);
@@ -45,6 +52,10 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
         mFilter2 = (Button) view.findViewById(R.id.act_list_filter_2);
         mFilter3 = (Button) view.findViewById(R.id.act_list_filter_3);
         mActListView = (ListView) view.findViewById(R.id.act_list);
+
+        mSearchBtn = (ImageView)view.findViewById(R.id.search_btn);
+        mSearchEt = (EditText)view.findViewById(R.id.search_content_input);
+
         //mActListView.setAdapter(mAdapter);
         View emptyView = view.findViewById(R.id.act_empty);
         mActListView.setEmptyView(emptyView);
@@ -57,6 +68,32 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
         mFilter1.setOnClickListener(this);
         mFilter2.setOnClickListener(this);
         mFilter3.setOnClickListener(this);
+
+        mSearchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String content = mSearchEt.getText().toString();
+                onSearchClicked(content);
+            }
+        });
+        mSearchEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (editable.length() == 0) {
+                    onSearchContentCleared ();
+                }
+            }
+        });
     }
 
     public abstract String getFilterTitle1 ();
@@ -64,6 +101,8 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
     public abstract String getFilterTitle2 ();
 
     public abstract String getFilterTitle3 ();
+
+    public abstract boolean canChooseStudio ();
 
     @Override
     public void onClick(View view) {
@@ -86,6 +125,14 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
 
     public Button getFilterSpinner3 () {
         return mFilter3;
+    }
+
+    public void onSearchClicked (String content) {
+
+    }
+
+    public void onSearchContentCleared () {
+
     }
 
     private AreaSelectFragment.OnAreaChooseListener mTempListener = null;
@@ -116,7 +163,7 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
     }
 
     public TopListItem getSelectedStudioItem () {
-        return mAdapter.mSelectedDelegate.mItem;
+        return mAdapter.getSelectedItem();
     }
 
     public abstract void needReloadData (int selectedIndex1, int selectedIndex2, int selectedIndex3);
@@ -134,6 +181,13 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
 
         public TopListAdapter (List<TopListDelegate> data) {
             mData = data;
+        }
+
+        public TopListItem getSelectedItem () {
+            if (mSelectedDelegate == null) {
+                return null;
+            }
+            return mSelectedDelegate.getTopListItem();
         }
 
         @Override
@@ -156,20 +210,21 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
             ViewHolder holder = null;
             if (view == null) {
                 holder = new ViewHolder();
-                View v = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.layout_active_top_list_item, null);
-                holder.profileIv = (ImageView)v.findViewById(R.id.top_list_item_profile);
-                holder.nameTv = (TextView)v.findViewById(R.id.top_list_item_name);
-                holder.locationTv = (TextView)v.findViewById(R.id.top_list_item_location);
-                holder.joinCountTv = (TextView)v.findViewById(R.id.top_list_item_join_count);
-                holder.commentCountTv = (TextView)v.findViewById(R.id.top_list_item_comment_count);
-                holder.supportCountTv = (TextView)v.findViewById(R.id.top_list_item_support_count);
+                view = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.layout_active_top_list_item, null);
+                holder.selectBtn = (RadioButton)view.findViewById(R.id.top_list_item_check_box);
+                holder.profileIv = (ImageView)view.findViewById(R.id.top_list_item_profile);
+                holder.nameTv = (TextView)view.findViewById(R.id.top_list_item_name);
+                holder.locationTv = (TextView)view.findViewById(R.id.top_list_item_location);
+                holder.joinCountTv = (TextView)view.findViewById(R.id.top_list_item_join_count);
+                holder.commentCountTv = (TextView)view.findViewById(R.id.top_list_item_comment_count);
+                holder.supportCountTv = (TextView)view.findViewById(R.id.top_list_item_support_count);
                 view.setTag(holder);
             } else {
                 holder = (ViewHolder)view.getTag();
             }
             final TopListDelegate itemDelegate = getItem(i);
             final TopListItem item = itemDelegate.getTopListItem();
-            holder.selectBtn.setVisibility(View.VISIBLE);
+            holder.selectBtn.setVisibility(canChooseStudio() ? View.VISIBLE : View.GONE);
             holder.selectBtn.setChecked(itemDelegate.isChecked());
             holder.nameTv.setText(item.getUserNickName());
             holder.locationTv.setText(item.getProvince());
@@ -187,18 +242,28 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
             holder.supportCountTv.setText(
                     MainApplication.UIContext.getString(R.string.act_support_count, item.getUpCount())
             );
-            view.setOnClickListener(new View.OnClickListener() {
+            holder.profileIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (mSelectedDelegate != null) {
-                        mSelectedDelegate.setChecked(false);
-                    }
-                    itemDelegate.setChecked(true);
-                    mSelectedDelegate = itemDelegate;
-
-                    getActivity().finish();
+                    Intent it = new Intent(getActivity(), StudioActivity.class);
+                    it.putExtra(StudioActivity.KEY_USER_ID, item.getUserId());
+                    startActivity(it);
                 }
             });
+            if (canChooseStudio()) {
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mSelectedDelegate != null) {
+                            mSelectedDelegate.setChecked(false);
+                        }
+                        itemDelegate.setChecked(true);
+                        mSelectedDelegate = itemDelegate;
+                        notifyDataSetChanged();
+                    }
+                });
+            }
+
             return view;
         }
     }

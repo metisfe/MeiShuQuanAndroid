@@ -1,15 +1,18 @@
 package com.metis.meishuquan.fragment.act;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.adapter.PrvcEnumAdapter;
+import com.metis.meishuquan.model.BLL.ActiveOperator;
 import com.metis.meishuquan.model.BLL.TopListItem;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.College;
@@ -25,9 +28,9 @@ public class StudioListFragment extends ActiveListFragment {
     private int mIndex = 1;
 
     private ArrayList<String> mFilterData3 = new ArrayList<String>();
-    private List<College> mCollegeList = null;
 
-    private PrvcEnumAdapter mAdapter1 = new PrvcEnumAdapter();
+    private int mFilter1, mFilter2, mFilter3;
+    private String mKey = "";
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -38,21 +41,12 @@ public class StudioListFragment extends ActiveListFragment {
             mFilterData3.add(array[i]);
         }
 
-        UserInfoOperator.getInstance().getCollegeList("", new UserInfoOperator.OnGetListener<List<College>>() {
-            @Override
-            public void onGet(boolean succeed, List<College> colleges) {
-                if (succeed) {
-                    mCollegeList = colleges;
-                }
-            }
-        });
-
-        reloadDataList();
+        reloadDataList(mFilter1, mFilter2, mFilter3);
     }
 
-    private void reloadDataList () {
+    private void reloadDataList (int filter1, int filter2, int filter3) {
         mIndex = 1;
-        loadDataList(mIndex, new UserInfoOperator.OnGetListener<List<TopListItem>>() {
+        loadDataList(filter1, filter2, filter3, mIndex, new UserInfoOperator.OnGetListener<List<TopListItem>>() {
             @Override
             public void onGet(boolean succeed, List<TopListItem> topListItems) {
                 if (succeed) {
@@ -68,8 +62,24 @@ public class StudioListFragment extends ActiveListFragment {
         });
     }
 
+    @Override
+    public void onSearchClicked(String content) {
+        if (TextUtils.isEmpty(content)) {
+            return;
+        }
+        mKey = content;
+        needReloadData(mFilter1, mFilter2, mFilter3);
+        mKey = "";
+    }
+
+    @Override
+    public void onSearchContentCleared() {
+        mKey = "";
+        needReloadData(mFilter1, mFilter2, mFilter3);
+    }
+
     private void loadDataListMore () {
-        loadDataList(mIndex + 1, new UserInfoOperator.OnGetListener<List<TopListItem>>() {
+        /*loadDataList(mIndex + 1, new UserInfoOperator.OnGetListener<List<TopListItem>>() {
             @Override
             public void onGet(boolean succeed, List<TopListItem> topListItems) {
                 if (succeed) {
@@ -82,28 +92,33 @@ public class StudioListFragment extends ActiveListFragment {
                     }
                 }
             }
-        });
+        });*/
     }
 
-    private void loadDataList (int index, UserInfoOperator.OnGetListener<List<TopListItem>> listener) {
+    private void loadDataList (int filter1, int filter2, int filter3, int index, UserInfoOperator.OnGetListener<List<TopListItem>> listener) {
 
-        //ActiveOperator.getInstance().getStudioList(11, filter2, filter3, index, listener);
+        ActiveOperator.getInstance().getStudioList(filter1, filter2, filter3, index, mKey, listener);
     }
 
 
     @Override
     public String getFilterTitle1() {
-        return null;
+        return getString(R.string.act_filter_title_area);
     }
 
     @Override
     public String getFilterTitle2() {
-        return null;
+        return getString(R.string.act_filter_title_college);
     }
 
     @Override
     public String getFilterTitle3() {
-        return null;
+        return getString(R.string.act_filter_title_spec);
+    }
+
+    @Override
+    public boolean canChooseStudio() {
+        return true;
     }
 
     @Override
@@ -114,6 +129,32 @@ public class StudioListFragment extends ActiveListFragment {
                     @Override
                     public void onChoose(AreaSelectFragment.Areable area) {
                         getFilterSpinner1().setText(area.getTitle());
+                        mFilter1 = area.getId();
+                        needReloadData(mFilter1, mFilter2, mFilter3);
+                    }
+                });
+                break;
+            case R.id.act_list_filter_2:
+                addFragment(CollegeChooseFragment.getInstance());
+                CollegeChooseFragment.getInstance().setCallback(new CollegeChooseFragment.Callback() {
+                    @Override
+                    public void onCallback(int i, College college) {
+                        getFilterSpinner2().setText(college.getName());
+                        removeFragment(CollegeChooseFragment.getInstance());
+                        mFilter2 = college.getpId();
+                        needReloadData(mFilter1, mFilter2, mFilter3);
+                    }
+                });
+                break;
+            case R.id.act_list_filter_3:
+                addFragment(PKSwitchFragment.getInstance());
+                PKSwitchFragment.getInstance().setCallback(new SpecFragment.Callback() {
+                    @Override
+                    public void onCallback(int position, String name) {
+                        removeFragment(PKSwitchFragment.getInstance());
+                        getFilterSpinner3().setText(name);
+                        mFilter3 = position + 1;
+                        needReloadData(mFilter1, mFilter2, mFilter3);
                     }
                 });
                 break;
@@ -122,7 +163,7 @@ public class StudioListFragment extends ActiveListFragment {
 
     @Override
     public void needReloadData(int selectedIndex1, int selectedIndex2, int selectedIndex3) {
-        reloadDataList();
+        reloadDataList(selectedIndex1, selectedIndex2, selectedIndex3);
     }
 
     public class SimpleAdapter extends BaseAdapter {
@@ -159,37 +200,4 @@ public class StudioListFragment extends ActiveListFragment {
         }
     }
 
-    public class CollegeAdapter extends BaseAdapter {
-
-        private List<College> mCollegeList = null;
-
-        public CollegeAdapter (List<College> colleges) {
-            mCollegeList = colleges;
-        }
-
-        @Override
-        public int getCount() {
-            return mCollegeList.size();
-        }
-
-        @Override
-        public College getItem(int i) {
-            return mCollegeList.get(i);
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return getItem(i).getpId();
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            if (view == null) {
-                view = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.act_list_spinner_item, null);
-            }
-            TextView tv = (TextView)view.findViewById(R.id.item_text);
-            tv.setText(getItem(i).getName());
-            return view;
-        }
-    }
 }

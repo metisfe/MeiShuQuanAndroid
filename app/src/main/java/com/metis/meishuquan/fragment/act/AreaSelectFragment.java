@@ -100,6 +100,8 @@ public class AreaSelectFragment extends MultiListViewFragment {
             @Override
             public void onChoose(Areable area) {
                 if (mProvAdapter.getSelectedAreable() != null && area.getId() == mProvAdapter.getSelectedAreable().getId()) {
+                    mTownDataList.clear();
+                    mTownAdapter.notifyDataSetChanged();
                     onAreaSelected(area);
                     return;
                 }

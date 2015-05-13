@@ -28,8 +28,10 @@ import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.InputActivity;
 import com.metis.meishuquan.activity.WebActivity;
+import com.metis.meishuquan.activity.course.ChooseCourseActivity;
 import com.metis.meishuquan.activity.info.BaseActivity;
 import com.metis.meishuquan.activity.info.DepartmentActivity;
+import com.metis.meishuquan.activity.info.InfoActivity;
 import com.metis.meishuquan.activity.info.TextActivity;
 import com.metis.meishuquan.adapter.commons.ConstellationAdapter;
 import com.metis.meishuquan.adapter.commons.SimplePrvsAdapter;
@@ -54,6 +56,7 @@ import com.metis.meishuquan.model.assess.City;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.contract.Moment;
+import com.metis.meishuquan.model.course.CourseChannelItem;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.topline.News;
 import com.metis.meishuquan.util.ImageLoaderUtils;
@@ -61,6 +64,7 @@ import com.metis.meishuquan.util.PatternUtils;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
 
@@ -747,6 +751,12 @@ public class StudioActivity extends BaseActivity implements
                     provinceAdapter.setOnItemClickListener(mPrvsListener);
                     provinceFragment.setAdapter(provinceAdapter);
                     provinceFragment.show(getSupportFragmentManager(), TAG);
+                    break;
+                case R.id.info_good_at:
+                    List<CourseChannelItem> mCourseItems = null;
+                    it = new Intent (StudioActivity.this, ChooseCourseActivity.class);
+                    it.putExtra(ChooseCourseActivity.OLDSELECTEDCHANNELITEMS, (Serializable) mCourseItems);
+                    startActivityForResult(it, InfoActivity.REQUEST_CODE_CHOOSE_COURSE);
                     break;
                 /*case R.id.info_provience:
                     showCityFragment();

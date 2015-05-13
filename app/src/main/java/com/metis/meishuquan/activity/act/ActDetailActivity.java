@@ -25,8 +25,6 @@ public class ActDetailActivity extends BaseActivity implements RadioGroup.OnChec
     private View mSearchView = null;
     private EditText mSearchInput = null;
 
-    private boolean isSearchShowing = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,26 +46,14 @@ public class ActDetailActivity extends BaseActivity implements RadioGroup.OnChec
         super.onPostCreate(savedInstanceState);
         addFragment(mDetailFragment, false);
         mDetailBtn.setChecked(true);
-        getTitleView().setTitleRightVisible(View.GONE);
+        /*getTitleView().setTitleRightVisible(View.GONE);
         getTitleView().setImageRightVisible(View.GONE);
-        getTitleView().setImageRightResource(R.drawable.ic_launcher);
+        getTitleView().setImageRightResource(R.drawable.rc_ic_atfriend_search);*/
 
-    }
-
-    @Override
-    public void onTitleRightPressed() {
-        if (mGroup.getCheckedRadioButtonId() != R.id.act_title_list) {
-            return;
-        }
-        if (isSearchShowing) {
-            hideSearchView();
-        } else {
-            showSearchView();
-        }
     }
 
     private void showSearchView () {
-        if (!isSearchShowing) {
+        /*if (!isSearchShowing) {
             if (mSearchView == null) {
                 mSearchView = LayoutInflater.from(this).inflate(R.layout.layout_act_search_title, null);
                 mSearchInput = (EditText)mSearchView.findViewById(R.id.search_input);
@@ -84,16 +70,16 @@ public class ActDetailActivity extends BaseActivity implements RadioGroup.OnChec
                         return false;
                     }
                 });
-            }
-            getTitleView().removeCenterView(mCustomTitle);
+            }*/
+            /*getTitleView().removeCenterView(mCustomTitle);
             getTitleView().addCenterView(mSearchView);
             //getTitleView().setImageRightResource();
             mSearchInput.requestFocus();
             isSearchShowing = true;
-        }
+        }*/
     }
 
-    private void hideSearchView () {
+    /*private void hideSearchView () {
         if (isSearchShowing) {
             getTitleView().addCenterView(mCustomTitle);
             getTitleView().removeCenterView(mSearchView);
@@ -101,14 +87,14 @@ public class ActDetailActivity extends BaseActivity implements RadioGroup.OnChec
             mListFragment.clearSearch();
             isSearchShowing = false;
         }
-    }
+    }*/
 
     @Override
     public void onBackPressed() {
-        if (isSearchShowing) {
+        /*if (isSearchShowing) {
             hideSearchView();
             return;
-        }
+        }*/
         super.onBackPressed();
     }
 

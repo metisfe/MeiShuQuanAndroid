@@ -93,6 +93,8 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
         MyInfoBtn mStudiolView = (MyInfoBtn)view.findViewById(R.id.info_studio);
         MyInfoBtn mGoodAtView = (MyInfoBtn)view.findViewById(R.id.info_good_at);
         MyInfoBtn mAchievementView = (MyInfoBtn)view.findViewById(R.id.info_achievement);
+        MyInfoBtn mPhoneView = (MyInfoBtn)view.findViewById(R.id.info_modify_phone);
+        MyInfoBtn mRegisterView = (MyInfoBtn)view.findViewById(R.id.info_register_time);
 
         View mRecentsContainer = view.findViewById(R.id.info_recents_container);
         TextView mRecentsContentTv = (TextView)view.findViewById(R.id.info_recents_content);
@@ -101,6 +103,8 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
                 mUser.getUserAvatar(), mProfile,
                 ImageLoaderUtils.getRoundDisplayOptions(mContext.getResources().getDimensionPixelSize(R.dimen.info_profile_size))
         );
+
+        mProfileContainer.findViewById(R.id.my_info_btn_arrow).setVisibility(canEdit ? View.VISIBLE : View.INVISIBLE);
 
         mNickView.setSecondaryText(mUser.getName());
         mNickView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
@@ -125,9 +129,11 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
         mCvView.setSecondaryText(mUser.getUserResume());
         mCvView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
 
+        mSchoolView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
         mSchoolView.setVisibility(mUser.getUserRoleEnum() == IdTypeEnum.STUDENT ? View.VISIBLE : View.GONE);
         mSchoolView.setSecondaryText(mUser.getLocationSchool());
 
+        mStudiolView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
         if (mStudioName != null) {
             mStudiolView.setSecondaryText(mStudioName);
         } else {
@@ -137,6 +143,8 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
             }
 
         }
+        mDepartmentView.setVisibility(mUser.getUserRoleEnum() == IdTypeEnum.TEACHER ? View.VISIBLE : View.GONE);
+        mDepartmentView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
         mDepartmentAddrView.setVisibility(mUser.getUserRoleEnum() == IdTypeEnum.TEACHER ? View.VISIBLE : View.GONE);
         if (mUser.getStudio() != null) {
             mDepartmentAddrView.setSecondaryText(/*mUser.getLocationAddress()*/mUser.getStudio().getAddress());
@@ -184,6 +192,9 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
 
         mRecentsContentTv.setText(mUser.getSelfSignature());
         mRecentsContainer.findViewById(R.id.info_btn_arrow).setVisibility(canEdit ? View.VISIBLE : View.INVISIBLE);
+
+        mRegisterView.setArrowVisible(View.INVISIBLE);
+        mRegisterView.setSecondaryText(mUser.getRegisterTimeFormated());
 
         mProfileContainer.setOnClickListener(this);
         mNickView.setOnClickListener(this);

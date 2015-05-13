@@ -46,6 +46,8 @@
     <string name="info_good_at">擅长科目</string>
     <string name="info_cv">个人简历</string>
     <string name="info_achievement">教学成果</string>
+    <string name="info_modify_phone">修改手机号</string>
+    <string name="info_register_time">注册时间</string>
     <string name="info_meishuquan_id_illegal">美术圈号不符合规则</string>
     <string name="info_nick_name_illegal">昵称不符合规则</string>
     <string name="info_illegal_birthday">出生日期不合法</string>
@@ -147,8 +149,11 @@
     <string name="act_select_studio">选画室</string>
     <string name="act_choose_one_plz">请选择一个画室</string>
     <string name="act_filter_title_pk">学生PK榜</string>
-    <string name="act_filter_title_spec">推荐</string>
+    <string name="act_filter_title_spec">筛选</string>
     <string name="act_filter_title_area">地区</string>
+    <string name="act_filter_title_college">对口院校</string>
+    <string name="act_join_success">选择画室成功</string>
+    <string name="act_join_failed">选择画室失败</string>
 
     <string-array name="act_filter_1">
         <item>学生PK榜</item>
