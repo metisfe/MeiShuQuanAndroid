@@ -154,8 +154,8 @@ public class StudioActivity extends BaseActivity implements
                 if (succeed) {
                     mUser = user;
                     //TODO
-                    /*mUser.setUserRole(3);
-                    mUser.setUserId(100090);*/
+                    //mUser.setUserRole(2);
+                    //mUser.setUserId(100090);
                     loadFirstTab();
                     fillUser(user);
                     if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
@@ -472,6 +472,33 @@ public class StudioActivity extends BaseActivity implements
                     mAdapter.notifyDataSetChanged();
                 }
                 break;
+            case InfoActivity.REQUEST_CODE_CHOOSE_COURSE:
+                if (resultCode == RESULT_OK) {
+                    List<CourseChannelItem> list = (List<CourseChannelItem>)data.getExtras().getSerializable("tags");
+                    /*JsonArray array = new JsonArray();
+                    for (CourseChannelItem item : list) {
+                        JsonObject object = new JsonObject();
+                        object.addProperty(CourseChannelItem.KEY_CHANNEL_ID, item.getChannelId());
+                        object.addProperty(CourseChannelItem.KEY_CHANNEL_NAME, item.getChannelName());
+                        array.add(object);
+                    }
+                    String json = array.toString().replaceAll("\\{", "\\(");
+                    json = json.replaceAll("\\}", "\\)");*/
+                    StringBuilder builder = new StringBuilder();
+                    StringBuilder nameBuilder = new StringBuilder();
+                    for (CourseChannelItem item : list) {
+                        builder.append(item.getChannelId() + ",");
+                        nameBuilder.append(item.getChannelName() + " ");
+                    }
+                    UserManager.updateMyInfo(User.KEY_GOODSUBJECTS, builder.toString());
+                    mUser.setGoodSubjects(builder.toString());
+                    if (mAdapter instanceof UserInfoAdapter) {
+                        ((UserInfoAdapter)mAdapter).setGoodAtSubjects(nameBuilder.toString());
+                        mAdapter.notifyDataSetChanged();
+                    }
+                    Log.v(TAG, "REQUEST_CODE_CHOOSE_COURSE " + builder);
+                }
+                break;
         }
     }
 
@@ -703,12 +730,12 @@ public class StudioActivity extends BaseActivity implements
                     fragment.show(getSupportFragmentManager(), TAG);
                     break;
                 case R.id.info_department_address:
-                    showDialogAndUpdate(getString(R.string.info_department_address), mUser.getLocationAddress(), getString(R.string.info_department_address), User.KEY_LOCATIONADDRESS, new InputDialogFragment.OnOkListener() {
+                    /*showDialogAndUpdate(getString(R.string.info_department_address), mUser.getLocationAddress(), getString(R.string.info_department_address), User.KEY_LOCATIONADDRESS, new InputDialogFragment.OnOkListener() {
                         @Override
                         public void onOkClick(View view, CharSequence cs) {
                             mUser.setLocationAddress(cs.toString());
                         }
-                    });
+                    });*/
                     break;
                 case R.id.info_cv:
                     showDialogAndUpdate(getString(R.string.info_cv), mUser.getUserResume(), getString(R.string.info_cv), User.KEY_USER_RESUME, new InputDialogFragment.OnOkListener() {

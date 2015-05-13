@@ -1,6 +1,7 @@
 package com.metis.meishuquan.activity.info;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +25,12 @@ import java.util.List;
 
 public class MyCommentsActivity extends DataListActivity {
 
+    public static final String KEY_TYPE = "type";
+
     private List<Assess> mData = new ArrayList<Assess>();
     private int mIndex = 1;
+
+    private int mType = 0;
 
     @Override
     public String getTitleText() {
@@ -33,8 +38,17 @@ public class MyCommentsActivity extends DataListActivity {
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        mType = getIntent().getIntExtra(KEY_TYPE, mType);
+        super.onCreate(savedInstanceState);
+        if (mType == 1) {
+            setTitleCenter(getString(R.string.my_info_asks));
+        }
+    }
+
+    @Override
     public void loadData(int index) {
-        UserInfoOperator.getInstance().getQuestionList(MainApplication.userInfo.getUserId(), index, 0, new UserInfoOperator.OnGetListener<List<Assess>>() {
+        UserInfoOperator.getInstance().getQuestionList(MainApplication.userInfo.getUserId(), index, mType, new UserInfoOperator.OnGetListener<List<Assess>>() {
             @Override
             public void onGet(boolean succeed, List<Assess> data) {
                 if (succeed) {
@@ -67,7 +81,7 @@ public class MyCommentsActivity extends DataListActivity {
         loadData(1);
     }
 
-    private class CommentAdapter extends BaseAdapter {
+    public class CommentAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {

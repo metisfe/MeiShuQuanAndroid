@@ -133,6 +133,7 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
         mSchoolView.setVisibility(mUser.getUserRoleEnum() == IdTypeEnum.STUDENT ? View.VISIBLE : View.GONE);
         mSchoolView.setSecondaryText(mUser.getLocationSchool());
 
+        mStudiolView.setText(mUser.getUserRoleEnum() == IdTypeEnum.STUDENT ? R.string.info_workspace : R.string.info_department);
         mStudiolView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
         if (mStudioName != null) {
             mStudiolView.setSecondaryText(mStudioName);
@@ -143,16 +144,19 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
             }
 
         }
-        mDepartmentView.setVisibility(mUser.getUserRoleEnum() == IdTypeEnum.TEACHER ? View.VISIBLE : View.GONE);
+        mDepartmentView.setVisibility(/*mUser.getUserRoleEnum() == IdTypeEnum.TEACHER ? View.VISIBLE : */View.GONE);
         mDepartmentView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
         mDepartmentAddrView.setVisibility(mUser.getUserRoleEnum() == IdTypeEnum.TEACHER ? View.VISIBLE : View.GONE);
         if (mUser.getStudio() != null) {
             mDepartmentAddrView.setSecondaryText(/*mUser.getLocationAddress()*/mUser.getStudio().getAddress());
         }
 
-        mDepartmentAddrView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
+        mDepartmentAddrView.setArrowVisible(View.INVISIBLE);
 
         mGoodAtView.setVisibility(mUser.getUserRoleEnum() == IdTypeEnum.TEACHER ? View.VISIBLE : View.GONE);
+        if (mGoodAtSubjects != null) {
+            mGoodAtView.setSecondaryText(mGoodAtSubjects);
+        }
         String subjectsId = mUser.getGoodSubjects();
         if (!TextUtils.isEmpty(subjectsId)) {
             String allCourse = SharedPreferencesUtil.getInstanse(mContext).getStringByKey(SharedPreferencesUtil.COURSE_CHANNEL_LIST);
@@ -218,6 +222,11 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
     private String mStudioName = null;
     public void setStudioName (String studio) {
         mStudioName = studio;
+    }
+
+    private String mGoodAtSubjects = null;
+    public void setGoodAtSubjects (String goodAtSubjects) {
+        mGoodAtSubjects = goodAtSubjects;
     }
 
     private CourseChannelItem getCourseChannelItem (List<CourseChannel> channelsList, int channelId) {

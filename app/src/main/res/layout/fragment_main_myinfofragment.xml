@@ -156,13 +156,14 @@
                     android:layout_height="1px"
                     android:layout_alignParentTop="true" />
             </com.metis.meishuquan.view.shared.MyInfoBtn>
-            <!--<com.metis.meishuquan.view.shared.MyInfoBtn
+            <com.metis.meishuquan.view.shared.MyInfoBtn
                 android:id="@+id/my_info_asks"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 bs:src="@drawable/my_info_ask"
                 bs:text="@string/my_info_asks"
                 bs:secondaryTextVisible="false"
+                android:visibility="gone"
                 >
                 <include
                     layout="@layout/divider_horizontail"
@@ -170,7 +171,7 @@
                     android:layout_height="1px"
                     android:layout_marginLeft="10dp"
                     />
-            </com.metis.meishuquan.view.shared.MyInfoBtn>-->
+            </com.metis.meishuquan.view.shared.MyInfoBtn>
             <com.metis.meishuquan.view.shared.MyInfoBtn
                 android:id="@+id/my_info_comments"
                 android:layout_width="fill_parent"

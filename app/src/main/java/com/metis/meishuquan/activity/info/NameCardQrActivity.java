@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.google.gson.JsonObject;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.act.ActDetailActivity;
 import com.metis.meishuquan.fragment.commons.ListDialogFragment;
 import com.metis.meishuquan.fragment.commons.QRFragment;
 import com.metis.meishuquan.model.commons.User;
@@ -85,14 +86,10 @@ public class NameCardQrActivity extends BaseActivity {
     }
 
     @Override
-    public String getTitleRight() {
-        return getString(R.string.name_card_scan);
-    }
-
-    @Override
     public void onTitleRightPressed() {
         //startActivity(new Intent (QrActivity.this, ImagePreviewActivity.class));
-        startActivity(new Intent(NameCardQrActivity.this, QrScanActivity.class));
+        //startActivity(new Intent(NameCardQrActivity.this, QrScanActivity.class));
+        startActivity(new Intent (this, ActDetailActivity.class));
     }
 
     private class ActionAdapter extends BaseAdapter {

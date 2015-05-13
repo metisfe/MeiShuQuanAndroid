@@ -30,6 +30,7 @@ import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.login.LoginFragment;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.User;
+import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.view.shared.TabBar;
 
@@ -43,7 +44,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     private TabBar tabBar;
     private View mInfoContainer = null, mLoginView = null, mInfoDetailsContainer = null;
     private TextView mInfoName = null, mAttentionCountTv = null, mFollowersCountTv = null;
-    private View mCollectionView, mCommentView, mClassesView, mNameCardView, mAdvanceView, mSettingView;
+    private View mCollectionView, mCommentView, mMyAskView, mClassesView, mNameCardView, mAdvanceView, mSettingView;
     private ImageView mProfileIv = null;
 
     private MainApplication mMainApplication = null;
@@ -81,6 +82,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
 
         mCollectionView = view.findViewById(R.id.my_info_collections);
         mCommentView = view.findViewById(R.id.my_info_comments);
+        mMyAskView = view.findViewById(R.id.my_info_asks);
         mClassesView = view.findViewById(R.id.my_info_classes);
         mNameCardView = view.findViewById(R.id.my_info_name_card);
         mAdvanceView = view.findViewById(R.id.my_info_advances);
@@ -91,6 +93,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
 
         mCollectionView.setOnClickListener(this);
         mCommentView.setOnClickListener(this);
+        mMyAskView.setOnClickListener(this);
         mClassesView.setOnClickListener(this);
         mNameCardView.setOnClickListener(this);
         mAdvanceView.setOnClickListener(this);
@@ -144,6 +147,8 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         if (user == null) {
             return;
         }
+        //TODO
+        user.setUserRole(2);
         final int profilePix = mMainApplication.getResources().getDimensionPixelSize(R.dimen.my_info_profile_size);
         mInfoName.setText(user.getName());
         mAttentionCountTv.setText(MainApplication.UIContext.getString(R.string.my_info_count, user.getFocusNum()));
@@ -154,6 +159,10 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                     ImageLoaderUtils.getRoundDisplayOptions(profilePix));
         } else {
             mProfileIv.setImageResource(R.drawable.ic_launcher);
+        }
+
+        if (user.getUserRoleEnum() == IdTypeEnum.TEACHER) {
+            mMyAskView.setVisibility(View.VISIBLE);
         }
 
     }
@@ -187,6 +196,17 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                     Toast.makeText(getActivity(), R.string.my_info_toast_not_login, Toast.LENGTH_SHORT).show();
                 }
 
+                break;
+            case R.id.my_info_asks:
+                if (MainApplication.isLogin()) {
+                    Intent it = new Intent (getActivity(), MyCommentsActivity.class);
+                    it.putExtra(MyCommentsActivity.KEY_TYPE, 1);
+                    startActivity(it);
+                    //startActivity();
+                } else {
+                    startActivity(new Intent (getActivity(), LoginActivity.class));
+                    Toast.makeText(getActivity(), R.string.my_info_toast_not_login, Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.my_info_classes:
                 if (MainApplication.isLogin()) {
