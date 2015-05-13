@@ -79,23 +79,18 @@ public class Utils {
     public static final int MIN_SELECTED_FOLLOWEE = 3;
 
     public static SimpleDateFormat DateFormatter = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss.SSS", Locale.US);
-    public static String getDisplayTime(String timeString)
-    {
+
+    public static String getDisplayTime(String timeString) {
         return getDateFromNow(getDate(timeString, null));
     }
 
-    public static Date getDate(String dateString, Date defaultValue)
-    {
+    public static Date getDate(String dateString, Date defaultValue) {
         Date result = defaultValue;
-        try
-        {
-            if (dateString != null)
-            {
+        try {
+            if (dateString != null) {
                 result = DateFormatter.parse(dateString.replace("T", "").replace("Z", ""));
             }
-        }
-        catch (ParseException ex)
-        {
+        } catch (ParseException ex) {
             result = defaultValue;
         }
 
@@ -398,8 +393,8 @@ public class Utils {
         return ret.toLowerCase();
     }
 
-    public static String getIpAddress (Context context) {
-        WifiManager wm = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+    public static String getIpAddress(Context context) {
+        WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
         return ip;
     }

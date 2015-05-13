@@ -4,6 +4,7 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.metis.meishuquan.MainApplication;
+import com.metis.meishuquan.model.commons.AndroidVersion;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.BlockTypeEnum;
 import com.metis.meishuquan.model.enums.FileUploadTypeEnum;
@@ -32,6 +33,7 @@ public class CommonOperator {
     private final String PUBLISHCOMMENT = "v1.1/Comment/PublishComment";//发表评论
     private final String PRIVATE = "v1.1/Comment/Favorite";
     private final String FileUpload = "v1.1/File/Upload";//文件上传
+    private final String ANDROIDVERSION = "v1.1/Default/AndroidVersion";//获取最新版本
     private final String SESSION = MainApplication.userInfo.getCookie();
     private boolean flag;
 
@@ -143,6 +145,15 @@ public class CommonOperator {
                 pram.add(pair1);
                 pram.add(pair2);
                 ApiDataProvider.getmClient().invokeApi(FILEUPLOAD.toString(), imgByte, HttpPost.METHOD_NAME, null, pram, callback);
+            }
+        }
+    }
+
+    public void getVersion(ApiOperationCallback<ReturnInfo<AndroidVersion>> callback) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                ApiDataProvider.getmClient().invokeApi(ANDROIDVERSION, null, HttpGet.METHOD_NAME, null,
+                        (Class<ReturnInfo<AndroidVersion>>) new ReturnInfo<AndroidVersion>().getClass(), callback);
             }
         }
     }

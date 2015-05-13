@@ -1,8 +1,11 @@
 package com.metis.meishuquan;
 
+import android.app.AlertDialog;
 import android.app.Application;
-import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -10,22 +13,20 @@ import android.util.Log;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.metis.meishuquan.model.circle.CUserModel;
-import com.metis.meishuquan.model.circle.MyFriendList;
-import com.metis.meishuquan.model.circle.UserAdvanceInfo;
+import com.metis.meishuquan.model.BLL.CommonOperator;
+import com.metis.meishuquan.model.commons.AndroidVersion;
 import com.metis.meishuquan.model.commons.User;
+import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.LoginStateEnum;
 import com.metis.meishuquan.model.login.LoginUserData;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.model.provider.DataProvider;
 import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
+import com.metis.meishuquan.util.Utils;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
-import org.apache.http.client.methods.HttpGet;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import io.rong.imkit.RongIM;

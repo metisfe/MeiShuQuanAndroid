@@ -1,23 +1,32 @@
 package com.metis.meishuquan;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.metis.meishuquan.fragment.main.CircleFragment;
 import com.metis.meishuquan.fragment.main.ClassFragment;
 import com.metis.meishuquan.fragment.main.AssessFragment;
 import com.metis.meishuquan.fragment.main.MyInfoFragment;
 import com.metis.meishuquan.fragment.main.ToplineFragment;
 import com.metis.meishuquan.framework.util.TextureRender;
+import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.assess.Bimp;
+import com.metis.meishuquan.model.commons.AndroidVersion;
+import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.ui.SelectedTabType;
 import com.metis.meishuquan.util.Environments;
 import com.metis.meishuquan.util.GlobalData;
@@ -27,6 +36,8 @@ import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.util.ViewUtils;
 import com.metis.meishuquan.view.DialogManager;
 import com.metis.meishuquan.view.shared.TabBar;
+import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import java.util.Properties;
 
@@ -79,6 +90,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
 
         Utils.showConfigureNetwork(this);
         onNewIntent(this.getIntent());
+        updateApp();
     }
 
     @Override
@@ -233,5 +245,48 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
             popupRoot.addView(view);
             attachViewCount++;
         }
+    }
+
+
+    private void updateApp() {
+        //TODO:比较上次检测时间是否超过24小时
+        CommonOperator.getInstance().getVersion(new ApiOperationCallback<ReturnInfo<AndroidVersion>>() {
+            @Override
+            public void onCompleted(ReturnInfo<AndroidVersion> result, Exception exception, ServiceFilterResponse response) {
+                if (result != null && result.isSuccess()) {
+                    Gson gson = new Gson();
+                    String json = gson.toJson(result);
+                    ReturnInfo info = gson.fromJson(json, new TypeToken<ReturnInfo<AndroidVersion>>() {
+                    }.getType());
+
+                    final AndroidVersion androidVersion = (AndroidVersion) info.getData();
+                    String curentVersion = Utils.getVersion(MainActivity.this);
+                    Log.i("curentVersion", curentVersion);
+                    if (androidVersion != null && !androidVersion.getVersionNumber().equals(curentVersion)) {
+                        String msg = "现有可用更新,版本号为" + androidVersion.getVersionNumber() + "，是否下载更新？";
+                        new AlertDialog.Builder(MainActivity.this)
+                                .setTitle("确认")
+                                .setMessage(msg)
+                                .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        Intent intent = new Intent();
+                                        intent.setAction("android.intent.action.VIEW");
+                                        Uri uri = Uri.parse(androidVersion.getDownUrl());
+                                        intent.setData(uri);
+                                        startActivity(intent);
+                                    }
+                                })
+                                .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                    }
+                                })
+                                .show();
+                    }
+                }
+            }
+        });
     }
 }
