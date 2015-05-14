@@ -2,6 +2,8 @@ package com.metis.meishuquan.model.commons;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 /**
  * Created by wangjin on 15/5/14.
  */
@@ -20,6 +22,8 @@ public class AndroidVersion {
 
     @SerializedName("createTime")
     private String createTime;
+
+    private Date lastCheckTime;
 
     public int getVersionId() {
         return versionId;
@@ -59,5 +63,13 @@ public class AndroidVersion {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public Date getLastCheckTime() {
+        return lastCheckTime;
+    }
+
+    public void setLastCheckTime(Date lastCheckTime) {
+        this.lastCheckTime = lastCheckTime;
     }
 }

@@ -17,9 +17,11 @@ public class MomentActionBar extends LinearLayout {
     private TextView tvRepostCount, tvCommentCount, tvLikeCount;
     private OnActionButtonClickListener onActionButtonClickListener;
 
-    public interface OnActionButtonClickListener
-    {
+    public interface OnActionButtonClickListener {
+        public void onReply();
+
         public void onComment();
+
         public void onLike();
     }
 
@@ -33,20 +35,17 @@ public class MomentActionBar extends LinearLayout {
         init();
     }
 
-    public void setOnActionButtonClickListener(OnActionButtonClickListener onActionButtonClickListener)
-    {
+    public void setOnActionButtonClickListener(OnActionButtonClickListener onActionButtonClickListener) {
         this.onActionButtonClickListener = onActionButtonClickListener;
     }
 
-    public void setData(int repostCount, int commentCount, int likeCount)
-    {
+    public void setData(int repostCount, int commentCount, int likeCount) {
         this.tvRepostCount.setText(repostCount > 0 ? "" + repostCount : "");
         this.tvCommentCount.setText(commentCount > 0 ? "" + commentCount : "");
         this.tvLikeCount.setText(likeCount > 0 ? "" + likeCount : "");
     }
 
-    public void init()
-    {
+    public void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.fragment_circle_moment_action_bar, this);
         repostActionLayout = (LinearLayout) this.findViewById(R.id.action_repost);
         commentActionLayout = (LinearLayout) this.findViewById(R.id.action_comment);
@@ -59,8 +58,7 @@ public class MomentActionBar extends LinearLayout {
         commentActionLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onActionButtonClickListener != null)
-                {
+                if (onActionButtonClickListener != null) {
                     onActionButtonClickListener.onComment();
                 }
             }
@@ -69,11 +67,21 @@ public class MomentActionBar extends LinearLayout {
         likeActionLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onActionButtonClickListener != null)
-                {
+                if (onActionButtonClickListener != null) {
                     onActionButtonClickListener.onLike();
                 }
             }
         });
+
+        repostActionLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (onActionButtonClickListener != null) {
+                    onActionButtonClickListener.onReply();
+                }
+            }
+        });
+
+
     }
 }

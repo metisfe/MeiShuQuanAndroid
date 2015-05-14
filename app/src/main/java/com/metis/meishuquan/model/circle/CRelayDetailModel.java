@@ -45,4 +45,7 @@ public class CRelayDetailModel implements Serializable {
 
     @SerializedName("images")
     public List<CircleImage> images;
+
+    @SerializedName("selectStudio")
+    public CUserModel selectStudio;//已经选择的机构
 }

@@ -65,7 +65,7 @@ public class MomentsFragment extends CircleBaseFragment {
         View contextView = inflater.inflate(R.layout.fragment_circle_momentsfragment, container, false);
         fm = getActivity().getSupportFragmentManager();
         this.listView = (DragListView) contextView.findViewById(R.id.fragment_circle_moments_list);
-        circleMomentAdapter = new CircleMomentAdapter(getActivity(), list);
+        circleMomentAdapter = new CircleMomentAdapter(getActivity(), list,contextView);
         this.listView.setAdapter(circleMomentAdapter);
         getData(0, 0, DragListView.LOAD);
 

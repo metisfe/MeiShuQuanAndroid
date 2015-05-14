@@ -1,5 +1,6 @@
 package com.metis.meishuquan.fragment.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.circle.ChatListFragment;
 import com.metis.meishuquan.fragment.circle.CircleBaseFragment;
 import com.metis.meishuquan.fragment.circle.ContactListFragment;
@@ -42,32 +44,6 @@ public class CircleFragment extends CircleBaseFragment {
         this.tabBar = (TabBar) rootView.findViewById(R.id.fragment_shared_circlefragment_tab_bar);
         this.tabBar.setTabSelectedListener(MainApplication.MainActivity);
         this.titleBar = (CircleTitleBar) rootView.findViewById(R.id.fragment_shared_circlefragment_title_bar);
-
-//        titleBar.setText("微博");
-//        titleBar.setRightButton("", R.drawable.icon_pic, new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                PostMomentFragment postMomentFragment = new PostMomentFragment();
-//                Bundle args = new Bundle();
-//                postMomentFragment.setArguments(args);
-//                FragmentManager fm = getActivity().getSupportFragmentManager();
-//                FragmentTransaction ft = fm.beginTransaction();
-//                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
-//                ft.add(R.id.content_container, postMomentFragment);
-//                ft.addToBackStack(null);
-//                ft.commit();
-//            }
-//        });
-//
-//        titleBar.setLeftButton("cancel",0,new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                FragmentManager fm = getActivity().getSupportFragmentManager();
-//                FragmentTransaction ft = fm.beginTransaction();
-//                ft.remove(CircleFragment.this);
-//                ft.commit();
-//            }
-//        });
 
         this.viewPager = (ViewPager) rootView.findViewById(R.id.fragment_shared_circlefragment_viewpager);
         this.indicator = (TabPageIndicator) rootView.findViewById(R.id.fragment_shared_circlefragment_topbar_indicator);

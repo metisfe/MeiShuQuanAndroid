@@ -79,7 +79,7 @@ public class ReplyActivity extends FragmentActivity {
         this.tvTitle.setText(title);
         this.tvContent.setText(content);
 
-        if (!imgUrl.isEmpty()) {
+        if (imgUrl != null && !imgUrl.isEmpty()) {
             ImageLoaderUtils.getImageLoader(this).displayImage(imgUrl, imgPic);
         }
     }
@@ -131,6 +131,7 @@ public class ReplyActivity extends FragmentActivity {
     }
 
     private void send(final CirclePushBlogParm parm) {
+        parm.setContent(etInput.getText().toString());
         CircleOperator.getInstance().pushBlog(parm, new ApiOperationCallback<ReturnInfo<CCircleDetailModel>>() {
             @Override
             public void onCompleted(ReturnInfo<CCircleDetailModel> result, Exception exception, ServiceFilterResponse response) {
@@ -150,6 +151,4 @@ public class ReplyActivity extends FragmentActivity {
         });
         Utils.hideInputMethod(MainApplication.UIContext, etInput);
     }
-
-
 }

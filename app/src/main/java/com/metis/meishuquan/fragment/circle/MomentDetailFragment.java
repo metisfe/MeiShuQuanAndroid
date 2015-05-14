@@ -135,6 +135,11 @@ public class MomentDetailFragment extends Fragment {
 
         MomentActionBar.OnActionButtonClickListener OnActionButtonClickListener = new MomentActionBar.OnActionButtonClickListener() {
             @Override
+            public void onReply() {
+
+            }
+
+            @Override
             public void onComment() {
                 if (!isCommentShown) {
                     circleMomentCommentAdapter = new CircleMomentDetailCommentAdapter(commentList);

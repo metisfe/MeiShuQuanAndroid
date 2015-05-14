@@ -1,9 +1,11 @@
 package com.metis.meishuquan.adapter.circle;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,32 +16,45 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.fragment.circle.MomentDetailFragment;
 import com.metis.meishuquan.activity.act.ActDetailActivity;
 import com.metis.meishuquan.activity.act.SelectStudioActivity;
+import com.metis.meishuquan.activity.circle.ReplyActivity;
+import com.metis.meishuquan.activity.login.LoginActivity;
+import com.metis.meishuquan.fragment.circle.MomentCommentFragment;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
+import com.metis.meishuquan.model.circle.CirclePushBlogParm;
+import com.metis.meishuquan.model.circle.CirclePushCommentResult;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
+import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.view.circle.moment.MomentActionBar;
 import com.metis.meishuquan.view.circle.moment.comment.EmotionTextView;
 import com.metis.meishuquan.view.course.FlowLayout;
+import com.metis.meishuquan.view.popup.SharePopupWindow;
+import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+
+import org.apache.http.client.methods.HttpGet;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CircleMomentAdapter extends BaseAdapter {
     private FragmentManager fm = null;
+    private Context mContext;
+    private View parent;
 
     private List<CCircleDetailModel> momentList = new ArrayList<CCircleDetailModel>();
 
-    public CircleMomentAdapter(Context context, List<CCircleDetailModel> momentList) {
+    public CircleMomentAdapter(Context context, List<CCircleDetailModel> momentList, View parent) {
         this.momentList = momentList;
+        this.mContext = context;
+        this.parent = parent;
         fm = ((MainActivity) context).getSupportFragmentManager();
     }
 
@@ -111,23 +126,14 @@ public class CircleMomentAdapter extends BaseAdapter {
             viewHolder.ll_not_circle.setVisibility(View.VISIBLE);
             viewHolder.ll_circle.setVisibility(View.GONE);
 
-            if (moment.relayCircle.type == SupportTypeEnum.Activity.getVal()) {
+            if (moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal()) {
                 if (moment.user.identity == IdTypeEnum.STUDENT.getVal() && moment.user.userId == MainApplication.userInfo.getUserId()) {
                     viewHolder.chooseHuashi.setVisibility(View.VISIBLE);
                     viewHolder.chooseHuashi.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            //TODO:选画室
                             chooseHuaShi(view, moment);
-                            Toast.makeText(MainApplication.UIContext, "选画室", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                } else if (moment.relayCircle.type == SupportTypeEnum.News.getVal()) {
-                    viewHolder.ll_not_circle.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            //进入新闻详情
-                            navigatToNewInfo(moment.relayCircle.id);
+                            //Toast.makeText(MainApplication.UIContext, "选画室", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -155,6 +161,22 @@ public class CircleMomentAdapter extends BaseAdapter {
         viewHolder.createTime.setText(moment.getTimeText());
         viewHolder.device.setText(moment.getDeviceText());
         viewHolder.momentActionBar.setData(moment.relayCount, moment.comentCount, moment.supportCount);
+        viewHolder.momentActionBar.setOnActionButtonClickListener(new MomentActionBar.OnActionButtonClickListener() {
+            @Override
+            public void onReply() {
+                reply(moment);
+            }
+
+            @Override
+            public void onComment() {
+                comment(moment);
+            }
+
+            @Override
+            public void onLike() {
+                support(moment);
+            }
+        });
 
         //转发部分
         if (moment.relayCircle != null) {
@@ -168,59 +190,97 @@ public class CircleMomentAdapter extends BaseAdapter {
             viewHolder.ll_not_circle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (moment.relayCircle.type == SupportTypeEnum.Activity.getVal()) {
-                        //TODO:跳转至活动详情
+                    if (moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal()
+                            || moment.relayCircle.type == SupportTypeEnum.ActivityStudio.getVal()) {
+                        //跳转至活动详情
                         navigatToActivityInfo(view, moment);
+                    } else if (moment.relayCircle.type == SupportTypeEnum.News.getVal()) {
+                        navigatToNewsInfo(moment.relayCircle.id);
                     }
                 }
-
-
             });
         }
-
-//        convertView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                MomentDetailFragment momentDetailFragment = new MomentDetailFragment();
-//                GlobalData.moment = moment;
-//
-//                FragmentTransaction ft = fm.beginTransaction();
-//                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
-//                ft.add(R.id.content_container, momentDetailFragment);
-//                ft.addToBackStack(null);
-//                ft.commit();
-//            }
-//        });
 
         return convertView;
     }
 
-    //进入新闻详情
-    private void navigatToNewInfo(int newId) {
+    private void support(CCircleDetailModel moment) {
 
+        String url = String.format("v1.1/Comment/Support?userid=%s&id=%s&type=7&result=1&session=%s", MainApplication.userInfo.getUserId(), moment.id, MainApplication.userInfo.getCookie());
+
+        ApiDataProvider.getmClient().invokeApi(url, null,
+                HttpGet.METHOD_NAME, null, CirclePushCommentResult.class,
+                new ApiOperationCallback<CirclePushCommentResult>() {
+                    @Override
+                    public void onCompleted(CirclePushCommentResult result, Exception exception, ServiceFilterResponse response) {
+                        if (result == null || !result.isSuccess()) {
+                            return;
+                        }
+                        Toast.makeText(MainApplication.UIContext, "点赞成功！", Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
-    private void navigatToActivityInfo(CCircleDetailModel moment) {
+    private void comment(CCircleDetailModel moment) {
+        GlobalData.getInstance().moment = moment;
+        if (!MainApplication.isLogin()) {
+            mContext.startActivity(new Intent(mContext, LoginActivity.class));
+            return;
+        }
+        MomentCommentFragment momentCommentFragment = new MomentCommentFragment();
+
+        FragmentManager fm = ((MainActivity) mContext).getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+        ft.add(R.id.content_container, momentCommentFragment);
+        ft.addToBackStack(null);
+        ft.commit();
+    }
+
+    private void reply(CCircleDetailModel moment) {
+        Intent it = new Intent(mContext, ReplyActivity.class);
+        CirclePushBlogParm parm = new CirclePushBlogParm();
+        parm.setType(SupportTypeEnum.Activity.getVal());
+        parm.setRelayId(moment.relayCircle.id);
+        it.putExtra(ReplyActivity.PARM, parm);
+        it.putExtra(ReplyActivity.TITLE, moment.relayCircle.title);
+        it.putExtra(ReplyActivity.CONTENT, moment.relayCircle.desc);
+//        it.putExtra(ReplyActivity.IMAGEURL, moment.relayCircle.images.get(0));
+        mContext.startActivity(it);
+    }
+
+    //进入新闻详情
+    private void navigatToNewsInfo(int newId) {
 
     }
 
     private static final String TAG = CircleMomentAdapter.class.getSimpleName();
 
+    //进入活动详情
     private void navigatToActivityInfo(View view, CCircleDetailModel moment) {
-        Toast.makeText(view.getContext(), "navigatToActivityInfo", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(view.getContext(), "navigatToActivityInfo", Toast.LENGTH_SHORT).show();
         Intent it = new Intent(view.getContext(), ActDetailActivity.class);
         it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        view.getContext().startActivity(new Intent(view.getContext(), ActDetailActivity.class));
-        //TODO:进入活动详情
+        view.getContext().startActivity(it);
+
     }
 
+    //选画室
     private void chooseHuaShi(View view, CCircleDetailModel moment) {
+        if (moment.relayCircle.upCount < 10) {
+            new AlertDialog.Builder(mContext)
+                    .setTitle("提示")
+                    .setMessage("您还没有集齐10个赞，还不能选画室，快拉小伙伴来给您点赞吧！")
+                    .setPositiveButton("确定", null)
+                    .show();
+            return;
+        }
         Log.v(TAG, "chooseHuaShi view.getContext=" + view.getContext());
         Toast.makeText(view.getContext(), "chooseHuaShi", Toast.LENGTH_SHORT).show();
         Intent it = new Intent(view.getContext(), SelectStudioActivity.class);
         it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         view.getContext().startActivity(it);
-        //TODO:选画室
+
     }
 
 

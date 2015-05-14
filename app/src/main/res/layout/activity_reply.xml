@@ -11,8 +11,8 @@
 
         <Button
             android:id="@+id/id_btn_back"
-            android:layout_width="44dp"
-            android:layout_height="match_parent"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:background="@drawable/bg_btn_arrow_left" />
@@ -37,8 +37,8 @@
 
         <RelativeLayout
             android:id="@+id/id_rl_right"
-            android:layout_width="wrap_content"
-            android:layout_height="44dp"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true">
 
             <Button
@@ -48,6 +48,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
                 android:background="@color/transparent"
+                android:layout_alignParentRight="true"
                 android:layout_toRightOf="@+id/id_img_dynamic"
                 android:text="发送"
                 android:layout_marginRight="5dp"
@@ -65,21 +66,24 @@
         android:paddingLeft="10dp"
         android:paddingTop="20dp"
         android:gravity="top"
+        android:text="我正在参加#超级美术生#海选，一定要帮我到美术圈APP集齐10个赞哦！这样我就有机会免费进全国最好画室中最贵的VIP班学习啦！"
         android:textSize="16sp"
-        android:hint="说说分享心得…" />
+        android:hint="说两句…" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/id_et_input_reply"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/fragment_circle_postmoment_bottom_container"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp">
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
 
         <ImageView
             android:id="@+id/id_img_pic"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/icon" />
 
         <TextView
@@ -99,6 +103,7 @@
             android:layout_toRightOf="@+id/id_img_pic"
             android:layout_below="@+id/id_tv_title"
             android:layout_marginTop="5dp"
+            android:maxLines="5"
             android:layout_marginLeft="5dp"
             android:textSize="12sp"
             android:textColor="#7e7e7e"

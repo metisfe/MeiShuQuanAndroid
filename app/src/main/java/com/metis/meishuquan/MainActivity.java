@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.main.CircleFragment;
 import com.metis.meishuquan.fragment.main.ClassFragment;
 import com.metis.meishuquan.fragment.main.AssessFragment;
@@ -30,6 +31,7 @@ import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.ui.SelectedTabType;
 import com.metis.meishuquan.util.Environments;
 import com.metis.meishuquan.util.GlobalData;
+import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.SystemUtil;
 import com.metis.meishuquan.util.UnifiedConfigurationOverride;
 import com.metis.meishuquan.util.Utils;
@@ -39,6 +41,7 @@ import com.metis.meishuquan.view.shared.TabBar;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
+import java.util.Date;
 import java.util.Properties;
 
 public class MainActivity extends FragmentActivity implements TabBar.TabSelectedListener {
@@ -52,9 +55,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         self = this;
-
 
         doWantToQuite = false;
         setContentView(R.layout.activity_mainactivity);
@@ -91,6 +92,13 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
         Utils.showConfigureNetwork(this);
         onNewIntent(this.getIntent());
         updateApp();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1001 && resultCode == RESULT_OK) {
+            navigateTo(CircleFragment.class);
+        }
     }
 
     @Override
@@ -158,7 +166,11 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
                 navigateTo(MyInfoFragment.class);
                 break;
             default:
-                navigateTo(CircleFragment.class);
+                if (MainApplication.isLogin()) {
+                    navigateTo(CircleFragment.class);
+                } else {
+                    startActivityForResult(new Intent(MainActivity.this, LoginActivity.class), 1001);
+                }
                 break;
         }
     }
@@ -178,7 +190,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
         }
 
         ft.replace(R.id.content_container, baseFragment, fragment.getSimpleName());
-        ft.commit();
+        ft.commitAllowingStateLoss();
     }
 
     @Override
@@ -250,6 +262,19 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
 
     private void updateApp() {
         //TODO:比较上次检测时间是否超过24小时
+        String json = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey(SharedPreferencesUtil.LAST_APP_VERSION);
+        if (!json.isEmpty()) {
+            ReturnInfo info = new Gson().fromJson(json, new TypeToken<ReturnInfo<AndroidVersion>>() {
+            }.getType());
+            Date lastCheckTime = ((AndroidVersion) info.getData()).getLastCheckTime();
+            Date now = new Date();
+            long i = now.getTime() - lastCheckTime.getTime();
+            long day = i / (24 * 60 * 60 * 1000);
+            if (day < 1) {
+                return;
+            }
+        }
+
         CommonOperator.getInstance().getVersion(new ApiOperationCallback<ReturnInfo<AndroidVersion>>() {
             @Override
             public void onCompleted(ReturnInfo<AndroidVersion> result, Exception exception, ServiceFilterResponse response) {
@@ -258,16 +283,18 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
                     String json = gson.toJson(result);
                     ReturnInfo info = gson.fromJson(json, new TypeToken<ReturnInfo<AndroidVersion>>() {
                     }.getType());
+                    ((AndroidVersion) info.getData()).setLastCheckTime(new Date());
+                    SharedPreferencesUtil.getInstanse(self).update(SharedPreferencesUtil.LAST_APP_VERSION, gson.toJson(info));
 
                     final AndroidVersion androidVersion = (AndroidVersion) info.getData();
                     String curentVersion = Utils.getVersion(MainActivity.this);
                     Log.i("curentVersion", curentVersion);
                     if (androidVersion != null && !androidVersion.getVersionNumber().equals(curentVersion)) {
-                        String msg = "现有可用更新,版本号为" + androidVersion.getVersionNumber() + "，是否下载更新？";
+                        String msg = "现有可用更新,版本号为 V" + androidVersion.getVersionNumber() + "，是否下载更新？";
                         new AlertDialog.Builder(MainActivity.this)
-                                .setTitle("确认")
+                                .setTitle("提示")
                                 .setMessage(msg)
-                                .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                                .setPositiveButton("现在更新", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         Intent intent = new Intent();
@@ -277,7 +304,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
                                         startActivity(intent);
                                     }
                                 })
-                                .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                                .setNegativeButton("以后", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         dialogInterface.dismiss();

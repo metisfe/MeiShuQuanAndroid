@@ -1,5 +1,6 @@
 package com.metis.meishuquan.fragment.login;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -122,6 +123,7 @@ public class LoginFragment extends Fragment {
                             Utils.hideInputMethod(getActivity(), etPwd);
                             Utils.hideInputMethod(getActivity(), etUserName);
                             Toast.makeText(MainApplication.UIContext, "登录成功", Toast.LENGTH_SHORT).show();
+                            getActivity().setResult(Activity.RESULT_OK);
                             getActivity().finish();
                             isPressLogin = false;
                         } else if (result != null && result.getInfo().equals(String.valueOf(1))) {

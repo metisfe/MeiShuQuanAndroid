@@ -1,5 +1,6 @@
 package com.metis.meishuquan.fragment.Topline;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,6 +19,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.act.ActDetailActivity;
 import com.metis.meishuquan.adapter.topline.ToplineCustomAdapter;
 import com.metis.meishuquan.model.BLL.ActiveOperator;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
@@ -51,6 +53,7 @@ public class ItemFragment extends Fragment {
     private List<News> list = new ArrayList<News>();
     private ImageView imgAct;//活动
     private int channelId = -1;
+    View headerView = null;
     private TopLineOperator operator;
 
     private ToplineCustomAdapter toplineAdapter;
@@ -73,12 +76,16 @@ public class ItemFragment extends Fragment {
         initView(contextView);
 
         if (channelId == 17) {
-            View headerView = inflater.inflate(R.layout.view_act_topline, null, false);
+            headerView = inflater.inflate(R.layout.view_act_topline, null, false);
             getActiveInfo(headerView);//获取活动详情
         }
 
         //初始化事件
         initEvent();
+
+        //初始化成员
+        toplineAdapter = new ToplineCustomAdapter(getActivity(), list);
+        this.listView.setAdapter(toplineAdapter);
         return contextView;
     }
 
@@ -89,8 +96,8 @@ public class ItemFragment extends Fragment {
                 if (succeed) {
                     activeInfo = info;
                     initHeaderView(headerView);
-                    ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(activeInfo.getImage(), imgAct);
                     listView.addHeaderView(headerView);
+                    ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(activeInfo.getImage(), imgAct);
                 }
             }
         });
@@ -102,8 +109,7 @@ public class ItemFragment extends Fragment {
         this.imgAct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO:进入活动详情
-                Toast.makeText(MainApplication.UIContext, "进入活动详情", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getActivity(), ActDetailActivity.class));
             }
         });
     }
@@ -114,12 +120,7 @@ public class ItemFragment extends Fragment {
      * @param contextView
      */
     private void initView(View contextView) {
-        //view
         this.listView = (DragListView) contextView.findViewById(R.id.listview_topbar_fragment);
-
-        //初始化成员
-        toplineAdapter = new ToplineCustomAdapter(getActivity(), list);
-        this.listView.setAdapter(toplineAdapter);
     }
 
     private void initEvent() {
