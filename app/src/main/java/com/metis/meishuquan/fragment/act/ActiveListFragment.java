@@ -310,6 +310,9 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
                         startActivity(new Intent(getActivity(), LoginActivity.class));
                         return;
                     }
+                    if (itemDelegate.isChecked()) {
+                        return;
+                    }
                     ActiveOperator.getInstance().getMyActiveInfo(mActiveInfo.getpId(), new UserInfoOperator.OnGetListener<ActiveOperator.SimpleActiveInfo>() {
                         @Override
                         public void onGet(boolean succeed, final ActiveOperator.SimpleActiveInfo simpleActiveInfo) {
@@ -318,6 +321,15 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
                             }
                             if (simpleActiveInfo != null) {
                                 mSimpleInfo = simpleActiveInfo;
+                                if (simpleActiveInfo.getUpCount() < 10) {
+                                    showDialog(getString(R.string.act_less_than_10), new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                                        }
+                                    });
+                                    return;
+                                }
                                 final int remainCount = 3 - simpleActiveInfo.getUpdateCount();
                                 final boolean canChooseStudio = remainCount > 0;
                                 showDialog(canChooseStudio ? getString(R.string.act_join_count, remainCount) : getString(R.string.act_join_can_not_choose), new DialogInterface.OnClickListener() {

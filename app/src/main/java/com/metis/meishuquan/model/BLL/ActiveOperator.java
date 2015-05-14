@@ -284,6 +284,7 @@ public class ActiveOperator {
         public int activityId;
         public boolean isJoin;
         public int updateCount;
+        public int upCount;
 
         public int getpId() {
             return pId;
@@ -339,6 +340,14 @@ public class ActiveOperator {
 
         public void setStudioId(int studioId) {
             this.studioId = studioId;
+        }
+
+        public int getUpCount() {
+            return upCount;
+        }
+
+        public void setUpCount(int upCount) {
+            this.upCount = upCount;
         }
     }
 }

@@ -161,15 +161,17 @@
     <string name="act_join_only_student">只有学生才能报名参加活动</string>
     <string name="act_has_joined">已报名</string>
     <string name="act_join">报名</string>
+    <string name="act_joined">您已报名</string>
+    <string name="act_less_than_10">亲！邀请好友集满10个赞，才能选画室哦！</string>
 
     <string-array name="act_filter_1">
         <item>学生PK榜</item>
         <item>画室PK榜</item>
     </string-array>
     <string-array name="act_filter_2">
-        <item>推荐</item>
-        <item>最新</item>
-        <item>最热</item>
+        <item>推荐画室</item>
+        <item>最新入住</item>
+        <item>最热画室</item>
     </string-array>
     <string-array name="act_filter_3">
         <item>北京</item>

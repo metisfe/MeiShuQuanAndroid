@@ -1,6 +1,8 @@
 package com.metis.meishuquan.activity.act;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.RadioGroup;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.BaseActivity;
 import com.metis.meishuquan.fragment.act.ActDetailFragment;
+import com.metis.meishuquan.fragment.act.StudioListFragment;
 import com.metis.meishuquan.fragment.act.TopListFragment;
 
 public class ActDetailActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener {
@@ -18,47 +21,58 @@ public class ActDetailActivity extends BaseActivity implements RadioGroup.OnChec
     private View mCustomTitle = null;
 
     private ActDetailFragment mDetailFragment = ActDetailFragment.getInstance();
-    private TopListFragment mListFragment = TopListFragment.getInstance();
+    private StudioListFragment mListFragment = StudioListFragment.getInstance();
+    //private TopListFragment mListFragment = TopListFragment.getInstance();
 
     private RadioGroup mGroup = null;
     private RadioButton mDetailBtn, mListBtn;
     private View mSearchView = null;
     private EditText mSearchInput = null;
+    private boolean isSearchShowing = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_act_detail);
 
-        /*mCustomTitle = LayoutInflater.from(this).inflate(R.layout.layout_act_title, null);
+        mCustomTitle = LayoutInflater.from(this).inflate(R.layout.layout_act_title, null);
         getTitleView().addCenterView(mCustomTitle);
 
         mGroup = (RadioGroup)mCustomTitle.findViewById(R.id.act_title_group);
         mDetailBtn = (RadioButton)mCustomTitle.findViewById(R.id.act_title_details);
         mListBtn = (RadioButton)mCustomTitle.findViewById(R.id.act_title_list);
 
-        mGroup.setOnCheckedChangeListener(this);*/
+        mGroup.setOnCheckedChangeListener(this);
 
     }
 
     @Override
+    public void onTitleRightPressed() {
+        if (isSearchShowing) {
+            hideSearchView();
+        } else {
+            showSearchView();
+        }
+    }
+
+    @Override
     public String getTitleCenter() {
-        return getString(R.string.act_title_details);
+        return null;
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         addFragment(mDetailFragment, false);
-        //mDetailBtn.setChecked(true);
-        /*getTitleView().setTitleRightVisible(View.GONE);
+        mDetailBtn.setChecked(true);
+        getTitleView().setTitleRightVisible(View.GONE);
         getTitleView().setImageRightVisible(View.GONE);
-        getTitleView().setImageRightResource(R.drawable.rc_ic_atfriend_search);*/
+        getTitleView().setImageRightResource(R.drawable.rc_ic_atfriend_search);
 
     }
 
     private void showSearchView () {
-        /*if (!isSearchShowing) {
+        if (!isSearchShowing) {
             if (mSearchView == null) {
                 mSearchView = LayoutInflater.from(this).inflate(R.layout.layout_act_search_title, null);
                 mSearchInput = (EditText)mSearchView.findViewById(R.id.search_input);
@@ -75,31 +89,32 @@ public class ActDetailActivity extends BaseActivity implements RadioGroup.OnChec
                         return false;
                     }
                 });
-            }*/
-            /*getTitleView().removeCenterView(mCustomTitle);
+            }
+            getTitleView().removeCenterView(mCustomTitle);
             getTitleView().addCenterView(mSearchView);
-            //getTitleView().setImageRightResource();
+            getTitleView().setImageRightResource(R.drawable.active_right_btn_close);
             mSearchInput.requestFocus();
             isSearchShowing = true;
-        }*/
+        }
     }
 
-    /*private void hideSearchView () {
+    private void hideSearchView () {
         if (isSearchShowing) {
             getTitleView().addCenterView(mCustomTitle);
             getTitleView().removeCenterView(mSearchView);
+            getTitleView().setImageRightResource(R.drawable.rc_ic_atfriend_search);
             mSearchInput.setText("");
             mListFragment.clearSearch();
             isSearchShowing = false;
         }
-    }*/
+    }
 
     @Override
     public void onBackPressed() {
-        /*if (isSearchShowing) {
+        if (isSearchShowing) {
             hideSearchView();
             return;
-        }*/
+        }
         super.onBackPressed();
     }
 

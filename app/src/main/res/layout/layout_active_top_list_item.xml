@@ -37,6 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:paddingRight="10dp"
         >
         <TextView
             android:id="@+id/top_list_item_join_count"
@@ -53,6 +54,7 @@
             android:layout_below="@+id/top_list_item_join_count"
             android:gravity="right"
             android:layout_alignParentRight="true"
+            android:visibility="gone"
             style="@style/info_secondaryTextStyle"
             />
         <Button
@@ -65,6 +67,8 @@
             android:layout_toLeftOf="@+id/support"
             android:textColor="@color/top_list_item_join"
             android:textSize="12sp"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_marginTop="2dp"
             />
         <ImageView
             android:id="@+id/support"
@@ -75,6 +79,7 @@
             android:src="@drawable/top_list_item_support"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:visibility="gone"
             />
         <TextView
             android:id="@+id/top_list_item_support_count"
@@ -83,6 +88,7 @@
             android:layout_below="@+id/top_list_item_comment_count"
             android:layout_alignParentRight="true"
             android:gravity="right"
+            android:visibility="gone"
             style="@style/info_secondaryTextStyle"
             />
     </RelativeLayout>

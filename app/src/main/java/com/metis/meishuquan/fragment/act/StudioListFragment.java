@@ -29,6 +29,12 @@ public class StudioListFragment extends ActiveListFragment {
 
     private static final String TAG = StudioListFragment.class.getSimpleName();
 
+    private static StudioListFragment sFragment = new StudioListFragment();
+
+    public static StudioListFragment getInstance () {
+        return sFragment;
+    }
+
     private int mIndex = 1;
 
     private ArrayList<String> mFilterData3 = new ArrayList<String>();
@@ -87,6 +93,16 @@ public class StudioListFragment extends ActiveListFragment {
 
     @Override
     public void onSearchContentCleared() {
+        mKey = "";
+        needReloadData(0, mFilter2, mFilter3);
+    }
+
+    public void searchContent (String content) {
+        mKey = content;
+        needReloadData(0, mFilter2, mFilter3);
+    }
+
+    public void clearSearch () {
         mKey = "";
         needReloadData(0, mFilter2, mFilter3);
     }
