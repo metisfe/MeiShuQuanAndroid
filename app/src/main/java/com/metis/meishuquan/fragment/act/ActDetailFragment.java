@@ -29,7 +29,7 @@ import com.metis.meishuquan.util.ImageLoaderUtils;
 /**
  * Created by WJ on 2015/4/29.
  */
-public class ActDetailFragment extends Fragment implements View.OnClickListener {
+public class ActDetailFragment extends Fragment implements View.OnClickListener{
 
     private static final String TAG = ActDetailFragment.class.getSimpleName();
 
@@ -106,6 +106,9 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener 
         mAwardTv.setText(info.getActivityAward());
         mDetailTv.setText(info.getContent());
         mJoinBtn.setVisibility(View.VISIBLE);
+        if (MainApplication.userInfo == null || MainApplication.userInfo.getUserRoleEnum() != IdTypeEnum.STUDENT) {
+            mJoinBtn.setEnabled(false);
+        }
         if (mSimpleActiveInfo != null && mSimpleActiveInfo.isJoin) {
             mJoinBtn.setText(R.string.act_has_joined);
         }

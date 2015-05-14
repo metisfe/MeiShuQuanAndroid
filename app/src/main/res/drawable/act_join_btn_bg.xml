@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false" android:drawable="@drawable/act_join_btn_bg_disable"/>
+    <item >
+        <shape>
+            <solid android:color="#fb6d6d"/>
+        </shape>
+    </item>
+</selector>
