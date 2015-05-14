@@ -29,13 +29,13 @@ import com.metis.meishuquan.util.ImageLoaderUtils;
 /**
  * Created by WJ on 2015/4/29.
  */
-public class ActDetailFragment extends Fragment implements View.OnClickListener{
+public class ActDetailFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = ActDetailFragment.class.getSimpleName();
 
-    private static ActDetailFragment sFragment = new ActDetailFragment ();
+    private static ActDetailFragment sFragment = new ActDetailFragment();
 
-    public static ActDetailFragment getInstance () {
+    public static ActDetailFragment getInstance() {
         return sFragment;
     }
 
@@ -54,13 +54,13 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mCoverIv = (ImageView)view.findViewById(R.id.act_detail_cover);
-        mTitleTv = (TextView)view.findViewById(R.id.act_detail_title);
-        mDescTv = (TextView)view.findViewById(R.id.act_detail_desc);
-        mAwardTv = (TextView)view.findViewById(R.id.act_detail_award);
-        mDetailTv = (TextView)view.findViewById(R.id.act_detail_text);
-        mJoinBtn = (Button)view.findViewById(R.id.act_detail_join);
-        mCheckBtn = (Button)view.findViewById(R.id.act_check_studio);
+        mCoverIv = (ImageView) view.findViewById(R.id.act_detail_cover);
+        mTitleTv = (TextView) view.findViewById(R.id.act_detail_title);
+        mDescTv = (TextView) view.findViewById(R.id.act_detail_desc);
+        mAwardTv = (TextView) view.findViewById(R.id.act_detail_award);
+        mDetailTv = (TextView) view.findViewById(R.id.act_detail_text);
+        mJoinBtn = (Button) view.findViewById(R.id.act_detail_join);
+        mCheckBtn = (Button) view.findViewById(R.id.act_check_studio);
         mJoinBtn.setOnClickListener(this);
         mCheckBtn.setOnClickListener(this);
 
@@ -97,7 +97,7 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-    private void fillInfo (ActiveInfo info) {
+    private void fillInfo(ActiveInfo info) {
         ImageLoaderUtils.getImageLoader(getActivity()).displayImage(
                 info.getImage(), mCoverIv, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
         );
@@ -124,7 +124,7 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
                     startActivity(new Intent(getActivity(), LoginActivity.class));
                     return;
                 }
-                if (MainApplication.userInfo.getUserRoleEnum() == IdTypeEnum.TEACHER) {
+                if (MainApplication.userInfo.getUserRole() == IdTypeEnum.TEACHER.getVal()) {
                     Toast.makeText(getActivity(), R.string.act_join_only_student, Toast.LENGTH_SHORT).show();
                     return;
                 }
