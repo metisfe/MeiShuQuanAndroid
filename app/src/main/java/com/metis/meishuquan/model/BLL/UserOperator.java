@@ -150,4 +150,22 @@ public class UserOperator {
         }
 
     }
+
+    public void searchUser(String account, String pwd, ApiOperationCallback<ReturnInfo<String>> callback) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuilder PATH = new StringBuilder(LOGIN);
+                PATH.append("account=" + account);
+                PATH.append("&pwd=" + pwd);
+                PATH.append("&session=" + SESSION);
+                List<Pair<String, String>> pram = new ArrayList<>();
+                Pair<String, String> pair1 = new Pair<>("account", account);
+                Pair<String, String> pair2 = new Pair<>("pwd", pwd);
+                pram.add(pair1);
+                pram.add(pair2);
+
+                ApiDataProvider.getmClient().invokeApi(LOGIN, null, HttpPost.METHOD_NAME, pram, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+            }
+        }
+    }
 }

@@ -53,7 +53,7 @@ public class ItemFragment extends Fragment {
     private List<News> list = new ArrayList<News>();
     private ImageView imgAct;//活动
     private int channelId = -1;
-    View headerView = null;
+    private View headerView = null;
     private TopLineOperator operator;
 
     private ToplineCustomAdapter toplineAdapter;
@@ -136,6 +136,32 @@ public class ItemFragment extends Fragment {
             public void onLoad() {
                 if (channelId != -1) {
                     getData(list.get(list.size() - 1).getNewsId(), DragListView.LOAD);
+                }
+            }
+        });
+
+        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if ((i + 1) < (list.size())) {
+                    int newsId = 0;
+                    if (headerView == null) {
+                        newsId = list.get(i - 1).getNewsId();//获取新闻Id
+                    } else {
+                        newsId = list.get(i - 2).getNewsId();//获取新闻Id
+                    }
+
+                    ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
+                    Bundle args = new Bundle();
+                    args.putInt("newsId", newsId);
+                    itemInfoFragment.setArguments(args);
+
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    FragmentTransaction ft = fm.beginTransaction();
+//            ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                    ft.add(R.id.content_container, itemInfoFragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
                 }
             }
         });

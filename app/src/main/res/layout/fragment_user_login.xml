@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="登录"
-            android:textColor="#fb6d6d"
+            android:textColor="@color/common_color_fb6d6d"
             android:textSize="20sp" />
 
     </RelativeLayout>
@@ -107,7 +107,7 @@
                 android:layout_width="0dp"
                 android:layout_height="45dp"
                 android:layout_weight="1"
-                android:background="#FF5363"
+                android:background="@color/common_color_fb6d6d"
                 android:text="登录"
                 android:textColor="#f0f0f0"
                 android:textSize="18sp" />
@@ -118,7 +118,7 @@
                 android:layout_height="45dp"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="1"
-                android:background="#FF5363"
+                android:background="@color/common_color_fb6d6d"
                 android:text="注册"
                 android:textColor="#f0f0f0"
                 android:textSize="18sp" />

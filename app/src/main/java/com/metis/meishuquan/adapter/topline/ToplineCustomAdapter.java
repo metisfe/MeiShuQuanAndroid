@@ -100,24 +100,6 @@ public class ToplineCustomAdapter extends ToplineAdapter {
         holder.tv_readCount.setText("阅读(" + news.getPageViewCount() + ")");
         holder.tv_comment_count.setText("评论(" + news.getCommentCount() + ")");
 
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int newsId = lstData.get(position).getNewsId();//获取新闻Id
-                ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
-                Bundle args = new Bundle();
-                args.putInt("newsId", newsId);
-                itemInfoFragment.setArguments(args);
-
-                FragmentManager fm = ((MainActivity) context).getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-//            ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
-                ft.add(R.id.content_container, itemInfoFragment);
-                ft.addToBackStack(null);
-                ft.commit();
-            }
-        });
-
         return convertView;
     }
 

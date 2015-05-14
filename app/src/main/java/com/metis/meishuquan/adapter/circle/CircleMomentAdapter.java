@@ -267,14 +267,14 @@ public class CircleMomentAdapter extends BaseAdapter {
 
     //选画室
     private void chooseHuaShi(View view, CCircleDetailModel moment) {
-        if (moment.relayCircle.upCount < 10) {
-            new AlertDialog.Builder(mContext)
-                    .setTitle("提示")
-                    .setMessage("您还没有集齐10个赞，还不能选画室，快拉小伙伴来给您点赞吧！")
-                    .setPositiveButton("确定", null)
-                    .show();
-            return;
-        }
+//        if (moment.relayCircle.upCount < 10) {
+//            new AlertDialog.Builder(mContext)
+//                    .setTitle("提示")
+//                    .setMessage("您还没有集齐10个赞，还不能选画室，快拉小伙伴来给您点赞吧！")
+//                    .setPositiveButton("确定", null)
+//                    .show();
+//            return;
+//        }
         Log.v(TAG, "chooseHuaShi view.getContext=" + view.getContext());
         Toast.makeText(view.getContext(), "chooseHuaShi", Toast.LENGTH_SHORT).show();
         Intent it = new Intent(view.getContext(), SelectStudioActivity.class);
