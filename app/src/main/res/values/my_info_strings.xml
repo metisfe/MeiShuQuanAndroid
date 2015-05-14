@@ -158,6 +158,9 @@
     <string name="act_join_count">您有%1$d次选择画室机会，确定选择该画室吗？</string>
     <string name="act_join_unjoined">请先报名再选择画室</string>
     <string name="act_join_can_not_choose">您已经没有选择画室的机会了</string>
+    <string name="act_join_only_student">只有学生才能报名参加活动</string>
+    <string name="act_has_joined">已报名</string>
+    <string name="act_join">报名</string>
 
     <string-array name="act_filter_1">
         <item>学生PK榜</item>

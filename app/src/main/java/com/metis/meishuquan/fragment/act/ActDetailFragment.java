@@ -13,13 +13,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.act.SelectStudioActivity;
 import com.metis.meishuquan.activity.circle.ReplyActivity;
+import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.model.BLL.ActiveOperator;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.circle.CirclePushBlogParm;
 import com.metis.meishuquan.model.commons.ActiveInfo;
+import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 
@@ -37,6 +40,7 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
     }
 
     private ActiveInfo mInfo = null;
+    private ActiveOperator.SimpleActiveInfo mSimpleActiveInfo = null;
 
     private ImageView mCoverIv = null;
     private TextView mTitleTv = null, mDescTv = null, mAwardTv = null, mDetailTv = null;
@@ -73,8 +77,17 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
                 public void onGet(boolean succeed, ActiveInfo activeInfo) {
                     if (succeed) {
                         mInfo = activeInfo;
+                        ActiveOperator.getInstance().getMyActiveInfo(mInfo.getpId(), new UserInfoOperator.OnGetListener<ActiveOperator.SimpleActiveInfo>() {
+                            @Override
+                            public void onGet(boolean succeed, ActiveOperator.SimpleActiveInfo simpleActiveInfo) {
+                                if (succeed) {
+                                    mSimpleActiveInfo = simpleActiveInfo;
+                                    fillInfo(mInfo);
+                                }
+                            }
+                        });
                         Log.v(TAG, TAG + " onActivityCreated " + activeInfo.getContent());
-                        fillInfo(mInfo);
+
                     }
 
                 }
@@ -93,7 +106,10 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
         mAwardTv.setText(info.getActivityAward());
         mDetailTv.setText(info.getContent());
         mJoinBtn.setVisibility(View.VISIBLE);
-        mCheckBtn.setVisibility(View.VISIBLE);
+        if (mSimpleActiveInfo != null && mSimpleActiveInfo.isJoin) {
+            mJoinBtn.setText(R.string.act_has_joined);
+        }
+        //mCheckBtn.setVisibility(View.VISIBLE);
         /*mJoinBtn.setEnabled(!info.isUseState());
         mJoinBtn.setText(info.isUseState() ? );*/
     }
@@ -103,6 +119,15 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
         Intent it = null;
         switch (view.getId()) {
             case R.id.act_detail_join:
+                if (!MainApplication.isLogin()) {
+                    Toast.makeText(getActivity(), R.string.my_info_toast_not_login, Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    return;
+                }
+                if (MainApplication.userInfo.getUserRoleEnum() == IdTypeEnum.TEACHER) {
+                    Toast.makeText(getActivity(), R.string.act_join_only_student, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (mInfo != null) {
                     it = new Intent(getActivity(), ReplyActivity.class);
                     CirclePushBlogParm parm = new CirclePushBlogParm();

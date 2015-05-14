@@ -60,7 +60,7 @@
             android:layout_width="36dp"
             android:layout_height="18dp"
             android:background="@drawable/bg_top_list_join_in"
-            android:text="报名"
+            android:text="@string/act_join"
             android:layout_below="@+id/top_list_item_comment_count"
             android:layout_toLeftOf="@+id/support"
             android:textColor="@color/top_list_item_join"

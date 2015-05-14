@@ -277,6 +277,8 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
             itemDelegate.setChecked(mSimpleInfo != null && mSimpleInfo.getStudioId() == item.getUserId());
             holder.nameTv.setText(item.getUserNickName());
             holder.locationTv.setText(item.getRegion());
+            //act_has_joined
+            holder.joinBtn.setText(itemDelegate.isChecked ? R.string.act_has_joined : R.string.act_join);
             ImageLoaderUtils.getImageLoader(getActivity()).displayImage(
                     item.getUserAvatar(),
                     holder.profileIv,

@@ -2,8 +2,12 @@ package com.metis.meishuquan.activity.act;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.metis.meishuquan.R;
@@ -18,12 +22,65 @@ public class SelectStudioActivity extends BaseActivity {
 
     private StudioListFragment mStudioListFragment = null;
 
+    private View mSearchView = null;
+    private EditText mSearchInput = null;
+
+    private boolean isSearchShowing = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_studio);
 
         mStudioListFragment = (StudioListFragment)getSupportFragmentManager().findFragmentById(R.id.select_studio_fragment);
+
+
+    }
+
+    private void showSearchView () {
+        if (!isSearchShowing) {
+            if (mSearchView == null) {
+                mSearchView = LayoutInflater.from(this).inflate(R.layout.layout_act_search_title, null);
+                mSearchInput = (EditText)mSearchView.findViewById(R.id.search_input);
+                mSearchInput.setOnKeyListener(new View.OnKeyListener() {
+                    @Override
+                    public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                        if (keyEvent.getAction() == KeyEvent.ACTION_UP) {
+                            switch (keyEvent.getKeyCode()) {
+                                case KeyEvent.KEYCODE_ENTER:
+                                    //mListFragment.searchContent(mSearchInput.getText().toString());
+                                    break;
+                            }
+                        }
+                        return false;
+                    }
+                });
+            }
+            //getTitleView().removeCenterView(mCustomTitle);
+            getTitleView().addCenterView(mSearchView);
+            //getTitleView().setImageRightResource();
+            mSearchInput.requestFocus();
+            isSearchShowing = true;
+        }
+    }
+
+    /*private void hideSearchView () {
+        if (isSearchShowing) {
+            getTitleView().addCenterView(mCustomTitle);
+            getTitleView().removeCenterView(mSearchView);
+            mSearchInput.setText("");
+            mListFragment.clearSearch();
+            isSearchShowing = false;
+        }
+    }*/
+
+    @Override
+    public void onBackPressed() {
+        /*if (isSearchShowing) {
+            hideSearchView();
+            return;
+        }*/
+        super.onBackPressed();
     }
 
     @Override
