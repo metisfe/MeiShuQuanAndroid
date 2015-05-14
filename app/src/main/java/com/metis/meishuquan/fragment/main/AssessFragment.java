@@ -103,8 +103,7 @@ public class AssessFragment extends Fragment {
         initView(rootView);
         initEvent();
 
-        if (GlobalData.AssessIndex > 0)
-        {
+        if (GlobalData.AssessIndex > 0) {
             indicator.setCurrentItem(GlobalData.AssessIndex);
             GlobalData.AssessIndex = 0;
         }
@@ -176,12 +175,6 @@ public class AssessFragment extends Fragment {
         ft.addToBackStack(null);
         ft.commit();
         this.photoPath = "";
-        assessPublishFragment.setOnAssessPublishedListner(new AssessPublishFragment.OnAssessPublishedListner() {
-            @Override
-            public void refreshSescondTab(int index) {
-                GlobalData.AssessIndex = index;
-            }
-        });
     }
 
     private void initView(ViewGroup rootView) {

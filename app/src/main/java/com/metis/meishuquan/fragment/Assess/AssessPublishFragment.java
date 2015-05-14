@@ -69,8 +69,8 @@ public class AssessPublishFragment extends Fragment {
 
     private OnAssessPublishedListner onAssessPublishedListner;
 
-    public void setOnAssessPublishedListner(OnAssessPublishedListner onAssessPublishedListner) {
-        this.onAssessPublishedListner = onAssessPublishedListner;
+    public void setOnAssessPublishedListner(OnAssessPublishedListner onPublishedListner) {
+        this.onAssessPublishedListner = onPublishedListner;
     }
 
     public interface OnAssessPublishedListner {
