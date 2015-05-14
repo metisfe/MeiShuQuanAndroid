@@ -2,6 +2,7 @@ package com.metis.meishuquan.fragment.act;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.metis.meishuquan.adapter.PrvcEnumAdapter;
 import com.metis.meishuquan.model.BLL.ActiveOperator;
 import com.metis.meishuquan.model.BLL.TopListItem;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
+import com.metis.meishuquan.model.commons.ActiveInfo;
 import com.metis.meishuquan.model.commons.College;
 
 import java.util.ArrayList;
@@ -25,12 +27,16 @@ import java.util.List;
  */
 public class StudioListFragment extends ActiveListFragment {
 
+    private static final String TAG = StudioListFragment.class.getSimpleName();
+
     private int mIndex = 1;
 
     private ArrayList<String> mFilterData3 = new ArrayList<String>();
 
-    private int mFilter1, mFilter2, mFilter3;
+    private int mProvinceId, mCityId, mTownId;
+    private int mFilter2, mFilter3;
     private String mKey = "";
+    private ActiveInfo mActiveInfo = null;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -40,8 +46,15 @@ public class StudioListFragment extends ActiveListFragment {
         for (int i = 0; i < array.length; i++) {
             mFilterData3.add(array[i]);
         }
-
-        reloadDataList(mFilter1, mFilter2, mFilter3);
+        ActiveOperator.getInstance().getActiveDetail(new UserInfoOperator.OnGetListener<ActiveInfo>() {
+            @Override
+            public void onGet(boolean succeed, ActiveInfo activeInfo) {
+                if (succeed) {
+                    mActiveInfo = activeInfo;
+                    reloadDataList(0, mFilter2, mFilter3);
+                }
+            }
+        });
     }
 
     private void reloadDataList (int filter1, int filter2, int filter3) {
@@ -68,14 +81,14 @@ public class StudioListFragment extends ActiveListFragment {
             return;
         }
         mKey = content;
-        needReloadData(mFilter1, mFilter2, mFilter3);
+        needReloadData(0, mFilter2, mFilter3);
         mKey = "";
     }
 
     @Override
     public void onSearchContentCleared() {
         mKey = "";
-        needReloadData(mFilter1, mFilter2, mFilter3);
+        needReloadData(0, mFilter2, mFilter3);
     }
 
     private void loadDataListMore () {
@@ -96,8 +109,10 @@ public class StudioListFragment extends ActiveListFragment {
     }
 
     private void loadDataList (int filter1, int filter2, int filter3, int index, UserInfoOperator.OnGetListener<List<TopListItem>> listener) {
+        if (mActiveInfo != null) {
+            ActiveOperator.getInstance().getStudioList(mProvinceId, mCityId, mTownId, mActiveInfo.getpId(), filter3, filter2, 0, index, mKey, listener);
+        }
 
-        ActiveOperator.getInstance().getStudioList(filter1, filter2, filter3, index, mKey, listener);
     }
 
 
@@ -125,12 +140,14 @@ public class StudioListFragment extends ActiveListFragment {
     public void onFilterClick(View view) {
         switch (view.getId()) {
             case R.id.act_list_filter_1:
-                showAreaChooseFragment(new AreaSelectFragment.OnAreaChooseListener() {
+                showAreaChooseFragment(new AreaSelectFragment.OnPlaceChooseListener() {
                     @Override
-                    public void onChoose(AreaSelectFragment.Areable area) {
-                        getFilterSpinner1().setText(area.getTitle());
-                        mFilter1 = area.getId();
-                        needReloadData(mFilter1, mFilter2, mFilter3);
+                    public void onChoose(AreaSelectFragment.Areable areable, int provinceId, int cityId, int townId) {
+                        mProvinceId = provinceId;
+                        mCityId = cityId;
+                        mTownId = townId;
+                        getFilterSpinner1().setText(areable.getTitle());
+                        needReloadData(0, mFilter2, mFilter3);
                     }
                 });
                 break;
@@ -142,7 +159,7 @@ public class StudioListFragment extends ActiveListFragment {
                         getFilterSpinner2().setText(college.getName());
                         removeFragment(CollegeChooseFragment.getInstance());
                         mFilter2 = college.getpId();
-                        needReloadData(mFilter1, mFilter2, mFilter3);
+                        needReloadData(0, mFilter2, mFilter3);
                     }
                 });
                 break;
@@ -154,7 +171,7 @@ public class StudioListFragment extends ActiveListFragment {
                         removeFragment(PKSwitchFragment.getInstance());
                         getFilterSpinner3().setText(name);
                         mFilter3 = position + 1;
-                        needReloadData(mFilter1, mFilter2, mFilter3);
+                        needReloadData(0, mFilter2, mFilter3);
                     }
                 });
                 break;
@@ -164,6 +181,11 @@ public class StudioListFragment extends ActiveListFragment {
     @Override
     public void needReloadData(int selectedIndex1, int selectedIndex2, int selectedIndex3) {
         reloadDataList(selectedIndex1, selectedIndex2, selectedIndex3);
+    }
+
+    @Override
+    public void needLoadMore() {
+        Log.v(TAG, "needLoadMore ");
     }
 
     public class SimpleAdapter extends BaseAdapter {

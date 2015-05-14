@@ -10,5 +10,10 @@
             <solid  android:color="#606060"/>
         </shape>-->
     </item>
+    <item android:state_pressed="true"  android:drawable="@color/lightergray">
+        <!--<shape>
+            <solid  android:color="#606060"/>
+        </shape>-->
+    </item>
     <item android:drawable="@android:color/white"/>
 </selector>

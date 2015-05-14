@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,7 @@ public class NameCardQrActivity extends BaseActivity {
         json.addProperty(User.KEY_NICK_NAME, user.getName());
         json.addProperty(User.KEY_USERAVATAR, user.getUserAvatar());
         mQrFragment = (QRFragment)getSupportFragmentManager().findFragmentById(R.id.qr_fragment);
+        Log.v(TAG, "onCreate " + user.getPhoneNum());
         mQrFragment.showQrCodeWith(/*json.toString()*/user.getPhoneNum());
         mQrFragment.setOnImageClickListener(new View.OnClickListener() {
             @Override

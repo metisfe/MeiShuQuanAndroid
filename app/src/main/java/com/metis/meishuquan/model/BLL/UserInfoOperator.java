@@ -134,6 +134,42 @@ public class UserInfoOperator {
         updateUserInfo(userId, map);
     }
 
+    public void updateUserCover (final long userId, Bitmap bmp) {
+        byte[] data = ImageLoaderUtils.BitmapToByteArray(bmp);
+        String defineStr = data.length + "," + 1 + "," + data.length;
+        AssessOperator.getInstance().fileUpload(FileUploadTypeEnum.IMG, defineStr, data, new ServiceFilterResponseCallback() {
+
+            @Override
+            public void onResponse(ServiceFilterResponse response, Exception exception) {
+                if (response != null) {
+                    String result = response.getContent();
+                    Log.v(TAG, "updateUserProfile " + result);
+                    Gson gson = new Gson();
+                    Result<List<Profile>> profileResult = gson.fromJson(result, new TypeToken<Result<List<Profile>>>() {
+                    }.getType());
+                    if (profileResult.getOption().getStatus() == 0) {
+                        updateUserCoverByUrl(userId, profileResult.getData().get(0).getOriginalImage());
+                    }
+                    /*if (listener != null) {
+                        listener.onGet(true, profileResult.getData());
+                    }*/
+                }
+                Log.v(TAG, "onResponse " + response.getContent());
+            }
+        });
+    }
+
+    public void updateUserCover (final long userId, String path) {
+        Bitmap bmp = BitmapFactory.decodeFile(path);
+        updateUserCover(userId, bmp);
+    }
+
+    public void updateUserCoverByUrl (long userId, String url) {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put(User.KEY_BACKGROUND_IMG, url);
+        updateUserInfo(userId, map);
+    }
+
     public void updateUserInfo (long uid, Map<String, String> map) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             JsonObject json = new JsonObject();

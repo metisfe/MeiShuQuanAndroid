@@ -142,6 +142,7 @@
     <string name="act_title_details">活动详情</string>
     <string name="act_title_list">PK榜</string>
     <string name="act_title_join">我要报名</string>
+    <string name="act_title_check">查看画室</string>
     <string name="act_joined_count">已报名%1$d人</string>
     <string name="act_comment_count">评论%1$d人</string>
     <string name="act_support_count">%1$d次</string>
@@ -154,6 +155,9 @@
     <string name="act_filter_title_college">对口院校</string>
     <string name="act_join_success">选择画室成功</string>
     <string name="act_join_failed">选择画室失败</string>
+    <string name="act_join_count">您有%1$d次选择画室机会，确定选择该画室吗？</string>
+    <string name="act_join_unjoined">请先报名再选择画室</string>
+    <string name="act_join_can_not_choose">您已经没有选择画室的机会了</string>
 
     <string-array name="act_filter_1">
         <item>学生PK榜</item>

@@ -30,22 +30,27 @@ public class ActDetailActivity extends BaseActivity implements RadioGroup.OnChec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_act_detail);
 
-        mCustomTitle = LayoutInflater.from(this).inflate(R.layout.layout_act_title, null);
+        /*mCustomTitle = LayoutInflater.from(this).inflate(R.layout.layout_act_title, null);
         getTitleView().addCenterView(mCustomTitle);
 
         mGroup = (RadioGroup)mCustomTitle.findViewById(R.id.act_title_group);
         mDetailBtn = (RadioButton)mCustomTitle.findViewById(R.id.act_title_details);
         mListBtn = (RadioButton)mCustomTitle.findViewById(R.id.act_title_list);
 
-        mGroup.setOnCheckedChangeListener(this);
+        mGroup.setOnCheckedChangeListener(this);*/
 
+    }
+
+    @Override
+    public String getTitleCenter() {
+        return getString(R.string.act_title_details);
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         addFragment(mDetailFragment, false);
-        mDetailBtn.setChecked(true);
+        //mDetailBtn.setChecked(true);
         /*getTitleView().setTitleRightVisible(View.GONE);
         getTitleView().setImageRightVisible(View.GONE);
         getTitleView().setImageRightResource(R.drawable.rc_ic_atfriend_search);*/

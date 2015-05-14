@@ -1,5 +1,8 @@
 package com.metis.meishuquan.fragment.act;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +12,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,12 +20,21 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.circle.ReplyActivity;
 import com.metis.meishuquan.activity.info.BaseActivity;
 import com.metis.meishuquan.activity.info.homepage.StudioActivity;
+import com.metis.meishuquan.activity.login.LoginActivity;
+import com.metis.meishuquan.model.BLL.ActiveOperator;
 import com.metis.meishuquan.model.BLL.TopListItem;
+import com.metis.meishuquan.model.BLL.UserInfoOperator;
+import com.metis.meishuquan.model.circle.CirclePushBlogParm;
+import com.metis.meishuquan.model.commons.ActiveInfo;
+import com.metis.meishuquan.model.commons.Result;
+import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 
 import java.util.ArrayList;
@@ -30,12 +43,15 @@ import java.util.List;
 /**
  * Created by WJ on 2015/5/6.
  */
-public abstract class ActiveListFragment extends Fragment implements View.OnClickListener, AreaSelectFragment.OnAreaChooseListener{
+public abstract class ActiveListFragment extends Fragment implements View.OnClickListener, AreaSelectFragment.OnPlaceChooseListener{
 
     private Button mFilter1, mFilter2, mFilter3;
     private ListView mActListView = null;
-    private ImageView mSearchBtn = null;
-    private EditText mSearchEt = null;
+    /*private ImageView mSearchBtn = null;
+    private EditText mSearchEt = null;*/
+
+    private ActiveInfo mActiveInfo = null;
+    private ActiveOperator.SimpleActiveInfo mSimpleInfo = null;
 
     private List<TopListDelegate> mDataList = new ArrayList<TopListDelegate>();
     private TopListAdapter mAdapter = new TopListAdapter(mDataList);
@@ -52,9 +68,26 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
         mFilter2 = (Button) view.findViewById(R.id.act_list_filter_2);
         mFilter3 = (Button) view.findViewById(R.id.act_list_filter_3);
         mActListView = (ListView) view.findViewById(R.id.act_list);
+        mActListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+                switch (i) {
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        if (mActListView.getLastVisiblePosition() >= absListView.getChildCount() - 1) {
+                            needLoadMore();
+                        }
+                        break;
+                }
+            }
 
-        mSearchBtn = (ImageView)view.findViewById(R.id.search_btn);
-        mSearchEt = (EditText)view.findViewById(R.id.search_content_input);
+            @Override
+            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+
+            }
+        });
+
+        /*mSearchBtn = (ImageView)view.findViewById(R.id.search_btn);
+        mSearchEt = (EditText)view.findViewById(R.id.search_content_input);*/
 
         //mActListView.setAdapter(mAdapter);
         View emptyView = view.findViewById(R.id.act_empty);
@@ -69,7 +102,24 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
         mFilter2.setOnClickListener(this);
         mFilter3.setOnClickListener(this);
 
-        mSearchBtn.setOnClickListener(new View.OnClickListener() {
+        ActiveOperator.getInstance().getActiveDetail(new UserInfoOperator.OnGetListener<ActiveInfo>() {
+            @Override
+            public void onGet(boolean succeed, ActiveInfo activeInfo) {
+                if (succeed) {
+                    mActiveInfo = activeInfo;
+                    ActiveOperator.getInstance().getMyActiveInfo(mActiveInfo.getpId(), new UserInfoOperator.OnGetListener<ActiveOperator.SimpleActiveInfo>() {
+                        @Override
+                        public void onGet(boolean succeed, ActiveOperator.SimpleActiveInfo simpleActiveInfo) {
+                            if (succeed) {
+                                mSimpleInfo = simpleActiveInfo;
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        /*mSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String content = mSearchEt.getText().toString();
@@ -93,7 +143,7 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
                     onSearchContentCleared ();
                 }
             }
-        });
+        });*/
     }
 
     public abstract String getFilterTitle1 ();
@@ -135,7 +185,7 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
 
     }
 
-    private AreaSelectFragment.OnAreaChooseListener mTempListener = null;
+    private AreaSelectFragment.OnPlaceChooseListener mTempListener = null;
 
     public void addFragment (Fragment fragment) {
         ((BaseActivity) getActivity()).addFragment(fragment);
@@ -145,21 +195,20 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
         ((BaseActivity)getActivity()).removeFragment(fragment);
     }
 
-    public void showAreaChooseFragment (AreaSelectFragment.OnAreaChooseListener listener) {
+    public void showAreaChooseFragment (AreaSelectFragment.OnPlaceChooseListener listener) {
         mTempListener = listener;
-        AreaSelectFragment.getInstance().setOnAreaChooseListener(this);
+        AreaSelectFragment.getInstance().setOnPlaceChooseListener(this);
         addFragment(AreaSelectFragment.getInstance());
     }
 
     @Override
-    public void onChoose(AreaSelectFragment.Areable area) {
-        AreaSelectFragment.getInstance().setOnAreaChooseListener(null);
+    public void onChoose(AreaSelectFragment.Areable areable, int provinceId, int cityId, int townId) {
+        AreaSelectFragment.getInstance().setOnPlaceChooseListener(null);
         removeFragment(AreaSelectFragment.getInstance());
         if (mTempListener != null) {
-            mTempListener.onChoose(area);
+            mTempListener.onChoose(areable, provinceId, cityId, townId);
             mTempListener = null;
         }
-        //needReloadData();
     }
 
     public TopListItem getSelectedStudioItem () {
@@ -167,6 +216,7 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
     }
 
     public abstract void needReloadData (int selectedIndex1, int selectedIndex2, int selectedIndex3);
+    public abstract void needLoadMore ();
 
     public void onReloadFinished (List<TopListDelegate> data) {
         mDataList.clear();
@@ -211,23 +261,22 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
             if (view == null) {
                 holder = new ViewHolder();
                 view = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.layout_active_top_list_item, null);
-                holder.selectBtn = (RadioButton)view.findViewById(R.id.top_list_item_check_box);
                 holder.profileIv = (ImageView)view.findViewById(R.id.top_list_item_profile);
                 holder.nameTv = (TextView)view.findViewById(R.id.top_list_item_name);
                 holder.locationTv = (TextView)view.findViewById(R.id.top_list_item_location);
                 holder.joinCountTv = (TextView)view.findViewById(R.id.top_list_item_join_count);
                 holder.commentCountTv = (TextView)view.findViewById(R.id.top_list_item_comment_count);
                 holder.supportCountTv = (TextView)view.findViewById(R.id.top_list_item_support_count);
+                holder.joinBtn = (Button)view.findViewById(R.id.top_list_item_btn);
                 view.setTag(holder);
             } else {
                 holder = (ViewHolder)view.getTag();
             }
             final TopListDelegate itemDelegate = getItem(i);
             final TopListItem item = itemDelegate.getTopListItem();
-            holder.selectBtn.setVisibility(canChooseStudio() ? View.VISIBLE : View.GONE);
-            holder.selectBtn.setChecked(itemDelegate.isChecked());
+            itemDelegate.setChecked(mSimpleInfo != null && mSimpleInfo.getStudioId() == item.getUserId());
             holder.nameTv.setText(item.getUserNickName());
-            holder.locationTv.setText(item.getProvince());
+            holder.locationTv.setText(item.getRegion());
             ImageLoaderUtils.getImageLoader(getActivity()).displayImage(
                     item.getUserAvatar(),
                     holder.profileIv,
@@ -250,7 +299,102 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
                     startActivity(it);
                 }
             });
-            if (canChooseStudio()) {
+            holder.joinBtn.setSelected(itemDelegate.isChecked());
+            holder.joinBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!MainApplication.isLogin()) {
+                        Toast.makeText(getActivity(), R.string.my_info_toast_not_login, Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getActivity(), LoginActivity.class));
+                        return;
+                    }
+                    ActiveOperator.getInstance().getMyActiveInfo(mActiveInfo.getpId(), new UserInfoOperator.OnGetListener<ActiveOperator.SimpleActiveInfo>() {
+                        @Override
+                        public void onGet(boolean succeed, final ActiveOperator.SimpleActiveInfo simpleActiveInfo) {
+                            if (!succeed) {
+                                return;
+                            }
+                            if (simpleActiveInfo != null) {
+                                mSimpleInfo = simpleActiveInfo;
+                                final int remainCount = 3 - simpleActiveInfo.getUpdateCount();
+                                final boolean canChooseStudio = remainCount > 0;
+                                showDialog(canChooseStudio ? getString(R.string.act_join_count, remainCount) : getString(R.string.act_join_can_not_choose), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        if (!canChooseStudio) {
+                                            return;
+                                        }
+                                        if (mSelectedDelegate != null) {
+                                            mSelectedDelegate.setChecked(false);
+                                        }
+                                        itemDelegate.setChecked(true);
+                                        mSelectedDelegate = itemDelegate;
+                                        notifyDataSetChanged();
+                                        if (mActiveInfo != null) {
+                                            if (!simpleActiveInfo.isJoin) {
+                                                ActiveOperator.getInstance().selectStudio(item.getUserId(), mActiveInfo.getpId(), new UserInfoOperator.OnGetListener<Result>() {
+                                                    @Override
+                                                    public void onGet(boolean succeed, Result o) {
+                                                        if (succeed) {
+                                                            mSimpleInfo.setStudioId(item.getUserId());
+                                                            notifyDataSetChanged();
+                                                            Toast.makeText(getActivity(), R.string.act_join_success, Toast.LENGTH_SHORT).show();
+                                                        } else {
+                                                            Toast.makeText(getActivity(), R.string.act_join_failed, Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                });
+                                            } else {
+                                                ActiveOperator.getInstance().changeStudio(item.getUserId(), mActiveInfo.getpId(), new UserInfoOperator.OnGetListener<Result>() {
+                                                    @Override
+                                                    public void onGet(boolean succeed, Result result) {
+                                                        if (succeed) {
+                                                            mSimpleInfo.setStudioId(item.getUserId());
+                                                            notifyDataSetChanged();
+                                                            Toast.makeText(getActivity(), R.string.act_join_success, Toast.LENGTH_SHORT).show();
+                                                        } else {
+                                                            Toast.makeText(getActivity(), R.string.act_join_failed, Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                });
+                                            }
+
+                                        }
+                                    }
+                                });
+                            } else {
+                                showDialog(getString(R.string.act_join_unjoined), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                        if (mActiveInfo != null) {
+                                            ActiveOperator.getInstance().selectStudio(item.getUserId(), mActiveInfo.getpId(), new UserInfoOperator.OnGetListener() {
+                                                @Override
+                                                public void onGet(boolean succeed, Object o) {
+                                                    if (mActiveInfo != null) {
+                                                        Intent it = new Intent(getActivity(), ReplyActivity.class);
+                                                        CirclePushBlogParm parm = new CirclePushBlogParm();
+                                                        parm.setType(SupportTypeEnum.Activity.getVal());
+                                                        parm.setRelayId(mActiveInfo.getpId());
+                                                        it.putExtra(ReplyActivity.PARM, parm);
+                                                        it.putExtra(ReplyActivity.TITLE, mActiveInfo.getTitle());
+                                                        it.putExtra(ReplyActivity.CONTENT, mActiveInfo.getContent());
+                                                        it.putExtra(ReplyActivity.IMAGEURL, mActiveInfo.getImage());
+                                                        startActivity(it);
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+
+
+                }
+            });
+            /*if (canChooseStudio()) {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -262,18 +406,33 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
                         notifyDataSetChanged();
                     }
                 });
-            }
+            }*/
 
             return view;
         }
     }
 
+    private Dialog mDialog = null;
+    private void showDialog (String msg, DialogInterface.OnClickListener positiveListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(msg);
+        builder.setPositiveButton(R.string.gender_ok, positiveListener);
+        builder.setNegativeButton(R.string.alter_dialog_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog = builder.create();
+        mDialog.show();
+    }
+
     private class ViewHolder {
-        public RadioButton selectBtn;
         public ImageView profileIv;
         public TextView nameTv;
         public TextView locationTv;
         public TextView joinCountTv, commentCountTv, supportCountTv;
+        public Button joinBtn;
     }
 
 

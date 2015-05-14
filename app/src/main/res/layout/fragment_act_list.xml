@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <RelativeLayout
+    <!--<RelativeLayout
         android:id="@+id/search_container"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
@@ -20,16 +20,18 @@
             android:src="@drawable/rc_ic_atfriend_search"
             android:layout_alignParentRight="true"
             />
-    </RelativeLayout>
+    </RelativeLayout>-->
     <LinearLayout
         android:id="@+id/act_list_spanner_group"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@+id/search_container"
+        android:background="#e5e7ec"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
         >
         <Button
-            android:id="@+id/act_list_filter_1"
+            android:id="@+id/act_list_filter_3"
             style="@style/act_list_spanner"
             />
         <Button
@@ -37,7 +39,7 @@
             style="@style/act_list_spanner"
             />
         <Button
-            android:id="@+id/act_list_filter_3"
+            android:id="@+id/act_list_filter_1"
             style="@style/act_list_spanner"
             />
     </LinearLayout>

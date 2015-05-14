@@ -83,7 +83,9 @@ public class StudioActivity extends BaseActivity implements
             REQUEST_CODE_DEPARTMENT = 600,
             REQUEST_CODE_SCHOOL = 601,
             REQUEST_CODE_CAMERA = 222,
-            REQUEST_CODE_GALLERY = 333;
+            REQUEST_CODE_GALLERY = 333,
+            REQUEST_CODE_COVER_CAMERA = 234,
+            REQUEST_CODE_COVER_GALLERY = 345;
 
     private View mTitleView = null;
     private ImageView mTitleProfile = null;
@@ -133,9 +135,9 @@ public class StudioActivity extends BaseActivity implements
         mTitleProfile = (ImageView)mTitleView.findViewById(R.id.studio_title_profile);
         mTitleName = (TextView)mTitleView.findViewById(R.id.studio_title_name);
         mSubTitleName = (TextView)mTitleView.findViewById(R.id.studio_title_meishuquan_id);
-        ImageLoaderUtils.getImageLoader(this).displayImage("http://images.apple.com/cn/live/2015-mar-event/images/751591e0653867230e700d3a99157780826cce88_xlarge.jpg",
+        /*ImageLoaderUtils.getImageLoader(this).displayImage("http://images.apple.com/cn/live/2015-mar-event/images/751591e0653867230e700d3a99157780826cce88_xlarge.jpg",
                 mTitleProfile,
-                ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.studio_profile_size)));
+                ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.studio_profile_size)));*/
 
         mStudioFragment = (StudioFragment)getSupportFragmentManager().findFragmentById(R.id.studio_fragment);
         mStudioFragment.setOnMenuItemClickListener(this);
@@ -201,6 +203,14 @@ public class StudioActivity extends BaseActivity implements
             );
         }
         mStudioFragment.setUser(user);
+        mStudioFragment.setOnCoverLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                ListDialogFragment.getInstance().setAdapter(new MyAdapter(REQUEST_CODE_COVER_GALLERY, REQUEST_CODE_COVER_CAMERA));
+                ListDialogFragment.getInstance().show(getSupportFragmentManager(), TAG);
+                return false;
+            }
+        });
         //mSubTitleName.setText(user.get);
     }
 
@@ -499,6 +509,27 @@ public class StudioActivity extends BaseActivity implements
                     Log.v(TAG, "REQUEST_CODE_CHOOSE_COURSE " + builder);
                 }
                 break;
+            case REQUEST_CODE_COVER_GALLERY:
+                if (resultCode == RESULT_OK) {
+                    final String path = ImageLoaderUtils.getRealFilePath(this, data.getData());
+                    Log.v(TAG, "onActivityResult " + path);
+                    final int profileSize = getResources().getDimensionPixelSize(R.dimen.studio_profile_size);
+                    mUser.setBackgroundImg(ImageDownloader.Scheme.FILE.wrap(path));
+                    mStudioFragment.setCover(path);
+                    UserInfoOperator.getInstance().updateUserCover(MainApplication.userInfo.getUserId(), path);
+                    mAdapter.notifyDataSetChanged();
+                }
+                break;
+            case REQUEST_CODE_COVER_CAMERA:
+                if (resultCode == RESULT_OK) {
+                    Log.v(TAG, "onActivityResult mCameraPath=" + mCameraOutputPath);
+                    mUser.setBackgroundImg(ImageDownloader.Scheme.FILE.wrap(mCameraOutputPath));
+                    final int size = getResources().getDimensionPixelSize(R.dimen.studio_profile_size);
+                    UserInfoOperator.getInstance().updateUserCover(MainApplication.userInfo.getUserId(), mCameraOutputPath);
+                    mStudioFragment.setCover(mCameraOutputPath);
+                    mAdapter.notifyDataSetChanged();
+                }
+                break;
         }
     }
 
@@ -541,7 +572,7 @@ public class StudioActivity extends BaseActivity implements
         }
     }*/
 
-    public String camera() {
+    public String camera(int requestCode) {
         Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File dir = new File(Environment.getExternalStorageDirectory()
                 + "/myimage/");
@@ -560,14 +591,14 @@ public class StudioActivity extends BaseActivity implements
         //path = file.getPath();
         Uri imageUri = Uri.fromFile(file);
         openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        startActivityForResult(openCameraIntent, REQUEST_CODE_CAMERA);
+        startActivityForResult(openCameraIntent, requestCode);
         return file.getAbsolutePath();
     }
 
-    public void pickFromGallery() {
+    public void pickFromGallery(int requestCode) {
         Intent intent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);//调用android的图库
-        startActivityForResult(intent, REQUEST_CODE_GALLERY);
+        startActivityForResult(intent, requestCode);
     }
 
     private Dialog mDialog = null;
@@ -672,7 +703,7 @@ public class StudioActivity extends BaseActivity implements
             Intent it = null;
             switch (v.getId()) {
                 case R.id.info_profile_container:
-                    ListDialogFragment.getInstance().setAdapter(new MyAdapter());
+                    ListDialogFragment.getInstance().setAdapter(new MyAdapter(REQUEST_CODE_GALLERY, REQUEST_CODE_CAMERA));
                     ListDialogFragment.getInstance().show(getSupportFragmentManager(), TAG);
                     break;
                 case R.id.info_nick:
@@ -839,6 +870,13 @@ public class StudioActivity extends BaseActivity implements
                 R.string.info_profile_gallery,
                 R.string.info_profile_camera};
 
+        int mRequestCodeGallery, mRequestCodeCamera;
+
+        public MyAdapter (int requestCodeGallery, int requestCodeCamera) {
+            mRequestCodeGallery = requestCodeGallery;
+            mRequestCodeCamera = requestCodeCamera;
+        }
+
         @Override
         public int getCount() {
             return mTitleResArr.length;
@@ -864,10 +902,10 @@ public class StudioActivity extends BaseActivity implements
                 public void onClick(View v) {
                     switch (mTitleResArr[position]) {
                         case R.string.info_profile_gallery:
-                            pickFromGallery();
+                            pickFromGallery(mRequestCodeGallery);
                             break;
                         case R.string.info_profile_camera:
-                            mCameraOutputPath = camera();
+                            mCameraOutputPath = camera(mRequestCodeCamera);
                             break;
                     }
                     ListDialogFragment.getInstance().dismiss();

@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by WJ on 2015/5/12.
  */
-public class SpecFragment extends MultiListViewFragment implements AdapterView.OnItemClickListener {
+public class SpecFragment extends MultiListViewFragment {
 
     private static SpecFragment sFragment = new SpecFragment();
 
@@ -44,7 +44,6 @@ public class SpecFragment extends MultiListViewFragment implements AdapterView.O
             mAdapterList.add(mAdapter);
         }
         setAdapterList(mAdapterList);
-        getListView(0).setOnItemClickListener(this);
     }
 
     public void setCallback (Callback callback) {
@@ -57,24 +56,16 @@ public class SpecFragment extends MultiListViewFragment implements AdapterView.O
     }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Toast.makeText(getActivity(), "onItemClick " + i + " mCallback=" + mCallback, Toast.LENGTH_SHORT).show();
-        String[] mSpecs = getStringArray();
-        if (mCallback != null) {
-            mCallback.onCallback(i, mSpecs[i]);
-        }
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
         mCallback = null;
     }
 
-    public static class SimpleAdapter extends BaseAdapter {
+    public class SimpleAdapter extends BaseAdapter {
 
         private Context mContext = null;
         private String[] mSpecs = null;
+        private int mSelectedIndex = -1;
 
         public SimpleAdapter (Context context, String[] array) {
             mContext = context;
@@ -97,10 +88,24 @@ public class SpecFragment extends MultiListViewFragment implements AdapterView.O
         }
 
         @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            view = LayoutInflater.from(mContext).inflate(R.layout.layout_list_dialog_item, null);
+        public View getView(final int i, View view, ViewGroup viewGroup) {
+            if (view == null) {
+                view = LayoutInflater.from(mContext).inflate(R.layout.layout_list_dialog_item, null);
+            }
+
             TextView tv = (TextView)view.findViewById(R.id.list_dialog_item);
             tv.setText(getItem(i));
+            view.setBackgroundColor(getResources().getColor(mSelectedIndex == i ? R.color.ltgray : android.R.color.white));
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mSelectedIndex = i;
+                    notifyDataSetChanged();
+                    if (mCallback != null) {
+                        mCallback.onCallback(i, mSpecs[i]);
+                    }
+                }
+            });
             return view;
         }
     }

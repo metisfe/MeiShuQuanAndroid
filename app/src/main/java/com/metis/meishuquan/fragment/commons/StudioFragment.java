@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -23,6 +24,7 @@ import com.metis.meishuquan.model.BLL.StudioBaseInfo;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.util.ImageLoaderUtils;
+import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
 /**
  * Created by WJ on 2015/4/23.
@@ -36,6 +38,7 @@ public class StudioFragment extends Fragment{
     private View mHeaderView = null;
     private ImageView mHeadCoverIv = null;
     private TextView mHeaderExtraTv = null;
+    private Button mHeaderMsgBtn = null;
 
     private BaseAdapter mAdapter = null;
 
@@ -72,6 +75,7 @@ public class StudioFragment extends Fragment{
         mHeaderView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_studio_list_header, null);
         mHeadCoverIv = (ImageView)mHeaderView.findViewById(R.id.studio_list_header_cover);
         mHeaderExtraTv = (TextView)mHeaderView.findViewById(R.id.studio_list_header_extras);
+        mHeaderMsgBtn = (Button)mHeaderView.findViewById(R.id.studio_list_header_msg);
         setAdapter(mAdapter);
 
         mIntroduceTv = (TextView)mHeaderView.findViewById(R.id.studio_list_header_self_introduce);
@@ -86,6 +90,14 @@ public class StudioFragment extends Fragment{
         mRadioGroup.check(R.id.studio_list_header_tab1);
         //fillHeader();
         //fillHeader(null);
+    }
+
+    public void setOnCoverLongClickListener (View.OnLongClickListener listener) {
+        mHeadCoverIv.setOnLongClickListener(listener);
+    }
+
+    public void setCover (String path) {
+        ImageLoaderUtils.getImageLoader(getActivity()).displayImage(ImageDownloader.Scheme.FILE.wrap(path), mHeadCoverIv, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher));
     }
 
     public void setUser (User user) {
@@ -116,8 +128,15 @@ public class StudioFragment extends Fragment{
             mMenuLayout.setVisibility(View.GONE);
             mIntroduceTv.setVisibility(View.VISIBLE);
         }
+        if(user.getUserId() == MainApplication.userInfo.getUserId()) {
+            mHeaderMsgBtn.setVisibility(View.GONE);
+        }
+        String coverUrl = user.getBackgroundImg();
+        if (coverUrl == null) {
+            coverUrl = user.getBackGroundImg();
+        }
         ImageLoaderUtils.getImageLoader(getActivity()).displayImage(
-                user.getBackgroundImg(), mHeadCoverIv,
+                coverUrl, mHeadCoverIv,
                 ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
         );
         mHeaderExtraTv.setText(getString(R.string.studio_fans_and_focus, user.getFansNum(), user.getFocusNum()));

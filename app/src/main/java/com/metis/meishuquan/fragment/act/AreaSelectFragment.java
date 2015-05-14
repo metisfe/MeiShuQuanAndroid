@@ -1,5 +1,6 @@
 package com.metis.meishuquan.fragment.act;
 
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,9 +27,11 @@ public class AreaSelectFragment extends MultiListViewFragment {
     private List<Areable> mProvinceDataList = new ArrayList<Areable>();
     private List<Areable> mCityDataList = new ArrayList<Areable>();
     private List<Areable> mTownDataList = new ArrayList<Areable>();
-    List<BaseAdapter> mAdapters = new ArrayList<BaseAdapter>();
+    private List<BaseAdapter> mAdapters = new ArrayList<BaseAdapter>();
 
-    private OnAreaChooseListener mFragmentAreaListener = null;
+    private int mProvinceId, mCityId, mTownId;
+
+    private OnPlaceChooseListener mFragmentAreaListener = null;
 
     private static AreaSelectFragment sFragment = new AreaSelectFragment();
 
@@ -79,6 +82,9 @@ public class AreaSelectFragment extends MultiListViewFragment {
                 mCityAdapter.notifyDataSetChanged();
                 mTownDataList.clear();
                 mTownAdapter.notifyDataSetChanged();
+                mProvinceId = area.getId();
+                mCityId = 0;
+                mTownId = 0;
                 UserInfoOperator.getInstance().getAreaList(area.getId(), new UserInfoOperator.OnGetListener<List<City>>() {
                     @Override
                     public void onGet(boolean succeed, List<City> cities) {
@@ -99,6 +105,8 @@ public class AreaSelectFragment extends MultiListViewFragment {
         mCityAdapter.setOnAreaChooseListener(new OnAreaChooseListener() {
             @Override
             public void onChoose(Areable area) {
+                mCityId = area.getId();
+                mTownId = 0;
                 if (mProvAdapter.getSelectedAreable() != null && area.getId() == mProvAdapter.getSelectedAreable().getId()) {
                     mTownDataList.clear();
                     mTownAdapter.notifyDataSetChanged();
@@ -128,26 +136,31 @@ public class AreaSelectFragment extends MultiListViewFragment {
         mTownAdapter.setOnAreaChooseListener(new OnAreaChooseListener() {
             @Override
             public void onChoose(Areable area) {
+                mTownId = area.getId();
                 onAreaSelected(area);
             }
         });
 
     }
 
-    public void setOnAreaChooseListener (OnAreaChooseListener listener) {
+    public void setOnPlaceChooseListener (OnPlaceChooseListener listener) {
         mFragmentAreaListener = listener;
+    }
+
+    public static interface OnPlaceChooseListener{
+        public void onChoose (Areable areable, int provinceId, int cityId, int townId);
     }
 
     public void onAreaSelected (Areable areable) {
         if (mFragmentAreaListener != null) {
-            mFragmentAreaListener.onChoose(areable);
+            mFragmentAreaListener.onChoose(areable, mProvinceId, mCityId, mTownId);
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        setOnAreaChooseListener(null);
+        setOnPlaceChooseListener(null);
     }
 
     private class AreaAdapter extends BaseAdapter {
@@ -210,7 +223,7 @@ public class AreaSelectFragment extends MultiListViewFragment {
     }
 
     public static interface OnAreaChooseListener {
-        public void onChoose (Areable area);
+        public void onChoose (Areable areable);
     }
 
     private class ProvinceArea implements Areable {

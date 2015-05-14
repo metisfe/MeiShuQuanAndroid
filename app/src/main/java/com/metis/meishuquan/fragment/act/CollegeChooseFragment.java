@@ -1,6 +1,7 @@
 package com.metis.meishuquan.fragment.act;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,9 @@ import java.util.List;
 /**
  * Created by WJ on 2015/5/13.
  */
-public class CollegeChooseFragment extends MultiListViewFragment implements AdapterView.OnItemClickListener {
+public class CollegeChooseFragment extends MultiListViewFragment {
+
+    private static final String TAG = CollegeChooseFragment.class.getSimpleName();
 
     private static CollegeChooseFragment sFragment = new CollegeChooseFragment();
 
@@ -40,37 +43,29 @@ public class CollegeChooseFragment extends MultiListViewFragment implements Adap
         if (mAdapter == null && mAdapterList.isEmpty()) {
             mAdapter = new CollegeAdapter(mCollegeList);
             mAdapterList.add(mAdapter);
-        }
+            UserInfoOperator.getInstance().getCollegeList("", new UserInfoOperator.OnGetListener<List<College>>() {
+                @Override
+                public void onGet(boolean succeed, List<College> colleges) {
+                    if (succeed) {
+                        mCollegeList.clear();
+                        mCollegeList.addAll(colleges);
+                        mAdapter.notifyDataSetChanged();
+                    }
 
-        setAdapterList(mAdapterList);
-        UserInfoOperator.getInstance().getCollegeList("", new UserInfoOperator.OnGetListener<List<College>>() {
-            @Override
-            public void onGet(boolean succeed, List<College> colleges) {
-                if (succeed) {
-                    mCollegeList.clear();
-                    mCollegeList.addAll(colleges);
-                    mAdapter.notifyDataSetChanged();
                 }
-
-            }
-        });
-        getListView(0).setOnItemClickListener(this);
+            });
+        }
+        setAdapterList(mAdapterList);
     }
 
     public void setCallback (Callback callback) {
         mCallback = callback;
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        if (mCallback != null) {
-            mCallback.onCallback(i, mCollegeList.get(i));
-        }
-    }
-
     public class CollegeAdapter extends BaseAdapter {
 
         private List<College> mCollegeList = null;
+        private int mSelectedIndex = -1;
 
         public CollegeAdapter (List<College> colleges) {
             mCollegeList = colleges;
@@ -92,12 +87,25 @@ public class CollegeChooseFragment extends MultiListViewFragment implements Adap
         }
 
         @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
+        public View getView(final int i, View view, ViewGroup viewGroup) {
             if (view == null) {
                 view = LayoutInflater.from(getActivity()).inflate(R.layout.layout_list_dialog_item, null);
             }
             TextView tv = (TextView)view.findViewById(R.id.list_dialog_item);
             tv.setText(getItem(i).getName());
+            view.setBackgroundColor(getResources().getColor(mSelectedIndex == i ? R.color.ltgray : android.R.color.white));
+            view.setSelected(true);
+            view.setPressed(true);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mSelectedIndex = i;
+                    if (mCallback != null) {
+                        mCallback.onCallback(i, mCollegeList.get(i));
+                    }
+                    notifyDataSetChanged();
+                }
+            });
             return view;
         }
     }

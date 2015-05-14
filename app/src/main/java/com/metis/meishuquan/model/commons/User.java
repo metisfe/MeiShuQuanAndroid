@@ -34,7 +34,8 @@ public class User implements Serializable {
             KEY_USER_ROLE = "userRole",
             KEY_USER_RESUME = "UserResume",
             KEY_LOCATION_STUDIO = "LocationStudio",
-            KEY_LOCATION_SCHOOL = "LocationSchool";
+            KEY_LOCATION_SCHOOL = "LocationSchool",
+            KEY_BACKGROUND_IMG = "backgroundImg";
 
     @SerializedName("userId")
     private int userId = -1;
@@ -114,6 +115,9 @@ public class User implements Serializable {
     @SerializedName("backgroundImg")
     private String backgroundImg;
 
+    @SerializedName("backGroundImg")
+    private String backGroundImg;
+
     @SerializedName("userResume")
     private String userResume;
 
@@ -136,6 +140,14 @@ public class User implements Serializable {
 
     public void setBackgroundImg(String backgroundImg) {
         this.backgroundImg = backgroundImg;
+    }
+
+    public String getBackGroundImg() {
+        return backGroundImg;
+    }
+
+    public void setBackGroundImg(String backGroundImg) {
+        this.backGroundImg = backGroundImg;
     }
 
     public void setName(String name) {

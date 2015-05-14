@@ -118,7 +118,7 @@ public class TopListFragment extends ActiveListFragment {
                 });
                 break;
             case R.id.act_list_filter_3:
-                showAreaChooseFragment(new AreaSelectFragment.OnAreaChooseListener() {
+                /*showAreaChooseFragment(new AreaSelectFragment.OnAreaChooseListener() {
                     @Override
                     public void onChoose(AreaSelectFragment.Areable area) {
                         getFilterSpinner3().setText(area.getTitle());
@@ -126,7 +126,7 @@ public class TopListFragment extends ActiveListFragment {
                         //TODO
                         needReloadData(mFilter1, mFilter2, mFilter3);
                     }
-                });
+                });*/
                 break;
         }
     }
@@ -151,6 +151,11 @@ public class TopListFragment extends ActiveListFragment {
     public void needReloadData(int selectedIndex1, int selectedIndex2, int selectedIndex3) {
         Log.v(TAG, "filter1=" + selectedIndex1 + " filter2=" + selectedIndex2 + " filter3=" + selectedIndex3);
         reLoadDataList(selectedIndex1, selectedIndex2, selectedIndex3);
+    }
+
+    @Override
+    public void needLoadMore() {
+
     }
 
     private void reLoadDataList (int filter1, int filter2, int filter3) {

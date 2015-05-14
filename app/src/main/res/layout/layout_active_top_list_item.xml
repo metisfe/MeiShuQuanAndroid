@@ -1,65 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <RadioButton
-        android:id="@+id/top_list_item_check_box"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:visibility="gone"
-        />
+    android:layout_height="70dp">
     <ImageView
         android:id="@+id/top_list_item_profile"
         android:layout_width="@dimen/active_list_profile_size"
         android:layout_height="@dimen/active_list_profile_size"
         android:layout_margin="10dp"
-        android:layout_toRightOf="@+id/top_list_item_check_box"
-        />
-    <TextView
-        android:id="@+id/top_list_item_name"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/top_list_item_extra"
-        android:layout_toRightOf="@+id/top_list_item_profile"
-        />
-    <TextView
-        android:id="@+id/top_list_item_location"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/top_list_item_extra"
-        android:layout_toRightOf="@+id/top_list_item_profile"
-        android:layout_below="@+id/top_list_item_name"
+        android:layout_centerVertical="true"
         />
     <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/top_list_item_profile"
+        android:layout_toLeftOf="@+id/top_list_item_extra"
+        android:layout_centerVertical="true"
+        >
+        <TextView
+            android:id="@+id/top_list_item_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            style="@style/info_textStyle"
+            />
+        <TextView
+            android:id="@+id/top_list_item_location"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/top_list_item_name"
+            style="@style/info_secondaryTextStyle"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/top_list_item_extra"
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         >
         <TextView
             android:id="@+id/top_list_item_join_count"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:layout_alignParentRight="true"
+            style="@style/info_secondaryTextStyle"
+            />
         <TextView
             android:id="@+id/top_list_item_comment_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/top_list_item_join_count"
+            android:gravity="right"
+            android:layout_alignParentRight="true"
+            style="@style/info_secondaryTextStyle"
+            />
+        <Button
+            android:id="@+id/top_list_item_btn"
+            android:layout_width="36dp"
+            android:layout_height="18dp"
+            android:background="@drawable/bg_top_list_join_in"
+            android:text="报名"
+            android:layout_below="@+id/top_list_item_comment_count"
+            android:layout_toLeftOf="@+id/support"
+            android:textColor="@color/top_list_item_join"
+            android:textSize="12sp"
+            />
+        <ImageView
+            android:id="@+id/support"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_below="@+id/top_list_item_comment_count"
+            android:layout_toLeftOf="@+id/top_list_item_support_count"
+            android:src="@drawable/top_list_item_support"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             />
         <TextView
             android:id="@+id/top_list_item_support_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/top_list_item_comment_count"
-            />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/top_list_item_support_count"
-            android:layout_below="@+id/top_list_item_comment_count"
-            android:src="@drawable/top_list_item_support"
+            android:layout_alignParentRight="true"
+            android:gravity="right"
+            style="@style/info_secondaryTextStyle"
             />
     </RelativeLayout>
 </RelativeLayout>

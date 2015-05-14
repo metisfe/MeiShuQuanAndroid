@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.act.SelectStudioActivity;
 import com.metis.meishuquan.activity.circle.ReplyActivity;
 import com.metis.meishuquan.model.BLL.ActiveOperator;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
@@ -39,7 +40,7 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
 
     private ImageView mCoverIv = null;
     private TextView mTitleTv = null, mDescTv = null, mAwardTv = null, mDetailTv = null;
-    private Button mJoinBtn = null;
+    private Button mJoinBtn = null, mCheckBtn = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,7 +56,10 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
         mAwardTv = (TextView)view.findViewById(R.id.act_detail_award);
         mDetailTv = (TextView)view.findViewById(R.id.act_detail_text);
         mJoinBtn = (Button)view.findViewById(R.id.act_detail_join);
+        mCheckBtn = (Button)view.findViewById(R.id.act_check_studio);
         mJoinBtn.setOnClickListener(this);
+        mCheckBtn.setOnClickListener(this);
+
         Log.v(TAG, TAG + " onViewCreated");
     }
 
@@ -81,23 +85,26 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
     }
 
     private void fillInfo (ActiveInfo info) {
-        ImageLoaderUtils.getImageLoader(getActivity()).displayImage("https://ss3.baidu.com/9fo3dSag_xI4khGko9WTAnF6hhy/super/whfpf%3D425%2C260%2C50/sign=91b19610064f78f0805ec9b31f0c3e67/cdbf6c81800a19d8d6628c4136fa828ba61e4614.jpg"
-                /*info.getImage()*/, mCoverIv, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
+        ImageLoaderUtils.getImageLoader(getActivity()).displayImage(
+                info.getImage(), mCoverIv, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
         );
         mTitleTv.setText(info.getTitle());
         mDescTv.setText(info.getDesc());
         mAwardTv.setText(info.getActivityAward());
         mDetailTv.setText(info.getContent());
+        mJoinBtn.setVisibility(View.VISIBLE);
+        mCheckBtn.setVisibility(View.VISIBLE);
         /*mJoinBtn.setEnabled(!info.isUseState());
         mJoinBtn.setText(info.isUseState() ? );*/
     }
 
     @Override
     public void onClick(View view) {
+        Intent it = null;
         switch (view.getId()) {
             case R.id.act_detail_join:
                 if (mInfo != null) {
-                    Intent it = new Intent(getActivity(), ReplyActivity.class);
+                    it = new Intent(getActivity(), ReplyActivity.class);
                     CirclePushBlogParm parm = new CirclePushBlogParm();
                     parm.setType(SupportTypeEnum.Activity.getVal());
                     parm.setRelayId(mInfo.getpId());
@@ -105,11 +112,15 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
                     it.putExtra(ReplyActivity.TITLE, mInfo.getTitle());
                     it.putExtra(ReplyActivity.CONTENT, mInfo.getContent());
                     it.putExtra(ReplyActivity.IMAGEURL, mInfo.getImage());
-                    startActivity(it);
-                    Toast.makeText(getActivity(), "onClick " + mInfo.getpId(), Toast.LENGTH_SHORT).show();
 
                 }
                 break;
+            case R.id.act_check_studio:
+                if (mInfo != null) {
+                    it = new Intent(getActivity(), SelectStudioActivity.class);
+                }
+                break;
         }
+        startActivity(it);
     }
 }

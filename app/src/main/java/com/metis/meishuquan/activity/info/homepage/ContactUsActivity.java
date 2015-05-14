@@ -44,6 +44,9 @@ public class ContactUsActivity extends BaseActivity {
         StudioOperator.getInstance().getStudioBaseInfo(mStudioId, new UserInfoOperator.OnGetListener<StudioBaseInfo>() {
             @Override
             public void onGet(boolean succeed, StudioBaseInfo studioBaseInfo) {
+                if (!succeed) {
+                    return;
+                }
                 mDetailsTv.setText(
                         studioBaseInfo.getAddress() + "\n" +
                                 studioBaseInfo.getTelephone() + "\n" +
