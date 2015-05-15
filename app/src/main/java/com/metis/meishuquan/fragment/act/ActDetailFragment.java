@@ -1,9 +1,11 @@
 package com.metis.meishuquan.fragment.act;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +24,7 @@ import com.metis.meishuquan.model.BLL.ActiveOperator;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.circle.CirclePushBlogParm;
 import com.metis.meishuquan.model.commons.ActiveInfo;
+import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.util.ImageLoaderUtils;
@@ -29,7 +32,7 @@ import com.metis.meishuquan.util.ImageLoaderUtils;
 /**
  * Created by WJ on 2015/4/29.
  */
-public class ActDetailFragment extends Fragment implements View.OnClickListener {
+public class ActDetailFragment extends Fragment implements View.OnClickListener{
 
     private static final String TAG = ActDetailFragment.class.getSimpleName();
 
@@ -44,7 +47,10 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener 
 
     private ImageView mCoverIv = null;
     private TextView mTitleTv = null, mDescTv = null, mAwardTv = null, mDetailTv = null;
+    private TextView mActDeals = null;
     private Button mJoinBtn = null, mCheckBtn = null;
+
+    private User mUser = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -61,8 +67,21 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener 
         mDetailTv = (TextView) view.findViewById(R.id.act_detail_text);
         mJoinBtn = (Button) view.findViewById(R.id.act_detail_join);
         mCheckBtn = (Button) view.findViewById(R.id.act_check_studio);
+        mActDeals = (TextView)view.findViewById(R.id.act_deals);
         mJoinBtn.setOnClickListener(this);
         mCheckBtn.setOnClickListener(this);
+
+        mActDeals.setText(Html.fromHtml("<font size=\"3\" color=\"black\">" + getString(R.string.act_deals_1) + "</font><font size=\"3\" color=\"red\">" + getString(R.string.act_deals_2) + "</font>"));
+        mActDeals.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri uri = Uri.parse("http://www.meishuquan.net/UserAgreement.html");
+
+                Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+
+                startActivity(intent);
+            }
+        });
 
         Log.v(TAG, TAG + " onViewCreated");
     }
@@ -71,29 +90,49 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener 
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Log.v(TAG, TAG + " onActivityCreated");
-        if (mInfo == null) {
-            ActiveOperator.getInstance().getActiveDetail(new UserInfoOperator.OnGetListener<ActiveInfo>() {
+        if (MainApplication.userInfo != null && MainApplication.isLogin()) {
+            UserInfoOperator.getInstance().getUserInfo(MainApplication.userInfo.getUserId(), true, new UserInfoOperator.OnGetListener<User>() {
                 @Override
-                public void onGet(boolean succeed, ActiveInfo activeInfo) {
+                public void onGet(boolean succeed, User user) {
                     if (succeed) {
-                        mInfo = activeInfo;
-                        ActiveOperator.getInstance().getMyActiveInfo(mInfo.getpId(), new UserInfoOperator.OnGetListener<ActiveOperator.SimpleActiveInfo>() {
-                            @Override
-                            public void onGet(boolean succeed, ActiveOperator.SimpleActiveInfo simpleActiveInfo) {
-                                if (succeed) {
-                                    mSimpleActiveInfo = simpleActiveInfo;
-                                    fillInfo(mInfo);
+                        mUser = user;
+                        if (mInfo == null) {
+                            ActiveOperator.getInstance().getActiveDetail(new UserInfoOperator.OnGetListener<ActiveInfo>() {
+                                @Override
+                                public void onGet(boolean succeed, ActiveInfo activeInfo) {
+                                    if (succeed) {
+                                        mInfo = activeInfo;
+                                        ActiveOperator.getInstance().getMyActiveInfo(mInfo.getpId(), new UserInfoOperator.OnGetListener<ActiveOperator.SimpleActiveInfo>() {
+                                            @Override
+                                            public void onGet(boolean succeed, ActiveOperator.SimpleActiveInfo simpleActiveInfo) {
+                                                if (succeed) {
+                                                    mSimpleActiveInfo = simpleActiveInfo;
+                                                    fillInfo(mInfo);
+                                                }
+                                            }
+                                        });
+                                        Log.v(TAG, TAG + " onActivityCreated " + activeInfo.getContent());
+
+                                    }
+
                                 }
-                            }
-                        });
-                        Log.v(TAG, TAG + " onActivityCreated " + activeInfo.getContent());
-
+                            });
+                        } else {
+                            ActiveOperator.getInstance().getMyActiveInfo(mInfo.getpId(), new UserInfoOperator.OnGetListener<ActiveOperator.SimpleActiveInfo>() {
+                                @Override
+                                public void onGet(boolean succeed, ActiveOperator.SimpleActiveInfo simpleActiveInfo) {
+                                    if (succeed) {
+                                        mSimpleActiveInfo = simpleActiveInfo;
+                                        fillInfo(mInfo);
+                                    }
+                                }
+                            });
+                        }
                     }
-
                 }
             });
         } else {
-            fillInfo(mInfo);
+            startActivity(new Intent(getActivity(), LoginActivity.class));
         }
     }
 
@@ -101,12 +140,21 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener 
         ImageLoaderUtils.getImageLoader(getActivity()).displayImage(
                 info.getImage(), mCoverIv, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
         );
+
         mTitleTv.setText(info.getTitle());
         mDescTv.setText(info.getDesc());
         mAwardTv.setText(info.getActivityAward());
         mDetailTv.setText(info.getContent());
         mJoinBtn.setVisibility(View.VISIBLE);
-        if (mSimpleActiveInfo != null && mSimpleActiveInfo.isJoin) {
+        if (mUser != null && mUser.getUserRoleEnum() != IdTypeEnum.STUDENT) {
+            mJoinBtn.setEnabled(false);
+            mJoinBtn.setVisibility(View.GONE);
+            mActDeals.setVisibility(View.GONE);
+        }
+        //Toast.makeText(getActivity(), "getUserRole " + mUser.getUserRole(), Toast.LENGTH_SHORT).show();
+        if (mSimpleActiveInfo.pId > 0 && !mSimpleActiveInfo.isJoin) {
+            mJoinBtn.setText(R.string.act_title_check);
+        } else if (mSimpleActiveInfo.isJoin) {
             mJoinBtn.setText(R.string.act_has_joined);
         }
         //mCheckBtn.setVisibility(View.VISIBLE);
@@ -124,14 +172,17 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener 
                     startActivity(new Intent(getActivity(), LoginActivity.class));
                     return;
                 }
-                Log.i("user_role",MainApplication.userInfo.getUserRole()+"&&&&&&&&&&");
-                if (MainApplication.userInfo.getUserRole() == IdTypeEnum.TEACHER.getVal()) {
+
+                if (mUser != null && mUser.getUserRoleEnum() != IdTypeEnum.STUDENT) {
                     Toast.makeText(getActivity(), R.string.act_join_only_student, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (mInfo != null) {
-                    if (mSimpleActiveInfo != null && mSimpleActiveInfo.isJoin) {
+                    if (mSimpleActiveInfo != null && mSimpleActiveInfo.pId > 0) {
                         Toast.makeText(getActivity(), R.string.act_joined, Toast.LENGTH_SHORT).show();
+                        if (mJoinedListener != null) {
+                            mJoinedListener.onClick(view);
+                        }
                         return;
                     }
                     it = new Intent(getActivity(), ReplyActivity.class);
@@ -142,6 +193,7 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener 
                     it.putExtra(ReplyActivity.TITLE, mInfo.getTitle());
                     it.putExtra(ReplyActivity.CONTENT, mInfo.getContent());
                     it.putExtra(ReplyActivity.IMAGEURL, mInfo.getImage());
+
                 }
                 break;
             case R.id.act_check_studio:
@@ -151,5 +203,9 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener 
                 break;
         }
         startActivity(it);
+    }
+    private View.OnClickListener mJoinedListener = null;
+    public void setOnClickListenerIfJoined (View.OnClickListener listenerIfJoined) {
+        mJoinedListener = listenerIfJoined;
     }
 }

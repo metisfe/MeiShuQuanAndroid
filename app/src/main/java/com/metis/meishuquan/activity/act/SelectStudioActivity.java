@@ -33,7 +33,7 @@ public class SelectStudioActivity extends BaseActivity {
         setContentView(R.layout.activity_select_studio);
 
         mStudioListFragment = (StudioListFragment)getSupportFragmentManager().findFragmentById(R.id.select_studio_fragment);
-
+        mStudioListFragment.setCanEdit(true);
 
     }
 
@@ -48,7 +48,7 @@ public class SelectStudioActivity extends BaseActivity {
                         if (keyEvent.getAction() == KeyEvent.ACTION_UP) {
                             switch (keyEvent.getKeyCode()) {
                                 case KeyEvent.KEYCODE_ENTER:
-                                    //mListFragment.searchContent(mSearchInput.getText().toString());
+                                    mStudioListFragment.searchContent(mSearchInput.getText().toString());
                                     break;
                             }
                         }

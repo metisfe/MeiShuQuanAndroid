@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridLayout;
@@ -90,6 +91,18 @@ public class StudioFragment extends Fragment{
         mRadioGroup.check(R.id.studio_list_header_tab1);
         //fillHeader();
         //fillHeader(null);
+
+        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+
+            }
+        });
     }
 
     public void setOnCoverLongClickListener (View.OnLongClickListener listener) {

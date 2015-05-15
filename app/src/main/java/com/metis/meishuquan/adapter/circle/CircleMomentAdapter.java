@@ -206,8 +206,14 @@ public class CircleMomentAdapter extends BaseAdapter {
     }
 
     private void support(CCircleDetailModel moment) {
+        int supportId = 0;
+        if (moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal()) {
+            supportId = moment.relayCircle.joinActivityId;
+        } else {
+            supportId = moment.id;
+        }
 
-        String url = String.format("v1.1/Comment/Support?userid=%s&id=%s&type=7&result=1&session=%s", MainApplication.userInfo.getUserId(), moment.id, MainApplication.userInfo.getCookie());
+        String url = String.format("v1.1/Comment/Support?userid=%s&id=%s&type=7&result=1&session=%s", MainApplication.userInfo.getUserId(), supportId, MainApplication.userInfo.getCookie());
 
         ApiDataProvider.getmClient().invokeApi(url, null,
                 HttpGet.METHOD_NAME, null, CirclePushCommentResult.class,
@@ -242,7 +248,7 @@ public class CircleMomentAdapter extends BaseAdapter {
         Intent it = new Intent(mContext, ReplyActivity.class);
         CirclePushBlogParm parm = new CirclePushBlogParm();
         parm.setType(SupportTypeEnum.Activity.getVal());
-        parm.setRelayId(moment.relayCircle.id);
+        parm.setRelayId(moment.id);
         it.putExtra(ReplyActivity.PARM, parm);
         it.putExtra(ReplyActivity.TITLE, moment.relayCircle.title);
         it.putExtra(ReplyActivity.CONTENT, moment.relayCircle.desc);

@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,10 +46,14 @@ import java.util.List;
  */
 public abstract class ActiveListFragment extends Fragment implements View.OnClickListener, AreaSelectFragment.OnPlaceChooseListener{
 
+    private static final String TAG = ActiveListFragment.class.getSimpleName();
+
     private Button mFilter1, mFilter2, mFilter3;
     private ListView mActListView = null;
     /*private ImageView mSearchBtn = null;
     private EditText mSearchEt = null;*/
+
+    private boolean canEdit = false;
 
     private ActiveInfo mActiveInfo = null;
     private ActiveOperator.SimpleActiveInfo mSimpleInfo = null;
@@ -71,11 +76,19 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
         mActListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
+
                 switch (i) {
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        Log.v(TAG, "onScrollStateChanged SCROLL_STATE_IDLE");
                         if (mActListView.getLastVisiblePosition() >= absListView.getChildCount() - 1) {
                             needLoadMore();
                         }
+                        break;
+                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+                        Log.v(TAG, "onScrollStateChanged SCROLL_STATE_FLING");
+                        break;
+                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+                        Log.v(TAG, "onScrollStateChanged SCROLL_STATE_TOUCH_SCROLL");
                         break;
                 }
             }
@@ -153,6 +166,10 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
     public abstract String getFilterTitle3 ();
 
     public abstract boolean canChooseStudio ();
+
+    public void setCanEdit (boolean canEdit) {
+        this.canEdit = canEdit;
+    }
 
     @Override
     public void onClick(View view) {
@@ -278,6 +295,7 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
             holder.nameTv.setText(item.getUserNickName());
             holder.locationTv.setText(item.getRegion());
             //act_has_joined
+            holder.joinBtn.setVisibility(canEdit || itemDelegate.isChecked() ? View.VISIBLE : View.GONE);
             holder.joinBtn.setText(itemDelegate.isChecked ? R.string.act_has_joined : R.string.act_join);
             ImageLoaderUtils.getImageLoader(getActivity()).displayImage(
                     item.getUserAvatar(),

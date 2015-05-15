@@ -44,6 +44,16 @@ public class ActDetailActivity extends BaseActivity implements RadioGroup.OnChec
 
         mGroup.setOnCheckedChangeListener(this);
 
+        mDetailFragment.setOnClickListenerIfJoined(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //removeLastFragment(false);
+                mListBtn.setChecked(true);
+                /*getTitleView().setImageRightVisible(View.VISIBLE);
+                addFragment(mListFragment, false);*/
+            }
+        });
+
     }
 
     @Override

@@ -40,7 +40,7 @@ public class StudioListFragment extends ActiveListFragment {
     private ArrayList<String> mFilterData3 = new ArrayList<String>();
 
     private int mProvinceId, mCityId, mTownId;
-    private int mFilter2, mFilter3;
+    private int mFilter2, mFilter3 = 1;
     private String mKey = "";
     private ActiveInfo mActiveInfo = null;
 
@@ -108,7 +108,7 @@ public class StudioListFragment extends ActiveListFragment {
     }
 
     private void loadDataListMore () {
-        /*loadDataList(mIndex + 1, new UserInfoOperator.OnGetListener<List<TopListItem>>() {
+        loadDataList(0, mFilter2, mFilter3, mIndex + 1, new UserInfoOperator.OnGetListener<List<TopListItem>>() {
             @Override
             public void onGet(boolean succeed, List<TopListItem> topListItems) {
                 if (succeed) {
@@ -121,7 +121,7 @@ public class StudioListFragment extends ActiveListFragment {
                     }
                 }
             }
-        });*/
+        });
     }
 
     private void loadDataList (int filter1, int filter2, int filter3, int index, UserInfoOperator.OnGetListener<List<TopListItem>> listener) {
@@ -202,6 +202,7 @@ public class StudioListFragment extends ActiveListFragment {
     @Override
     public void needLoadMore() {
         Log.v(TAG, "needLoadMore ");
+        loadDataListMore();
     }
 
     public class SimpleAdapter extends BaseAdapter {

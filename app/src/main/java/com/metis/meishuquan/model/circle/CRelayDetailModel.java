@@ -27,6 +27,13 @@ public class CRelayDetailModel implements Serializable {
 
     @SerializedName("source")
     public String source;
+
+    @SerializedName("joinActivityId")
+    public int joinActivityId;
+
+    @SerializedName("activityImg")
+    public String activityImg;
+
     /**
      * 报名状态 仅仅非画室机构转发有效
      * 0无 1已报名 2不能修改
