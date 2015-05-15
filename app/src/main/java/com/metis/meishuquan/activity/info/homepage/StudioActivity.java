@@ -707,10 +707,16 @@ public class StudioActivity extends BaseActivity implements
                     ListDialogFragment.getInstance().show(getSupportFragmentManager(), TAG);
                     break;
                 case R.id.info_nick:
-                    showDialogAndUpdate(getString(R.string.info_nick), mUser.getName(), "", User.KEY_NICK_NAME, new InputDialogFragment.OnOkListener() {
+                    showDialogAndUpdate(getString(R.string.info_nick), mUser.getName(), "", new InputDialogFragment.OnOkListener() {
                         @Override
                         public void onOkClick(View view, CharSequence cs) {
-                            mUser.setName(cs.toString());
+                            if (PatternUtils.PATTERN_NICK_NAME.matcher(cs).matches()) {
+                                UserManager.updateMyInfo(User.KEY_NICK_NAME, cs.toString());
+                                mUser.setName(cs.toString());
+                            } else {
+                                Toast.makeText(StudioActivity.this, R.string.studio_wrong_format, Toast.LENGTH_SHORT).show();
+                            }
+
                         }
                     });
                     //startInputActivityForResult(getString(R.string.info_modify_nick), mUser.getName(), true, InputActivity.REQUEST_CODE_NICK);
@@ -718,19 +724,25 @@ public class StudioActivity extends BaseActivity implements
                 case R.id.info_meishuquan_id:
 
                     if (TextUtils.isEmpty(mUser.getAccout())) {
-                        showDialogAndUpdate(getString(R.string.info_meishuquan_id), "", getString(R.string.info_meishuquan_id), User.KEY_ACCOUNT, new InputDialogFragment.OnOkListener() {
+                        showDialogAndUpdate(getString(R.string.info_meishuquan_id), "", getString(R.string.info_meishuquan_id), new InputDialogFragment.OnOkListener() {
                             @Override
                             public void onOkClick(View view, CharSequence cs) {
-                                mUser.setAccout(cs.toString());
+                                if (PatternUtils.PATTERN_MEISHUQUAN_ID.matcher(cs).matches()) {
+                                    mUser.setAccout(cs.toString());
+                                    UserManager.updateMyInfo(User.KEY_ACCOUNT, cs.toString());
+                                } else {
+                                    Toast.makeText(StudioActivity.this, R.string.studio_wrong_format, Toast.LENGTH_SHORT).show();
+                                }
                             }
                         });
                     }
                     break;
                 case R.id.info_recents_container:
-                    showDialogAndUpdate(getString(R.string.info_recents), mUser.getSelfSignature(), getString(R.string.info_recents), User.KEY_SELFSIGNATURE, new InputDialogFragment.OnOkListener() {
+                    showDialogAndUpdate(getString(R.string.info_recents), mUser.getSelfSignature(), getString(R.string.info_recents), new InputDialogFragment.OnOkListener() {
                         @Override
                         public void onOkClick(View view, CharSequence cs) {
                             mUser.setSelfSignature(cs.toString());
+                            UserManager.updateMyInfo(User.KEY_SELFSIGNATURE, cs.toString());
                         }
                     });
                     //startInputActivityForResult(getString(R.string.info_recents), mRecentsContentTv.getText(), false, InputActivity.REQUEST_CODE_RECENTS);
@@ -769,18 +781,20 @@ public class StudioActivity extends BaseActivity implements
                     });*/
                     break;
                 case R.id.info_cv:
-                    showDialogAndUpdate(getString(R.string.info_cv), mUser.getUserResume(), getString(R.string.info_cv), User.KEY_USER_RESUME, new InputDialogFragment.OnOkListener() {
+                    showDialogAndUpdate(getString(R.string.info_cv), mUser.getUserResume(), getString(R.string.info_cv), new InputDialogFragment.OnOkListener() {
                         @Override
                         public void onOkClick(View view, CharSequence cs) {
                             mUser.setUserResume(cs.toString());
+                            UserManager.updateMyInfo(User.KEY_USER_RESUME, cs.toString());
                         }
                     });
                     break;
                 case R.id.info_achievement:
-                    showDialogAndUpdate(getString(R.string.info_achievement), mUser.getAchievement(), getString(R.string.info_achievement), User.KEY_USER_RESUME, new InputDialogFragment.OnOkListener() {
+                    showDialogAndUpdate(getString(R.string.info_achievement), mUser.getAchievement(), getString(R.string.info_achievement), new InputDialogFragment.OnOkListener() {
                         @Override
                         public void onOkClick(View view, CharSequence cs) {
                             mUser.setAchievement(cs.toString());
+                            UserManager.updateMyInfo(User.KEY_USER_RESUME, cs.toString());
                         }
                     });
                     break;
@@ -840,17 +854,13 @@ public class StudioActivity extends BaseActivity implements
         }
     };
 
-    private void showDialogAndUpdate (String title, String text, String hint, final String key, final InputDialogFragment.OnOkListener listener) {
+    private void showDialogAndUpdate (String title, String text, String hint, final InputDialogFragment.OnOkListener listener) {
         InputDialogFragment.getInstance(title, text, hint, new InputDialogFragment.OnOkListener() {
             @Override
             public void onOkClick(View view, CharSequence cs) {
-                if (TextUtils.isEmpty(cs)) {
-                    return;
-                }
                 if (listener != null) {
                     listener.onOkClick(view, cs);
                 }
-                UserManager.updateMyInfo(key, cs.toString());
                 //updateInfo(key, cs.toString());
             }
         }).show(getSupportFragmentManager(), "");
