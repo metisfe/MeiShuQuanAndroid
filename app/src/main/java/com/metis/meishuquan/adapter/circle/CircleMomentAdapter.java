@@ -208,13 +208,15 @@ public class CircleMomentAdapter extends BaseAdapter {
 
     private void support(CCircleDetailModel moment) {
         int supportId = 0;
+        int typeId = 7;
         if (moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal()) {
             supportId = moment.relayCircle.joinActivityId;
+            typeId = moment.relayCircle.type;
         } else {
             supportId = moment.id;
         }
 
-        String url = String.format("v1.1/Comment/Support?userid=%s&id=%s&type=7&result=1&session=%s", MainApplication.userInfo.getUserId(), supportId, MainApplication.userInfo.getCookie());
+        String url = String.format("v1.1/Comment/Support?userid=%s&id=%s&type=%s&result=1&session=%s", MainApplication.userInfo.getUserId(), supportId, typeId, MainApplication.getSession());
 
         ApiDataProvider.getmClient().invokeApi(url, null,
                 HttpGet.METHOD_NAME, null, CirclePushCommentResult.class,
