@@ -175,6 +175,12 @@ public class AssessFragment extends Fragment {
         ft.addToBackStack(null);
         ft.commit();
         this.photoPath = "";
+        assessPublishFragment.setOnAssessPublishedListner(new AssessPublishFragment.OnAssessPublishedListner() {
+            @Override
+            public void refreshSescondTab(int index) {
+                GlobalData.AssessIndex = index;
+            }
+        });
     }
 
     private void initView(ViewGroup rootView) {
@@ -259,6 +265,12 @@ public class AssessFragment extends Fragment {
                             ft.add(R.id.content_container, assessPublishFragment);
                             ft.addToBackStack(null);
                             ft.commit();
+                            assessPublishFragment.setOnAssessPublishedListner(new AssessPublishFragment.OnAssessPublishedListner() {
+                                @Override
+                                public void refreshSescondTab(int index) {
+                                    GlobalData.AssessIndex = index;
+                                }
+                            });
                         }
                     });
                 } else {

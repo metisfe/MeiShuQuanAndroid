@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +17,7 @@ import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.circle.ChatActivity;
+import com.metis.meishuquan.activity.info.QrScanActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.util.ViewUtils;
@@ -28,15 +27,18 @@ import com.metis.meishuquan.view.circle.PopupAddWindow;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
 
 /**
  * Created by wudi on 4/4/2015.
  */
 public class ChatListFragment extends CircleBaseFragment {
+    public static int REQUEST_QC = 11;
 
     private ViewGroup rootView;
     private ListView listView;
+    private List<RongIMClient.Conversation> clist = null;
     private ChatListAdapter adapter;
 
     @Override
@@ -98,13 +100,15 @@ public class ChatListFragment extends CircleBaseFragment {
                 }, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ScanQRCodeFragment scanQRCodeFragment = new ScanQRCodeFragment();
-                        FragmentManager fm = getActivity().getSupportFragmentManager();
-                        FragmentTransaction ft = fm.beginTransaction();
-                        ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
-                        ft.add(R.id.content_container, scanQRCodeFragment);
-                        ft.addToBackStack(null);
-                        ft.commit();
+                        startActivityForResult(new Intent(MainApplication.UIContext, QrScanActivity.class), REQUEST_QC);
+//
+//                        ScanQRCodeFragment scanQRCodeFragment = new ScanQRCodeFragment();
+//                        FragmentManager fm = getActivity().getSupportFragmentManager();
+//                        FragmentTransaction ft = fm.beginTransaction();
+//                        ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+//                        ft.add(R.id.content_container, scanQRCodeFragment);
+//                        ft.addToBackStack(null);
+//                        ft.commit();
                     }
                 });
 
@@ -121,7 +125,12 @@ public class ChatListFragment extends CircleBaseFragment {
 
     private void refreshList() {
         if (this.listView != null && adapter != null && MainApplication.rongClient != null) {
-            List<RongIMClient.Conversation> clist = MainApplication.rongClient.getConversationList();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    clist = MainApplication.rongClient.getConversationList();
+                }
+            }).start();
             if (clist != null) adapter.data = clist;
             ViewUtils.delayExecute(new Runnable() {
                 @Override
@@ -150,7 +159,13 @@ public class ChatListFragment extends CircleBaseFragment {
         });
 
         if (MainApplication.rongClient != null) {
-            adapter.data = MainApplication.rongClient.getConversationList();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.data = MainApplication.rongClient.getConversationList();
+                }
+            }).start();
+
         } else {
             startActivity(new Intent(getActivity(), LoginActivity.class));
         }

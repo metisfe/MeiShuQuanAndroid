@@ -128,6 +128,7 @@ public class CircleMomentAdapter extends BaseAdapter {
 
             if (moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal()) {
                 if (moment.user.identity == IdTypeEnum.STUDENT.getVal() && moment.user.userId == MainApplication.userInfo.getUserId()) {
+                    viewHolder.chooseHuashi = (ImageView) convertView.findViewById(R.id.id_img_choose_huashi);
                     viewHolder.chooseHuashi.setVisibility(View.VISIBLE);
                     viewHolder.chooseHuashi.setOnClickListener(new View.OnClickListener() {
                         @Override

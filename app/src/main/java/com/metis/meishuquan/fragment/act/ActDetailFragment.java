@@ -124,6 +124,7 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener 
                     startActivity(new Intent(getActivity(), LoginActivity.class));
                     return;
                 }
+                Log.i("user_role",MainApplication.userInfo.getUserRole()+"&&&&&&&&&&");
                 if (MainApplication.userInfo.getUserRole() == IdTypeEnum.TEACHER.getVal()) {
                     Toast.makeText(getActivity(), R.string.act_join_only_student, Toast.LENGTH_SHORT).show();
                     return;
@@ -141,7 +142,6 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener 
                     it.putExtra(ReplyActivity.TITLE, mInfo.getTitle());
                     it.putExtra(ReplyActivity.CONTENT, mInfo.getContent());
                     it.putExtra(ReplyActivity.IMAGEURL, mInfo.getImage());
-
                 }
                 break;
             case R.id.act_check_studio:

@@ -19,6 +19,7 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,8 @@ public class CommonOperator {
     private final String PRIVATE = "v1.1/Comment/Favorite";
     private final String FileUpload = "v1.1/File/Upload";//文件上传
     private final String ANDROIDVERSION = "v1.1/Default/AndroidVersion";//获取最新版本
+    private final String CHECKLOGINSTATE = "v1.1/Default/Start?session=" + MainApplication.getSession();//校验账号状态
+
     private final String SESSION = MainApplication.userInfo.getCookie();
     private boolean flag;
 
@@ -65,7 +68,7 @@ public class CommonOperator {
                 path.append("&id=" + id);
                 path.append("&type=" + type.getVal());
                 path.append("&result=" + result);
-                path.append("&session=" + SESSION);
+                path.append("&session=" + MainApplication.getSession());
                 ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
@@ -82,14 +85,15 @@ public class CommonOperator {
      * @param callback
      */
     public void publishComment(int userid, int newsId, String content, int replyCid, BlockTypeEnum blockType, ApiOperationCallback<ReturnInfo<String>> callback) {
+        String encodeContent = URLEncoder.encode(content);
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuilder path = new StringBuilder(PUBLISHCOMMENT);
                 path.append("?userid=" + userid);
                 path.append("&newsid=" + newsId);
-                path.append("&content=" + content);
-                path.append("&replyCid=" + replyCid);
-                path.append("&blockType=" + blockType.getVal());
+                path.append("&content=" + encodeContent);
+                path.append("&replyCid=" + String.valueOf(replyCid));
+                path.append("&blockType=" + String.valueOf(blockType.getVal()));
                 path.append("&session=" + MainApplication.getSession());
                 Log.i(Log_PubLishComment_url, path.toString());
                 ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
@@ -154,6 +158,15 @@ public class CommonOperator {
             if (flag) {
                 ApiDataProvider.getmClient().invokeApi(ANDROIDVERSION, null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<AndroidVersion>>) new ReturnInfo<AndroidVersion>().getClass(), callback);
+            }
+        }
+    }
+
+    public void checkLoginState(ApiOperationCallback<ReturnInfo<String>> callback) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                ApiDataProvider.getmClient().invokeApi(CHECKLOGINSTATE, null, HttpGet.METHOD_NAME, null,
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
         }
     }

@@ -55,6 +55,7 @@ import com.metis.meishuquan.model.topline.ContentInfo;
 import com.metis.meishuquan.model.topline.RelatedRead;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
 import com.metis.meishuquan.model.topline.Urls;
+import com.metis.meishuquan.util.Helper;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.ImageUtil;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
@@ -105,7 +106,6 @@ public class ItemInfoFragment extends Fragment {
 
     private int newsId = 0;
     private boolean titleVisible = true;
-    private Animation animation;
     private FragmentManager fm;
 
     @Override
@@ -197,7 +197,6 @@ public class ItemInfoFragment extends Fragment {
         imgStep = (ImageView) rootView.findViewById(R.id.id_img_step);
         imgPrivate = (ImageView) rootView.findViewById(R.id.id_img_favorite);//收藏图标
 
-        animation = AnimationUtils.loadAnimation(MainApplication.UIContext, R.anim.support_add_one);
         fm = getActivity().getSupportFragmentManager();
     }
 
@@ -213,24 +212,24 @@ public class ItemInfoFragment extends Fragment {
             for (int i = 0; i < lstContentInfo.length; i++) {
                 ContentInfo contentInfo = lstContentInfo[i];
                 if (contentInfo.getType().equals("TXT")) {
-                    if (contentInfo.getData().getContentType().equals("p")) {
+                    if (contentInfo.getData().getContentType() != null && contentInfo.getData().getContentType().equals("p")) {
                         addTextView(contentInfo.getData().getContent());
                     } else {
                         addTextView(contentInfo.getData().getContent());
                     }
                 }
-                if (contentInfo.getType().equals("IMG")) {
+                if (contentInfo.getType() != null && contentInfo.getType().equals("IMG")) {
                     lstImgUrls.add(contentInfo.getData().getUrl());
                     addImageView(contentInfo.getData().getUrl(), contentInfo.getData().getWidth(), contentInfo.getData().getHeight());
                 }
-                if (contentInfo.getType().equals("VOIDE")) {
+                if (contentInfo.getType() != null && contentInfo.getType().equals("VOIDE")) {
                     //addImageView(contentInfo.getData().getUrl(), contentInfo.getData().getWidth(), contentInfo.getData().getHeight());
                 }
             }
 
             //相关阅读
             if (newsInfo.getData().getRelatedNewsList().size() > 0) {
-                llRelatedRead.setVisibility(View.VISIBLE);
+                ll_relatedReadAndSupportContainer.setVisibility(View.VISIBLE);
                 //绑定相关阅读数据
                 List<RelatedRead> lstRelatedRead = newsInfo.getData().getRelatedNewsList();
                 commonAdapter = new CommonAdapter(MainApplication.UIContext, lstRelatedRead);
@@ -387,7 +386,7 @@ public class ItemInfoFragment extends Fragment {
                     }
                 }
                 //点赞加1效果
-                supportOrStep(tvSupportCount, tvSupportAddOne, imgSupport, count, true);
+                Helper.getInstance(MainApplication.UIContext).supportOrStep(tvSupportCount, tvSupportAddOne, imgSupport, count, true);
 
                 if (newsInfo.getData().getUserMark() != null && newsInfo.getData().getUserMark().isSupport()) {
                     Toast.makeText(MainApplication.UIContext, "您已赞", Toast.LENGTH_SHORT).show();
@@ -429,7 +428,7 @@ public class ItemInfoFragment extends Fragment {
                         return;
                     }
                 }
-                supportOrStep(tvStepCount, tvStepAddOne, imgStep, count, false);
+                Helper.getInstance(MainApplication.UIContext).supportOrStep(tvStepCount, tvStepAddOne, imgStep, count, false);
 
 
                 //判断登录状态
@@ -523,8 +522,8 @@ public class ItemInfoFragment extends Fragment {
                 if (newsInfo != null && newsInfo.getData() != null) {
                     SharePopupWindow sharePopupWindow = new SharePopupWindow(getActivity(), rootView);
                     Log.i("分享的图片地址", shareImgUrl);
-                    if(shareImgUrl.isEmpty()){
-                        shareImgUrl="";
+                    if (shareImgUrl.isEmpty()) {
+                        shareImgUrl = "";
                     }
                     sharePopupWindow.setShareInfo(newsInfo.getData().getTitle(), newsInfo.getData().getTitle(), newsInfo.getData().getShareUrl(), shareImgUrl);
                     Log.i("share_content", newsInfo.getData().getShareUrl());
@@ -581,26 +580,6 @@ public class ItemInfoFragment extends Fragment {
         fragmentTransaction.commit();
     }
 
-    private void supportOrStep(TextView tvCount, final TextView tvAddOne, ImageView img, int count, boolean isSupport) {
-        tvAddOne.setVisibility(View.VISIBLE);
-        tvAddOne.startAnimation(animation);
-        int addCount = count + 1;
-        tvCount.setText("(" + addCount + ")");
-        tvCount.setTag(count + 1);
-        tvCount.setTextColor(Color.RED);
-        if (isSupport) {
-            img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.icon_support));
-        } else {
-            img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.icon_step));
-        }
-
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                tvAddOne.setVisibility(View.GONE);
-            }
-        }, 500);
-    }
-
     private void hideInputView() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
@@ -655,13 +634,11 @@ public class ItemInfoFragment extends Fragment {
                     tvStepCount.setTextColor(Color.RED);
                 }
             }
-
         }
     }
 
     public void getInfoData(final int newsId, final UserInfoOperator.OnGetListener<TopLineNewsInfo> listener) {
-        TopLineOperator topLineOperator = TopLineOperator.getInstance();
-        topLineOperator.getNewsInfoById(newsId, new ApiOperationCallback<ReturnInfo<String>>() {
+        TopLineOperator.getInstance().getNewsInfoById(newsId, new ApiOperationCallback<ReturnInfo<String>>() {
             @Override
             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                 if (result != null) {

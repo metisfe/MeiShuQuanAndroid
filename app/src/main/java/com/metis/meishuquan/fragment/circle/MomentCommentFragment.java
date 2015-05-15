@@ -52,6 +52,7 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import org.apache.http.client.methods.HttpGet;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,6 +84,7 @@ public class MomentCommentFragment extends Fragment {
     private ImageButton emotionKeyboardSwitchButton;
     private boolean isEmotionSoftInputSwitchInMiddle;
     private boolean isEmotionInputShown;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 //        Bundle args = this.getArguments();
@@ -102,7 +104,8 @@ public class MomentCommentFragment extends Fragment {
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
-                ft.replace(R.id.content_container, momentDetailFragment);
+                ft.add(R.id.content_container, momentDetailFragment);
+                ft.remove(MomentCommentFragment.this);
                 ft.commit();
                 hideKeyBoard();
             }
@@ -113,16 +116,16 @@ public class MomentCommentFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainApplication.UIContext, "正在发送，请稍候", Toast.LENGTH_SHORT).show();
-                String url = String.format("v1.1/Circle/PushComment?id=%s&content=%s&session=%s", GlobalData.moment.id, editText.getText().toString(), MainApplication.userInfo.getCookie());
+                String encodeContent = URLEncoder.encode(editText.getText().toString());
+                String url = String.format("v1.1/Circle/PushComment?id=%s&content=%s&session=%s", GlobalData.moment.id, encodeContent, MainApplication.userInfo.getCookie());
                 publishButton.setClickable(false);
                 ApiDataProvider.getmClient().invokeApi(url, null,
-                        HttpGet.METHOD_NAME, null,  CirclePushCommentResult.class,
+                        HttpGet.METHOD_NAME, null, CirclePushCommentResult.class,
                         new ApiOperationCallback<CirclePushCommentResult>() {
                             @Override
                             public void onCompleted(CirclePushCommentResult result, Exception exception, ServiceFilterResponse response) {
                                 publishButton.setClickable(true);
-                                if (result == null || !result.isSuccess())
-                                {
+                                if (result == null || !result.isSuccess()) {
                                     Toast.makeText(MainApplication.UIContext, "发送失败，请检查网络后重试", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
@@ -143,13 +146,10 @@ public class MomentCommentFragment extends Fragment {
         this.emotionKeyboardSwitchButtonContainer = (LinearLayout) rootView.findViewById(R.id.switch_emotion_container);
         this.emotionKeyboardSwitchButton = (ImageButton) rootView.findViewById(R.id.switch_emotion);
         this.emotionKeyboardSwitchButton.setImageResource(EMOTION_DRAWABLE_RESOURCE_ID);
-        this.emotionKeyboardSwitchButton.setOnClickListener(new View.OnClickListener()
-        {
+        this.emotionKeyboardSwitchButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                if (emotionSelectView.getVisibility() == View.GONE)
-                {
+            public void onClick(View v) {
+                if (emotionSelectView.getVisibility() == View.GONE) {
                     isEmotionInputShown = true;
                     hideKeyBoard();
                     ViewUtils.delayExecute(new Runnable() {
@@ -168,9 +168,7 @@ public class MomentCommentFragment extends Fragment {
                             emotionKeyboardSwitchButtonContainer.setLayoutParams(params);
                         }
                     }, 200);
-                }
-                else
-                {
+                } else {
                     isEmotionInputShown = false;
                     showKeyBoard();
                     emotionSelectView.setVisibility(View.GONE);
@@ -182,13 +180,10 @@ public class MomentCommentFragment extends Fragment {
         editText = (EmotionEditText) rootView.findViewById(R.id.comment_edittext);
         editText.setFocusableInTouchMode(true);
         editText.requestFocus();
-        editText.setOnClickListener(new View.OnClickListener()
-        {
+        editText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                if (emotionSelectView.isShown())
-                {
+            public void onClick(View v) {
+                if (emotionSelectView.isShown()) {
                     emotionSelectView.setVisibility(View.GONE);
                     emotionKeyboardSwitchButton.setImageResource(EMOTION_DRAWABLE_RESOURCE_ID);
                 }
@@ -210,36 +205,30 @@ public class MomentCommentFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    private void showKeyBoard()
-    {
+    private void showKeyBoard() {
         InputMethodManager imm = (InputMethodManager) MainApplication.MainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
-    protected void hideKeyBoard()
-    {
+    protected void hideKeyBoard() {
         ((InputMethodManager) MainApplication.MainActivity.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(MainApplication.MainActivity
                 .getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
 
         final View fragmentRootView = rootView.findViewById(R.id.ll_parent);
         final ViewTreeObserver observer = fragmentRootView.getViewTreeObserver();
-        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
-        {
+        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
-            public void onGlobalLayout()
-            {
+            public void onGlobalLayout() {
                 Rect r = new Rect();
                 fragmentRootView.getWindowVisibleDisplayFrame(r);
                 int visible_height = r.bottom;
                 // soft input pop out
-                if (ScreenHeight - visible_height > SoftInputMinHeight && !isEmotionSoftInputSwitchInMiddle)
-                {
+                if (ScreenHeight - visible_height > SoftInputMinHeight && !isEmotionSoftInputSwitchInMiddle) {
                     isEmotionSoftInputSwitchInMiddle = true;
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                     params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -248,18 +237,14 @@ public class MomentCommentFragment extends Fragment {
                 }
 
                 // soft input hide
-                if (visible_height == ScreenHeight && isEmotionSoftInputSwitchInMiddle)
-                {
+                if (visible_height == ScreenHeight && isEmotionSoftInputSwitchInMiddle) {
                     isEmotionSoftInputSwitchInMiddle = false;
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
-                    if (isEmotionInputShown)
-                    {
+                    if (isEmotionInputShown) {
                         params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                         params.setMargins(0, MarginTopForEmotionSwitch, 0, 0);
-                    }
-                    else
-                    {
+                    } else {
                         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                     }
 
@@ -269,16 +254,12 @@ public class MomentCommentFragment extends Fragment {
         });
     }
 
-    private int getStatusBarHeight()
-    {
+    private int getStatusBarHeight() {
         int result = 0;
         int resourceId = MainApplication.Resources.getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0)
-        {
+        if (resourceId > 0) {
             result = MainApplication.Resources.getDimensionPixelSize(resourceId);
-        }
-        else
-        {
+        } else {
             return (int) (MainApplication.getDisplayMetrics().density * 25);
         }
 

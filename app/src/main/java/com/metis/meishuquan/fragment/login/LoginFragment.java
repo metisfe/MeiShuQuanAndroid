@@ -82,6 +82,7 @@ public class LoginFragment extends Fragment {
         btnLogin.setOnClickListener(new View.OnClickListener() {//登录
             @Override
             public void onClick(View view) {
+                btnLogin.setClickable(false);
                 if (isPressLogin) {
                     return;
                 }
@@ -126,12 +127,15 @@ public class LoginFragment extends Fragment {
                             getActivity().setResult(Activity.RESULT_OK);
                             getActivity().finish();
                             isPressLogin = false;
+                            btnLogin.setClickable(false);
                         } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
                             Toast.makeText(MainApplication.UIContext, result.getMessage(), Toast.LENGTH_SHORT).show();
                             isPressLogin = false;
+                            btnLogin.setClickable(false);
                         } else if (result != null || exception != null) {
                             Log.e("**LoginFragment", exception.getCause().toString());
                             isPressLogin = false;
+                            btnLogin.setClickable(false);
                         }
                     }
                 });

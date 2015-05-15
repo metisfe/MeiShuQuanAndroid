@@ -10,9 +10,11 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.commons.AndroidVersion;
 import com.metis.meishuquan.model.commons.User;
@@ -126,8 +128,7 @@ public class MainApplication extends Application {
     }
 
     private User getUserInfoFromSharedPreferences() {
-        SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(UIContext);
-        String json = spu.getStringByKey(SharedPreferencesUtil.USER_LOGIN_INFO);
+        String json = SharedPreferencesUtil.getInstanse(UIContext).getStringByKey(SharedPreferencesUtil.USER_LOGIN_INFO);
         if (json.isEmpty()) {
             return new User();
         }

@@ -27,6 +27,7 @@ import com.metis.meishuquan.framework.util.TextureRender;
 import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.assess.Bimp;
 import com.metis.meishuquan.model.commons.AndroidVersion;
+import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.ui.SelectedTabType;
 import com.metis.meishuquan.util.Environments;
@@ -48,6 +49,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
     private static final String PressBackAgainToQuiteApplicationMessage = "再按一次退出";
     private ViewGroup popupRoot;
     private boolean doWantToQuite;
+    private boolean isNormal;//检验账号是否有异常
     private int attachViewCount = 0;
 
     public static MainActivity self;
@@ -91,15 +93,16 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
 
         Utils.showConfigureNetwork(this);
         onNewIntent(this.getIntent());
+        checkLoginState();
         updateApp();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1001 && resultCode == RESULT_OK) {
-            navigateTo(CircleFragment.class);
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if (requestCode == 1001 && resultCode == RESULT_OK) {
+//            navigateTo(CircleFragment.class);
+//        }
+//    }
 
     @Override
     public void onResume() {
@@ -259,7 +262,6 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
         }
     }
 
-
     private void updateApp() {
         //TODO:比较上次检测时间是否超过24小时
         String json = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey(SharedPreferencesUtil.LAST_APP_VERSION);
@@ -312,6 +314,20 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
                                 })
                                 .show();
                     }
+                }
+            }
+        });
+    }
+
+    private void checkLoginState() {
+        CommonOperator.getInstance().checkLoginState(new ApiOperationCallback<ReturnInfo<String>>() {
+            @Override
+            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                if (result != null && result.isSuccess()) {
+                } else {
+                    MainApplication.userInfo = new User();
+                    Toast.makeText(MainApplication.UIContext, "账号异常！请重新登录，建议您修改密码", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(MainApplication.UIContext, LoginActivity.class));
                 }
             }
         });
