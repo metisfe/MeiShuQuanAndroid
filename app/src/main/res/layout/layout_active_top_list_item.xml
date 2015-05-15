@@ -30,7 +30,6 @@
             style="@style/info_secondaryTextStyle"
             />
     </RelativeLayout>
-
     <RelativeLayout
         android:id="@+id/top_list_item_extra"
         android:layout_width="120dp"
@@ -39,11 +38,23 @@
         android:layout_centerVertical="true"
         android:paddingRight="10dp"
         >
+        <Button
+            android:id="@+id/top_list_item_btn"
+            android:layout_width="36dp"
+            android:layout_height="18dp"
+            android:background="@drawable/bg_top_list_join_in"
+            android:text="@string/act_join"
+            android:textColor="@color/top_list_item_join"
+            android:textSize="12sp"
+            android:layout_marginTop="2dp"
+            android:layout_alignParentRight="true"
+            />
         <TextView
             android:id="@+id/top_list_item_join_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="right"
+            android:layout_below="@+id/top_list_item_btn"
             android:layout_alignParentRight="true"
             style="@style/info_secondaryTextStyle"
             />
@@ -51,31 +62,15 @@
             android:id="@+id/top_list_item_comment_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/top_list_item_join_count"
             android:gravity="right"
-            android:layout_alignParentRight="true"
             android:visibility="gone"
             style="@style/info_secondaryTextStyle"
             />
-        <Button
-            android:id="@+id/top_list_item_btn"
-            android:layout_width="36dp"
-            android:layout_height="18dp"
-            android:background="@drawable/bg_top_list_join_in"
-            android:text="@string/act_join"
-            android:layout_below="@+id/top_list_item_comment_count"
-            android:layout_toLeftOf="@+id/support"
-            android:textColor="@color/top_list_item_join"
-            android:textSize="12sp"
-            android:layout_alignWithParentIfMissing="true"
-            android:layout_marginTop="2dp"
-            />
+
         <ImageView
             android:id="@+id/support"
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:layout_below="@+id/top_list_item_comment_count"
-            android:layout_toLeftOf="@+id/top_list_item_support_count"
             android:src="@drawable/top_list_item_support"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
@@ -85,11 +80,10 @@
             android:id="@+id/top_list_item_support_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/top_list_item_comment_count"
-            android:layout_alignParentRight="true"
             android:gravity="right"
             android:visibility="gone"
             style="@style/info_secondaryTextStyle"
             />
     </RelativeLayout>
+
 </RelativeLayout>

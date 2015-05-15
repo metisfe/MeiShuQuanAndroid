@@ -1,9 +1,11 @@
 package com.metis.meishuquan.fragment.act;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +47,7 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
 
     private ImageView mCoverIv = null;
     private TextView mTitleTv = null, mDescTv = null, mAwardTv = null, mDetailTv = null;
+    private TextView mActDeals = null;
     private Button mJoinBtn = null, mCheckBtn = null;
 
     private User mUser = null;
@@ -64,8 +67,21 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
         mDetailTv = (TextView) view.findViewById(R.id.act_detail_text);
         mJoinBtn = (Button) view.findViewById(R.id.act_detail_join);
         mCheckBtn = (Button) view.findViewById(R.id.act_check_studio);
+        mActDeals = (TextView)view.findViewById(R.id.act_deals);
         mJoinBtn.setOnClickListener(this);
         mCheckBtn.setOnClickListener(this);
+
+        mActDeals.setText(Html.fromHtml("<font size=\"3\" color=\"black\">" + getString(R.string.act_deals_1) + "</font><font size=\"3\" color=\"red\">" + getString(R.string.act_deals_2) + "</font>"));
+        mActDeals.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri uri = Uri.parse("http://www.meishuquan.net/UserAgreement.html");
+
+                Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+
+                startActivity(intent);
+            }
+        });
 
         Log.v(TAG, TAG + " onViewCreated");
     }

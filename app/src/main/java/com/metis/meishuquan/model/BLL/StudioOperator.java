@@ -301,10 +301,11 @@ public class StudioOperator {
         }
     }
 
-    public void getMyCircleList (final UserInfoOperator.OnGetListener<List<CCircleDetailModel>> listener) {
+    public void getMyCircleList (long userId, final UserInfoOperator.OnGetListener<List<CCircleDetailModel>> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_STUDIO_MY_CIRCLE_LIST);
             sb.append("?" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+            sb.append("&" + KEY_USER_ID + "=" + userId);
 
             Log.v(TAG, "getMyCircleList request=" + sb.toString());
             ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {

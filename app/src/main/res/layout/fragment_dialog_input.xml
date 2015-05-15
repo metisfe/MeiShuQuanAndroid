@@ -7,7 +7,11 @@
     <TextView
         android:id="@+id/input_title"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="5dp"
+        style="@style/info_textStyle"
+        />
     <EditText
         android:id="@+id/input_edit"
         android:layout_width="fill_parent"
@@ -28,6 +32,6 @@
         android:layout_below="@+id/input_edit"
         android:text="@string/gender_ok"
         android:background="@android:color/transparent"
-        android:textColor="@android:color/black"
+        style="@style/info_textStyle"
         />
 </RelativeLayout>

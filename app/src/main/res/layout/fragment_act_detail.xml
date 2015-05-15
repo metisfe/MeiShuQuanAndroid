@@ -4,8 +4,10 @@
     android:layout_height="match_parent">
 
     <ScrollView
+        android:id="@+id/act_detail_scroll"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_above="@+id/act_btn_container"
         >
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -62,36 +64,51 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 />
-            <Button
-                android:id="@+id/act_detail_join"
-                android:layout_width="fill_parent"
-                android:layout_height="35dp"
-                android:layout_marginLeft="35dp"
-                android:layout_marginRight="35dp"
-                android:layout_marginTop="35dp"
-                android:layout_marginBottom="10dp"
-                android:textColor="@android:color/white"
-                android:background="@drawable/act_join_btn_bg"
-                android:text="@string/act_title_join"
-                android:gravity="center"
-                android:layout_below="@+id/act_detail_text"
-                android:visibility="gone"
-                />
-            <Button
-                android:id="@+id/act_check_studio"
-                android:layout_width="fill_parent"
-                android:layout_height="35dp"
-                android:layout_marginLeft="35dp"
-                android:layout_marginRight="35dp"
-                android:layout_marginBottom="35dp"
-                android:textColor="@android:color/white"
-                android:background="@drawable/act_join_btn_bg"
-                android:text="@string/act_title_check"
-                android:gravity="center"
-                android:layout_below="@+id/act_detail_join"
-                android:visibility="gone"
-                />
+
         </RelativeLayout>
     </ScrollView>
-
+    <LinearLayout
+        android:id="@+id/act_btn_container"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        >
+        <Button
+            android:id="@+id/act_detail_join"
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:layout_marginTop="35dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/act_join_btn_bg"
+            android:text="@string/act_title_join"
+            android:gravity="center"
+            android:visibility="gone"
+            />
+        <Button
+            android:id="@+id/act_check_studio"
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:layout_marginBottom="35dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/act_join_btn_bg"
+            android:text="@string/act_title_check"
+            android:gravity="center"
+            android:layout_below="@+id/act_detail_join"
+            android:visibility="gone"
+            />
+        <TextView
+            android:id="@+id/act_deals"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:paddingBottom="10dp"
+            />
+    </LinearLayout>
 </RelativeLayout>

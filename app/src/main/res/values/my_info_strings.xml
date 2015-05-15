@@ -141,7 +141,7 @@
     <string name="my_course_read_count">阅读(%1$d)</string>
     
     <string name="act_title_details">活动详情</string>
-    <string name="act_title_list">PK榜</string>
+    <string name="act_title_list">选画室</string>
     <string name="act_title_join">我要报名</string>
     <string name="act_title_check">查看画室</string>
     <string name="act_joined_count">已报名%1$d人</string>
@@ -151,7 +151,7 @@
     <string name="act_select_studio">选画室</string>
     <string name="act_choose_one_plz">请选择一个画室</string>
     <string name="act_filter_title_pk">学生PK榜</string>
-    <string name="act_filter_title_spec">筛选</string>
+    <string name="act_filter_title_spec">推荐</string>
     <string name="act_filter_title_area">地区</string>
     <string name="act_filter_title_college">培训方向</string>
     <string name="act_join_success">选择画室成功</string>
@@ -164,6 +164,8 @@
     <string name="act_join">报名</string>
     <string name="act_joined">您已报名</string>
     <string name="act_less_than_10">亲！邀请好友集满10个赞，才能选画室哦！</string>
+    <string name="act_deals_1">点击“我要报名”，即表示您同意</string>
+    <string name="act_deals_2">《美术圈软件许可及服务协议》</string>
 
     <string-array name="act_filter_1">
         <item>学生PK榜</item>

@@ -283,7 +283,7 @@ public class StudioActivity extends BaseActivity implements
             } else {
                 if (mCircleList == null) {
                     mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
-                    StudioOperator.getInstance().getMyCircleList(new UserInfoOperator.OnGetListener<List<CCircleDetailModel>>() {
+                    StudioOperator.getInstance().getMyCircleList(mUser.getUserId(), new UserInfoOperator.OnGetListener<List<CCircleDetailModel>>() {
                         @Override
                         public void onGet(boolean succeed, List<CCircleDetailModel> cCircleDetailModels) {
                             if (succeed) {
