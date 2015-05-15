@@ -255,7 +255,7 @@ public class CircleMomentAdapter extends BaseAdapter {
         it.putExtra(ReplyActivity.PARM, parm);
         it.putExtra(ReplyActivity.TITLE, moment.relayCircle.title);
         it.putExtra(ReplyActivity.CONTENT, moment.relayCircle.desc);
-//        it.putExtra(ReplyActivity.IMAGEURL, moment.relayCircle.images.get(0));
+        it.putExtra(ReplyActivity.IMAGEURL, moment.relayCircle.activityImg);
         mContext.startActivity(it);
     }
 
