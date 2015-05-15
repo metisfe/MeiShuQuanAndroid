@@ -56,6 +56,7 @@ public class StudioFragment extends Fragment{
 
     private OnMenuItemClickListener mMenuClick = null;
     private RadioGroup.OnCheckedChangeListener mCheckChangeListener = null;
+    private OnNextPageListener mNextListener = null;
 
     private String mTitle1, mTitle2, mTitle3;
 
@@ -67,6 +68,10 @@ public class StudioFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_studio, null, true);
+    }
+
+    public RadioGroup getRadioGroup () {
+        return mRadioGroup;
     }
 
     @Override
@@ -95,7 +100,22 @@ public class StudioFragment extends Fragment{
         mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
-
+                switch (i) {
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        Log.v(TAG, "onScrollStateChanged SCROLL_STATE_IDLE");
+                        if (mListView.getLastVisiblePosition() >= absListView.getChildCount() - 1) {
+                            if (mNextListener != null) {
+                                mNextListener.onLoadNextPage();
+                            }
+                        }
+                        break;
+                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+                        Log.v(TAG, "onScrollStateChanged SCROLL_STATE_FLING");
+                        break;
+                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+                        Log.v(TAG, "onScrollStateChanged SCROLL_STATE_TOUCH_SCROLL");
+                        break;
+                }
             }
 
             @Override
@@ -287,6 +307,14 @@ public class StudioFragment extends Fragment{
             tv.setTextColor(mContext.getResources().getColor(android.R.color.black));
             return tv;
         }
+    }
+
+    public void setOnNextPageListener (OnNextPageListener listener) {
+        mNextListener = listener;
+    }
+
+    public static interface OnNextPageListener {
+        public void onLoadNextPage ();
     }
 
 }

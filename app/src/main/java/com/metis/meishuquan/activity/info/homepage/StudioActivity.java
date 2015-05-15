@@ -33,6 +33,7 @@ import com.metis.meishuquan.activity.info.BaseActivity;
 import com.metis.meishuquan.activity.info.DepartmentActivity;
 import com.metis.meishuquan.activity.info.InfoActivity;
 import com.metis.meishuquan.activity.info.TextActivity;
+import com.metis.meishuquan.adapter.circle.CircleMomentAdapter;
 import com.metis.meishuquan.adapter.commons.ConstellationAdapter;
 import com.metis.meishuquan.adapter.commons.SimplePrvsAdapter;
 import com.metis.meishuquan.adapter.studio.AchievementAdapter;
@@ -106,6 +107,8 @@ public class StudioActivity extends BaseActivity implements
 
     private String mCameraOutputPath = null;
 
+    private int mIndexForTab1, mIndexForTab2, mIndexForTab3;
+
     private SimplePrvsAdapter.OnPrvsItemClickListener mPrvsListener = new SimplePrvsAdapter.OnPrvsItemClickListener() {
 
         @Override
@@ -143,6 +146,22 @@ public class StudioActivity extends BaseActivity implements
         mStudioFragment.setOnMenuItemClickListener(this);
 
         mStudioFragment.setOnCheckedChangeListener(this);
+        mStudioFragment.setOnNextPageListener(new StudioFragment.OnNextPageListener() {
+            @Override
+            public void onLoadNextPage() {
+                int id = mStudioFragment.getRadioGroup().getCheckedRadioButtonId();
+                switch (id) {
+                    case R.id.studio_list_header_tab1:
+                        loadFirstTab();
+                        break;
+                    case R.id.studio_list_header_tab2:
+                        break;
+                    case R.id.studio_list_header_tab3:
+                        break;
+                }
+                /*onCheckedChanged (mStudioFragment.getRadioGroup(), id);*/
+            }
+        });
 
     }
 
@@ -279,6 +298,17 @@ public class StudioActivity extends BaseActivity implements
                     });
                 } else {
                     mAdapter = new ToplineCustomAdapter(StudioActivity.this, mNewsList);
+                    StudioOperator.getInstance().getMyNewsList(mUser.getUserId(), mNewsList.get(mNewsList.size() - 1).getNewsId(), new UserInfoOperator.OnGetListener<List<News>>() {
+                        @Override
+                        public void onGet(boolean succeed, List<News> newses) {
+                            if (succeed) {
+                                mNewsList.addAll(newses);
+                                if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab1) {
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        }
+                    });
                 }
             } else {
                 if (mCircleList == null) {
@@ -289,7 +319,7 @@ public class StudioActivity extends BaseActivity implements
                             if (succeed) {
                                 mCircleList = cCircleDetailModels;
                                 if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab1) {
-                                    mAdapter = new CircleListAdapter(cCircleDetailModels);
+                                    mAdapter = new CircleMomentAdapter(StudioActivity.this, cCircleDetailModels, null);
                                     mStudioFragment.setAdapter(mAdapter);
                                 }
 
@@ -316,21 +346,35 @@ public class StudioActivity extends BaseActivity implements
                 if (mUser != null) {
                     if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
                         //辉煌成绩
-                        if (mAchievementList == null) {
+                        if (mAchievementList == null || mAchievementList.isEmpty()) {
                             mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
                             StudioOperator.getInstance().getAchievementList(mUser.getUserId(), 0, new UserInfoOperator.OnGetListener<List<Achievement>>() {
                                 @Override
                                 public void onGet(boolean succeed, List<Achievement> achievements) {
-                                    mAchievementList = achievements;
-                                    if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab2) {
-                                        mAdapter = new AchievementAdapter(StudioActivity.this, achievements);
-                                        mStudioFragment.setAdapter(mAdapter);
+                                    if (succeed) {
+                                        mAchievementList = achievements;
+                                        if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab2) {
+                                            mAdapter = new AchievementAdapter(StudioActivity.this, achievements);
+                                            mStudioFragment.setAdapter(mAdapter);
+                                        }
                                     }
 
                                 }
                             });
                         } else {
                             mAdapter = new AchievementAdapter(this, mAchievementList);
+                            StudioOperator.getInstance().getAchievementList(mUser.getUserId(), mAchievementList.get(mAchievementList.size() - 1).getAchievementId(), new UserInfoOperator.OnGetListener<List<Achievement>>() {
+                                @Override
+                                public void onGet(boolean succeed, List<Achievement> achievements) {
+                                    if (succeed) {
+                                        mAchievementList.addAll(achievements);
+                                        if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab2) {
+                                            mAdapter.notifyDataSetChanged();
+                                        }
+                                    }
+
+                                }
+                            });
                         }
                     } else {
                         //获取个人相册
