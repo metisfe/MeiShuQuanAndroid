@@ -148,6 +148,8 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
         mJoinBtn.setVisibility(View.VISIBLE);
         if (mUser != null && mUser.getUserRoleEnum() != IdTypeEnum.STUDENT) {
             mJoinBtn.setEnabled(false);
+            mJoinBtn.setVisibility(View.GONE);
+            mActDeals.setVisibility(View.GONE);
         }
         //Toast.makeText(getActivity(), "getUserRole " + mUser.getUserRole(), Toast.LENGTH_SHORT).show();
         if (mSimpleActiveInfo.pId > 0 && !mSimpleActiveInfo.isJoin) {

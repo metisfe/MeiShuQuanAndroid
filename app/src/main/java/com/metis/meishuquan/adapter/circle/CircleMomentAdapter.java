@@ -3,6 +3,7 @@ package com.metis.meishuquan.adapter.circle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.support.v4.app.FragmentTransaction;
@@ -55,7 +56,7 @@ public class CircleMomentAdapter extends BaseAdapter {
         this.momentList = momentList;
         this.mContext = context;
         this.parent = parent;
-        fm = ((MainActivity) context).getSupportFragmentManager();
+        fm = ((FragmentActivity) context).getSupportFragmentManager();
     }
 
     private class ViewHolder {
