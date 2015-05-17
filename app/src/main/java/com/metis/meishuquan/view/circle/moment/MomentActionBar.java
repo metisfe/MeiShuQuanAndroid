@@ -1,9 +1,12 @@
 package com.metis.meishuquan.view.circle.moment;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,9 +16,10 @@ import com.metis.meishuquan.R;
  * Created by jx on 4/7/2015.
  */
 public class MomentActionBar extends LinearLayout {
-    private LinearLayout repostActionLayout, commentActionLayout, likeActionLayout;
-    private TextView tvRepostCount, tvCommentCount, tvLikeCount;
-    private OnActionButtonClickListener onActionButtonClickListener;
+    public LinearLayout repostActionLayout, commentActionLayout, likeActionLayout;
+    public TextView tvRepostCount, tvCommentCount, tvLikeCount, tvAddOne;
+    public ImageView imgSupport;
+    public OnActionButtonClickListener onActionButtonClickListener;
 
     public interface OnActionButtonClickListener {
         public void onReply();
@@ -42,7 +46,17 @@ public class MomentActionBar extends LinearLayout {
     public void setData(int repostCount, int commentCount, int likeCount) {
         this.tvRepostCount.setText(repostCount > 0 ? "" + repostCount : "");
         this.tvCommentCount.setText(commentCount > 0 ? "" + commentCount : "");
-        this.tvLikeCount.setText(likeCount > 0 ? "" + likeCount : "");
+        this.tvLikeCount.setText(likeCount > 0 ? "(" + likeCount + ")" : "");
+    }
+
+    public void setCheck() {
+        this.imgSupport.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.icon_support));
+        this.tvLikeCount.setTextColor(Color.RED);
+    }
+
+    public void setUncheck() {
+        this.imgSupport.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.icon_unsupport));
+        this.tvLikeCount.setTextColor(getResources().getColor(R.color.common_color_7e7e7e));
     }
 
     public void init() {
@@ -54,6 +68,9 @@ public class MomentActionBar extends LinearLayout {
         tvRepostCount = (TextView) this.findViewById(R.id.tv_repost_count);
         tvCommentCount = (TextView) this.findViewById(R.id.tv_comment_count);
         tvLikeCount = (TextView) this.findViewById(R.id.tv_like_count);
+        tvAddOne = (TextView) this.findViewById(R.id.id_tv_add_one);
+
+        imgSupport = (ImageView) this.findViewById(R.id.id_img_support);
 
         commentActionLayout.setOnClickListener(new OnClickListener() {
             @Override
@@ -81,7 +98,5 @@ public class MomentActionBar extends LinearLayout {
                 }
             }
         });
-
-
     }
 }

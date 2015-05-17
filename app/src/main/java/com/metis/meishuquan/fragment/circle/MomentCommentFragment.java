@@ -85,6 +85,12 @@ public class MomentCommentFragment extends Fragment {
     private boolean isEmotionSoftInputSwitchInMiddle;
     private boolean isEmotionInputShown;
 
+    private MomentDetailFragment.OnCommentSuccessListner onCommentSuccessListner;
+
+    public void setOnCommentSuccessListner(MomentDetailFragment.OnCommentSuccessListner onCommentSuccessListner) {
+        this.onCommentSuccessListner = onCommentSuccessListner;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 //        Bundle args = this.getArguments();
@@ -135,9 +141,13 @@ public class MomentCommentFragment extends Fragment {
                                 FragmentManager fm = getActivity().getSupportFragmentManager();
                                 FragmentTransaction ft = fm.beginTransaction();
                                 ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
-                                ft.replace(R.id.content_container, momentDetailFragment);
+                                ft.remove(MomentCommentFragment.this);
+                                if (GlobalData.fromMomentsFragment == 1) {
+                                    ft.add(R.id.content_container, momentDetailFragment);
+                                }
                                 ft.commit();
                                 hideKeyBoard();
+                                onCommentSuccessListner.onSuccess();
                             }
                         });
             }

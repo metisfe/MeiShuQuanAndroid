@@ -55,7 +55,8 @@ public class CircleFragment extends CircleBaseFragment {
 
             @Override
             public void onPageSelected(int position) {
-                if (fragmentPagerAdapter != null && fragmentPagerAdapter.fragments != null && fragmentPagerAdapter.fragments.length > position && fragmentPagerAdapter.fragments[position] != null) {
+                if (fragmentPagerAdapter != null && fragmentPagerAdapter.fragments != null
+                        && fragmentPagerAdapter.fragments.length > position && fragmentPagerAdapter.fragments[position] != null) {
                     fragmentPagerAdapter.fragments[position].timeToSetTitleBar();
                 }
             }
@@ -73,7 +74,7 @@ public class CircleFragment extends CircleBaseFragment {
 
     @Override
     public void timeToSetTitleBar() {
-        getTitleBar().setText("微博");
+        getTitleBar().setText("朋友圈");
         getTitleBar().setRightButton("", R.drawable.icon_pic, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,7 +135,7 @@ public class CircleFragment extends CircleBaseFragment {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "微博";
+                    return "朋友圈";
                 case 1:
                     return "消息";
                 case 2:

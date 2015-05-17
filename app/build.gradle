@@ -5,7 +5,7 @@ android {
         test {
             keyAlias 'key'
             keyPassword '123123123'
-            storeFile file('/Users/wangjin/Desktop/Metis-app/apk/key.store')
+            storeFile file('/Users/wangjin/Documents/AndroidStudioProjects/MeiShuQuanAndroid/key.store')
             storePassword '123123123'
         }
     }

@@ -107,7 +107,7 @@ public class Utils {
         long dateTime = date.getTime();
         long diffTime = nowTime - dateTime;
         if (diffTime <= MINUTE_IN_MILISECOND) {
-            return "一分钟前";
+            return "刚刚";
         } else if (diffTime < HOUR_IN_MILISECOND) {
             int minutes = (int) (diffTime / MINUTE_IN_MILISECOND);
             return String.format("%d分钟以前", minutes);

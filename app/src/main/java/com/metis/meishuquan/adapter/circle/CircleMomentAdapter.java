@@ -25,6 +25,7 @@ import com.metis.meishuquan.activity.act.SelectStudioActivity;
 import com.metis.meishuquan.activity.circle.ReplyActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.circle.MomentCommentFragment;
+import com.metis.meishuquan.fragment.circle.MomentDetailFragment;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CirclePushBlogParm;
 import com.metis.meishuquan.model.circle.CirclePushCommentResult;
@@ -32,7 +33,9 @@ import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.GlobalData;
+import com.metis.meishuquan.util.Helper;
 import com.metis.meishuquan.util.ImageLoaderUtils;
+import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.circle.moment.MomentActionBar;
 import com.metis.meishuquan.view.circle.moment.comment.EmotionTextView;
 import com.metis.meishuquan.view.course.FlowLayout;
@@ -46,6 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CircleMomentAdapter extends BaseAdapter {
+    private static String KEY_ISSUPPORT = "已赞过";
     private FragmentManager fm = null;
     private Context mContext;
     private View parent;
@@ -94,9 +98,10 @@ public class CircleMomentAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int i, View convertView, ViewGroup view) {
-        ViewHolder viewHolder = new ViewHolder();
+        ViewHolder viewHolder = null;
         final CCircleDetailModel moment = momentList.get(i);
         if (convertView == null) {
+            viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_circle_moment_list_item, null);
 
             viewHolder.avatar = (ImageView) convertView.findViewById(R.id.id_img_portrait);
@@ -162,8 +167,31 @@ public class CircleMomentAdapter extends BaseAdapter {
 
         viewHolder.createTime.setText(moment.getTimeText());
         viewHolder.device.setText(moment.getDeviceText());
-        viewHolder.momentActionBar.setData(moment.relayCount, moment.comentCount, moment.supportCount);
-        viewHolder.momentActionBar.setOnActionButtonClickListener(new MomentActionBar.OnActionButtonClickListener() {
+
+        //重新初始化
+        final ViewHolder finalViewHolder = viewHolder;
+
+        //判断是否已赞过
+        String isSupportStr = SharedPreferencesUtil.getInstanse(mContext).getStringByKey(MainApplication.userInfo.getUserId() + moment.id + "");
+        if (moment.relayCircle != null && moment.relayCircle.type != SupportTypeEnum.ActivityStudent.getVal() && moment.userMark.isSupport) {
+            finalViewHolder.momentActionBar.setCheck();
+        } else if (moment.relayCircle != null && moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal() && moment.relayCircle.userMark.isSupport) {
+            finalViewHolder.momentActionBar.setCheck();
+        } else if (isSupportStr.equals(KEY_ISSUPPORT)) {
+            finalViewHolder.momentActionBar.setCheck();
+        } else {
+            finalViewHolder.momentActionBar.setUncheck();
+        }
+
+        int supportCount = 0;
+        if (moment.relayCircle != null && moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal()) {
+            supportCount = moment.relayCircle.upCount;
+        } else {
+            supportCount = moment.supportCount;
+        }
+        finalViewHolder.momentActionBar.setData(moment.relayCount, moment.comentCount, supportCount);
+        final int finalSupportCount = supportCount;
+        finalViewHolder.momentActionBar.setOnActionButtonClickListener(new MomentActionBar.OnActionButtonClickListener() {
             @Override
             public void onReply() {
                 reply(moment);
@@ -176,6 +204,22 @@ public class CircleMomentAdapter extends BaseAdapter {
 
             @Override
             public void onLike() {
+                if (moment.relayCircle != null && moment.relayCircle.type != SupportTypeEnum.ActivityStudent.getVal() && moment.userMark.isSupport) {
+                    Toast.makeText(mContext, "您已顶过", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (moment.relayCircle != null && moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal() && moment.relayCircle.userMark.isSupport) {
+                    Toast.makeText(mContext, "您已顶过", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                String isSupportStr = SharedPreferencesUtil.getInstanse(mContext).getStringByKey(MainApplication.userInfo.getUserId() + moment.id + "");
+                if (isSupportStr.equals(KEY_ISSUPPORT)) {
+                    Toast.makeText(mContext, "您已顶过", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                //+1动画
+                Helper.getInstance(mContext).supportOrStep(finalViewHolder.momentActionBar.tvLikeCount, finalViewHolder.momentActionBar.tvAddOne, finalViewHolder.momentActionBar.imgSupport,
+                        finalSupportCount, true);
                 support(moment);
             }
         });
@@ -192,8 +236,7 @@ public class CircleMomentAdapter extends BaseAdapter {
             viewHolder.ll_not_circle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal()
-                            || moment.relayCircle.type == SupportTypeEnum.ActivityStudio.getVal()) {
+                    if (moment.relayCircle != null) {
                         //跳转至活动详情
                         navigatToActivityInfo(view, moment);
                     } else if (moment.relayCircle.type == SupportTypeEnum.News.getVal()) {
@@ -206,14 +249,15 @@ public class CircleMomentAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private void support(CCircleDetailModel moment) {
+    private void support(final CCircleDetailModel moment) {
         int supportId = 0;
-        int typeId = 7;
-        if (moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal()) {
+        int typeId = 0;
+        if (moment.relayCircle != null && moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal()) {
             supportId = moment.relayCircle.joinActivityId;
             typeId = moment.relayCircle.type;
         } else {
             supportId = moment.id;
+            typeId = SupportTypeEnum.Circle.getVal();
         }
 
         String url = String.format("v1.1/Comment/Support?userid=%s&id=%s&type=%s&result=1&session=%s", MainApplication.userInfo.getUserId(), supportId, typeId, MainApplication.getSession());
@@ -226,7 +270,8 @@ public class CircleMomentAdapter extends BaseAdapter {
                         if (result == null || !result.isSuccess()) {
                             return;
                         }
-                        Toast.makeText(MainApplication.UIContext, "点赞成功！", Toast.LENGTH_LONG).show();
+                        SharedPreferencesUtil.getInstanse(mContext).add(MainApplication.userInfo.getUserId() + moment.id + "", KEY_ISSUPPORT);
+                        //Toast.makeText(MainApplication.UIContext, "点赞成功！", Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -238,7 +283,12 @@ public class CircleMomentAdapter extends BaseAdapter {
             return;
         }
         MomentCommentFragment momentCommentFragment = new MomentCommentFragment();
+        momentCommentFragment.setOnCommentSuccessListner(new MomentDetailFragment.OnCommentSuccessListner() {
+            @Override
+            public void onSuccess() {
 
+            }
+        });
         FragmentManager fm = ((MainActivity) mContext).getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
@@ -250,12 +300,19 @@ public class CircleMomentAdapter extends BaseAdapter {
     private void reply(CCircleDetailModel moment) {
         Intent it = new Intent(mContext, ReplyActivity.class);
         CirclePushBlogParm parm = new CirclePushBlogParm();
-        parm.setType(SupportTypeEnum.Activity.getVal());
+        if (moment.relayCircle != null) {
+            parm.setType(moment.relayCircle.type);
+        } else {
+            parm.setType(SupportTypeEnum.Circle.getVal());
+        }
         parm.setRelayId(moment.id);
         it.putExtra(ReplyActivity.PARM, parm);
-        it.putExtra(ReplyActivity.TITLE, moment.relayCircle.title);
-        it.putExtra(ReplyActivity.CONTENT, moment.relayCircle.desc);
-        it.putExtra(ReplyActivity.IMAGEURL, moment.relayCircle.activityImg);
+        if (moment.relayCircle != null && (moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal() || moment.relayCircle.type == SupportTypeEnum.News.getVal())) {
+            it.putExtra(ReplyActivity.TITLE, moment.relayCircle.title);
+            it.putExtra(ReplyActivity.CONTENT, moment.relayCircle.desc);
+            it.putExtra(ReplyActivity.IMAGEURL, moment.relayCircle.activityImg);
+        }
+
         mContext.startActivity(it);
     }
 

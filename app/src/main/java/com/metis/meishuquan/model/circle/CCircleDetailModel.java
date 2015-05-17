@@ -27,7 +27,7 @@ public class CCircleDetailModel {
     public int relayCount;
 
     @SerializedName("supportCount")
-    public int supportCount;
+    public int supportCount=0;
 
     @SerializedName("device")
     public String device;

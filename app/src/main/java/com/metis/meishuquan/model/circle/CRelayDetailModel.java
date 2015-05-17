@@ -42,7 +42,7 @@ public class CRelayDetailModel implements Serializable {
     public int status;
 
     @SerializedName("upCount")
-    public int upCount;
+    public int upCount=0;
 
     @SerializedName("joinCount")
     public int joinCount;

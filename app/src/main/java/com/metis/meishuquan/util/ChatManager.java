@@ -410,7 +410,9 @@ public class ChatManager {
 
     private static String normalizePhoneNumber(String s) {
         if (s == null || s.length() < 11) return null;
-        s = s.substring(s.length() - 11);
+        s = s.replace(" ", "");
+        s = s.replace("-", "");
+        s = s.substring( s.length()- 11);
         if (s.charAt(0) != '1') return null;
         return s;
     }

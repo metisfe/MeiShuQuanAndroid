@@ -34,6 +34,7 @@ public class AddFriendFragment extends Fragment {
         if (requestCode == QR_REQUEST_CODE && resultCode == getActivity().RESULT_OK) {
             String userPhone = (String) data.getExtras().get(QrScanActivity.KEY_RESULT);
             Log.i("QR_RESULT", userPhone);
+            
         }
     }
 

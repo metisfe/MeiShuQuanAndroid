@@ -128,7 +128,8 @@ public class FriendMatchFragment extends Fragment {
     }
 
     class CircleFriendListAdapter extends BaseExpandableListAdapter {
-        public List<List<UserAdvanceInfo>> friendList;
+        public List<List<UserAdvanceInfo>> friendList;//匹配的好友
+
         public List<UserAdvanceInfo> queryResult = new ArrayList<>();
 
         @Override

@@ -101,6 +101,10 @@ public class MomentDetailFragment extends Fragment {
     List<CUserModel> likeList = new ArrayList<CUserModel>();
     private boolean isCommentShown = true;
 
+    public interface OnCommentSuccessListner {
+        void onSuccess();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_circle_moment_detail, null, false);
@@ -199,14 +203,18 @@ public class MomentDetailFragment extends Fragment {
             ((ImageView) headerView.findViewById(R.id.id_img_for_circle)).setVisibility(View.GONE);
         }
 
-        MomentActionBar actionBar = (MomentActionBar) headerView.findViewById(R.id.moment_action_bar);
+        actionBar = (MomentActionBar) headerView.findViewById(R.id.moment_action_bar);
         actionBar.setData(moment.relayCount, moment.comentCount, moment.supportCount);
         actionBar.setOnActionButtonClickListener(OnActionButtonClickListener);
-
 
         return headerView;
     }
 
+    public void commentCountAddOne() {
+        if (GlobalData.moment != null) {
+            GlobalData.moment.comentCount += 1;
+        }
+    }
 
     //初始化事件
     private void initEvent() {
@@ -227,7 +235,12 @@ public class MomentDetailFragment extends Fragment {
                     return;
                 }
                 MomentCommentFragment momentCommentFragment = new MomentCommentFragment();
-
+                momentCommentFragment.setOnCommentSuccessListner(new OnCommentSuccessListner() {
+                    @Override
+                    public void onSuccess() {
+                        commentCountAddOne();
+                    }
+                });
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
