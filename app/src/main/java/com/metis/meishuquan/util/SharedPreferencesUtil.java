@@ -29,6 +29,9 @@ public class SharedPreferencesUtil {
     public static final String CHECKED_CHANNEL_ITEMS = "CHECKED_CHANNEL_ITEMS";//已选择的课程类型
 
     /*系统*/
+    public static final String MOMENTS_GROUP_INFO = "MOMENTS_GROUP_INFO";
+
+    /*系统*/
     public static final String LAST_APP_VERSION = "LAST_APP_VERSION";
 
 

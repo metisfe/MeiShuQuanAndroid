@@ -95,6 +95,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
         onNewIntent(this.getIntent());
         checkLoginState();
         updateApp();
+        CommonOperator.getInstance().getMomentsGroups();//获取朋友圈分组信息
     }
 
 //    @Override

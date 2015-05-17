@@ -11,6 +11,7 @@ public class GlobalData {
     public static int AssessIndex = 0;
     public static CCircleDetailModel moment; //for data between moment list and moment detail
     public static int fromMomentsFragment = -1;
+    public static int momentsGroupId = -1;
 
     private SelectedTabType tabTypeSelected;
     private int[] titleBarTypeSelected = new int[]{-1, -1, -1, -1, -1};

@@ -53,7 +53,7 @@ public class FriendMatchFragment extends Fragment {
     private void initView() {
         this.titleBar = (CircleTitleBar) rootView.findViewById(R.id.fragment_circle_friendmatch_titlebar);
         titleBar.setText("通讯录联系人");
-        titleBar.setLeftButton("back", 0, new View.OnClickListener() {
+        titleBar.setLeftButton("", R.drawable.bg_btn_arrow_left, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager().popBackStack();

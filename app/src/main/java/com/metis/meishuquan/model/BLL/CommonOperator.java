@@ -3,6 +3,7 @@ package com.metis.meishuquan.model.BLL;
 import android.util.Log;
 import android.util.Pair;
 
+import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.commons.AndroidVersion;
 import com.metis.meishuquan.model.contract.ReturnInfo;
@@ -12,8 +13,10 @@ import com.metis.meishuquan.model.enums.PrivateResultEnum;
 import com.metis.meishuquan.model.enums.PrivateTypeEnum;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
+import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.SystemUtil;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
 
 import org.apache.http.client.methods.HttpGet;
@@ -36,6 +39,7 @@ public class CommonOperator {
     private final String FileUpload = "v1.1/File/Upload";//文件上传
     private final String ANDROIDVERSION = "v1.1/Default/AndroidVersion";//获取最新版本
     private final String CHECKLOGINSTATE = "v1.1/Default/Start?session=" + MainApplication.getSession();//校验账号状态
+    private final String MOMENTSGROUPS = "v1.1/Circle/MyDiscussions";//朋友圈分组信息
 
     private final String SESSION = MainApplication.userInfo.getCookie();
     private boolean flag;
@@ -167,6 +171,29 @@ public class CommonOperator {
             if (flag) {
                 ApiDataProvider.getmClient().invokeApi(CHECKLOGINSTATE, null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+            }
+        }
+    }
+
+    public void getMomentsGroups() {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuffer path = new StringBuffer(MOMENTSGROUPS);
+                path.append("?userid=" + MainApplication.userInfo.getUserId());
+                path.append("&type=" + 1);
+                path.append("&session=" + SESSION);
+                Log.i("朋友圈Url", path.toString());
+                ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+                            @Override
+                            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                                if (result != null && result.isSuccess()) {
+                                    String json = new Gson().toJson(result);
+                                    Log.e(SharedPreferencesUtil.MOMENTS_GROUP_INFO, json);
+                                    SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(SharedPreferencesUtil.MOMENTS_GROUP_INFO, json);
+                                }
+                            }
+                        });
             }
         }
     }

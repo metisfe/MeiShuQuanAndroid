@@ -1,6 +1,5 @@
 package com.metis.meishuquan.fragment.main;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,15 +11,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.circle.ChatListFragment;
 import com.metis.meishuquan.fragment.circle.CircleBaseFragment;
 import com.metis.meishuquan.fragment.circle.ContactListFragment;
 import com.metis.meishuquan.fragment.circle.MomentsFragment;
 import com.metis.meishuquan.fragment.circle.PostMomentFragment;
+import com.metis.meishuquan.model.circle.MomentsGroup;
+import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.util.GlobalData;
+import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
+import com.metis.meishuquan.view.circle.PopupMomentsWindow;
 import com.metis.meishuquan.view.shared.TabBar;
 import com.viewpagerindicator.TabPageIndicator;
 
@@ -40,6 +46,8 @@ public class CircleFragment extends CircleBaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_circlefragment, container, false);
+        getMomentsGroupInfo();
+
 
         this.tabBar = (TabBar) rootView.findViewById(R.id.fragment_shared_circlefragment_tab_bar);
         this.tabBar.setTabSelectedListener(MainApplication.MainActivity);
@@ -47,6 +55,59 @@ public class CircleFragment extends CircleBaseFragment {
 
         this.viewPager = (ViewPager) rootView.findViewById(R.id.fragment_shared_circlefragment_viewpager);
         this.indicator = (TabPageIndicator) rootView.findViewById(R.id.fragment_shared_circlefragment_topbar_indicator);
+
+        //朋友圈点击
+        this.indicator.setOnTabReselectedListener(new TabPageIndicator.OnTabReselectedListener() {
+            @Override
+            public void onTabReselected(int position) {
+                if (position == 0) {
+                    PopupMomentsWindow addWindow = new PopupMomentsWindow(getActivity(), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ((MainActivity) getActivity()).removeAllAttachedView();
+                        }
+                    }, new View.OnClickListener() {//全部
+                        @Override
+                        public void onClick(View v) {
+                            GlobalData.momentsGroupId = 0;
+                            indicator.setCurrentItem(0);
+                        }
+                    }, new View.OnClickListener() {//我的主页
+                        @Override
+                        public void onClick(View v) {
+                            GlobalData.momentsGroupId = 0;
+                            indicator.setCurrentItem(0);
+                        }
+                    }, new View.OnClickListener() {//朋友圈
+                        @Override
+                        public void onClick(View v) {
+                            GlobalData.momentsGroupId = 0;
+                            indicator.setCurrentItem(0);
+                        }
+                    }, new View.OnClickListener() {//特别关注
+                        @Override
+                        public void onClick(View view) {
+                            GlobalData.momentsGroupId = 0;
+                            indicator.setCurrentItem(0);
+                        }
+                    }, new View.OnClickListener() {//我的老师
+                        @Override
+                        public void onClick(View view) {
+                            GlobalData.momentsGroupId = 0;
+                            indicator.setCurrentItem(0);
+                        }
+                    }, new View.OnClickListener() {//我的同学
+                        @Override
+                        public void onClick(View view) {
+                            GlobalData.momentsGroupId = 0;
+                            indicator.setCurrentItem(0);
+                        }
+                    });
+
+                    ((MainActivity) getActivity()).addAttachView(addWindow);
+                }
+            }
+        });
         this.indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -70,6 +131,13 @@ public class CircleFragment extends CircleBaseFragment {
         this.viewPager.setAdapter(fragmentPagerAdapter);
         this.indicator.setViewPager(viewPager);
         return rootView;
+    }
+
+    private List<MomentsGroup> getMomentsGroupInfo() {
+        String json = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey(SharedPreferencesUtil.MOMENTS_GROUP_INFO);
+        ReturnInfo<List<MomentsGroup>> returnInfo = new Gson().fromJson(json, new TypeToken<ReturnInfo<List<MomentsGroup>>>() {
+        }.getType());
+        return returnInfo.getData();
     }
 
     @Override
