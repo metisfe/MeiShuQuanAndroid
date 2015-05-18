@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
     android:background="#cdcdcd"
     android:orientation="vertical">
 
@@ -74,7 +75,6 @@
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/img_select_id_1"
                 android:scaleType="fitCenter" />
 
             <ImageView
@@ -83,7 +83,6 @@
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/img_unselect_id_2"
                 android:scaleType="fitCenter" />
 
             <ImageView
@@ -92,7 +91,6 @@
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/img_unselect_id_3"
                 android:scaleType="fitCenter" />
 
             <ImageView
@@ -101,7 +99,6 @@
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/img_unselect_id_4"
                 android:scaleType="fitCenter" />
 
             <ImageView
@@ -110,7 +107,6 @@
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/img_unselect_id_5"
                 android:scaleType="fitCenter" />
         </LinearLayout>
 
@@ -172,7 +168,7 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:text="其他"
+                android:text="爱好者"
                 android:textColor="#A0A0A0"
                 android:textSize="15sp" />
         </LinearLayout>
@@ -182,6 +178,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clickable="true"
         android:layout_below="@+id/ll_type">
 
         <GridView

@@ -1,5 +1,6 @@
 package com.metis.meishuquan.fragment.login;
 
+import android.app.ProgressDialog;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -136,6 +137,9 @@ public class RegisterFragment extends Fragment {
                     if (selectedId == -1) {
                         Log.e("roleId", "selectedRoleId为-1");
                     }
+                    final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+                    progressDialog.show(getActivity(), "", "正在注册，请稍候！");
+                    progressDialog.setCancelable(false);
                     userOperator.register(phone, verCode, pwd, selectedId, new ApiOperationCallback<ReturnInfo<String>>() {
                         @Override
                         public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
@@ -157,8 +161,7 @@ public class RegisterFragment extends Fragment {
                                 //add userInfo into sharedPreferences
                                 Gson gson1 = new Gson();
                                 String finalUserInfoJson = gson1.toJson(user);
-                                SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(getActivity());
-                                spu.update(SharedPreferencesUtil.USER_LOGIN_INFO, finalUserInfoJson);
+                                SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(SharedPreferencesUtil.USER_LOGIN_INFO, finalUserInfoJson);
 
                                 //update field of UserInfo to main application
                                 MainApplication.userInfo = user.getData();
@@ -167,6 +170,7 @@ public class RegisterFragment extends Fragment {
                                 Utils.hideInputMethod(getActivity(), etPwd);
                                 Utils.hideInputMethod(getActivity(), etUserName);
                                 Toast.makeText(MainApplication.UIContext, "注册成功", Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();
                                 getActivity().finish();
                             } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
                                 Toast.makeText(MainApplication.UIContext, result.getMessage(), Toast.LENGTH_SHORT).show();
@@ -197,7 +201,7 @@ public class RegisterFragment extends Fragment {
                     @Override
                     public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                         if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                            Log.i(getClass().getSimpleName(), "验证码已发送:"+new Gson().toJson(result));
+                            Log.i(getClass().getSimpleName(), "验证码已发送:" + new Gson().toJson(result));
                         } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
                             Toast.makeText(MainApplication.UIContext, result.getMessage(), Toast.LENGTH_SHORT).show();
                         }

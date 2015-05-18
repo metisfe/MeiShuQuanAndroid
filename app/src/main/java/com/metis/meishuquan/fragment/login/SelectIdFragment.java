@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +61,7 @@ public class SelectIdFragment extends Fragment {
     private void getData() {
         SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
         String json = spu.getStringByKey(SharedPreferencesUtil.USER_ROLE);
+        Log.i("role_data", "角色信息：" + json);
         Gson gson = new Gson();
         UserRole userRole = gson.fromJson(json, new TypeToken<UserRole>() {
         }.getType());
@@ -119,7 +121,7 @@ public class SelectIdFragment extends Fragment {
                 }
                 RegisterFragment registerFragment = new RegisterFragment();
                 Bundle bundle = new Bundle();
-                bundle.putInt("selectedId", identity.getId());
+                bundle.putInt("selectedId", identity.getId());//若无子角色，则传父角色ID
                 registerFragment.setArguments(bundle);
 
                 FragmentTransaction ft = fm.beginTransaction();
@@ -138,8 +140,11 @@ public class SelectIdFragment extends Fragment {
                 setUnselectedColorForTextView(new TextView[]{tvTeacher, tvHuashi, tvParent, tvOther});
                 setSelectedDrawable(imgStudent);
                 setUnSelectedDrawable(IdTypeEnum.STUDENT);
+
                 for (IdentityType type : userRole.getData()) {
                     if (type.getName().equals("学生")) {
+                        identity = new Identity();
+                        identity.setId(type.getId());
                         adapter = new MyGridAdapter(type.getChildLists());
                         gvData.setAdapter(adapter);
                     }
@@ -157,6 +162,8 @@ public class SelectIdFragment extends Fragment {
                 setUnSelectedDrawable(IdTypeEnum.TEACHER);
                 for (IdentityType type : userRole.getData()) {
                     if (type.getName().equals("老师")) {
+                        identity = new Identity();
+                        identity.setId(type.getId());
                         adapter = new MyGridAdapter(type.getChildLists());
                         gvData.setAdapter(adapter);
                     }
@@ -174,6 +181,8 @@ public class SelectIdFragment extends Fragment {
                 setUnSelectedDrawable(IdTypeEnum.STUDIO);
                 for (IdentityType type : userRole.getData()) {
                     if (type.getName().equals("画室/机构")) {
+                        identity = new Identity();
+                        identity.setId(type.getId());
                         adapter = new MyGridAdapter(type.getChildLists());
                         gvData.setAdapter(adapter);
                     }
@@ -191,6 +200,8 @@ public class SelectIdFragment extends Fragment {
                 setUnSelectedDrawable(IdTypeEnum.PARENT);
                 for (IdentityType type : userRole.getData()) {
                     if (type.getName().equals("家长")) {
+                        identity = new Identity();
+                        identity.setId(type.getId());
                         adapter = new MyGridAdapter(type.getChildLists());
                         gvData.setAdapter(adapter);
                     }
@@ -208,6 +219,8 @@ public class SelectIdFragment extends Fragment {
                 setUnSelectedDrawable(IdTypeEnum.OTHER);
                 for (IdentityType type : userRole.getData()) {
                     if (type.getName().equals("爱好者")) {
+                        identity = new Identity();
+                        identity.setId(type.getId());
                         adapter = new MyGridAdapter(type.getChildLists());
                         gvData.setAdapter(adapter);
                     }
@@ -218,6 +231,9 @@ public class SelectIdFragment extends Fragment {
         gvData.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
+                if (view == null || position < 0) {
+                    return;
+                }
                 for (int i = 0; i < parent.getCount(); i++) {
                     View v = parent.getChildAt(i);
                     MyGridAdapter.ViewHolder holder = (MyGridAdapter.ViewHolder) v.getTag();

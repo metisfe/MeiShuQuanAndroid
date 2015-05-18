@@ -1,6 +1,7 @@
 package com.metis.meishuquan.fragment.login;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -82,7 +83,9 @@ public class LoginFragment extends Fragment {
         btnLogin.setOnClickListener(new View.OnClickListener() {//登录
             @Override
             public void onClick(View view) {
-                btnLogin.setClickable(false);
+                final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+                progressDialog.show(getActivity(), "", "正在登录，请稍候！");
+                progressDialog.setCancelable(false);
                 if (isPressLogin) {
                     return;
                 }
@@ -125,17 +128,15 @@ public class LoginFragment extends Fragment {
                             Utils.hideInputMethod(getActivity(), etUserName);
                             Toast.makeText(MainApplication.UIContext, "登录成功", Toast.LENGTH_SHORT).show();
                             getActivity().setResult(Activity.RESULT_OK);
+                            progressDialog.dismiss();
                             getActivity().finish();
                             isPressLogin = false;
-                            btnLogin.setClickable(false);
                         } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
                             Toast.makeText(MainApplication.UIContext, result.getMessage(), Toast.LENGTH_SHORT).show();
                             isPressLogin = false;
-                            btnLogin.setClickable(false);
                         } else if (result != null || exception != null) {
                             Log.e("**LoginFragment", exception.getCause().toString());
                             isPressLogin = false;
-                            btnLogin.setClickable(false);
                         }
                     }
                 });

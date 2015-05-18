@@ -37,13 +37,12 @@
     <Button
         android:id="@+id/setting_logout"
         android:layout_width="fill_parent"
-        android:layout_height="60dp"
-        android:background="#FF5363"
+        android:layout_height="40dp"
+        android:background="@color/common_color_fb6d6d"
         android:text="@string/setting_logout"
         android:textColor="#F1F1F1"
         android:textSize="20sp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="20dp"
-        android:textStyle="bold" />
+        android:layout_marginTop="20dp"/>
 </LinearLayout>

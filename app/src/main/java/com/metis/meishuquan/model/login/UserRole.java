@@ -8,6 +8,7 @@ import java.util.List;
  * Created by wj on 15/4/8.
  */
 public class UserRole {
+
     private List<IdentityType> data;
 
     public List<IdentityType> getData() {
