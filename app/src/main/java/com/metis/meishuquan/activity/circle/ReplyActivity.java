@@ -95,7 +95,7 @@ public class ReplyActivity extends FragmentActivity {
         this.rl_at = (RelativeLayout) this.findViewById(R.id.id_rl_emotion);
         this.rl_emotion = (RelativeLayout) this.findViewById(R.id.id_rl_emotion);
 
-        if (this.parm.getType() == SupportTypeEnum.ActivityStudent.getVal()) {
+        if (this.parm.getType() == SupportTypeEnum.Activity.getVal()) {
             this.etInput.setText("我正在参加#超级美术生#海选，一定要帮我到美术圈APP集齐10个赞哦！这样我就有机会免费进全国最好画室中最贵的VIP班学习啦！");
         }
     }

@@ -79,10 +79,10 @@ public class ItemInfoFragment extends Fragment {
     public static final String KEY_TITLE_VISIBLE = "title_visible";
     public static final String LOG_EXCEPTION = "exception";
     public static final String KEY_NEWSID = "newsId";
+    public static final String KEY_SHARE_IMG_URL = "share_url";
 
     private final int LOGINREQUESTCODE = 1001;
     private String shareContent = "来自美术圈";
-    private String shareImgUrl = "";
 
     private Button btnBack, btnShare;
     private ViewGroup rootView;
@@ -105,6 +105,7 @@ public class ItemInfoFragment extends Fragment {
     private ArrayList<String> lstImgUrls = new ArrayList<String>();
 
     private int newsId = 0;
+    private String shareImageUrl = "";
     private boolean titleVisible = true;
     private FragmentManager fm;
 
@@ -127,6 +128,7 @@ public class ItemInfoFragment extends Fragment {
         Bundle args = this.getArguments();
         if (args != null) {
             newsId = args.getInt(KEY_NEWSID);
+            shareImageUrl = args.getString(KEY_SHARE_IMG_URL);
             //根据新闻Id获取新闻内容
             getInfoData(newsId);
         }
@@ -242,12 +244,9 @@ public class ItemInfoFragment extends Fragment {
     }
 
     //添加视图控件
-    private void addImageView(String url, int width, int height) {
+    private void addImageView(final String url, int width, int height) {
         if (ll_content == null) {
             ll_content = (LinearLayout) rootView.findViewById(R.id.id_ll_news_content);//内容父布局
-        }
-        if (shareImgUrl.equals("")) {
-            shareImgUrl = url;
         }
         ImageView imageView = new ImageView(getActivity());
 
@@ -263,7 +262,8 @@ public class ItemInfoFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), ImagePreviewActivity.class);
-                intent.putStringArrayListExtra(KEY_IMAGE_URL_ARRAY, lstImgUrls);
+                intent.putStringArrayListExtra(ImagePreviewActivity.KEY_IMAGE_URL_ARRAY, lstImgUrls);
+                intent.putExtra(ImagePreviewActivity.KEY_START_INDEX, lstImgUrls.indexOf(url));
                 startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.activity_zoomin, 0);
             }
@@ -521,12 +521,7 @@ public class ItemInfoFragment extends Fragment {
             public void onClick(View view) {
                 if (newsInfo != null && newsInfo.getData() != null) {
                     SharePopupWindow sharePopupWindow = new SharePopupWindow(getActivity(), rootView);
-                    Log.i("分享的图片地址", shareImgUrl);
-                    if (shareImgUrl.isEmpty()) {
-                        shareImgUrl = "";
-                    }
-                    sharePopupWindow.setShareInfo(newsInfo.getData().getTitle(), newsInfo.getData().getTitle(), newsInfo.getData().getShareUrl(), shareImgUrl);
-                    Log.i("share_content", newsInfo.getData().getShareUrl());
+                    sharePopupWindow.setShareInfo(newsInfo.getData().getTitle(), newsInfo.getData().getTitle(), newsInfo.getData().getShareUrl(), shareImageUrl, SupportTypeEnum.News.getVal(), newsInfo.getData().getNewsId());
                 }
             }
         });

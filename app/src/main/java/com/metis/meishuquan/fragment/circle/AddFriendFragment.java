@@ -1,6 +1,9 @@
 package com.metis.meishuquan.fragment.circle;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,9 +17,16 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.circle.SearchUserActivity;
+import com.metis.meishuquan.activity.circle.SearchUserInfoActivity;
 import com.metis.meishuquan.activity.info.QrScanActivity;
+import com.metis.meishuquan.model.BLL.CommonOperator;
+import com.metis.meishuquan.model.circle.CUserModel;
+import com.metis.meishuquan.model.circle.UserSearch;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
 import com.metis.meishuquan.view.circle.ContactListItemView;
+import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 /**
  * Created by wudi on 4/12/2015.
@@ -32,9 +42,20 @@ public class AddFriendFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == QR_REQUEST_CODE && resultCode == getActivity().RESULT_OK) {
-            String userPhone = (String) data.getExtras().get(QrScanActivity.KEY_RESULT);
+            final String userPhone = (String) data.getExtras().get(QrScanActivity.KEY_RESULT);
             Log.i("QR_RESULT", userPhone);
-            
+            CommonOperator.getInstance().searchUser(userPhone, new ApiOperationCallback<UserSearch>() {
+                @Override
+                public void onCompleted(UserSearch result, Exception exception, ServiceFilterResponse response) {
+                    if (result != null && result.option.isSuccess()) {
+                        //显示好友信息
+                        Intent intent = new Intent(getActivity(), SearchUserInfoActivity.class);
+                        intent.putExtra(SearchUserInfoActivity.KEY_USER_INFO, (java.io.Serializable) result.data);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+            });
         }
     }
 
@@ -56,13 +77,7 @@ public class AddFriendFragment extends Fragment {
         this.searchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OnlineFriendSearchFragment onlineFriendSearchFragment = new OnlineFriendSearchFragment();
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
-                ft.add(R.id.content_container, onlineFriendSearchFragment);
-                ft.addToBackStack(null);
-                ft.commit();
+                startActivity(new Intent(getActivity(), SearchUserActivity.class));
             }
         });
 
@@ -77,13 +92,6 @@ public class AddFriendFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivityForResult(new Intent(getActivity(), QrScanActivity.class), QR_REQUEST_CODE);
-//                ScanQRCodeFragment scanQRCodeFragment = new ScanQRCodeFragment();
-//                FragmentManager fm = getActivity().getSupportFragmentManager();
-//                FragmentTransaction ft = fm.beginTransaction();
-//                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
-//                ft.add(R.id.content_container, scanQRCodeFragment);
-//                ft.addToBackStack(null);
-//                ft.commit();
             }
         });
 

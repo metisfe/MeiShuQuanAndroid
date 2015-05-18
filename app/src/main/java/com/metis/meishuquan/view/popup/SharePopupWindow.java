@@ -2,6 +2,7 @@ package com.metis.meishuquan.view.popup;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,6 +17,10 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.circle.ReplyActivity;
+import com.metis.meishuquan.model.circle.CirclePushBlogParm;
+import com.metis.meishuquan.model.enums.SupportTypeEnum;
+import com.metis.meishuquan.model.topline.TopLineNewsInfo;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeEntity;
 import com.umeng.socialize.controller.UMServiceFactory;
@@ -38,6 +43,7 @@ public class SharePopupWindow extends PopupWindow {
 
     private static final String TAG = SharePopupWindow.class.getSimpleName();
 
+
     private boolean isInited = false;
     private UMSocialService mController = null;
 
@@ -46,6 +52,7 @@ public class SharePopupWindow extends PopupWindow {
             mContent = "",
             mTargetUrl = "",
             mImageUrl = "";
+    private int mType, mSharedId;
 
     public SharePopupWindow(final Activity mContext, View parent) {
 
@@ -72,9 +79,19 @@ public class SharePopupWindow extends PopupWindow {
         Button btnSinaWeibo = (Button) view.findViewById(R.id.id_btn_share_sina_weibo);
         Button btnCancel = (Button) view.findViewById(R.id.id_btn_cancel);
 
+        //分享美术圈
         btnMeishuquan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent it = new Intent(mContext, ReplyActivity.class);
+                CirclePushBlogParm parm = new CirclePushBlogParm();
+                parm.setType(mType);
+                parm.setRelayId(mSharedId);
+                it.putExtra(ReplyActivity.PARM, parm);
+                it.putExtra(ReplyActivity.TITLE, mTitle);
+                it.putExtra(ReplyActivity.CONTENT, mContent);
+                it.putExtra(ReplyActivity.IMAGEURL, mImageUrl);
+                mContext.startActivity(it);
                 dismiss();
             }
         });
@@ -194,6 +211,18 @@ public class SharePopupWindow extends PopupWindow {
         Log.v(TAG, "setShareInfo content=" +  mContent);
         Log.v(TAG, "setShareInfo mTargetUrl=" + mTargetUrl);
         Log.v(TAG, "setShareInfo mImageUrl=" + mImageUrl);*/
+    }
+
+    public void setShareInfo(String title, String content, String targetUrl, String imageUrl, int type, int shareId) {
+        if (TextUtils.isEmpty(title) || TextUtils.isEmpty(targetUrl) || TextUtils.isEmpty(content) || TextUtils.isEmpty(imageUrl)) {
+            throw new IllegalArgumentException("title or targetUrl is Empty");
+        }
+        mTitle = title;
+        mContent = content;
+        mTargetUrl = targetUrl;
+        mImageUrl = imageUrl;
+        mType = type;
+        mSharedId = shareId;
     }
 
     private void fillShareContent(Activity activity, BaseShareContent content) {

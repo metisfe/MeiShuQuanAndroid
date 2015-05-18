@@ -154,6 +154,7 @@ public class ItemFragment extends Fragment {
                     ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
                     Bundle args = new Bundle();
                     args.putInt("newsId", newsId);
+                    args.putString(ItemInfoFragment.KEY_SHARE_IMG_URL, headerView == null ? list.get(i - 1).getImgUrl() : list.get(i - 2).getImgUrl());
                     itemInfoFragment.setArguments(args);
 
                     FragmentManager fm = getActivity().getSupportFragmentManager();

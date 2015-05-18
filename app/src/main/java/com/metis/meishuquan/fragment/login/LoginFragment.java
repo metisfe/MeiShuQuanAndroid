@@ -85,7 +85,7 @@ public class LoginFragment extends Fragment {
             public void onClick(View view) {
                 final ProgressDialog progressDialog = new ProgressDialog(getActivity());
                 progressDialog.show(getActivity(), "", "正在登录，请稍候！");
-                progressDialog.setCancelable(false);
+                progressDialog.setCancelable(true);
                 if (isPressLogin) {
                     return;
                 }
@@ -133,9 +133,11 @@ public class LoginFragment extends Fragment {
                             isPressLogin = false;
                         } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
                             Toast.makeText(MainApplication.UIContext, result.getMessage(), Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
                             isPressLogin = false;
                         } else if (result != null || exception != null) {
                             Log.e("**LoginFragment", exception.getCause().toString());
+                            progressDialog.dismiss();
                             isPressLogin = false;
                         }
                     }

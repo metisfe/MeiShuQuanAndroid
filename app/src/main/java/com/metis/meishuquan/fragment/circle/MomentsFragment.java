@@ -42,7 +42,8 @@ import java.util.List;
 public class MomentsFragment extends CircleBaseFragment {
     @Override
     public void timeToSetTitleBar() {
-        getTitleBar().setText("微博");
+
+        getTitleBar().setText(MainApplication.userInfo.getName().equals("") ? "朋友圈" : MainApplication.userInfo.getName());
         getTitleBar().setRightButton("", R.drawable.icon_pic, new View.OnClickListener() {
             @Override
             public void onClick(View view) {

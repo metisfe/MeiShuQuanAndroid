@@ -52,22 +52,15 @@ public class FriendConfirmFragment extends Fragment {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_circle_friendconfirmfragment, container, false);
         this.titleBar = (CircleTitleBar) rootView.findViewById(R.id.fragment_circle_friendconfirmfragment_titlebar);
         titleBar.setText("新的朋友");
-        titleBar.setRightButton("增加朋友", 0, new View.OnClickListener() {
+        titleBar.setLeftButton("", R.drawable.bg_btn_arrow_left, new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                AddFriendFragment addFriendFragment = new AddFriendFragment();
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
-                ft.add(R.id.content_container, addFriendFragment);
-                ft.addToBackStack(null);
-                ft.commit();
-            }
-        });
+            public void onClick(View view) {
+//                FragmentManager fm = getActivity().getSupportFragmentManager();
+//                FragmentTransaction ft = fm.beginTransaction();
+//                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+//                ft.remove(FriendConfirmFragment.this);
+//                ft.commit();
 
-        titleBar.setLeftButton("返回", 0, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });

@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_color_f0f0f0">
+    android:background="@color/common_color_e2e2e2">
 
     <RelativeLayout
         android:id="@+id/id_rl_title_bar"
@@ -71,19 +71,18 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="120dp"
         android:layout_below="@+id/id_et_input_reply"
+        android:background="@color/common_color_f0f0f0"
         android:layout_above="@+id/fragment_circle_postmoment_bottom_container"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
+        android:padding="10dp">
 
         <ImageView
             android:id="@+id/id_img_pic"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/icon" />
+            android:src="#ccc" />
 
         <TextView
             android:id="@+id/id_tv_title"
@@ -98,7 +97,7 @@
         <TextView
             android:id="@+id/id_tv_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_toRightOf="@+id/id_img_pic"
             android:layout_below="@+id/id_tv_title"
             android:layout_marginTop="5dp"
@@ -116,6 +115,7 @@
         android:layout_height="44dp"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
+        android:visibility="gone"
         android:background="@drawable/fragment_circle_postmoment_bottom_container_shape">
 
         <RelativeLayout

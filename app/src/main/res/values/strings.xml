@@ -75,4 +75,6 @@
     <string name="title_activity_reply">ReplyActivity</string>
     <string name="title_activity_contact_us">ContactUsActivity</string>
     <string name="title_activity_simple_user_info_for_qr">SimpleUserInfoForQRActivity</string>
+    <string name="title_activity_request_message">RequestMessageActivity</string>
+    <string name="title_activity_search_user">SearchUserActivity</string>
 </resources>

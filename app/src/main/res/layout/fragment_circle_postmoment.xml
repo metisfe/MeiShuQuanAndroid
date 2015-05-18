@@ -36,6 +36,7 @@
         <RelativeLayout
             android:id="@+id/id_rl_post_moment_at"
             android:layout_width="0dp"
+            android:visibility="gone"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
@@ -63,44 +64,44 @@
     </LinearLayout>
 
     <!--<RelativeLayout-->
-        <!--android:id="@+id/fragment_circle_postmoment_bottom_container2"-->
-        <!--android:layout_above="@id/fragment_circle_postmoment_bottom_container"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="50dp">-->
+    <!--android:id="@+id/fragment_circle_postmoment_bottom_container2"-->
+    <!--android:layout_above="@id/fragment_circle_postmoment_bottom_container"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="50dp">-->
 
-        <!--<CheckBox-->
-            <!--android:id="@+id/fragment_circle_postmoment_bottom_container_cb"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content" />-->
+    <!--<CheckBox-->
+    <!--android:id="@+id/fragment_circle_postmoment_bottom_container_cb"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content" />-->
 
-        <!--<TextView-->
-            <!--android:layout_toRightOf="@id/fragment_circle_postmoment_bottom_container_cb"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="as comment" />-->
+    <!--<TextView-->
+    <!--android:layout_toRightOf="@id/fragment_circle_postmoment_bottom_container_cb"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="as comment" />-->
 
-        <!--<LinearLayout-->
-            <!--android:id="@+id/fragment_circle_postmoment_open_area"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:background="@drawable/fragment_circle_postmoment_openchoice">-->
+    <!--<LinearLayout-->
+    <!--android:id="@+id/fragment_circle_postmoment_open_area"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:background="@drawable/fragment_circle_postmoment_openchoice">-->
 
-            <!--<View-->
-                <!--android:id="@+id/fragment_circle_postmoment_open_image"-->
-                <!--android:layout_width="30dp"-->
-                <!--android:layout_height="30dp"-->
-                <!--android:layout_gravity="center_vertical"-->
-                <!--android:background="@drawable/fragment_circle_postmoment_choice_false" />-->
+    <!--<View-->
+    <!--android:id="@+id/fragment_circle_postmoment_open_image"-->
+    <!--android:layout_width="30dp"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:layout_gravity="center_vertical"-->
+    <!--android:background="@drawable/fragment_circle_postmoment_choice_false" />-->
 
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center_vertical"-->
-                <!--android:text="open" />-->
-        <!--</LinearLayout>-->
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_vertical"-->
+    <!--android:text="open" />-->
+    <!--</LinearLayout>-->
 
     <!--</RelativeLayout>-->
 
@@ -124,10 +125,10 @@
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/img_topline_default"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
         android:scaleType="centerCrop"
+        android:background="#ccc"
         android:layout_below="@id/id_et_input_cirle_post_moment" />
 
     <com.metis.meishuquan.view.circle.moment.comment.EmotionSelectView

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +18,17 @@ import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.circle.ChatActivity;
+import com.metis.meishuquan.activity.circle.SearchUserInfoActivity;
 import com.metis.meishuquan.activity.info.QrScanActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
+import com.metis.meishuquan.model.BLL.CommonOperator;
+import com.metis.meishuquan.model.circle.UserSearch;
 import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.util.ViewUtils;
 import com.metis.meishuquan.view.circle.CircleChatListItemView;
 import com.metis.meishuquan.view.circle.PopupAddWindow;
+import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,8 +65,27 @@ public class ChatListFragment extends CircleBaseFragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_QC && resultCode == getActivity().RESULT_OK) {
+            final String userPhone = (String) data.getExtras().get(QrScanActivity.KEY_RESULT);
+            Log.i("QR_RESULT", userPhone);
+            CommonOperator.getInstance().searchUser(userPhone, new ApiOperationCallback<UserSearch>() {
+                @Override
+                public void onCompleted(UserSearch result, Exception exception, ServiceFilterResponse response) {
+                    if (result != null && result.option.isSuccess()) {
+                        //显示好友信息
+                        Intent intent = new Intent(getActivity(), SearchUserInfoActivity.class);
+                        intent.putExtra(SearchUserInfoActivity.KEY_USER_INFO, (java.io.Serializable) result.data);
+                        startActivity(intent);
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
     public void timeToSetTitleBar() {
-        getTitleBar().setText("消息");
+        getTitleBar().setText(MainApplication.userInfo.getName().equals("") ? "消息" : MainApplication.userInfo.getName());
         getTitleBar().setRightButton("", R.drawable.icon_circle_add_, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,14 +126,6 @@ public class ChatListFragment extends CircleBaseFragment {
                     @Override
                     public void onClick(View v) {
                         startActivityForResult(new Intent(MainApplication.UIContext, QrScanActivity.class), REQUEST_QC);
-//
-//                        ScanQRCodeFragment scanQRCodeFragment = new ScanQRCodeFragment();
-//                        FragmentManager fm = getActivity().getSupportFragmentManager();
-//                        FragmentTransaction ft = fm.beginTransaction();
-//                        ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
-//                        ft.add(R.id.content_container, scanQRCodeFragment);
-//                        ft.addToBackStack(null);
-//                        ft.commit();
                     }
                 });
 

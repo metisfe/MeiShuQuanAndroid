@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:background="@color/white"
+    android:background="@color/common_color_e2e2e2"
     android:clickable="true"
     android:layout_height="match_parent">
 
@@ -10,7 +10,10 @@
         android:id="@+id/fragment_circle_onlinesearchfragment_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:iconifiedByDefault="false" />
+        android:queryHint="手机号/美术圈号"
+        android:iconifiedByDefault="false"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
 
     <Button
         android:id="@+id/fragment_circle_onlinesearchfragment_search"

@@ -41,20 +41,20 @@ public class RequestMessageFragment extends Fragment {
         this.editText = (EditText) rootView.findViewById(R.id.fragment_circle_requestmessage_edittext);
         this.titleBar = (CircleTitleBar) rootView.findViewById(R.id.fragment_circle_requestmessage_titlebar);
 
-        titleBar.setLeftButton("返回", 0, new View.OnClickListener() {
+        this.titleBar.setLeftButton("返回", 0, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });
-        titleBar.setText("好友验证");
-        titleBar.setRightButton("完成", 0, new View.OnClickListener() {
+        this.titleBar.setText("好友验证");
+        this.titleBar.setRightButton("发送", 0, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String targetId = getArguments().getString("targetid");
                 StringBuilder PATH = new StringBuilder("v1.1/Message/AddFriend");
                 PATH.append("?session=");
-                PATH.append(MainApplication.userInfo.getCookie());
+                PATH.append(MainApplication.getSession());
                 PATH.append("&userId=");
                 PATH.append(targetId);
                 PATH.append("&type=1");
@@ -75,7 +75,6 @@ public class RequestMessageFragment extends Fragment {
                                 }
                             }
                         });
-
             }
         });
 

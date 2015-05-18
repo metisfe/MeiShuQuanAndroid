@@ -3,6 +3,7 @@ package com.metis.meishuquan.adapter.circle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.content.Intent;
@@ -24,6 +25,7 @@ import com.metis.meishuquan.activity.act.ActDetailActivity;
 import com.metis.meishuquan.activity.act.SelectStudioActivity;
 import com.metis.meishuquan.activity.circle.ReplyActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
+import com.metis.meishuquan.fragment.Topline.ItemInfoFragment;
 import com.metis.meishuquan.fragment.circle.MomentCommentFragment;
 import com.metis.meishuquan.fragment.circle.MomentDetailFragment;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
@@ -125,7 +127,7 @@ public class CircleMomentAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        if (moment.relayCircle == null) {
+        if (moment.relayCircle == null) {//朋友圈类型
             viewHolder.ll_not_circle.setVisibility(View.GONE);
             viewHolder.ll_circle.setVisibility(View.VISIBLE);
         } else {
@@ -226,9 +228,7 @@ public class CircleMomentAdapter extends BaseAdapter {
 
         //转发部分
         if (moment.relayCircle != null) {
-            if (moment.relayCircle.images != null && moment.relayCircle.images.size() > 0 && !moment.relayCircle.images.get(0).Thumbnails.isEmpty()) {
-                ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.relayCircle.images.get(0).Thumbnails, viewHolder.imgForReply);
-            }
+            ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.relayCircle.activityImg, viewHolder.imgForReply);
             viewHolder.tvTitle.setText(moment.relayCircle.title);
             viewHolder.tvInfo.setText(moment.relayCircle.desc);
 
@@ -236,11 +236,11 @@ public class CircleMomentAdapter extends BaseAdapter {
             viewHolder.ll_not_circle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (moment.relayCircle != null) {
+                    if (moment.relayCircle != null && moment.relayCircle.type == SupportTypeEnum.CircleActivity.getVal()) {
                         //跳转至活动详情
                         navigatToActivityInfo(view, moment);
-                    } else if (moment.relayCircle.type == SupportTypeEnum.News.getVal()) {
-                        navigatToNewsInfo(moment.relayCircle.id);
+                    } else if (moment.relayCircle != null && moment.relayCircle.type == SupportTypeEnum.News.getVal()) {
+                        navigatToNewsInfo(moment);
                     }
                 }
             });
@@ -300,12 +300,16 @@ public class CircleMomentAdapter extends BaseAdapter {
     private void reply(CCircleDetailModel moment) {
         Intent it = new Intent(mContext, ReplyActivity.class);
         CirclePushBlogParm parm = new CirclePushBlogParm();
-        if (moment.relayCircle != null) {
-            parm.setType(moment.relayCircle.type);
+        if (moment.relayCircle != null && moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal()) {
+            parm.setType(SupportTypeEnum.CircleActivity.getVal());
+            parm.setRelayId(moment.relayCircle.id);
+        } else if (moment.relayCircle != null && moment.relayCircle.type == SupportTypeEnum.News.getVal()) {
+            parm.setType(SupportTypeEnum.News.getVal());
+            parm.setRelayId(moment.relayCircle.id);
         } else {
             parm.setType(SupportTypeEnum.Circle.getVal());
+            parm.setRelayId(moment.id);
         }
-        parm.setRelayId(moment.id);
         it.putExtra(ReplyActivity.PARM, parm);
         if (moment.relayCircle != null && (moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal() || moment.relayCircle.type == SupportTypeEnum.News.getVal())) {
             it.putExtra(ReplyActivity.TITLE, moment.relayCircle.title);
@@ -317,8 +321,16 @@ public class CircleMomentAdapter extends BaseAdapter {
     }
 
     //进入新闻详情
-    private void navigatToNewsInfo(int newId) {
-
+    private void navigatToNewsInfo(CCircleDetailModel moment) {
+        ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
+        Bundle args = new Bundle();
+        args.putInt("newsId", moment.relayCircle.id);
+        args.putString(ItemInfoFragment.KEY_SHARE_IMG_URL, moment.relayCircle.activityImg);
+        itemInfoFragment.setArguments(args);
+        FragmentTransaction ft = ((MainActivity) mContext).getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.content_container, itemInfoFragment);
+        ft.addToBackStack(null);
+        ft.commit();
     }
 
     private static final String TAG = CircleMomentAdapter.class.getSimpleName();

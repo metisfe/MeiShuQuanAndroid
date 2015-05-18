@@ -1,18 +1,18 @@
 package com.metis.meishuquan.model.circle;
 
-import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 
 /**
  * Created by jiaxh on 4/18/2015.
  */
 
-public class CUserModel {
+public class CUserModel implements Serializable {
 
-    public long userId;
+    public int userId;
 
-    public String name;
+    public String name;//昵称
 
-    public String remarkName;
+    public String remarkName;//备注名
 
     public String avatar;
 

@@ -16,6 +16,7 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.circle.UserAdvanceInfo;
 import com.metis.meishuquan.util.ChatManager;
@@ -113,7 +114,7 @@ public class ContactListFragment extends CircleBaseFragment {
 
     @Override
     public void timeToSetTitleBar() {
-        getTitleBar().setText("选择联系人");
+        getTitleBar().setText(MainApplication.userInfo.getName().equals("") ? "联系人" : MainApplication.userInfo.getName());
         getTitleBar().setRightButton("", R.drawable.icon_circle_add_, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
