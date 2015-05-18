@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -159,6 +160,8 @@ public class SharePopupWindow extends PopupWindow {
         btnSinaWeibo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                Intent it = new Intent("join_succeed");
+//                LocalBroadcastManager.getInstance(mContext).sendBroadcast(it);
                 dismiss();
                 //SinaShareContent
             }

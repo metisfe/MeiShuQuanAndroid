@@ -1,14 +1,18 @@
 package com.metis.meishuquan;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -54,6 +58,13 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
 
     public static MainActivity self;
 
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            navigateTo(CircleFragment.class);
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +107,9 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
         checkLoginState();
         updateApp();
         CommonOperator.getInstance().getMomentsGroups();//获取朋友圈分组信息
+
+        IntentFilter intentFilter = new IntentFilter("join_succeed");
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
     }
 
 //    @Override
@@ -104,6 +118,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
 //            navigateTo(CircleFragment.class);
 //        }
 //    }
+
 
     @Override
     public void onResume() {
@@ -227,6 +242,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
     @Override
     public void onDestroy() {
         DialogManager.getInstance().dismissDialog();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
         super.onDestroy();
     }
 

@@ -1,6 +1,9 @@
 package com.metis.meishuquan.activity.circle;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
@@ -75,6 +78,7 @@ public class ReplyActivity extends FragmentActivity {
         initView();
         bindData();
         initEvent();
+
     }
 
     public void bindData() {
@@ -150,6 +154,7 @@ public class ReplyActivity extends FragmentActivity {
                                 if (succeed) {
                                     Intent it = new Intent("join_succeed");
                                     LocalBroadcastManager.getInstance(ReplyActivity.this).sendBroadcast(it);
+
                                 }
                             }
                         });
