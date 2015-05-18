@@ -444,6 +444,9 @@
             android:name=".activity.circle.SearchUserActivity"
             android:label="@string/title_activity_search_user"
             android:windowSoftInputMode="stateVisible|adjustResize">
+    	<activity
+	    android:name=".activity.FriendsChooseActivity"
+	    android:label="@string/title_activity_friends_choose" >
         </activity>
     </application>
 

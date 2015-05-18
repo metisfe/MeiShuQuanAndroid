@@ -23,6 +23,15 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -131,6 +140,54 @@ public class CommonOperator {
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
         }
+    }
+
+    /*public void fileUpload (FileUploadTypeEnum type, List<String> path, ServiceFilterResponseCallback callback) {
+        List<File> files = new ArrayList<File>();
+        for (int i = 0; i < path.size(); i++) {
+            files.add(new File(path.get(i)));
+        }
+        try {
+            fileUpload(type, files, callback);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }*/
+
+    public void fileUpload (FileUploadTypeEnum type, List<File> path, ServiceFilterResponseCallback callback) throws IOException {
+        final int length = path.size();
+        StringBuilder sb = new StringBuilder();
+        long totalLength = 0;
+        for (int i = 0; i < length; i++) {
+            File file = path.get(i);
+            long len = file.length();
+            totalLength += len;
+            sb.append("," + len);
+        }
+        byte[] array = new byte[0];
+        ByteArrayOutputStream baos = new ByteArrayOutputStream((int)totalLength);
+        for (int i = 0; i < length; i++) {
+            File file = path.get(i);
+            long len = file.length();
+            byte[] data = new byte[(int)len];
+            FileInputStream fis = new FileInputStream(file);
+            fis.read(data);
+            baos.write(data, 0, (int)len);
+            baos.close();
+            byte[] newArray = baos.toByteArray();
+            array = byteMerger(array, newArray);
+        }
+
+        sb.insert(0, "," + length);
+        sb.insert(0, totalLength + "");
+        this.fileUpload(type, sb.toString(), array, callback);
+    }
+
+    public static byte[] byteMerger(byte[] byte_1, byte[] byte_2){
+        byte[] byte_3 = new byte[byte_1.length + byte_2.length];
+        System.arraycopy(byte_1, 0, byte_3, 0, byte_1.length);
+        System.arraycopy(byte_2, 0, byte_3, byte_1.length, byte_2.length);
+        return byte_3;
     }
 
     /**

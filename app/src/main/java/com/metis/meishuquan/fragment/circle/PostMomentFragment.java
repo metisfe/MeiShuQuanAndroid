@@ -1,44 +1,67 @@
 package com.metis.meishuquan.fragment.circle;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.FriendsChooseActivity;
+import com.metis.meishuquan.activity.assess.TestPicActivity;
 import com.metis.meishuquan.model.BLL.CircleOperator;
+import com.metis.meishuquan.model.BLL.CommonOperator;
+import com.metis.meishuquan.model.assess.Bimp;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
+import com.metis.meishuquan.model.circle.CircleImage;
 import com.metis.meishuquan.model.circle.CirclePushBlogParm;
+import com.metis.meishuquan.model.commons.Result;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.enums.FileUploadTypeEnum;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
+import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
 import com.metis.meishuquan.view.circle.moment.comment.EmotionEditText;
 import com.metis.meishuquan.view.circle.moment.comment.EmotionSelectView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
+import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by wudi on 4/2/2015.
  */
 public class PostMomentFragment extends Fragment {
+
+    private static final String TAG = PostMomentFragment.class.getSimpleName();
+
     private CircleTitleBar titleBar;
     private RelativeLayout rl_choose_pic;
     private RelativeLayout rl_at;
     private RelativeLayout rl_emotion;
     private EmotionEditText editText;
+
+    private GridView mImageGrid = null;
 
     private List<Integer> lstUserId = null;//@好友
 
@@ -51,6 +74,10 @@ public class PostMomentFragment extends Fragment {
     private int MarginTopForEmotionSwitch = ScreenHeight - EmotionSelectViewHeight - EmotionSwitchContainerHeight;
     private EmotionSelectView emotionSelectView;
 
+    private List<String> mImagePaths = new ArrayList<String>();
+
+    private ImageAdapter mAdapter = new ImageAdapter();
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_circle_postmoment, container, false);
@@ -58,6 +85,16 @@ public class PostMomentFragment extends Fragment {
         initTitleBar();
         initEvent();
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        if (Bimp.getInstance().drr.size() > 0) {
+            mImagePaths.clear();
+            mImagePaths.addAll(Bimp.getInstance().drr);
+            mAdapter.notifyDataSetChanged();
+        }
+        super.onResume();
     }
 
     private void initView(ViewGroup rootView) {
@@ -80,7 +117,12 @@ public class PostMomentFragment extends Fragment {
         this.rl_at = (RelativeLayout) rootView.findViewById(R.id.id_rl_post_moment_at);
         this.rl_emotion = (RelativeLayout) rootView.findViewById(R.id.id_rl_post_moment_emotion);
 
+        this.mImageGrid = (GridView)rootView.findViewById(R.id.postmoment_grid_pics);
+        this.mImageGrid.setAdapter(mAdapter);
+
         this.fm = getActivity().getSupportFragmentManager();
+
+
     }
 
     private void initTitleBar() {
@@ -89,14 +131,49 @@ public class PostMomentFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (!isSend) {
-                    String content = editText.getText().toString();
+                    if (!mImagePaths.isEmpty()) {
+                        List<File> files = new ArrayList<File>();
+                        for (int i = 0; i < mImagePaths.size(); i++) {
+                            files.add(new File(mImagePaths.get(i)));
+                        }
+                        try {
+                            CommonOperator.getInstance().fileUpload(FileUploadTypeEnum.IMG, files, new ServiceFilterResponseCallback () {
 
-                    CirclePushBlogParm parm = new CirclePushBlogParm();
-                    parm.setContent(content);
-                    parm.setDevice("美术圈");
-                    parm.setType(SupportTypeEnum.Circle.getVal());
+                                @Override
+                                public void onResponse(ServiceFilterResponse response, Exception exception) {
+                                    String feedbackContent = response.getContent();
+                                    if (TextUtils.isEmpty(feedbackContent)) {
+                                        Toast.makeText(getActivity(), "上传图片失败", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                    Gson gson = new Gson();
+                                    Log.v(TAG, "content=" + feedbackContent);
+                                    Result<List<CircleImage>> imageListResult = gson.fromJson(feedbackContent, new TypeToken<Result<List<CircleImage>>>(){}.getType());
+                                    String content = editText.getText().toString();
 
-                    send(parm);
+                                    CirclePushBlogParm parm = new CirclePushBlogParm();
+                                    parm.setContent(content);
+                                    parm.setDevice("美术圈");
+                                    parm.setType(SupportTypeEnum.Circle.getVal());
+                                    parm.setImages(imageListResult.getData());
+
+                                    send(parm);
+                                }
+                            });
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        String content = editText.getText().toString();
+
+                        CirclePushBlogParm parm = new CirclePushBlogParm();
+                        parm.setContent(content);
+                        parm.setDevice("美术圈");
+                        parm.setType(SupportTypeEnum.Circle.getVal());
+
+                        send(parm);
+                    }
+
                     isSend = true;
                 }
             }
@@ -139,7 +216,8 @@ public class PostMomentFragment extends Fragment {
         this.rl_choose_pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Toast.makeText(getActivity(), "onClick rl_choose_pic", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getActivity(), TestPicActivity.class));
             }
         });
 
@@ -147,7 +225,8 @@ public class PostMomentFragment extends Fragment {
         this.rl_at.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent it = new Intent(getActivity(), FriendsChooseActivity.class);
+                startActivity(it);
             }
         });
 
@@ -159,6 +238,38 @@ public class PostMomentFragment extends Fragment {
                 Utils.hideInputMethod(MainApplication.UIContext, editText);
             }
         });
+    }
+
+    private class ImageAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return mImagePaths.size();
+        }
+
+        @Override
+        public String getItem(int i) {
+            return mImagePaths.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            if (view == null) {
+                view = LayoutInflater.from(getActivity()).inflate(R.layout.layout_img_item, null);
+            }
+            String url = mImagePaths.get(i);
+            ImageView iv = (ImageView)view.findViewById(R.id.item_img);
+            ImageLoaderUtils.getImageLoader(getActivity()).displayImage(
+                    ImageDownloader.Scheme.FILE.wrap(url),
+                    iv,
+                    ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher));
+            return view;
+        }
     }
 
 }

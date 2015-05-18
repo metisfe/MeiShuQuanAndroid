@@ -148,6 +148,9 @@ public class StudioFragment extends Fragment{
     }
 
     private void fillHeader (User user) {
+        if (isDetached()) {
+            return;
+        }
         /*if (user == null) {
             mHeaderView.setVisibility(View.GONE);
             return;

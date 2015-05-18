@@ -19,6 +19,7 @@ import com.metis.meishuquan.model.assess.City;
 import com.metis.meishuquan.model.commons.College;
 import com.metis.meishuquan.model.commons.Comment;
 import com.metis.meishuquan.model.commons.Item;
+import com.metis.meishuquan.model.commons.MyFriendList;
 import com.metis.meishuquan.model.commons.Option;
 import com.metis.meishuquan.model.commons.Profile;
 import com.metis.meishuquan.model.commons.Result;
@@ -71,7 +72,8 @@ public class UserInfoOperator {
                             URL_PROVINCE = "v1.1/UserCenter/Province",
                             URL_SCHOOL = "v1.1/UserCenter/SchoolList?query=",
                             URL_COLLEGE = "v1.1/UserCenter/CollegeList?query=",
-                            URL_GET_AREA_LIST = "v1.1/UserCenter/ProvinceLink?id=";
+                            URL_GET_AREA_LIST = "v1.1/UserCenter/ProvinceLink?id=",
+                            URL_GET_MY_FRIENDS = "v1.1/Message/MyFriendList?type=";
 
     private static String KEY_USER_ID = "userId",
                         KEY_INDEX = "index",
@@ -96,6 +98,45 @@ public class UserInfoOperator {
 
     private UserInfoOperator () {
 
+    }
+
+    public void getMyFriends (int type, final OnGetListener<MyFriendList> listener) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            StringBuilder sb = new StringBuilder(URL_GET_MY_FRIENDS);
+            sb.append(type);
+            sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+            Log.v(TAG, "getMyFriends request " + sb);
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String json = gson.toJson(result);
+                        Log.v(TAG, " getMyFriends json=" + json);
+                        Result<MyFriendList> resultData = gson.fromJson(json, new TypeToken<Result<MyFriendList>>() {
+                        }.getType());
+                        if (resultData != null) {
+                            MyFriendList list = resultData.getData();
+                            if (listener != null) {
+                                listener.onGet(true, list);
+                            }
+
+                        } else {
+                            if (listener != null) {
+                                listener.onGet(false, null);
+                            }
+
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onGet(false, null);
+                        }
+
+                    }
+                }
+            });
+        }
     }
 
     public void updateUserProfile (final long userId, Bitmap bmp) {
