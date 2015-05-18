@@ -106,9 +106,31 @@ public class WorkAdapter extends BaseAdapter {
 
     private List<WorkInfoGroup> makeWorkInfoGroupList (List<WorkInfo> workInfos) {
         List<WorkInfoGroup> groupList = new ArrayList<WorkInfoGroup>();
-        int index = 0;
+        //int index = 0;
         final int length = workInfos.size();
-        for (; index < length; index += 3) {
+        for (int i = 0; i < length; i++) {
+            WorkInfoGroup group = null;
+            WorkInfo info = workInfos.get(i);
+            if (groupList.isEmpty()) {
+                group = new WorkInfoGroup();
+                group.mInfo1 = info;
+                groupList.add(group);
+            } else {
+                group = groupList.get(groupList.size() - 1);
+                /*if (group.mInfo1 == null) {
+                    group.mInfo1 = info;
+                } else */if (group.mInfo2 == null) {
+                    group.mInfo2 = info;
+                } else if (group.mInfo3 == null) {
+                    group.mInfo3 = info;
+                } else {
+                    group = new WorkInfoGroup();
+                    group.mInfo1 = info;
+                    groupList.add(group);
+                }
+            }
+        }
+        /*for (; index < length; index += 3) {
             WorkInfoGroup group = new WorkInfoGroup();
             group.mInfo1 = workInfos.get(index);
             if (index + 1 < length) {
@@ -129,7 +151,7 @@ public class WorkAdapter extends BaseAdapter {
                 group.mInfo2 = workInfos.get(index + 2);
             }
             groupList.add(group);
-        }
+        }*/
         return groupList;
     }
 

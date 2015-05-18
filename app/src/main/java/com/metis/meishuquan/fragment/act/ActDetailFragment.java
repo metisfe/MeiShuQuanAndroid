@@ -71,15 +71,17 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
         mJoinBtn.setOnClickListener(this);
         mCheckBtn.setOnClickListener(this);
 
-        mActDeals.setText(Html.fromHtml("<font size=\"3\" color=\"black\">" + getString(R.string.act_deals_1) + "</font><font size=\"3\" color=\"red\">" + getString(R.string.act_deals_2) + "</font>"));
+        mActDeals.setText(Html.fromHtml("<font color=\"black\">" + getString(R.string.act_deals_1) + "</font><font color=\"red\">" + getString(R.string.act_deals_2) + "</font>"));
         mActDeals.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Uri uri = Uri.parse("http://www.meishuquan.net/UserAgreement.html");
-
-                Intent intent = new Intent(Intent.ACTION_VIEW,uri);
-
-                startActivity(intent);
+                try {
+                    Uri uri = Uri.parse("http://www.meishuquan.net/UserAgreement.html");
+                    Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(), R.string.act_not_found_exception, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -150,6 +152,10 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
             mJoinBtn.setEnabled(false);
             mJoinBtn.setVisibility(View.GONE);
             mActDeals.setVisibility(View.GONE);
+        }
+
+        if (mSimpleActiveInfo != null && (mSimpleActiveInfo.pId > 0 || mSimpleActiveInfo.isJoin)) {
+            mJoinBtn.setEnabled(false);
         }
         //Toast.makeText(getActivity(), "getUserRole " + mUser.getUserRole(), Toast.LENGTH_SHORT).show();
         if (mSimpleActiveInfo.pId > 0 && !mSimpleActiveInfo.isJoin) {

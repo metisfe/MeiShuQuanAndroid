@@ -282,7 +282,7 @@ public class StudioActivity extends BaseActivity implements
     private void loadFirstTab () {
         if (mUser != null) {
             if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
-                if (mNewsList == null) {
+                if (mNewsList == null || mNewsList.isEmpty()) {
                     mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
                     StudioOperator.getInstance().getMyNewsList(mUser.getUserId(), 0, new UserInfoOperator.OnGetListener<List<News>>() {
                         @Override

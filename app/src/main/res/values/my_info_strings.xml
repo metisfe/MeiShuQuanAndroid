@@ -160,12 +160,13 @@
     <string name="act_join_unjoined">请先报名再选择画室</string>
     <string name="act_join_can_not_choose">您已经没有选择画室的机会了</string>
     <string name="act_join_only_student">只有学生才能报名参加活动</string>
-    <string name="act_has_joined">已报名</string>
+    <string name="act_has_joined">已加入活动</string>
     <string name="act_join">报名</string>
     <string name="act_joined">您已报名</string>
     <string name="act_less_than_10">亲！邀请好友集满10个赞，才能选画室哦！</string>
     <string name="act_deals_1">点击“我要报名”，即表示您同意</string>
     <string name="act_deals_2">《美术圈软件许可及服务协议》</string>
+    <string name="act_not_found_exception">未找到程序访问网页</string>
 
     <string-array name="act_filter_1">
         <item>学生PK榜</item>
