@@ -24,6 +24,7 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.act.ActDetailActivity;
 import com.metis.meishuquan.activity.act.SelectStudioActivity;
 import com.metis.meishuquan.activity.circle.ReplyActivity;
+import com.metis.meishuquan.activity.info.homepage.StudioActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.Topline.ItemInfoFragment;
 import com.metis.meishuquan.fragment.circle.MomentCommentFragment;
@@ -34,6 +35,7 @@ import com.metis.meishuquan.model.circle.CirclePushCommentResult;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
+import com.metis.meishuquan.util.ActivityUtils;
 import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.Helper;
 import com.metis.meishuquan.util.ImageLoaderUtils;
@@ -169,6 +171,12 @@ public class CircleMomentAdapter extends BaseAdapter {
 
         viewHolder.createTime.setText(moment.getTimeText());
         viewHolder.device.setText(moment.getDeviceText());
+        viewHolder.avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityUtils.startNameCardActivity(mContext, (int)moment.user.userId);
+            }
+        });
 
         //重新初始化
         final ViewHolder finalViewHolder = viewHolder;

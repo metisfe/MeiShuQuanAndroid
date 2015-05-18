@@ -380,6 +380,7 @@
             android:label="@string/title_activity_change_pwd" />
         <activity
             android:name=".activity.info.homepage.StudioActivity"
+            android:launchMode="singleTask"
             android:label="@string/title_activity_studio" />
         <activity
             android:name=".activity.info.homepage.StudioAlbumActivity"

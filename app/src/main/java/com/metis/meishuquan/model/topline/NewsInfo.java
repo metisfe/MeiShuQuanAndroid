@@ -1,5 +1,7 @@
 package com.metis.meishuquan.model.topline;
 
+import com.metis.meishuquan.model.commons.User;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -123,6 +125,8 @@ public class NewsInfo implements Serializable {
         this.commentDefaultText = commentDefaultText;
     }
 
+    public User user;
+
     public List<RelatedRead> getRelatedNewsList() {
         if (relatedNewsList == null) {
             relatedNewsList = new ArrayList<RelatedRead>();
@@ -173,5 +177,13 @@ public class NewsInfo implements Serializable {
 
     public void setShareUrl(String shareUrl) {
         this.shareUrl = shareUrl;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

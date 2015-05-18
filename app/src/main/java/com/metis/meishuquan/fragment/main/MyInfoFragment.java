@@ -19,6 +19,7 @@ import com.google.gson.JsonObject;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.AdvanceActivity;
+import com.metis.meishuquan.activity.info.ImagePreviewActivity;
 import com.metis.meishuquan.activity.info.InfoActivity;
 import com.metis.meishuquan.activity.info.MyCommentsActivity;
 import com.metis.meishuquan.activity.info.MyCourseActivity;
@@ -34,6 +35,9 @@ import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.view.shared.TabBar;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by wudi on 3/15/2015.
  */
@@ -48,6 +52,8 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     private ImageView mProfileIv = null;
 
     private MainApplication mMainApplication = null;
+
+    private User mUser = MainApplication.userInfo;
 
     @Override
     public void onAttach(Activity activity) {
@@ -120,6 +126,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onGet(boolean succeed, User user) {
                 if (succeed) {
+                    mUser = user;
                     mLoginView.setVisibility(View.GONE);
                     mInfoDetailsContainer.setVisibility(View.VISIBLE);
                     fillUserInfo(user);
@@ -172,10 +179,16 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.my_info_profile_container:
-            case R.id.my_info_profile:
                 Intent intent = new Intent (getActivity(), StudioActivity.class/*InfoActivity.class*/);
                 intent.putExtra(StudioActivity.KEY_USER_ID, MainApplication.userInfo.getUserId());
                 startActivity(intent);
+                break;
+            case R.id.my_info_profile:
+                Intent previewIt = new Intent (getActivity(), ImagePreviewActivity.class);
+                ArrayList<String> urls = new ArrayList<String>();
+                urls.add(mUser.getUserAvatar());
+                previewIt.putStringArrayListExtra(ImagePreviewActivity.KEY_IMAGE_URL_ARRAY, urls);
+                startActivity(previewIt);
                 break;
             case R.id.my_info_login:
                 //showLoginFragment();

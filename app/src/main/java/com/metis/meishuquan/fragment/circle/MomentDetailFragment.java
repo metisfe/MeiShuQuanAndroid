@@ -52,6 +52,7 @@ import com.metis.meishuquan.model.circle.CirclePushCommentResult;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
+import com.metis.meishuquan.util.ActivityUtils;
 import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
@@ -88,6 +89,7 @@ public class MomentDetailFragment extends Fragment {
 
     private TextView tv_nickname;
     private RelativeLayout rl_writeCommont;
+    private ImageView mHeaderView = null;
 
     private FragmentManager fm;
 
@@ -186,11 +188,12 @@ public class MomentDetailFragment extends Fragment {
         fm = getActivity().getSupportFragmentManager();
     }
 
-    private View getHeaderView(CCircleDetailModel moment, MomentActionBar.OnActionButtonClickListener OnActionButtonClickListener) {
+    private View getHeaderView(final CCircleDetailModel moment, MomentActionBar.OnActionButtonClickListener OnActionButtonClickListener) {
         View headerView = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_circle_moment_list_item, null);
 
-        ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.user.avatar, (ImageView) headerView.findViewById(R.id.id_img_portrait), ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height)));
 //        ((ImageView) headerView.findViewById(R.id.id_img_portrait)).setImageUrl(moment.user.avatar);
+
+        mHeaderView = (ImageView) headerView.findViewById(R.id.id_img_portrait);
 
         ((TextView) headerView.findViewById(R.id.id_username)).setText(moment.user.name);
         ((TextView) headerView.findViewById(R.id.id_tv_grade)).setText(moment.user.grade);
@@ -202,7 +205,13 @@ public class MomentDetailFragment extends Fragment {
         } else {
             ((ImageView) headerView.findViewById(R.id.id_img_for_circle)).setVisibility(View.GONE);
         }
-
+        ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.user.avatar, mHeaderView, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height)));
+        mHeaderView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityUtils.startNameCardActivity(getActivity(), (int)moment.user.userId);
+            }
+        });
         actionBar = (MomentActionBar) headerView.findViewById(R.id.moment_action_bar);
         actionBar.setData(moment.relayCount, moment.comentCount, moment.supportCount);
         actionBar.setOnActionButtonClickListener(OnActionButtonClickListener);
@@ -359,7 +368,13 @@ public class MomentDetailFragment extends Fragment {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            CCircleCommentModel comment = commentList.get(i);
+            final CCircleCommentModel comment = commentList.get(i);
+            viewHolder.avatar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ActivityUtils.startNameCardActivity(getActivity(), (int)(moment.user.userId));
+                }
+            });
             ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(comment.user.avatar, viewHolder.avatar, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height)));
             viewHolder.name.setText(comment.user.name);
             viewHolder.grade.setText(comment.user.grade);

@@ -79,16 +79,13 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
 
                 switch (i) {
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-                        Log.v(TAG, "onScrollStateChanged SCROLL_STATE_IDLE");
                         if (mActListView.getLastVisiblePosition() >= absListView.getChildCount() - 1) {
                             needLoadMore();
                         }
                         break;
                     case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-                        Log.v(TAG, "onScrollStateChanged SCROLL_STATE_FLING");
                         break;
                     case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-                        Log.v(TAG, "onScrollStateChanged SCROLL_STATE_TOUCH_SCROLL");
                         break;
                 }
             }
@@ -350,33 +347,33 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
                                 }
                                 final int remainCount = 3 - simpleActiveInfo.getUpdateCount();
                                 final boolean canChooseStudio = remainCount > 0;
-                                showDialog(canChooseStudio ? getString(R.string.act_join_count, remainCount) : getString(R.string.act_join_can_not_choose), new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        if (!canChooseStudio) {
-                                            return;
-                                        }
-                                        if (mSelectedDelegate != null) {
-                                            mSelectedDelegate.setChecked(false);
-                                        }
-                                        itemDelegate.setChecked(true);
-                                        mSelectedDelegate = itemDelegate;
-                                        notifyDataSetChanged();
-                                        if (mActiveInfo != null) {
-                                            if (!simpleActiveInfo.isJoin) {
-                                                ActiveOperator.getInstance().selectStudio(item.getUserId(), mActiveInfo.getpId(), new UserInfoOperator.OnGetListener<Result>() {
-                                                    @Override
-                                                    public void onGet(boolean succeed, Result o) {
-                                                        if (succeed) {
-                                                            mSimpleInfo.setStudioId(item.getUserId());
-                                                            notifyDataSetChanged();
-                                                            Toast.makeText(getActivity(), R.string.act_join_success, Toast.LENGTH_SHORT).show();
-                                                        } else {
-                                                            Toast.makeText(getActivity(), R.string.act_join_failed, Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    }
-                                                });
-                                            } else {
+                                if (!canChooseStudio) {
+                                    return;
+                                }
+                                if (mSelectedDelegate != null) {
+                                    mSelectedDelegate.setChecked(false);
+                                }
+                                itemDelegate.setChecked(true);
+                                mSelectedDelegate = itemDelegate;
+                                notifyDataSetChanged();
+                                if (mActiveInfo != null) {
+                                    if (!simpleActiveInfo.isJoin) {
+                                        ActiveOperator.getInstance().selectStudio(item.getUserId(), mActiveInfo.getpId(), new UserInfoOperator.OnGetListener<Result>() {
+                                            @Override
+                                            public void onGet(boolean succeed, Result o) {
+                                                if (succeed) {
+                                                    mSimpleInfo.setStudioId(item.getUserId());
+                                                    notifyDataSetChanged();
+                                                    Toast.makeText(getActivity(), R.string.act_join_success, Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(getActivity(), R.string.act_join_failed, Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        showDialog(canChooseStudio ? getString(R.string.act_join_count, remainCount) : getString(R.string.act_join_can_not_choose), new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
                                                 ActiveOperator.getInstance().changeStudio(item.getUserId(), mActiveInfo.getpId(), new UserInfoOperator.OnGetListener<Result>() {
                                                     @Override
                                                     public void onGet(boolean succeed, Result result) {
@@ -390,12 +387,14 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
                                                     }
                                                 });
                                             }
+                                        });
 
-                                        }
                                     }
-                                });
+
+                                }
+
                             } else {
-                                showDialog(getString(R.string.act_join_unjoined), new DialogInterface.OnClickListener() {
+                                showDialog(getString(R.string.act_join_unjoined), getString(R.string.act_modify_studio), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -446,9 +445,12 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
 
     private Dialog mDialog = null;
     private void showDialog (String msg, DialogInterface.OnClickListener positiveListener) {
+        showDialog(msg, getString(R.string.gender_ok), positiveListener);
+    }
+    private void showDialog (String msg, String okMsg, DialogInterface.OnClickListener positiveListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(msg);
-        builder.setPositiveButton(R.string.gender_ok, positiveListener);
+        builder.setPositiveButton(okMsg, positiveListener);
         builder.setNegativeButton(R.string.alter_dialog_cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

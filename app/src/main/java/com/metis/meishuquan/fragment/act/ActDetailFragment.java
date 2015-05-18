@@ -1,10 +1,14 @@
 package com.metis.meishuquan.fragment.act;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -51,6 +55,28 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
     private Button mJoinBtn = null, mCheckBtn = null;
 
     private User mUser = null;
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (mSimpleActiveInfo != null) {
+                mSimpleActiveInfo.isJoin = true;
+                fillBtn();
+            }
+        }
+    };
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, new IntentFilter("join_succeed"));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -143,18 +169,25 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
     }
 
     private void fillBtn () {
+        if (!isResumed()) {
+            return;
+        }
         if (mSimpleActiveInfo != null && (mSimpleActiveInfo.pId > 0 || mSimpleActiveInfo.isJoin)) {
             mJoinBtn.setEnabled(false);
         }
         //Toast.makeText(getActivity(), "getUserRole " + mUser.getUserRole(), Toast.LENGTH_SHORT).show();
         if (mSimpleActiveInfo.pId > 0 && !mSimpleActiveInfo.isJoin) {
-            mJoinBtn.setText(R.string.act_title_check);
+            mJoinBtn.setText(R.string.act_joined_already);
+            //mJoinBtn.setText(R.string.act_title_check);
         } else if (mSimpleActiveInfo.isJoin) {
-            mJoinBtn.setText(R.string.act_has_joined);
+            mJoinBtn.setText(R.string.act_joined_already);
         }
     }
 
     private void fillInfo(ActiveInfo info) {
+        if (!isResumed()) {
+            return;
+        }
         ImageLoaderUtils.getImageLoader(getActivity()).displayImage(
                 info.getImage(), mCoverIv, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
         );
@@ -191,7 +224,7 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
                     return;
                 }
                 if (mInfo != null) {
-                    if (mSimpleActiveInfo != null && mSimpleActiveInfo.pId > 0) {
+                    if (mSimpleActiveInfo != null && mSimpleActiveInfo.isJoin) {
                         Toast.makeText(getActivity(), R.string.act_joined, Toast.LENGTH_SHORT).show();
                         if (mJoinedListener != null) {
                             mJoinedListener.onClick(view);

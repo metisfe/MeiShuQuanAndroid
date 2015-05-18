@@ -1,6 +1,8 @@
 package com.metis.meishuquan.activity.circle;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +21,7 @@ import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.BLL.ActiveOperator;
 import com.metis.meishuquan.model.BLL.CircleOperator;
+import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CirclePushBlogParm;
 import com.metis.meishuquan.model.contract.ReturnInfo;
@@ -141,12 +144,21 @@ public class ReplyActivity extends FragmentActivity {
             public void onCompleted(ReturnInfo<CCircleDetailModel> result, Exception exception, ServiceFilterResponse response) {
                 if (result != null && result.isSuccess()) {
                     if (parm.getType() == SupportTypeEnum.Activity.getVal()) {
-                        ActiveOperator.getInstance().joinActivity(parm.getRelayId());
+                        ActiveOperator.getInstance().joinActivity(parm.getRelayId(), new UserInfoOperator.OnGetListener() {
+                            @Override
+                            public void onGet(boolean succeed, Object o) {
+                                if (succeed) {
+                                    Intent it = new Intent("join_succeed");
+                                    LocalBroadcastManager.getInstance(ReplyActivity.this).sendBroadcast(it);
+                                }
+                            }
+                        });
                     }
                     String json = new Gson().toJson(result);
                     Log.i("pushBlog", json);
 
                     Toast.makeText(MainApplication.UIContext, "发送成功", Toast.LENGTH_SHORT).show();
+
                     finish();
                 } else if (exception != null) {
                     Log.i("pushBlog", "exception:cause:" + exception.getCause() + "  message:" + exception.getMessage());

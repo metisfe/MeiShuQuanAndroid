@@ -221,6 +221,7 @@ public class StudioActivity extends BaseActivity implements
                     R.string.studio_tab_info_details
             );
         }
+        mSubTitleName.setText(mUser.getAccout());
         mStudioFragment.setUser(user);
         mStudioFragment.setOnCoverLongClickListener(new View.OnLongClickListener() {
             @Override

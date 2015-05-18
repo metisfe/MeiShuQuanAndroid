@@ -256,7 +256,7 @@ public class ActiveOperator {
         }
     }
 
-    public void joinActivity (int activityId) {
+    public void joinActivity (int activityId, final UserInfoOperator.OnGetListener listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_ACTIVE_JOIN_ACTIVITY);
             sb.append("?" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
@@ -269,6 +269,10 @@ public class ActiveOperator {
                     if (result != null) {
                         Gson gson = new Gson();
                         String resultJson = gson.toJson(result);
+                        Result resultInfo = gson.fromJson(resultJson, new TypeToken<Result>(){}.getType());
+                        if (listener != null) {
+                            listener.onGet(resultInfo.getOption().getStatus() == 0, null);
+                        }
                         Log.v(TAG, "joinActivity resultJson=" + resultJson);
                     }
                 }

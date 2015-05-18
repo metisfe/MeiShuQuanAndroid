@@ -41,6 +41,7 @@ import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.ImagePreviewActivity;
+import com.metis.meishuquan.activity.info.homepage.StudioActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.adapter.topline.CommonAdapter;
 import com.metis.meishuquan.model.BLL.CommonOperator;
@@ -55,6 +56,7 @@ import com.metis.meishuquan.model.topline.ContentInfo;
 import com.metis.meishuquan.model.topline.RelatedRead;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
 import com.metis.meishuquan.model.topline.Urls;
+import com.metis.meishuquan.util.ActivityUtils;
 import com.metis.meishuquan.util.Helper;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.ImageUtil;
@@ -599,6 +601,15 @@ public class ItemInfoFragment extends Fragment {
             this.tv_createtime.setText(newsInfo.getData().getModifyTime());
             String sourse = newsInfo.getData().getSource().getTitle().trim();
             this.tv_sourse.setText(sourse);
+
+            titleBar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (newsInfo.getData().getUser() != null) {
+                        ActivityUtils.startNameCardActivity(getActivity(), newsInfo.getData().getUser().getUserId());
+                    }
+                }
+            });
 
             //评论数
             int commentCount = newsInfo.getData().getCommentCount();

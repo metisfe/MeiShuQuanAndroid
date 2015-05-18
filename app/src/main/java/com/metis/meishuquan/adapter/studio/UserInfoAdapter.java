@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.InputActivity;
 import com.metis.meishuquan.activity.course.ChooseCourseActivity;
@@ -196,6 +197,8 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
 
         mRecentsContentTv.setText(mUser.getSelfSignature());
         mRecentsContainer.findViewById(R.id.info_btn_arrow).setVisibility(canEdit ? View.VISIBLE : View.INVISIBLE);
+
+        mPhoneView.setVisibility(MainApplication.userInfo != null && mUser.getUserId() == MainApplication.userInfo.getUserId() ? View.VISIBLE : View.GONE);
 
         mRegisterView.setArrowVisible(View.INVISIBLE);
         mRegisterView.setSecondaryText(mUser.getRegisterTimeFormated());
