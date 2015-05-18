@@ -104,12 +104,14 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
                                 public void onGet(boolean succeed, ActiveInfo activeInfo) {
                                     if (succeed) {
                                         mInfo = activeInfo;
+                                        fillInfo(mInfo);
                                         ActiveOperator.getInstance().getMyActiveInfo(mInfo.getpId(), new UserInfoOperator.OnGetListener<ActiveOperator.SimpleActiveInfo>() {
                                             @Override
                                             public void onGet(boolean succeed, ActiveOperator.SimpleActiveInfo simpleActiveInfo) {
                                                 if (succeed) {
                                                     mSimpleActiveInfo = simpleActiveInfo;
-                                                    fillInfo(mInfo);
+                                                    fillBtn();
+                                                    //fillInfo(mInfo);
                                                 }
                                             }
                                         });
@@ -120,12 +122,14 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
                                 }
                             });
                         } else {
+                            fillInfo(mInfo);
                             ActiveOperator.getInstance().getMyActiveInfo(mInfo.getpId(), new UserInfoOperator.OnGetListener<ActiveOperator.SimpleActiveInfo>() {
                                 @Override
                                 public void onGet(boolean succeed, ActiveOperator.SimpleActiveInfo simpleActiveInfo) {
                                     if (succeed) {
                                         mSimpleActiveInfo = simpleActiveInfo;
-                                        fillInfo(mInfo);
+                                        fillBtn();
+                                        //fillInfo(mInfo);
                                     }
                                 }
                             });
@@ -135,6 +139,18 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
             });
         } else {
             startActivity(new Intent(getActivity(), LoginActivity.class));
+        }
+    }
+
+    private void fillBtn () {
+        if (mSimpleActiveInfo != null && (mSimpleActiveInfo.pId > 0 || mSimpleActiveInfo.isJoin)) {
+            mJoinBtn.setEnabled(false);
+        }
+        //Toast.makeText(getActivity(), "getUserRole " + mUser.getUserRole(), Toast.LENGTH_SHORT).show();
+        if (mSimpleActiveInfo.pId > 0 && !mSimpleActiveInfo.isJoin) {
+            mJoinBtn.setText(R.string.act_title_check);
+        } else if (mSimpleActiveInfo.isJoin) {
+            mJoinBtn.setText(R.string.act_has_joined);
         }
     }
 
@@ -154,15 +170,6 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
             mActDeals.setVisibility(View.GONE);
         }
 
-        if (mSimpleActiveInfo != null && (mSimpleActiveInfo.pId > 0 || mSimpleActiveInfo.isJoin)) {
-            mJoinBtn.setEnabled(false);
-        }
-        //Toast.makeText(getActivity(), "getUserRole " + mUser.getUserRole(), Toast.LENGTH_SHORT).show();
-        if (mSimpleActiveInfo.pId > 0 && !mSimpleActiveInfo.isJoin) {
-            mJoinBtn.setText(R.string.act_title_check);
-        } else if (mSimpleActiveInfo.isJoin) {
-            mJoinBtn.setText(R.string.act_has_joined);
-        }
         //mCheckBtn.setVisibility(View.VISIBLE);
         /*mJoinBtn.setEnabled(!info.isUseState());
         mJoinBtn.setText(info.isUseState() ? );*/

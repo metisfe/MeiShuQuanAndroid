@@ -175,7 +175,7 @@ public class StudioActivity extends BaseActivity implements
                 if (succeed) {
                     mUser = user;
                     //TODO
-                    //mUser.setUserRole(2);
+                    //mUser.setUserRole(3);
                     //mUser.setUserId(100090);
                     loadFirstTab();
                     fillUser(user);
@@ -311,9 +311,9 @@ public class StudioActivity extends BaseActivity implements
                     });
                 }
             } else {
-                if (mCircleList == null) {
+                if (mCircleList == null || mCircleList.isEmpty()) {
                     mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
-                    StudioOperator.getInstance().getMyCircleList(mUser.getUserId(), new UserInfoOperator.OnGetListener<List<CCircleDetailModel>>() {
+                    StudioOperator.getInstance().getMyCircleList(mUser.getUserId(), 0, new UserInfoOperator.OnGetListener<List<CCircleDetailModel>>() {
                         @Override
                         public void onGet(boolean succeed, List<CCircleDetailModel> cCircleDetailModels) {
                             if (succeed) {

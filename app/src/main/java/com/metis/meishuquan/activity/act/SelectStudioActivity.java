@@ -35,6 +35,8 @@ public class SelectStudioActivity extends BaseActivity {
         mStudioListFragment = (StudioListFragment)getSupportFragmentManager().findFragmentById(R.id.select_studio_fragment);
         mStudioListFragment.setCanEdit(true);
 
+        getTitleView().setImageRightResource(R.drawable.rc_ic_atfriend_search);
+
     }
 
     private void showSearchView () {
@@ -58,28 +60,29 @@ public class SelectStudioActivity extends BaseActivity {
             }
             //getTitleView().removeCenterView(mCustomTitle);
             getTitleView().addCenterView(mSearchView);
+            getTitleView().setImageRightResource(R.drawable.active_right_btn_close);
             //getTitleView().setImageRightResource();
             mSearchInput.requestFocus();
             isSearchShowing = true;
         }
     }
 
-    /*private void hideSearchView () {
+    private void hideSearchView () {
         if (isSearchShowing) {
-            getTitleView().addCenterView(mCustomTitle);
             getTitleView().removeCenterView(mSearchView);
             mSearchInput.setText("");
-            mListFragment.clearSearch();
+            mStudioListFragment.clearSearch();
             isSearchShowing = false;
+            getTitleView().setImageRightResource(R.drawable.rc_ic_atfriend_search);
         }
-    }*/
+    }
 
     @Override
     public void onBackPressed() {
-        /*if (isSearchShowing) {
+        if (isSearchShowing) {
             hideSearchView();
             return;
-        }*/
+        }
         super.onBackPressed();
     }
 
@@ -89,13 +92,13 @@ public class SelectStudioActivity extends BaseActivity {
     }
 
     @Override
-    public String getTitleRight() {
-        return getString(R.string.gender_ok);
-    }
-
-    @Override
     public void onTitleRightPressed() {
-        final TopListItem item = mStudioListFragment.getSelectedStudioItem();
+        if (isSearchShowing) {
+            hideSearchView();
+        } else {
+            showSearchView();
+        }
+        /*final TopListItem item = mStudioListFragment.getSelectedStudioItem();
         if (item == null) {
             Toast.makeText(this, R.string.act_choose_one_plz, Toast.LENGTH_SHORT).show();
             return;
@@ -117,7 +120,7 @@ public class SelectStudioActivity extends BaseActivity {
                     });
                 }
             }
-        });
+        });*/
 
     }
 }

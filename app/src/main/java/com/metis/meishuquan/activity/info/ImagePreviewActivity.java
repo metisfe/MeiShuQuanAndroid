@@ -18,7 +18,8 @@ import java.util.List;
 public class ImagePreviewActivity extends BaseActivity {
 
     public static final String KEY_IMAGE_URL_ARRAY = "image_url_array",
-            KEY_THUMB_URL_ARRAY = "thumb_url_array";
+            KEY_THUMB_URL_ARRAY = "thumb_url_array",
+            KEY_START_INDEX = "start_index";
 
     private ImagePreviewFragment mPreviewFragment = null;
 
@@ -43,10 +44,12 @@ public class ImagePreviewActivity extends BaseActivity {
                 .findFragmentById(R.id.image_preview_fragment);
 
         lstImageUrls = getIntent().getStringArrayListExtra(KEY_IMAGE_URL_ARRAY);
+        int index = getIntent().getIntExtra(KEY_START_INDEX, 0);
 //        mUrlArray = getIntent().getStringArrayExtra(KEY_IMAGE_URL_ARRAY);
 //        mThumbArray = getIntent().getStringArrayExtra(KEY_THUMB_URL_ARRAY);
 
         mPreviewFragment.setLstImageUrl(lstImageUrls);
+        mPreviewFragment.setCurrentIndex(index);
         mPreviewFragment.setOnPhotoClickListener(new ImagePreviewSingleFragment.OnPhotoClickListener() {
             @Override
             public void onPhotoClick(View v, String url) {

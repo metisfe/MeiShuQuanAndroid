@@ -148,7 +148,9 @@
                 android:layout_height="wrap_content"
                 bs:src="@drawable/my_info_course"
                 bs:text="@string/my_info_classes"
-                bs:secondaryTextVisible="false">
+                bs:secondaryTextVisible="false"
+                android:visibility="gone"
+                >
 
                 <include
                     layout="@layout/divider_horizontail"
@@ -178,7 +180,9 @@
                 android:layout_height="wrap_content"
                 bs:src="@drawable/my_info_comment"
                 bs:text="@string/my_info_comments"
-                bs:secondaryTextVisible="false">
+                bs:secondaryTextVisible="false"
+                android:visibility="gone"
+                >
 
                 <include
                     layout="@layout/divider_horizontail"

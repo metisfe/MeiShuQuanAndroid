@@ -32,6 +32,8 @@ public class ImagePreviewFragment extends Fragment implements ViewPager.OnPageCh
 
     private ImagePreviewSingleFragment.OnPhotoClickListener mPhotoClickListener = null;
 
+    private int mStartIndex = 0;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_image_prview, null, false);
@@ -44,7 +46,15 @@ public class ImagePreviewFragment extends Fragment implements ViewPager.OnPageCh
         mViewPager.setOnPageChangeListener(this);
         mAdapter = new ImagePreviewAdapter(getChildFragmentManager());
         mViewPager.setAdapter(mAdapter);
+        setCurrentIndex(mStartIndex);
         setOnPhotoClickListener(mPhotoClickListener);
+    }
+
+    public void setCurrentIndex (int index) {
+        mStartIndex = index;
+        if (mViewPager != null) {
+            mViewPager.setCurrentItem(mStartIndex);
+        }
     }
 
     public void setLstImageUrl(List<String> lstImageUrl) {

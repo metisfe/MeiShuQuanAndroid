@@ -162,7 +162,8 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         }
 
         if (user.getUserRoleEnum() == IdTypeEnum.TEACHER) {
-            mMyAskView.setVisibility(View.VISIBLE);
+            //TODO
+            //mMyAskView.setVisibility(View.VISIBLE);
         }
 
     }

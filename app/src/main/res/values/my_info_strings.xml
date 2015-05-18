@@ -151,7 +151,7 @@
     <string name="act_select_studio">选画室</string>
     <string name="act_choose_one_plz">请选择一个画室</string>
     <string name="act_filter_title_pk">学生PK榜</string>
-    <string name="act_filter_title_spec">推荐</string>
+    <string name="act_filter_title_spec">推荐画室</string>
     <string name="act_filter_title_area">地区</string>
     <string name="act_filter_title_college">培训方向</string>
     <string name="act_join_success">选择画室成功</string>
