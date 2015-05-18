@@ -5,6 +5,7 @@ import android.util.Pair;
 
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
+import com.metis.meishuquan.model.circle.UserSearch;
 import com.metis.meishuquan.model.commons.AndroidVersion;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.BlockTypeEnum;
@@ -40,6 +41,7 @@ public class CommonOperator {
     private final String ANDROIDVERSION = "v1.1/Default/AndroidVersion";//获取最新版本
     private final String CHECKLOGINSTATE = "v1.1/Default/Start?session=" + MainApplication.getSession();//校验账号状态
     private final String MOMENTSGROUPS = "v1.1/Circle/MyDiscussions";//朋友圈分组信息
+    private final String SEARCHUSER = "v1.1/UserCenter/SearchUser";//查找好友
 
     private final String SESSION = MainApplication.userInfo.getCookie();
     private boolean flag;
@@ -194,6 +196,19 @@ public class CommonOperator {
                                 }
                             }
                         });
+            }
+        }
+    }
+
+    public void searchUser(String args, ApiOperationCallback<UserSearch> callback) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuilder PATH = new StringBuilder("v1.1/UserCenter/SearchUser");
+                PATH.append("?session=" + MainApplication.getSession());
+                PATH.append("&account=" + args);
+                Log.i("查找好友Url", PATH.toString());
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
+                        UserSearch.class, callback);
             }
         }
     }

@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.metis.meishuquan.activity.circle.SimpleUserInfoForQRActivity">
+    android:background="@color/common_color_e2e2e2"
+    tools:context="com.metis.meishuquan.activity.circle.SearchUserInfoActivity">
 
     <RelativeLayout
         android:id="@+id/id_rl_topbar"
@@ -29,9 +30,11 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/id_rl_userinfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/id_rl_topbar"
+        android:background="@color/common_color_f0f0f0"
         android:padding="10dp">
 
         <ImageView
@@ -46,16 +49,19 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/id_img_user_portrait"
             android:layout_marginLeft="10dp"
-            android:textSize="16sp"
-            android:text="昵称" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/id_img_user_portrait"
-            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
             android:textSize="16sp"
             android:text="昵称" />
     </RelativeLayout>
 
+    <Button
+        android:id="@+id/id_btn_add_friend"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/id_rl_userinfo"
+        android:layout_margin="10dp"
+        android:background="@color/common_color_fb6d6d"
+        android:text="添加至通讯录"
+        android:textColor="@color/common_color_f0f0f0"
+        android:textSize="20sp" />
 </RelativeLayout>
