@@ -1,12 +1,17 @@
 package com.metis.meishuquan.fragment.circle;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +39,22 @@ public class ContactListFragment extends CircleBaseFragment {
     private ViewGroup rootView;
     private ExpandableListView listView;
     private CircleFriendListAdapter adapter;
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ChatManager.SetOnFriendListReceivedListener(new ChatManager.OnFriendListReceivedListener() {
+                @Override
+                public void onReceive() {
+                    Log.d("circle", "refresh contact list");
+                    if (adapter != null) {
+                        adapter.friendList = ChatManager.getGroupedFriendList();
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            });
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -75,11 +96,14 @@ public class ContactListFragment extends CircleBaseFragment {
                 String uid = ((UserAdvanceInfo) adapter.getChild(groupPosition, childPosition)).getUserId();
                 //TODO: personal page
                 Toast.makeText(getActivity(), "Enter personal page id: " + uid, Toast.LENGTH_LONG).show();
+
+                LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter("refresh_friend_list"));
                 return true;
             }
         });
 
         this.adapter = new CircleFriendListAdapter();
+        ChatManager.refreshFriendData();
         this.adapter.friendList = ChatManager.getGroupedFriendList();
         this.adapter.fakeItems.add(new UserAdvanceInfo("新的朋友", R.drawable.icon_add_friend));
         this.adapter.fakeItems.add(new UserAdvanceInfo("群聊", R.drawable.icon_chat_group));
@@ -110,6 +134,7 @@ public class ContactListFragment extends CircleBaseFragment {
         super.onDetach();
         Log.d("circle", "on detach contact list");
         ChatManager.RemoveOnFriendListReceivedListener();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
     }
 
     @Override

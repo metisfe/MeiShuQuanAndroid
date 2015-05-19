@@ -1,12 +1,14 @@
 package com.metis.meishuquan.fragment.circle;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,12 +57,6 @@ public class FriendConfirmFragment extends Fragment {
         titleBar.setLeftButton("", R.drawable.bg_btn_arrow_left, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                FragmentManager fm = getActivity().getSupportFragmentManager();
-//                FragmentTransaction ft = fm.beginTransaction();
-//                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
-//                ft.remove(FriendConfirmFragment.this);
-//                ft.commit();
-
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });
@@ -87,8 +83,8 @@ public class FriendConfirmFragment extends Fragment {
         listView.setAdapter(adapter);
 
         StringBuilder PATH = new StringBuilder("v1.1/Message/MyFriendList");
-        PATH.append("?type=2&session=");
-        PATH.append(MainApplication.userInfo.getCookie());
+        PATH.append("?type=2&session=");//type:0全部，1好友列表，2历史好友列表
+        PATH.append(MainApplication.getSession());
 
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.show();
@@ -133,7 +129,7 @@ public class FriendConfirmFragment extends Fragment {
                 convertView = new ContactListItemView(getActivity());
             }
 
-            ((ContactListItemView) convertView).setAcceptMode(data.get(position).name, data.get(position).avatar, "申请理由，backend required", data.get(position).relation == 2 ? new View.OnClickListener() {
+            ((ContactListItemView) convertView).setAcceptMode(data.get(position).name, data.get(position).avatar, "申请理由，backend required", data.get(position).relation, data.get(position).relation == 5 ? new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     StringBuilder PATH = new StringBuilder("v1.1/Message/AddFriend");
@@ -152,11 +148,13 @@ public class FriendConfirmFragment extends Fragment {
                                 public void onCompleted(ReturnOnlyInfo result, Exception exception, ServiceFilterResponse response) {
                                     progressDialog.cancel();
                                     if (result != null && result.option != null && result.option.isSuccess()) {
-                                        Toast.makeText(getActivity(), "接受请求成功", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getActivity(), "已添加", Toast.LENGTH_LONG).show();
+                                        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent("refresh_friend_list"));
+                                        getActivity().getSupportFragmentManager().popBackStack();
                                         data.get(position).relation = 1;
                                         notifyDataSetChanged();
                                     } else {
-                                        Toast.makeText(getActivity(), "接受请求失败", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getActivity(), "添加失败", Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });

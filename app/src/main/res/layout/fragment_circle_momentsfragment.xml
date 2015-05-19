@@ -2,14 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/common_color_e2e2e2"
     android:orientation="vertical">
 
     <com.metis.meishuquan.view.shared.DragListView
         android:id="@+id/fragment_circle_moments_list"
         android:layout_width="match_parent"
-        android:background="@color/bg_listview"
+        android:background="@color/transparent"
+        android:divider="@color/transparent"
+        android:dividerHeight="5dp"
         android:layout_height="match_parent">
 
-       </com.metis.meishuquan.view.shared.DragListView>
+    </com.metis.meishuquan.view.shared.DragListView>
 
 </LinearLayout>

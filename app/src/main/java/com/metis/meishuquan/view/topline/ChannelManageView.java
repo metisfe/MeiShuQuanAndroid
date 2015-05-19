@@ -135,7 +135,7 @@ public class ChannelManageView extends RelativeLayout implements OnItemClickList
         }
         switch (parent.getId()) {
             case R.id.userGridView:
-                if (position != 0) {
+                if (position >1) {
                     final ImageView moveImageView = getView(view);
                     if (moveImageView != null) {
                         TextView newTextView = (TextView) view

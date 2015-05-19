@@ -10,9 +10,9 @@
         android:layout_marginLeft="10dp"
         android:layout_centerVertical="true" />
 
-    <com.loopj.android.image.SmartImageView
+    <ImageView
         android:id="@+id/view_circle_contactlistitemview_image"
-        android:layout_height="60dp"
+        android:layout_height="40dp"
         android:layout_width="60dp"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/view_circle_contactlistitemview_check"
@@ -62,8 +62,7 @@
             android:layout_marginBottom="1dp"
             android:textSize="20sp"
             android:layout_marginRight="10dp"
-            android:textColor="#ffffff"
-            android:background="#ff0000"/>
+            android:textColor="#ffffff" />
 
         <TextView
             android:id="@+id/view_circle_contactlistitemview_added"
@@ -71,7 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
             android:layout_marginBottom="1dp"
-            android:text="已增加"
+            android:text="已添加"
             android:layout_marginRight="10dp"
             android:textSize="16sp" />
 
@@ -85,6 +84,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
         android:layout_centerVertical="true"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </RelativeLayout>

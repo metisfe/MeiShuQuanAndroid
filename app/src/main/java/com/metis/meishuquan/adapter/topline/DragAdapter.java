@@ -56,7 +56,7 @@ public class DragAdapter extends BaseAdapter {
         item_text = (TextView) view.findViewById(R.id.text_item);
         ChannelItem channel = getItem(position);
         item_text.setText(channel.getChannelName());
-        if ((position == 0)) {
+        if ((position <= 1)) {
             item_text.setTextColor(context.getResources().getColor(R.color.tv_title_bar));
             item_text.setEnabled(false);
         }

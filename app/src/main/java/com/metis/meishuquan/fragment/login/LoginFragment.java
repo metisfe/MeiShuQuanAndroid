@@ -85,7 +85,6 @@ public class LoginFragment extends Fragment {
             public void onClick(View view) {
                 final ProgressDialog progressDialog = new ProgressDialog(getActivity());
                 progressDialog.show(getActivity(), "", "正在登录，请稍候！");
-                progressDialog.setCancelable(true);
                 if (isPressLogin) {
                     return;
                 }
@@ -140,6 +139,7 @@ public class LoginFragment extends Fragment {
                             progressDialog.dismiss();
                             isPressLogin = false;
                         }
+                        progressDialog.cancel();
                     }
                 });
 

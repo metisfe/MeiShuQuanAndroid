@@ -260,6 +260,7 @@ public class ChatManager {
     }
 
     public static List<List<UserAdvanceInfo>> getGroupedFriendList() {
+        refreshFriendData();//刷新数据
         List<UserAdvanceInfo> fList = new ArrayList<>();
         List<List<UserAdvanceInfo>> ret = new ArrayList<>();
         for (String id : friends) {
@@ -412,7 +413,7 @@ public class ChatManager {
         if (s == null || s.length() < 11) return null;
         s = s.replace(" ", "");
         s = s.replace("-", "");
-        s = s.substring( s.length()- 11);
+        s = s.substring(s.length() - 11);
         if (s.charAt(0) != '1') return null;
         return s;
     }

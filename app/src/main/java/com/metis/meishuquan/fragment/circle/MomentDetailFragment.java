@@ -1,70 +1,45 @@
 package com.metis.meishuquan.fragment.circle;
 
-import android.app.ActionBar;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.TranslateAnimation;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.hp.hpl.sparta.Text;
-import com.loopj.android.image.SmartImageView;
+import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.act.ActDetailActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
-import com.metis.meishuquan.adapter.circle.CircleMomentAdapter;
-import com.metis.meishuquan.fragment.Topline.CommentListFragment;
-import com.metis.meishuquan.fragment.main.CircleFragment;
-import com.metis.meishuquan.fragment.main.ToplineFragment;
-import com.metis.meishuquan.model.BLL.TopLineOperator;
+import com.metis.meishuquan.fragment.Topline.ItemInfoFragment;
 import com.metis.meishuquan.model.circle.CCircleCommentModel;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CCircleTabModel;
 import com.metis.meishuquan.model.circle.CUserModel;
 import com.metis.meishuquan.model.circle.CircleMomentDetail;
-import com.metis.meishuquan.model.circle.CircleMoments;
 import com.metis.meishuquan.model.circle.CirclePushCommentResult;
-import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
-import com.metis.meishuquan.model.topline.TopLineNewsInfo;
 import com.metis.meishuquan.util.ActivityUtils;
 import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.ImageLoaderUtils;
-import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.Utils;
-import com.metis.meishuquan.util.ViewUtils;
 import com.metis.meishuquan.view.circle.moment.MomentActionBar;
 import com.metis.meishuquan.view.circle.moment.MomentPageListView;
 import com.metis.meishuquan.view.circle.moment.comment.EmotionTextView;
+import com.metis.meishuquan.view.course.FlowLayout;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
-import com.metis.meishuquan.view.shared.DragListView;
-import com.metis.meishuquan.view.topline.CommentInputView;
-import com.metis.meishuquan.view.topline.NewsShareView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
@@ -72,7 +47,6 @@ import org.apache.http.client.methods.HttpGet;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 /**
  * 圈子列表项详细信息界面
@@ -90,6 +64,24 @@ public class MomentDetailFragment extends Fragment {
     private TextView tv_nickname;
     private RelativeLayout rl_writeCommont;
     private ImageView mHeaderView = null;
+
+    private ImageView avatar, chooseHuashi;
+    private TextView name;
+    private TextView grade;
+    private TextView createTime;
+    private EmotionTextView content;
+    private TextView device;
+    private ImageView imgForCircle;
+    private ImageView imgAttention;
+    private MomentActionBar momentActionBar;
+
+    private FlowLayout fl_atUsers;//@用户集合
+    private LinearLayout ll_circle;//非转发
+    private LinearLayout ll_not_circle;//转发
+    private ImageView imgForReply;
+    private TextView tvTitle;
+    private TextView tvInfo;
+
 
     private FragmentManager fm;
 
@@ -168,7 +160,7 @@ public class MomentDetailFragment extends Fragment {
             }
         };
 
-        View headerView = getHeaderView(moment, OnActionButtonClickListener);
+        View headerView = initHeaderView(moment, OnActionButtonClickListener);
         actionBar = (MomentActionBar) rootView.findViewById(R.id.moment_action_bar);
         listView.addHeaderView(headerView);
         actionBar.setData(moment.relayCount, moment.comentCount, moment.supportCount);
@@ -188,35 +180,117 @@ public class MomentDetailFragment extends Fragment {
         fm = getActivity().getSupportFragmentManager();
     }
 
-    private View getHeaderView(final CCircleDetailModel moment, MomentActionBar.OnActionButtonClickListener OnActionButtonClickListener) {
+    private View initHeaderView(final CCircleDetailModel moment, MomentActionBar.OnActionButtonClickListener OnActionButtonClickListener) {
         View headerView = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_circle_moment_list_item, null);
 
-//        ((ImageView) headerView.findViewById(R.id.id_img_portrait)).setImageUrl(moment.user.avatar);
-
         mHeaderView = (ImageView) headerView.findViewById(R.id.id_img_portrait);
+        name = (TextView) headerView.findViewById(R.id.id_username);
+        grade = (TextView) headerView.findViewById(R.id.id_tv_grade);
+        createTime = (TextView) headerView.findViewById(R.id.id_createtime);
+        content = (EmotionTextView) headerView.findViewById(R.id.id_tv_content);
+        device = (TextView) headerView.findViewById(R.id.tv_device);
+        imgForCircle = (ImageView) headerView.findViewById(R.id.id_img_for_circle);
+        momentActionBar = (MomentActionBar) headerView.findViewById(R.id.moment_action_bar);
 
-        ((TextView) headerView.findViewById(R.id.id_username)).setText(moment.user.name);
-        ((TextView) headerView.findViewById(R.id.id_tv_grade)).setText(moment.user.grade);
-        ((TextView) headerView.findViewById(R.id.id_createtime)).setText(moment.getTimeText());
-        ((TextView) headerView.findViewById(R.id.id_tv_content)).setText(moment.content);
-        ((TextView) headerView.findViewById(R.id.tv_device)).setText(moment.getDeviceText());
-        if (moment.images.size() > 0) {
-            ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.images.get(0).Thumbnails, (ImageView) headerView.findViewById(R.id.id_img_for_circle));
+        fl_atUsers = (FlowLayout) headerView.findViewById(R.id.id_flowlayout_at_users);
+        ll_circle = (LinearLayout) headerView.findViewById(R.id.id_ll_circle);
+        ll_not_circle = (LinearLayout) headerView.findViewById(R.id.id_ll_not_circle);
+
+        //关注
+        imgAttention = (ImageView) headerView.findViewById(R.id.id_img_attention);
+        imgAttention.setVisibility(View.VISIBLE);
+
+        imgForReply = (ImageView) headerView.findViewById(R.id.id_img_for_not_circle);
+        tvTitle = (TextView) headerView.findViewById(R.id.id_tv_title);
+        tvInfo = (TextView) headerView.findViewById(R.id.id_tv_info);
+
+        actionBar = (MomentActionBar) headerView.findViewById(R.id.moment_action_bar);
+
+        //判断是否是朋友圈类型，并显示隐藏相应区域
+        if (moment.relayCircle == null) {
+            ll_not_circle.setVisibility(View.GONE);
+            ll_circle.setVisibility(View.VISIBLE);
         } else {
-            ((ImageView) headerView.findViewById(R.id.id_img_for_circle)).setVisibility(View.GONE);
+            ll_not_circle.setVisibility(View.VISIBLE);
+            ll_circle.setVisibility(View.GONE);
         }
+
+        actionBar.setOnActionButtonClickListener(OnActionButtonClickListener);
+
+        bindHeaderViewData(moment);
+        initHeaderViewEvent(moment);
+        return headerView;
+    }
+
+    private void bindHeaderViewData(CCircleDetailModel moment) {
+        //头像
         ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.user.avatar, mHeaderView, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height)));
+        name.setText(moment.user.name);
+        tv_nickname.setText(moment.user.name);
+        grade.setText(moment.user.grade);
+        createTime.setText(moment.getTimeText());
+        content.setText(moment.content);
+        device.setText(moment.getDeviceText());
+        actionBar.setData(moment.relayCount, moment.comentCount, moment.supportCount);
+
+        //朋友圈类型
+        if (ll_circle.getVisibility() == View.VISIBLE) {
+            if (moment.images != null && moment.images.size() > 0 && !moment.images.get(0).equals("")) {
+                ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.images.get(0).Thumbnails, imgForCircle);
+            } else {
+                ll_circle.setVisibility(View.GONE);
+            }
+        }
+        if (ll_not_circle.getVisibility() == View.VISIBLE) {
+            ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.relayCircle.activityImg, imgForReply);
+            tvTitle.setText(moment.relayCircle.title.trim());
+            tvInfo.setText(moment.relayCircle.desc.trim());
+        }
+    }
+
+    private void initHeaderViewEvent(final CCircleDetailModel moment) {
+        //头像点击事件
         mHeaderView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityUtils.startNameCardActivity(getActivity(), (int)moment.user.userId);
+                ActivityUtils.startNameCardActivity(getActivity(), moment.user.userId);
             }
         });
-        actionBar = (MomentActionBar) headerView.findViewById(R.id.moment_action_bar);
-        actionBar.setData(moment.relayCount, moment.comentCount, moment.supportCount);
-        actionBar.setOnActionButtonClickListener(OnActionButtonClickListener);
 
-        return headerView;
+        ll_not_circle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (moment.relayCircle.type == SupportTypeEnum.CircleActivity.getVal()
+                        || moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal()) {
+                    //进入活动详情页
+                    Intent it = new Intent(getActivity(), ActDetailActivity.class);
+                    startActivity(it);
+                } else if (moment.relayCircle.type == SupportTypeEnum.News.getVal()) {
+                    //进入新闻详情页
+                    navigatToNewsInfo(moment);
+                }
+            }
+        });
+
+        imgAttention.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+    }
+
+    //进入新闻详情
+    private void navigatToNewsInfo(CCircleDetailModel moment) {
+        ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
+        Bundle args = new Bundle();
+        args.putInt("newsId", moment.relayCircle.id);
+        args.putString(ItemInfoFragment.KEY_SHARE_IMG_URL, moment.relayCircle.activityImg);
+        itemInfoFragment.setArguments(args);
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.content_container, itemInfoFragment);
+        ft.addToBackStack(null);
+        ft.commit();
     }
 
     public void commentCountAddOne() {
@@ -372,7 +446,7 @@ public class MomentDetailFragment extends Fragment {
             viewHolder.avatar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ActivityUtils.startNameCardActivity(getActivity(), (int)(moment.user.userId));
+                    ActivityUtils.startNameCardActivity(getActivity(), (int) (moment.user.userId));
                 }
             });
             ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(comment.user.avatar, viewHolder.avatar, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height)));
@@ -444,8 +518,7 @@ public class MomentDetailFragment extends Fragment {
                 params.setMargins(padding, 0, padding, 0);
 
                 image.setLayoutParams(params);
-                image.setBackgroundResource(R.drawable.ic_launcher);
-                ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(user.avatar, image, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height)));
+                ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(user.avatar, image, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height), R.drawable.default_user_dynamic));
 
                 viewHolder.container.addView(image);
             }

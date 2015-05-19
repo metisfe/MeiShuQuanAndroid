@@ -9,7 +9,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#f0f0f0"
         android:padding="10dp">
 
         <ImageView
@@ -49,6 +48,15 @@
             android:layout_alignTop="@+id/id_username"
             android:layout_alignParentRight="true"
             android:src="@drawable/bg_choose_huashi"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/id_img_attention"
+            android:layout_width="51dp"
+            android:layout_height="21.5dp"
+            android:layout_alignTop="@+id/id_username"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/bg_btn_unattention"
             android:visibility="gone" />
 
         <LinearLayout
@@ -101,13 +109,13 @@
         android:id="@+id/id_ll_not_circle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/id_img_for_not_circle"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="100dp"
+            android:layout_height="65dp"
             android:layout_below="@+id/id_tv_content"
             android:clickable="false"
             android:scaleType="centerCrop"
@@ -115,8 +123,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:padding="10dp"
+            android:layout_height="65dp"
             android:clickable="false"
             android:orientation="vertical">
 
@@ -124,7 +131,8 @@
                 android:id="@+id/id_tv_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="2"
+                android:singleLine="true"
+                android:layout_marginLeft="10dp"
                 android:text="标题"
                 android:textColor="@color/blue"
                 android:textSize="14sp" />
@@ -132,8 +140,9 @@
             <TextView
                 android:id="@+id/id_tv_info"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="2"
+                android:layout_height="match_parent"
+                android:singleLine="true"
+                android:layout_marginLeft="10dp"
                 android:text="详情"
                 android:textColor="#7e7e7e"
                 android:layout_marginTop="10dp"
@@ -146,12 +155,14 @@
         android:id="@+id/id_ll_circle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/common_color_f0f0f0"
         android:padding="10dp">
 
         <ImageView
             android:id="@+id/id_img_for_circle"
             android:layout_width="125dp"
             android:layout_height="125dp"
+            android:background="@color/common_color_e2e2e2"
             android:scaleType="centerCrop" />
     </LinearLayout>
 
@@ -164,7 +175,7 @@
         android:id="@+id/moment_action_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#e2e2e2"
+        android:background="@color/common_color_f0f0f0"
         android:layout_below="@id/circle_moment_detail_header"
         layout="@layout/fragment_circle_moment_action_bar" />
 </LinearLayout>

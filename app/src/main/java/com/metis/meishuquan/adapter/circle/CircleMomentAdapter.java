@@ -174,7 +174,7 @@ public class CircleMomentAdapter extends BaseAdapter {
         viewHolder.avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityUtils.startNameCardActivity(mContext, (int)moment.user.userId);
+                ActivityUtils.startNameCardActivity(mContext, (int) moment.user.userId);
             }
         });
 
@@ -244,7 +244,8 @@ public class CircleMomentAdapter extends BaseAdapter {
             viewHolder.ll_not_circle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (moment.relayCircle != null && moment.relayCircle.type == SupportTypeEnum.CircleActivity.getVal()) {
+                    if (moment.relayCircle.type == SupportTypeEnum.CircleActivity.getVal()
+                            || moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal()) {
                         //跳转至活动详情
                         navigatToActivityInfo(view, moment);
                     } else if (moment.relayCircle != null && moment.relayCircle.type == SupportTypeEnum.News.getVal()) {
@@ -349,7 +350,6 @@ public class CircleMomentAdapter extends BaseAdapter {
         Intent it = new Intent(view.getContext(), ActDetailActivity.class);
         it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         view.getContext().startActivity(it);
-
     }
 
     //选画室

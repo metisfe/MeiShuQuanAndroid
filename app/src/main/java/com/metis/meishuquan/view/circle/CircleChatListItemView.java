@@ -47,9 +47,9 @@ public class CircleChatListItemView extends LinearLayout {
             final String uid = conversation.getTargetId();
             String url = ChatManager.getUserInfo(uid).avatar;
             if (TextUtils.isEmpty(url)) {
-                imageView.setImageResource(R.drawable.default_user_dynamic);
+                imageView.setImageResource(R.drawable.default_portrait_fang);
             } else {
-                ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(url, imageView, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height), R.drawable.default_user_dynamic));
+                ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(url, imageView, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.default_portrait_fang));
             }
         } else {
             imageView.setImageResource(R.drawable.view_circle_groupicon);
