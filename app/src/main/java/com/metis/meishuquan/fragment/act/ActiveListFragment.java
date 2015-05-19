@@ -336,8 +336,8 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
                             }
                             if (simpleActiveInfo != null) {
                                 mSimpleInfo = simpleActiveInfo;
-                                if (simpleActiveInfo.getUpCount() < 10) {
-                                    showDialog(getString(R.string.act_less_than_10), new DialogInterface.OnClickListener() {
+                                if (simpleActiveInfo.getUpCount() < simpleActiveInfo.totalUpCount) {
+                                    showDialog(getString(R.string.act_less_than_10, simpleActiveInfo.totalUpCount), new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
 

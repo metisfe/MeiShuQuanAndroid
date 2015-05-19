@@ -165,7 +165,7 @@
     <string name="act_joined_already">已加入活动</string>
     <string name="act_join">报名</string>
     <string name="act_joined">您已报名</string>
-    <string name="act_less_than_10">亲！邀请好友集满10个赞，才能选画室哦！</string>
+    <string name="act_less_than_10">亲！邀请好友集满%1$d个赞，才能选画室哦！</string>
     <string name="act_deals_1">点击“我要报名”，即表示您同意</string>
     <string name="act_deals_2">《美术圈软件许可及服务协议》</string>
     <string name="act_not_found_exception">未找到程序访问网页</string>

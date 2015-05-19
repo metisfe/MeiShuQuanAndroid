@@ -289,6 +289,8 @@ public class ActiveOperator {
         public boolean isJoin;
         public int updateCount;
         public int upCount;
+        public int totalUpCount;
+
 
         public int getpId() {
             return pId;
@@ -352,6 +354,14 @@ public class ActiveOperator {
 
         public void setUpCount(int upCount) {
             this.upCount = upCount;
+        }
+
+        public int getTotalUpCount() {
+            return totalUpCount;
+        }
+
+        public void setTotalUpCount(int totalUpCount) {
+            this.totalUpCount = totalUpCount;
         }
     }
 }

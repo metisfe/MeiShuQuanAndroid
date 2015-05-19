@@ -118,18 +118,21 @@
         android:gravity="top"
         android:hint="分享新鲜事…" />
 
-    <!--<GridView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:numColumns="4" />-->
-    <ImageView
+    <GridView
+        android:id="@+id/postmoment_grid_pics"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:numColumns="3" />
+    <!--<ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
         android:scaleType="centerCrop"
         android:background="#ccc"
-        android:layout_below="@id/id_et_input_cirle_post_moment" />
+        android:layout_below="@id/id_et_input_cirle_post_moment" />-->
 
     <com.metis.meishuquan.view.circle.moment.comment.EmotionSelectView
         android:id="@+id/postmoment_emotion_input"
