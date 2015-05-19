@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.circle.ChatActivity;
 import com.metis.meishuquan.model.circle.UserAdvanceInfo;
 import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.view.circle.ContactListItemView;
@@ -95,7 +96,13 @@ public class ContactListFragment extends CircleBaseFragment {
 
                 String uid = ((UserAdvanceInfo) adapter.getChild(groupPosition, childPosition)).getUserId();
                 //TODO: personal page
-                Toast.makeText(getActivity(), "Enter personal page id: " + uid, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getActivity(), ChatActivity.class);
+                intent.putExtra("title", ((UserAdvanceInfo) adapter.getChild(groupPosition, childPosition)).getName());
+                intent.putExtra("targetId", uid);
+                intent.putExtra("type", "PRIVATE");
+                getActivity().startActivity(intent);
+
+//                Toast.makeText(getActivity(), "Enter personal page id: " + uid, Toast.LENGTH_LONG).show();
 
                 LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter("refresh_friend_list"));
                 return true;
@@ -113,28 +120,35 @@ public class ContactListFragment extends CircleBaseFragment {
         return rootView;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        Log.d("circle", "on attach contact list");
-        super.onAttach(activity);
-        ChatManager.SetOnFriendListReceivedListener(new ChatManager.OnFriendListReceivedListener() {
-            @Override
-            public void onReceive() {
-                Log.d("circle", "refresh contact list");
-                if (adapter != null) {
-                    adapter.friendList = ChatManager.getGroupedFriendList();
-                    adapter.notifyDataSetChanged();
-                }
-            }
-        });
-    }
+//    @Override
+//    public void onAttach(Activity activity) {
+//        Log.d("circle", "on attach contact list");
+//        super.onAttach(activity);
+//        ChatManager.SetOnFriendListReceivedListener(new ChatManager.OnFriendListReceivedListener() {
+//            @Override
+//            public void onReceive() {
+//                Log.d("circle", "refresh contact list");
+//                if (adapter != null) {
+//                    adapter.friendList = ChatManager.getGroupedFriendList();
+//                    adapter.notifyDataSetChanged();
+//                }
+//            }
+//        });
+//    }
+
+//    @Override
+//    public void onDetach() {
+//        super.onDetach();
+//        Log.d("circle", "on detach contact list");
+//        ChatManager.RemoveOnFriendListReceivedListener();
+//        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
+//    }
+
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        Log.d("circle", "on detach contact list");
-        ChatManager.RemoveOnFriendListReceivedListener();
+    public void onDestroy() {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
+        super.onDestroy();
     }
 
     @Override

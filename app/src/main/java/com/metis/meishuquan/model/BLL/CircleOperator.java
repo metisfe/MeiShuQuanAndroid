@@ -17,6 +17,8 @@ import org.apache.http.client.methods.HttpPost;
 public class CircleOperator {
     private static final String Log_PubLishComment_url = "Log_PubLishComment_url";
     private static final String URL_PUSHBLOG = "v1.1/Circle/PushBlog?";
+    private static final String URL_ATTENTION = "v1.1/Circle/FocusUserForGroup?";
+    private static final String URL_CANCEL_ATTENTION = "v1.1/Circle/CancelAttention?";
 
     private static CircleOperator operator = null;
     private static final String SESSION = MainApplication.userInfo.getCookie();
@@ -49,4 +51,30 @@ public class CircleOperator {
             }
         }
     }
+
+    public void attention(int userId, int groupId, ApiOperationCallback<ReturnInfo<String>> callback) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuffer PATH = new StringBuffer(URL_ATTENTION);
+                PATH.append("userId=" + userId);
+                PATH.append("&groupId=" + groupId);
+                PATH.append("&session=" + SESSION);
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+            }
+        }
+    }
+
+    public void cancelAttention(int userId, ApiOperationCallback<ReturnInfo<String>> callback) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuffer PATH = new StringBuffer(URL_CANCEL_ATTENTION);
+                PATH.append("userId=" + userId);
+                PATH.append("&session=" + SESSION);
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+            }
+        }
+    }
+
 }

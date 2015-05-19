@@ -134,7 +134,7 @@ public class StartFriendPickFragment extends Fragment {
                 if (selectedSet.size() == 0) {
                     titleBar.setRightButton("", 0, null);
                 } else {
-                    titleBar.setRightButton("确认（" + selectedSet.size() + "）", 0, onClickListener);
+                    titleBar.setRightButton("确认", 0, onClickListener);
                 }
 
                 return true;

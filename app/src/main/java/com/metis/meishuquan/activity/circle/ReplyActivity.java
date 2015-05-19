@@ -165,7 +165,7 @@ public class ReplyActivity extends FragmentActivity {
                     String json = new Gson().toJson(result);
                     Log.i("pushBlog", json);
 
-                    Toast.makeText(MainApplication.UIContext, "发送成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainApplication.UIContext, "转发成功", Toast.LENGTH_SHORT).show();
 
                     finish();
                 } else if (exception != null) {

@@ -6,9 +6,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -23,18 +25,21 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.act.ActDetailActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.Topline.ItemInfoFragment;
+import com.metis.meishuquan.model.BLL.CircleOperator;
 import com.metis.meishuquan.model.circle.CCircleCommentModel;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CCircleTabModel;
 import com.metis.meishuquan.model.circle.CUserModel;
 import com.metis.meishuquan.model.circle.CircleMomentDetail;
 import com.metis.meishuquan.model.circle.CirclePushCommentResult;
+import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.ActivityUtils;
 import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.Utils;
+import com.metis.meishuquan.view.circle.PopupAttentionWindow;
 import com.metis.meishuquan.view.circle.moment.MomentActionBar;
 import com.metis.meishuquan.view.circle.moment.MomentPageListView;
 import com.metis.meishuquan.view.circle.moment.comment.EmotionTextView;
@@ -82,6 +87,7 @@ public class MomentDetailFragment extends Fragment {
     private TextView tvTitle;
     private TextView tvInfo;
 
+    private boolean isAttention;
 
     private FragmentManager fm;
 
@@ -94,6 +100,7 @@ public class MomentDetailFragment extends Fragment {
     List<CCircleCommentModel> commentList = new ArrayList<CCircleCommentModel>();
     List<CUserModel> likeList = new ArrayList<CUserModel>();
     private boolean isCommentShown = true;
+    private PopupAttentionWindow popupAttentionWindow;
 
     public interface OnCommentSuccessListner {
         void onSuccess();
@@ -198,7 +205,14 @@ public class MomentDetailFragment extends Fragment {
 
         //关注
         imgAttention = (ImageView) headerView.findViewById(R.id.id_img_attention);
-        imgAttention.setVisibility(View.VISIBLE);
+        if (moment.user.userId != MainApplication.userInfo.getUserId()) {
+            imgAttention.setVisibility(View.VISIBLE);
+        }
+
+        if (moment.userMark.isAttention) {
+            imgAttention.setImageDrawable(getResources().getDrawable(R.drawable.bg_btn_attention));
+            isAttention = true;
+        }
 
         imgForReply = (ImageView) headerView.findViewById(R.id.id_img_for_not_circle);
         tvTitle = (TextView) headerView.findViewById(R.id.id_tv_title);
@@ -275,7 +289,53 @@ public class MomentDetailFragment extends Fragment {
         imgAttention.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!isAttention) {//关注
+                    isAttention = true;
+                    popupAttentionWindow = new PopupAttentionWindow(getActivity(),
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    ((MainActivity) getActivity()).removeAllAttachedView();
+                                }
+                            }, new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            //切换至已关注状态
+                            imgAttention.setImageDrawable(getResources().getDrawable(R.drawable.bg_btn_attention));
 
+                            final int groupId = popupAttentionWindow.getGroupId(i);
+                            CircleOperator.getInstance().attention(moment.user.userId, groupId, new ApiOperationCallback<ReturnInfo<String>>() {
+                                @Override
+                                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                                    if (result != null && result.isSuccess()) {
+                                        Toast.makeText(getActivity(), "关注成功", Toast.LENGTH_SHORT).show();
+                                    } else if (result != null && !result.isSuccess()) {
+                                        Log.e("attention", result.getMessage());
+                                    } else if (result == null) {
+                                        Log.e("attention", exception.toString());
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    ((MainActivity) getActivity()).addAttachView(popupAttentionWindow);
+                } else {
+                    //取消关注
+                    isAttention = false;
+
+                    CircleOperator.getInstance().cancelAttention(moment.user.userId, new ApiOperationCallback<ReturnInfo<String>>() {
+                        @Override
+                        public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                            if (result != null && result.isSuccess()) {
+                                Toast.makeText(getActivity(), "取消关注成功", Toast.LENGTH_SHORT).show();
+                            } else if (result != null && !result.isSuccess()) {
+                                Log.e("attention", result.getMessage());
+                            } else if (result == null) {
+                                Log.e("attention", exception.toString());
+                            }
+                        }
+                    });
+                }
             }
         });
     }
