@@ -226,13 +226,13 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
                     return;
                 }
                 if (mInfo != null) {
-                    if (mSimpleActiveInfo != null && mSimpleActiveInfo.isJoin) {
+                    /*if (mSimpleActiveInfo != null && mSimpleActiveInfo.isJoin) {
                         Toast.makeText(getActivity(), R.string.act_joined, Toast.LENGTH_SHORT).show();
                         if (mJoinedListener != null) {
                             mJoinedListener.onClick(view);
                         }
                         return;
-                    }
+                    }*/
                     it = new Intent(getActivity(), ReplyActivity.class);
                     CirclePushBlogParm parm = new CirclePushBlogParm();
                     parm.setType(SupportTypeEnum.Activity.getVal());

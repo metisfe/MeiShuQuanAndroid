@@ -175,7 +175,7 @@ public class StudioFragment extends Fragment{
                 coverUrl, mHeadCoverIv,
                 ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
         );
-        mHeaderExtraTv.setText(getString(R.string.studio_fans_and_focus, user.getFansNum(), user.getFocusNum()));
+        mHeaderExtraTv.setText(MainApplication.UIContext.getString(R.string.studio_fans_and_focus, user.getFansNum(), user.getFocusNum()));
         for (int i = 0; i < mMenuItems.length; i++) {
             final int index = i;
             final MenuItem item = mMenuItems[i];

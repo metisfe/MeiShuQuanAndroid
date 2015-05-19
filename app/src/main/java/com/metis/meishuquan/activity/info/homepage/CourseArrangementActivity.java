@@ -58,11 +58,11 @@ public class CourseArrangementActivity extends BaseActivity {
             @Override
             public void onGet(boolean succeed, List<CourseArrangeInfo> courseArrangeInfos) {
                 if (succeed) {
-                    CourseArrangeInfo info = courseArrangeInfos.get(0);
+                    //CourseArrangeInfo info = courseArrangeInfos.get(0);
                     mDataList.clear();
                     mDataList.addAll(courseArrangeInfos);
                     mAdapter.notifyDataSetChanged();
-                    Log.v(TAG, "getCourseArrangeList day = " + info.getCourseEndDate());
+                    //Log.v(TAG, "getCourseArrangeList day = " + info.getCourseEndDate());
                 }
             }
         });

@@ -209,6 +209,7 @@ public class PostMomentFragment extends Fragment {
         ft.remove(this);
         ft.commit();
         Utils.hideInputMethod(MainApplication.UIContext, editText);
+        Bimp.getInstance().drr.clear();
     }
 
     private void initEvent() {

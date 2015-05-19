@@ -163,7 +163,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         if (MainApplication.isLogin()) {
             ImageLoaderUtils.getImageLoader(getActivity()).displayImage(user.getUserAvatar(),
                     mProfileIv,
-                    ImageLoaderUtils.getRoundDisplayOptions(profilePix));
+                    ImageLoaderUtils.getRoundDisplayOptionsStill(profilePix));
         } else {
             mProfileIv.setImageResource(R.drawable.ic_launcher);
         }

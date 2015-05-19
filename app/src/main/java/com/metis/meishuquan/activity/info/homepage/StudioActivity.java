@@ -177,8 +177,8 @@ public class StudioActivity extends BaseActivity implements
                 if (succeed) {
                     mUser = user;
                     //TODO
-                    //mUser.setUserRole(3);
-                    //mUser.setUserId(100090);
+//                    mUser.setUserRole(3);
+//                    mUser.setUserId(100090);
                     loadFirstTab();
                     fillUser(user);
                     if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
@@ -209,7 +209,7 @@ public class StudioActivity extends BaseActivity implements
         ImageLoaderUtils.getImageLoader(this)
                 .displayImage(user.getUserAvatar(),
                         mTitleProfile,
-                        ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.studio_profile_size)));
+                        ImageLoaderUtils.getRoundDisplayOptionsStill(getResources().getDimensionPixelSize(R.dimen.studio_profile_size)));
         mTitleName.setText(user.getName());
         if (user.getUserRoleEnum() == IdTypeEnum.STUDIO) {
             mStudioFragment.setTabTitle(
@@ -244,8 +244,11 @@ public class StudioActivity extends BaseActivity implements
         Intent it = null;
         switch (item.id) {
             case R.id.studio_menu_introduce:
-                it = new Intent(this, StudioDetailActivity.class);
-                it.putExtra(StudioDetailActivity.KEY_STUDIO_INFO, mInfo);
+                it = new Intent(this, WebActivity.class);
+                it.putExtra(WebActivity.KEY_URL, "http://www.meishuquan.net/Studio/StudioDesc.aspx?studioid=" + mUser.getUserId());
+                it.putExtra(WebActivity.KEY_TITLE, getString(R.string.studio_introduce));
+                /*it = new Intent(this, StudioDetailActivity.class);
+                it.putExtra(StudioDetailActivity.KEY_STUDIO_INFO, mInfo);*/
                 break;
             case R.id.studio_menu_album:
                 it = new Intent(this, StudioAlbumActivity.class);
@@ -262,7 +265,7 @@ public class StudioActivity extends BaseActivity implements
             case R.id.studio_menu_charge:
                 /*it = new Intent(this, ChargeActivity.class);*/
                 it = new Intent(this, WebActivity.class);
-                it.putExtra(WebActivity.KEY_URL, "http://www.google.com");
+                it.putExtra(WebActivity.KEY_URL, "http://www.meishuquan.net/studio/ChargeStandardView.ASPX?studioid=" + mUser.getUserId());
                 it.putExtra(WebActivity.KEY_TITLE, getString(R.string.studio_charge));
                 break;
             case R.id.studio_menu_book_publish:
@@ -335,6 +338,12 @@ public class StudioActivity extends BaseActivity implements
                         public void onGet(boolean succeed, List<CCircleDetailModel> cCircleDetailModels) {
                             if (succeed) {
                                 mCircleList = cCircleDetailModels;
+                                for (CCircleDetailModel model : mCircleList) {
+                                    if (model.id == 1429) {
+                                        Log.e(TAG, "MyCircle first load contains 1429");
+                                    }
+                                }
+
                                 if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab1) {
                                     mAdapter = new CircleMomentAdapter(StudioActivity.this, cCircleDetailModels, null);
                                     mStudioFragment.setAdapter(mAdapter);
@@ -636,7 +645,7 @@ public class StudioActivity extends BaseActivity implements
                     mUser.setUserAvatar(ImageDownloader.Scheme.FILE.wrap(mCameraOutputPath));
                     final int size = getResources().getDimensionPixelSize(R.dimen.studio_profile_size);
                     UserInfoOperator.getInstance().updateUserProfile(MainApplication.userInfo.getUserId(), mCameraOutputPath);
-                    ImageLoaderUtils.getImageLoader(this).displayImage(ImageDownloader.Scheme.FILE.wrap(mCameraOutputPath), mTitleProfile, ImageLoaderUtils.getRoundDisplayOptions(size));
+                    ImageLoaderUtils.getImageLoader(this).displayImage(ImageDownloader.Scheme.FILE.wrap(mCameraOutputPath), mTitleProfile, ImageLoaderUtils.getRoundDisplayOptionsStill(size));
                     mAdapter.notifyDataSetChanged();
                 }
                 break;
@@ -646,7 +655,7 @@ public class StudioActivity extends BaseActivity implements
                     Log.v(TAG, "onActivityResult " + path);
                     final int profileSize = getResources().getDimensionPixelSize(R.dimen.studio_profile_size);
                     mUser.setUserAvatar(ImageDownloader.Scheme.FILE.wrap(path));
-                    ImageLoaderUtils.getImageLoader(this).displayImage(ImageDownloader.Scheme.FILE.wrap(path), mTitleProfile, ImageLoaderUtils.getRoundDisplayOptions(profileSize));
+                    ImageLoaderUtils.getImageLoader(this).displayImage(ImageDownloader.Scheme.FILE.wrap(path), mTitleProfile, ImageLoaderUtils.getRoundDisplayOptionsStill(profileSize));
                     UserInfoOperator.getInstance().updateUserProfile(MainApplication.userInfo.getUserId(), path);
                     mAdapter.notifyDataSetChanged();
                 }

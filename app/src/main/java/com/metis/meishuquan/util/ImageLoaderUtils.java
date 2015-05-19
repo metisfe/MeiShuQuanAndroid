@@ -34,11 +34,11 @@ public class ImageLoaderUtils {
         return loader;
     }
 
-    public static DisplayImageOptions getRoundDisplayOptions(int size) {
-        return getRoundDisplayOptions(size, R.drawable.default_user_dynamic);
+    public static DisplayImageOptions getRoundDisplayOptionsStill(int size) {
+        return getRoundDisplayOptionsStill(size, R.drawable.default_user_dynamic);
     }
 
-    public static DisplayImageOptions getRoundDisplayOptions(int size, int resousceId) {
+    public static DisplayImageOptions getRoundDisplayOptionsStill(int size, int resousceId) {
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
@@ -49,6 +49,24 @@ public class ImageLoaderUtils {
                 .considerExifParams(true)
                 .build();
         return options;
+    }
+
+    public static DisplayImageOptions getRoundDisplayOptions(int size) {
+        return getRoundDisplayOptions(size, R.drawable.default_user_dynamic);
+    }
+
+    public static DisplayImageOptions getRoundDisplayOptions(int size, int resousceId) {
+        /*DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
+                .displayer(new SquareRoundDisplayer(size))
+                .showImageForEmptyUri(resousceId)
+                .showImageOnFail(resousceId)
+                .showImageOnLoading(resousceId)
+                .considerExifParams(true)
+                .build();
+        return options;*/
+        return getNormalDisplayOptions(resousceId);
     }
 
     public static DisplayImageOptions getNormalDisplayOptions(int resousceId) {

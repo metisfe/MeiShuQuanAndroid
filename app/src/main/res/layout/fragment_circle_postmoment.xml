@@ -124,7 +124,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
-        android:numColumns="3" />
+        android:numColumns="3"
+        android:layout_below="@+id/id_et_input_cirle_post_moment"
+        />
     <!--<ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"

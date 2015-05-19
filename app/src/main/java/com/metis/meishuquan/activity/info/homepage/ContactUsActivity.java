@@ -1,9 +1,8 @@
 package com.metis.meishuquan.activity.info.homepage;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +14,8 @@ import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 
 public class ContactUsActivity extends BaseActivity {
+
+    private static final String TAG = ContactUsActivity.class.getSimpleName();
 
     private TextView mDetailsTv = null;
     private ImageView mMapIv = null;
@@ -50,14 +51,18 @@ public class ContactUsActivity extends BaseActivity {
                 mDetailsTv.setText(
                         studioBaseInfo.getAddress() + "\n" +
                                 studioBaseInfo.getTelephone() + "\n" +
-                        studioBaseInfo.getMicroblog() + "\n" +
+                                studioBaseInfo.getMicroblog() + "\n" +
                                 studioBaseInfo.getWeChat() + "\n" +
                                 studioBaseInfo.getWebSite() + "\n"
                 );
-                ImageLoaderUtils.getImageLoader(ContactUsActivity.this).displayImage(
-                        studioBaseInfo.getAddressPhoto(), mMapIv,
-                        ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
-                );
+                Log.v(TAG, "onPostCreate=" + studioBaseInfo.getAddressPhoto());
+                if (!TextUtils.isEmpty(studioBaseInfo.getAddressPhoto())) {
+                    ImageLoaderUtils.getImageLoader(ContactUsActivity.this).displayImage(
+                            studioBaseInfo.getAddressPhoto(), mMapIv,
+                            ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
+                    );
+                }
+
             }
         });
     }

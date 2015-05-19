@@ -3,6 +3,7 @@ package com.metis.meishuquan.fragment.commons;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import com.metis.meishuquan.R;
  * Created by WJ on 2015/5/7.
  */
 public class WebFragment extends Fragment {
+
+    private static final String TAG = WebFragment.class.getSimpleName();
 
     private WebView mWebView = null;
     private WebChromeClient mChromeClient = null;
@@ -61,11 +64,16 @@ public class WebFragment extends Fragment {
 
         mWebView.setWebChromeClient(mChromeClient);
         mWebView.setWebViewClient(mWebViewClient);
-        mWebView.loadData("<html><body>Loading ... <b>192</b> points.</body></html>", "text/html", null);
+        //mWebView.loadData("<html><body>Loading ... <b>192</b> points.</body></html>", "text/html", null);
     }
 
     public void loadUrl (String url) {
-        mWebView.loadUrl(url);
+        String loadUrl = url;
+        if (!url.startsWith("http://")) {
+            loadUrl = "http://" + url;
+        }
+        Log.e(TAG, "loadUrl=" + loadUrl);
+        mWebView.loadUrl(loadUrl);
     }
 
     @Override
