@@ -64,7 +64,7 @@ public class AreaSelectFragment extends MultiListViewFragment {
                     if (succeed) {
                         mProvinceDataList.clear();
                         List<ProvinceArea> provinceAreas = new ArrayList<ProvinceArea>();
-                        provinceAreas.add(new ProvinceArea(UserInfoOperator.SimpleProvince.getDefaultOne()));
+                        provinceAreas.add(new ProvinceArea(UserInfoOperator.SimpleProvince.getDefaultOne(getActivity())));
                         for (UserInfoOperator.SimpleProvince p : simpleProvinces) {
                             provinceAreas.add(new ProvinceArea(p));
                         }

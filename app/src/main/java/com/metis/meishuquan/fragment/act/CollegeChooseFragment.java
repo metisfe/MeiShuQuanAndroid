@@ -48,7 +48,7 @@ public class CollegeChooseFragment extends MultiListViewFragment {
                 public void onGet(boolean succeed, List<College> colleges) {
                     if (succeed) {
                         mCollegeList.clear();
-                        mCollegeList.add(College.getDefaultOne());
+                        mCollegeList.add(College.getDefaultOne(getActivity()));
                         mCollegeList.addAll(colleges);
                         mAdapter.notifyDataSetChanged();
                     }
