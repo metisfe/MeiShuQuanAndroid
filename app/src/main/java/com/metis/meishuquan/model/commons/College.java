@@ -7,6 +7,9 @@ import java.util.Date;
  * Created by WJ on 2015/5/12.
  */
 public class College implements Serializable {
+
+    private static College sDefaultCollege = null;
+
     private int pId;
     private String name;
     private String description;
@@ -42,5 +45,14 @@ public class College implements Serializable {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public synchronized static College getDefaultOne () {
+        if (sDefaultCollege == null) {
+            sDefaultCollege = new College();
+            sDefaultCollege.setpId(0);
+            sDefaultCollege.setName("È«²¿");
+        }
+        return sDefaultCollege;
     }
 }

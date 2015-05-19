@@ -821,6 +821,8 @@ public class UserInfoOperator {
 
     public static class SimpleProvince implements Serializable{
 
+        private static SimpleProvince sProvince = null;
+
         int provinceId;
         String name;
 
@@ -838,6 +840,15 @@ public class UserInfoOperator {
 
         public void setName(String name) {
             this.name = name;
+        }
+
+        public synchronized static SimpleProvince getDefaultOne () {
+            if (sProvince == null) {
+                sProvince = new SimpleProvince();
+                sProvince.provinceId = 0;
+                sProvince.name = "全部";
+            }
+            return sProvince;
         }
     }
 

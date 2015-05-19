@@ -19,7 +19,7 @@
 
     <string name="advance_send">发送</string>
     <string name="advance_not_empty">请填写反馈信息</string>
-    <string name="advance_thanks">感谢您的反馈</string>
+    <string name="advance_thanks">提交成功,感谢您的反馈</string>
 
     <string name="setting_modify_pwd">修改密码</string>
     <string name="setting_clear_cache">清理缓存</string>

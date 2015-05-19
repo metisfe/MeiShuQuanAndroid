@@ -217,6 +217,8 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
 
     @Override
     public void onChoose(AreaSelectFragment.Areable areable, int provinceId, int cityId, int townId) {
+        mDataList.clear();
+        mAdapter.notifyDataSetChanged();
         AreaSelectFragment.getInstance().setOnPlaceChooseListener(null);
         removeFragment(AreaSelectFragment.getInstance());
         if (mTempListener != null) {

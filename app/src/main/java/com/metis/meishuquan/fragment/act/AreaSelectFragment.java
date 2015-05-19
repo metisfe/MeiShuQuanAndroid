@@ -64,6 +64,7 @@ public class AreaSelectFragment extends MultiListViewFragment {
                     if (succeed) {
                         mProvinceDataList.clear();
                         List<ProvinceArea> provinceAreas = new ArrayList<ProvinceArea>();
+                        provinceAreas.add(new ProvinceArea(UserInfoOperator.SimpleProvince.getDefaultOne()));
                         for (UserInfoOperator.SimpleProvince p : simpleProvinces) {
                             provinceAreas.add(new ProvinceArea(p));
                         }
@@ -85,6 +86,10 @@ public class AreaSelectFragment extends MultiListViewFragment {
                 mProvinceId = area.getId();
                 mCityId = 0;
                 mTownId = 0;
+                if (area.getId() == 0) {
+                    onAreaSelected(area);
+                    return;
+                }
                 UserInfoOperator.getInstance().getAreaList(area.getId(), new UserInfoOperator.OnGetListener<List<City>>() {
                     @Override
                     public void onGet(boolean succeed, List<City> cities) {
