@@ -1,21 +1,34 @@
 package com.metis.meishuquan.activity.info;
 
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Toast;
 
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.fragment.commons.ImagePreviewFragment;
 import com.metis.meishuquan.fragment.commons.ImagePreviewSingleFragment;
+import com.metis.meishuquan.fragment.commons.ListDialogFragment;
+import com.metis.meishuquan.util.DownloadUtil;
 import com.uk.co.senab.photoview.PhotoView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ImagePreviewActivity extends BaseActivity {
+
+    private static final String TAG = ImagePreviewActivity.class.getSimpleName();
 
     public static final String KEY_IMAGE_URL_ARRAY = "image_url_array",
             KEY_THUMB_URL_ARRAY = "thumb_url_array",
@@ -55,6 +68,31 @@ public class ImagePreviewActivity extends BaseActivity {
             public void onPhotoClick(View v, String url) {
                 finish();
                 overridePendingTransition(0, R.anim.activity_zoomout);
+            }
+
+            @Override
+            public void onLongClick(View v, final String url) {
+                ListDialogFragment.getInstance().setAdapter(new ListDialogFragment.SimpleAdapter(ImagePreviewActivity.this, new String[]{getString(R.string.save_pics)}));
+                ListDialogFragment.getInstance().show(getSupportFragmentManager(), TAG);
+                ListDialogFragment.getInstance().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        ListDialogFragment.getInstance().dismiss();
+                        String str = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath();
+                        HttpUtils utils = new HttpUtils();
+                        utils.download(url, str + File.separator + System.currentTimeMillis() + ".jpg", new RequestCallBack<File>() {
+                            @Override
+                            public void onSuccess(ResponseInfo<File> responseInfo) {
+                                Toast.makeText(ImagePreviewActivity.this, getString(R.string.save_at, responseInfo.result.getAbsolutePath()), Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(HttpException e, String s) {
+                                Toast.makeText(ImagePreviewActivity.this, getString(R.string.save_failed), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
             }
         });
     }

@@ -104,7 +104,7 @@ public class CourseArrangementActivity extends BaseActivity {
             } else {
                 holder = (ViewHolder)view.getTag();
             }
-            holder.titleView.setText(mFormat.format(getItem(i).getCourseBeginDate()) + "-" + mFormat.format(getItem(i).getCourseEndDate()));
+            holder.titleView.setText(mFormat.format(getItem(i).getCourseBeginDate()) + "/" + mFormat.format(getItem(i).getCourseEndDate()));
             holder.subTitleView.setText(getItem(i).getCourseName());
             holder.detailsView.setText(getItem(i).getCourseInfo());
             return view;

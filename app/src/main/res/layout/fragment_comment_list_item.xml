@@ -46,8 +46,7 @@
             android:layout_toEndOf="@+id/id_img_portrait"
             android:layout_toRightOf="@+id/id_img_portrait"
             android:singleLine="true"
-            android:text="张三"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            style="@style/info_textStyle" />
 
         <TextView
             android:id="@+id/id_tv_region"

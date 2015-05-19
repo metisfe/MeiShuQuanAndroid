@@ -481,25 +481,28 @@ public class ItemInfoFragment extends Fragment {
         });
 
         //收藏
+        //TODO
         this.rl_private.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (MainApplication.isLogin()) {
                     if (!isPrivate) {
                         //收藏
+                        Toast.makeText(MainApplication.UIContext, "收藏成功", Toast.LENGTH_SHORT).show();
+                        isPrivate = true;
+                        imgPrivate.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_topline_private));
                         CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), newsId, PrivateTypeEnum.NEWS, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                                    Toast.makeText(MainApplication.UIContext, "收藏成功", Toast.LENGTH_SHORT).show();
-                                    isPrivate = true;
-                                    imgPrivate.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_topline_private));
+
                                 }
                             }
                         });
                     } else {
+                        Toast.makeText(MainApplication.UIContext, "已收藏", Toast.LENGTH_SHORT).show();
                         //取消收藏
-                        CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), newsId, PrivateTypeEnum.NEWS, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
+                        /*CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), newsId, PrivateTypeEnum.NEWS, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
@@ -508,7 +511,7 @@ public class ItemInfoFragment extends Fragment {
                                     imgPrivate.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_topline_unprivate));
                                 }
                             }
-                        });
+                        });*/
                     }
                 } else {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -642,19 +645,21 @@ public class ItemInfoFragment extends Fragment {
             }
         }
     }
-
+    private static final String TAG = ItemInfoFragment.class.getSimpleName();
     public void getInfoData(final int newsId, final UserInfoOperator.OnGetListener<TopLineNewsInfo> listener) {
         TopLineOperator.getInstance().getNewsInfoById(newsId, new ApiOperationCallback<ReturnInfo<String>>() {
             @Override
             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                 if (result != null) {
+
                     if (result.getInfo().equals(String.valueOf(0))) {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
-                        Log.i("头条详情数据", json);
+
                         if (!TextUtils.isEmpty(json)) {
                             newsInfo = gson.fromJson(json, new TypeToken<TopLineNewsInfo>() {
                             }.getType());
+                            //Log.v(TAG, "getNewsInfoById result=" + newsInfo.getData().getUserMark().isFavorite());
                             if (listener != null) {
                                 listener.onGet(true, newsInfo);
                             }

@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -78,6 +79,15 @@ public class ImagePreviewSingleFragment extends Fragment {
                 if (mPhotoListener != null) {
                     mPhotoListener.onPhotoClick(mPhotoView, mUrl);
                 }
+            }
+        });
+        mPhotoView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (mPhotoListener != null) {
+                    mPhotoListener.onLongClick(view, mUrl);
+                }
+                return false;
             }
         });
         /*mPhotoView.setOnClickListener(new View.OnClickListener() {
@@ -179,5 +189,6 @@ public class ImagePreviewSingleFragment extends Fragment {
 
     public static interface OnPhotoClickListener {
         public void onPhotoClick (View v, String url);
+        public void onLongClick (View v, String url);
     }
 }
