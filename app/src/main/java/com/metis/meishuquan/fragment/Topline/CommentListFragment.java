@@ -42,6 +42,7 @@ import com.metis.meishuquan.model.enums.PrivateTypeEnum;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.model.topline.AllComments;
 import com.metis.meishuquan.model.topline.Comment;
+import com.metis.meishuquan.util.ActivityUtils;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.metis.meishuquan.view.shared.DragListView;
@@ -466,9 +467,15 @@ public class CommentListFragment extends Fragment {
             });
         }
 
-        private void bindData(Comment comment, ViewHolder holder) {
+        private void bindData(final Comment comment, ViewHolder holder) {
             ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(comment.getUser().getAvatar(), holder.portrait,
                     ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height), R.drawable.default_user_dynamic));
+            holder.portrait.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ActivityUtils.startNameCardActivity(getActivity(), comment.getUser().getUserId());
+                }
+            });
             holder.userName.setText(comment.getUser().getName());
             holder.source.setText(comment.getUser().getLocationAddress());
             String notifyTimeStr = comment.getCommentDateTime();
