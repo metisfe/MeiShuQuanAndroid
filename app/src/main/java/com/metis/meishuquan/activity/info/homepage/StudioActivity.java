@@ -155,8 +155,10 @@ public class StudioActivity extends BaseActivity implements
                         loadFirstTab();
                         break;
                     case R.id.studio_list_header_tab2:
+                        loadSecondTab();
                         break;
                     case R.id.studio_list_header_tab3:
+                        loadThirdTab();
                         break;
                 }
                 /*onCheckedChanged (mStudioFragment.getRadioGroup(), id);*/
@@ -226,6 +228,9 @@ public class StudioActivity extends BaseActivity implements
         mStudioFragment.setOnCoverLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+                if (MainApplication.userInfo == null || mUser.getUserId() != MainApplication.userInfo.getUserId()) {
+                    return false;
+                }
                 ListDialogFragment.getInstance().setAdapter(new MyAdapter(REQUEST_CODE_COVER_GALLERY, REQUEST_CODE_COVER_CAMERA));
                 ListDialogFragment.getInstance().show(getSupportFragmentManager(), TAG);
                 return false;
@@ -298,12 +303,23 @@ public class StudioActivity extends BaseActivity implements
                         }
                     });
                 } else {
-                    mAdapter = new ToplineCustomAdapter(StudioActivity.this, mNewsList);
-                    StudioOperator.getInstance().getMyNewsList(mUser.getUserId(), mNewsList.get(mNewsList.size() - 1).getNewsId(), new UserInfoOperator.OnGetListener<List<News>>() {
+                    if (!(mAdapter instanceof ToplineCustomAdapter)) {
+                        mAdapter = new ToplineCustomAdapter(StudioActivity.this, mNewsList);
+                        mStudioFragment.setAdapter(mAdapter);
+                    }
+                    final News lastNews = mNewsList.get(mNewsList.size() - 1);
+                    StudioOperator.getInstance().getMyNewsList(mUser.getUserId(), lastNews.getNewsId(), new UserInfoOperator.OnGetListener<List<News>>() {
                         @Override
                         public void onGet(boolean succeed, List<News> newses) {
                             if (succeed) {
                                 mNewsList.addAll(newses);
+                                for (News n : newses) {
+                                    int index = mNewsList.indexOf(n);
+                                    if (index >= 0) {
+                                        continue;
+                                    }
+                                    mNewsList.add(n);
+                                }
                                 if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab1) {
                                     mAdapter.notifyDataSetChanged();
                                 }
@@ -328,9 +344,206 @@ public class StudioActivity extends BaseActivity implements
                         }
                     });
                 } else {
-                    mAdapter = new CircleListAdapter(mCircleList);
+                    if (!(mAdapter instanceof  CircleListAdapter)) {
+                        mAdapter = new CircleListAdapter(mCircleList);
+                        mStudioFragment.setAdapter(mAdapter);
+                    }
+                    final CCircleDetailModel lastMode = mCircleList.get(mCircleList.size() - 1);
+                    StudioOperator.getInstance().getMyCircleList(mUser.getUserId(), lastMode.id, new UserInfoOperator.OnGetListener<List<CCircleDetailModel>>() {
+                        @Override
+                        public void onGet(boolean succeed, List<CCircleDetailModel> cCircleDetailModels) {
+                            if (succeed) {
+                                for (CCircleDetailModel model : cCircleDetailModels) {
+                                    int index = mCircleList.indexOf(model);
+                                    /*boolean equalsLast = lastMode.equals(model);
+                                    Log.v(TAG, "equalsLast=" + equalsLast);*/
+                                    if (index >= 0) {
+                                        continue;
+                                    }
+                                    mCircleList.add(model);
+                                }
+                                if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab1) {
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        }
+                    });
                 }
 
+            }
+        } else {
+            mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
+        }
+    }
+
+    private void loadSecondTab () {
+        Log.v(TAG, "loadSecondTab");
+        if (mUser != null) {
+            if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
+                //辉煌成绩
+                if (mAchievementList == null || mAchievementList.isEmpty()) {
+                    mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
+                    StudioOperator.getInstance().getAchievementList(mUser.getUserId(), 0, new UserInfoOperator.OnGetListener<List<Achievement>>() {
+                        @Override
+                        public void onGet(boolean succeed, List<Achievement> achievements) {
+                            if (succeed) {
+                                mAchievementList = achievements;
+                                if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab2) {
+                                    mAdapter = new AchievementAdapter(StudioActivity.this, achievements);
+                                    mStudioFragment.setAdapter(mAdapter);
+                                }
+                            }
+
+                        }
+                    });
+                } else {
+                    if (mAdapter instanceof AchievementAdapter) {
+                        mAdapter = new AchievementAdapter(this, mAchievementList);
+                        mStudioFragment.setAdapter(mAdapter);
+                    }
+                    final Achievement lastAchievement = mAchievementList.get(mAchievementList.size() - 1);
+                    StudioOperator.getInstance().getAchievementList(mUser.getUserId(), lastAchievement.getAchievementId(), new UserInfoOperator.OnGetListener<List<Achievement>>() {
+                        @Override
+                        public void onGet(boolean succeed, List<Achievement> achievements) {
+                            if (succeed) {
+                                for (Achievement a : achievements) {
+                                    int index = mAchievementList.indexOf(a);
+                                    if (index >= 0) {
+                                        continue;
+                                    }
+                                    mAchievementList.add(a);
+                                }
+                                mAchievementList.addAll(achievements);
+                                if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab2) {
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                            }
+
+                        }
+                    });
+                }
+            } else {
+                //获取个人相册
+                Log.v(TAG, "1 getWorks mWorkInfoList == null " + (mWorkInfoList == null));
+                if (mWorkInfoList == null || mWorkInfoList.isEmpty()) {
+                    mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
+                    StudioOperator.getInstance().getWorks(mUser.getUserId(), 0, 0, new UserInfoOperator.OnGetListener<List<WorkInfo>>() {
+                        @Override
+                        public void onGet(boolean succeed, List<WorkInfo> workInfo) {
+                            if (succeed) {
+                                mWorkInfoList = workInfo;
+                                if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab2) {
+                                    mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
+                                    mStudioFragment.setAdapter(mAdapter);
+                                }
+                                Log.v(TAG, "2 getWorks mWorkInfoList == null " + (mWorkInfoList == null));
+
+                            }
+                        }
+                    });
+                } else {
+                    if (!(mAdapter instanceof WorkAdapter)) {
+                        mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
+                        mStudioFragment.setAdapter(mAdapter);
+                    }
+                    WorkInfo lastWork = mWorkInfoList.get(mWorkInfoList.size() - 1);
+                    StudioOperator.getInstance().getWorks(mUser.getUserId(), lastWork.getStudioAlbumId(), 0, new UserInfoOperator.OnGetListener<List<WorkInfo>>() {
+                        @Override
+                        public void onGet(boolean succeed, List<WorkInfo> workInfo) {
+                            if (succeed) {
+                                for (WorkInfo info : workInfo) {
+                                    int index = mWorkInfoList.indexOf(info);
+                                    if (index >= 0) {
+                                        continue;
+                                    }
+                                    mWorkInfoList.add(info);
+                                }
+                                if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab2) {
+                                    /*mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
+                                    mStudioFragment.setAdapter(mAdapter);*/
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                                Log.v(TAG, "2 getWorks mWorkInfoList == null " + (mWorkInfoList == null));
+
+                            }
+                        }
+                    });
+                }
+                /*if (mWorkInfoList != null) {
+                    mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
+                } else {
+                    mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
+                    StudioOperator.getInstance().getWorks(mUser.getUserId(), 0, 0, new UserInfoOperator.OnGetListener<List<WorkInfo>>() {
+                        @Override
+                        public void onGet(boolean succeed, List<WorkInfo> workInfo) {
+                            if (succeed) {
+                                mWorkInfoList = workInfo;
+                                if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab2) {
+                                    mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
+                                    mStudioFragment.setAdapter(mAdapter);
+                                }
+                                Log.v(TAG, "2 getWorks mWorkInfoList == null " + (mWorkInfoList == null));
+
+                            }
+                        }
+                    });
+                }*/
+            }
+        } else {
+            mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
+        }
+    }
+
+    private void loadThirdTab () {
+        Log.v(TAG, "loadThirdTab");
+        if (mUser != null) {
+            if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
+                //获取画室作品信息
+                if (mWorkInfoList == null || mWorkInfoList.isEmpty()) {
+                    mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
+                    StudioOperator.getInstance().getWorks(mUser.getUserId(), 0, 1, new UserInfoOperator.OnGetListener<List<WorkInfo>>() {
+                        @Override
+                        public void onGet(boolean succeed, List<WorkInfo> workInfo) {
+                            if (succeed) {
+                                mWorkInfoList = workInfo;
+                                if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab3) {
+                                    mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
+                                    mStudioFragment.setAdapter(mAdapter);
+                                }
+
+                            }
+                        }
+                    });
+                } else {
+                    if (!(mAdapter instanceof WorkAdapter)) {
+                        mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
+                        mStudioFragment.setAdapter(mAdapter);
+                    }
+                    final WorkInfo info = mWorkInfoList.get(mWorkInfoList.size() - 1);
+                    StudioOperator.getInstance().getWorks(mUser.getUserId(), info.getStudioAlbumId(), 1, new UserInfoOperator.OnGetListener<List<WorkInfo>>() {
+                        @Override
+                        public void onGet(boolean succeed, List<WorkInfo> workInfo) {
+                            if (succeed) {
+                                for (WorkInfo info : workInfo) {
+                                    int index = mWorkInfoList.indexOf(info);
+                                    if (index >= 0) {
+                                        continue;
+                                    }
+                                    mWorkInfoList.add(info);
+                                }
+                                if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab3) {
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        }
+                    });
+                }
+            } else {
+                //InfoAdapter adapter = new InfoAdapter(StudioActivity.this, mUser);
+                //adapter.setOnInfoItemClickListener(StudioActivity.this);
+                UserInfoAdapter adapter = new UserInfoAdapter(this, mUser, mUser.getUserId() == MainApplication.userInfo.getUserId());
+                adapter.setOnClickListener(mInfoClickListener);
+                mAdapter = adapter;
             }
         } else {
             mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
@@ -344,99 +557,10 @@ public class StudioActivity extends BaseActivity implements
                 loadFirstTab();
                 break;
             case R.id.studio_list_header_tab2:
-                if (mUser != null) {
-                    if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
-                        //辉煌成绩
-                        if (mAchievementList == null || mAchievementList.isEmpty()) {
-                            mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
-                            StudioOperator.getInstance().getAchievementList(mUser.getUserId(), 0, new UserInfoOperator.OnGetListener<List<Achievement>>() {
-                                @Override
-                                public void onGet(boolean succeed, List<Achievement> achievements) {
-                                    if (succeed) {
-                                        mAchievementList = achievements;
-                                        if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab2) {
-                                            mAdapter = new AchievementAdapter(StudioActivity.this, achievements);
-                                            mStudioFragment.setAdapter(mAdapter);
-                                        }
-                                    }
-
-                                }
-                            });
-                        } else {
-                            mAdapter = new AchievementAdapter(this, mAchievementList);
-                            StudioOperator.getInstance().getAchievementList(mUser.getUserId(), mAchievementList.get(mAchievementList.size() - 1).getAchievementId(), new UserInfoOperator.OnGetListener<List<Achievement>>() {
-                                @Override
-                                public void onGet(boolean succeed, List<Achievement> achievements) {
-                                    if (succeed) {
-                                        mAchievementList.addAll(achievements);
-                                        if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab2) {
-                                            mAdapter.notifyDataSetChanged();
-                                        }
-                                    }
-
-                                }
-                            });
-                        }
-                    } else {
-                        //获取个人相册
-                        Log.v(TAG, "1 getWorks mWorkInfoList == null " + (mWorkInfoList == null));
-                        if (mWorkInfoList != null) {
-                            mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
-                        } else {
-                            mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
-                            StudioOperator.getInstance().getWorks(mUser.getUserId(), 0, 0, new UserInfoOperator.OnGetListener<List<WorkInfo>>() {
-                                @Override
-                                public void onGet(boolean succeed, List<WorkInfo> workInfo) {
-                                    if (succeed) {
-                                        mWorkInfoList = workInfo;
-                                        if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab2) {
-                                            mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
-                                            mStudioFragment.setAdapter(mAdapter);
-                                        }
-                                        Log.v(TAG, "2 getWorks mWorkInfoList == null " + (mWorkInfoList == null));
-
-                                    }
-                                }
-                            });
-                        }
-                    }
-                } else {
-                    mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
-                }
-
+                loadSecondTab();
                 break;
             case R.id.studio_list_header_tab3:
-                if (mUser != null) {
-                    if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
-                        //获取画室作品信息
-                        if (mWorkInfoList != null) {
-                            mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
-                        } else {
-                            mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
-                            StudioOperator.getInstance().getWorks(mUser.getUserId(), 0, 1, new UserInfoOperator.OnGetListener<List<WorkInfo>>() {
-                                @Override
-                                public void onGet(boolean succeed, List<WorkInfo> workInfo) {
-                                    if (succeed) {
-                                        mWorkInfoList = workInfo;
-                                        if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab3) {
-
-                                        }
-                                        mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
-                                        mStudioFragment.setAdapter(mAdapter);
-                                    }
-                                }
-                            });
-                        }
-                    } else {
-                        //InfoAdapter adapter = new InfoAdapter(StudioActivity.this, mUser);
-                        //adapter.setOnInfoItemClickListener(StudioActivity.this);
-                        UserInfoAdapter adapter = new UserInfoAdapter(this, mUser, mUser.getUserId() == MainApplication.userInfo.getUserId());
-                        adapter.setOnClickListener(mInfoClickListener);
-                        mAdapter = adapter;
-                    }
-                } else {
-                    mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
-                }
+                loadThirdTab();
                 break;
         }
         mStudioFragment.setAdapter(mAdapter);

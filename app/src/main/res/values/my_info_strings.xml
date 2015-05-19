@@ -132,7 +132,7 @@
 
     <string name="studio_empty_data_set">暂无数据</string>
     
-    <string name="studio_tab_daily">日志</string>
+    <string name="studio_tab_daily">微博</string>
     <string name="studio_tab_album">相册</string>
     <string name="studio_tab_info_details">个人信息</string>
     <string name="studio_wrong_format">格式不合法</string>
@@ -157,7 +157,8 @@
     <string name="act_filter_title_college">培训方向</string>
     <string name="act_join_success">选择画室成功</string>
     <string name="act_join_failed">选择画室失败</string>
-    <string name="act_join_count">亲，您有%1$d次修改画室的机会，当前还剩下3次机会</string>
+    <string name="act_join_count">亲，您有%1$d次修改画室的机会，当前还剩下%2$d次机会</string>
+    <string name="act_join_count_cost">亲，您已使用过%1$d次修改画室的机会</string>
     <string name="act_join_unjoined">请先报名再选择画室</string>
     <string name="act_join_can_not_choose">您已经没有选择画室的机会了</string>
     <string name="act_join_only_student">只有学生才能报名参加活动</string>

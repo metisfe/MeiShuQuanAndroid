@@ -58,4 +58,15 @@ public class CCircleDetailModel {
     public boolean isValid() {
         return user != null /*&& user.name != null*/ /* && user.grade != null */ && createTime != null && content != null;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (o instanceof CCircleDetailModel) {
+            return ((CCircleDetailModel) o).id == id;
+        }
+        return false;
+    }
 }

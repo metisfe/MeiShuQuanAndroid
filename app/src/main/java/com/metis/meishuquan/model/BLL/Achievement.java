@@ -51,4 +51,15 @@ public class Achievement implements Serializable {
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (o instanceof Achievement) {
+            return ((Achievement) o).getAchievementId() == getAchievementId();
+        }
+        return false;
+    }
 }

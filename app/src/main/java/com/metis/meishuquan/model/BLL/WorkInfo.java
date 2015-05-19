@@ -69,4 +69,15 @@ public class WorkInfo implements Serializable {
     public void setPhotoClassify(int photoClassify) {
         this.photoClassify = photoClassify;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (o instanceof WorkInfo) {
+            return ((WorkInfo) o).getStudioAlbumId() == getStudioAlbumId();
+        }
+        return false;
+    }
 }

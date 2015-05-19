@@ -371,7 +371,7 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
                                             }
                                         });
                                     } else {
-                                        showDialog(canChooseStudio ? getString(R.string.act_join_count, remainCount) : getString(R.string.act_join_can_not_choose), new DialogInterface.OnClickListener() {
+                                        showDialog(canChooseStudio ? getString(R.string.act_join_count, 3, remainCount) : getString(R.string.act_join_count_cost, 3), new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
                                                 ActiveOperator.getInstance().changeStudio(item.getUserId(), mActiveInfo.getpId(), new UserInfoOperator.OnGetListener<Result>() {

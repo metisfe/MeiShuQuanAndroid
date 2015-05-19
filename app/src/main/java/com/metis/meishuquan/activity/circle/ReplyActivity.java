@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.FriendsChooseActivity;
 import com.metis.meishuquan.model.BLL.ActiveOperator;
 import com.metis.meishuquan.model.BLL.CircleOperator;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
@@ -129,7 +130,9 @@ public class ReplyActivity extends FragmentActivity {
         this.rl_at.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //TODO
+                Intent it = new Intent(ReplyActivity.this, FriendsChooseActivity.class);
+                startActivity(it);
             }
         });
 
