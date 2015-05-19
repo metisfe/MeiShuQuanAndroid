@@ -131,10 +131,12 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
                                     if (succeed) {
                                         mInfo = activeInfo;
                                         fillInfo(mInfo);
+                                        mJoinBtn.setVisibility(View.GONE);
                                         ActiveOperator.getInstance().getMyActiveInfo(mInfo.getpId(), new UserInfoOperator.OnGetListener<ActiveOperator.SimpleActiveInfo>() {
                                             @Override
                                             public void onGet(boolean succeed, ActiveOperator.SimpleActiveInfo simpleActiveInfo) {
                                                 if (succeed) {
+                                                    mJoinBtn.setVisibility(View.VISIBLE);
                                                     mSimpleActiveInfo = simpleActiveInfo;
                                                     fillBtn();
                                                     //fillInfo(mInfo);

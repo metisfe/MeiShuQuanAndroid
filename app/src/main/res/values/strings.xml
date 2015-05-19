@@ -78,4 +78,6 @@
     <string name="title_activity_request_message">RequestMessageActivity</string>
     <string name="title_activity_search_user">SearchUserActivity</string>
     <string name="title_activity_friends_choose">FriendChooseActivity</string>
+    <string name="title_activity_guide">GuideActivity</string>
+    <string name="title_activity_hello">@string/app_name</string>
 </resources>

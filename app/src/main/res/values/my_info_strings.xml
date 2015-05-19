@@ -227,4 +227,8 @@
 
     <string name="input_not_empty">请填写内容</string>
     <string name="qr_tip">扫一扫添加我为好友</string>
+
+    <string name="user_guide_go">立即体验</string>
+
+    <string name="all">全部</string>
 </resources>

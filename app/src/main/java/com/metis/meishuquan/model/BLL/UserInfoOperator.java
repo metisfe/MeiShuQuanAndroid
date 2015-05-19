@@ -14,6 +14,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.metis.meishuquan.MainApplication;
+import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.assess.Assess;
 import com.metis.meishuquan.model.assess.City;
 import com.metis.meishuquan.model.commons.College;
@@ -842,11 +843,11 @@ public class UserInfoOperator {
             this.name = name;
         }
 
-        public synchronized static SimpleProvince getDefaultOne () {
+        public synchronized static SimpleProvince getDefaultOne (Context context) {
             if (sProvince == null) {
                 sProvince = new SimpleProvince();
                 sProvince.provinceId = 0;
-                sProvince.name = "全部";
+                sProvince.name = context.getString(R.string.all);
             }
             return sProvince;
         }

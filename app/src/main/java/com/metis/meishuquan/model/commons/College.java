@@ -1,5 +1,9 @@
 package com.metis.meishuquan.model.commons;
 
+import android.content.Context;
+
+import com.metis.meishuquan.R;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -47,11 +51,11 @@ public class College implements Serializable {
         this.createTime = createTime;
     }
 
-    public synchronized static College getDefaultOne () {
+    public synchronized static College getDefaultOne (Context context) {
         if (sDefaultCollege == null) {
             sDefaultCollege = new College();
             sDefaultCollege.setpId(0);
-            sDefaultCollege.setName("È«²¿");
+            sDefaultCollege.setName(context.getString(R.string.all));
         }
         return sDefaultCollege;
     }
