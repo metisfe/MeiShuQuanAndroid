@@ -4,9 +4,27 @@
     android:layout_height="match_parent"
     tools:context="com.metis.meishuquan.activity.topline.NewsInfoActity">
 
-    <RelativeLayout
-        android:id="@+id/id_rl_news_info_main"
+    <include
+        android:id="@+id/id_topbar"
+        layout="@layout/fragment_topline_topbar_list_item_info_topbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="44dp"
+        android:layout_alignParentTop="true" />
+
+    <ListView
+        android:id="@+id/id_listview_news_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/id_footer"
+        android:layout_below="@+id/id_topbar"
+        android:divider="@null"
+        android:dividerHeight="0dp" />
+
+    <include
+        android:id="@+id/id_footer"
+        layout="@layout/fragment_topline_topbar_list_item_info_footbar"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>
