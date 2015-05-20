@@ -7,6 +7,6 @@
         android:id="@+id/album_grid"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:numColumns="3"
+        android:numColumns="2"
         />
 </RelativeLayout>

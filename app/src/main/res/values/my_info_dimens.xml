@@ -13,4 +13,6 @@
     <dimen name="active_list_profile_size">50dp</dimen>
 
     <dimen name="friend_list_friend_profile_size">50dp</dimen>
+
+    <dimen name="comment_profile_size">40dp</dimen>
 </resources>

@@ -1,6 +1,7 @@
 package com.metis.meishuquan.adapter.studio;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.BLL.WorkInfo;
+import com.metis.meishuquan.util.ActivityUtils;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 
 import java.util.ArrayList;
@@ -19,6 +21,10 @@ import java.util.List;
  */
 public class WorkAdapter extends BaseAdapter {
 
+    private static final String TAG = WorkAdapter.class.getSimpleName();
+
+    public static final int MAX_COLUMN = 2;
+
     private List<WorkInfoGroup> mDataList = new ArrayList<WorkInfoGroup>();
 
     private Context mContext = null;
@@ -26,7 +32,7 @@ public class WorkAdapter extends BaseAdapter {
     public WorkAdapter (Context context, List<WorkInfo> works) {
         mContext = context;
         addAllWorkInfo(works);
-        WorkInfoGroup group = new WorkInfoGroup();
+        //WorkInfoGroup group = new WorkInfoGroup();
         /*group.mInfo1 = new WorkInfo();
         group.mInfo2 = new WorkInfo();
         group.mInfo3 = new WorkInfo();
@@ -57,31 +63,34 @@ public class WorkAdapter extends BaseAdapter {
         if (view == null) {
             view = LayoutInflater.from(mContext).inflate(R.layout.layout_work_item, null);
             holder = new ViewHolder();
-            holder.mIv1 = (ImageView)view.findViewById(R.id.work_1);
-            holder.mIv2 = (ImageView)view.findViewById(R.id.work_2);
-            holder.mIv3 = (ImageView)view.findViewById(R.id.work_3);
+            for (int j = 0; j < MAX_COLUMN; j++) {
+                try {
+                    holder.imageViews[j] = (ImageView)view.findViewById(R.id.class.getField("work_" + j).getInt(null));
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (NoSuchFieldException e) {
+                    e.printStackTrace();
+                }
+            }
+            view.setTag(holder);
         } else {
             holder = (ViewHolder)view.getTag();
         }
         WorkInfoGroup workInfo = getItem(i);
-        if (workInfo.mInfo1 != null) {
+        for (int k = 0; k < MAX_COLUMN && k < workInfo.mInfoList.size(); k++) {
+            //Log.v(TAG, "getView " + k + " " + holder.imageViews + " workInfo.mInfoList.get(k)=" + workInfo.mInfoList.get(k));
+            final WorkInfo info = workInfo.mInfoList.get(k);
             ImageLoaderUtils.getImageLoader(mContext).displayImage(
-                    workInfo.mInfo1.getPhotoThumbnail(), holder.mIv1,
+                    info.getPhotoThumbnail(), holder.imageViews[k],
                     ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
             );
-        }
-        if (workInfo.mInfo2 != null) {
-            ImageLoaderUtils.getImageLoader(mContext).displayImage(
-                    workInfo.mInfo2.getPhotoThumbnail(), holder.mIv2,
-                    ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
-            );
-        }
 
-        if (workInfo.mInfo3 != null) {
-            ImageLoaderUtils.getImageLoader(mContext).displayImage(
-                    workInfo.mInfo3.getPhotoThumbnail(), holder.mIv3,
-                    ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
-            );
+            holder.imageViews[k].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ActivityUtils.startImagePreviewActivity(mContext, info.getPhotoUrl());
+                }
+            });
         }
 
         return view;
@@ -91,20 +100,43 @@ public class WorkAdapter extends BaseAdapter {
         if (workInfos == null || workInfos.isEmpty()) {
             return;
         }
-        if (!mDataList.isEmpty()) {
+        /*if (!mDataList.isEmpty()) {
             WorkInfoGroup lastGroup = mDataList.get(mDataList.size() - 1);
-            if (lastGroup.mInfo2 == null) {
-                lastGroup.mInfo2 = workInfos.remove(0);
+            List<WorkInfo> infoList = lastGroup.mInfoList;
+            for (int i = infoList.size(); i < MAX_COLUMN && i < workInfos.size(); i++) {
+                infoList.add(workInfos.remove(0));
             }
-            if (lastGroup.mInfo3 == null && !workInfos.isEmpty()) {
-                lastGroup.mInfo3 = workInfos.remove(0);
+        }*/
+        for (int i = 0; i < workInfos.size(); i++) {
+            WorkInfo info = workInfos.get(i);
+            if (!mDataList.isEmpty()) {
+                WorkInfoGroup lastGroup = mDataList.get(mDataList.size() - 1);
+                List<WorkInfo> infoList = lastGroup.mInfoList;
+                if (infoList.size() < MAX_COLUMN) {
+                    infoList.add(info);
+                } else {
+                    WorkInfoGroup group = new WorkInfoGroup();
+                    group.mInfoList.add(info);
+                    mDataList.add(group);
+                }
+            } else {
+                WorkInfoGroup group = new WorkInfoGroup();
+                group.mInfoList.add(info);
+                mDataList.add(group);
+            }
+        }
+        /*if (!mDataList.isEmpty()) {
+            WorkInfoGroup lastGroup = mDataList.get(mDataList.size() - 1);
+
+            for (int i = 0; i < MAX_COLUMN && !workInfos.isEmpty(); i++) {
+                lastGroup.mInfoList.add(workInfos.remove(0));
             }
 
         }
-        mDataList.addAll(makeWorkInfoGroupList(workInfos));
+        mDataList.addAll(makeWorkInfoGroupList(workInfos));*/
     }
 
-    private List<WorkInfoGroup> makeWorkInfoGroupList (List<WorkInfo> workInfos) {
+    /*private List<WorkInfoGroup> makeWorkInfoGroupList (List<WorkInfo> workInfos) {
         List<WorkInfoGroup> groupList = new ArrayList<WorkInfoGroup>();
         //int index = 0;
         final int length = workInfos.size();
@@ -117,9 +149,9 @@ public class WorkAdapter extends BaseAdapter {
                 groupList.add(group);
             } else {
                 group = groupList.get(groupList.size() - 1);
-                /*if (group.mInfo1 == null) {
+                *//*if (group.mInfo1 == null) {
                     group.mInfo1 = info;
-                } else */if (group.mInfo2 == null) {
+                } else *//*if (group.mInfo2 == null) {
                     group.mInfo2 = info;
                 } else if (group.mInfo3 == null) {
                     group.mInfo3 = info;
@@ -130,36 +162,16 @@ public class WorkAdapter extends BaseAdapter {
                 }
             }
         }
-        /*for (; index < length; index += 3) {
-            WorkInfoGroup group = new WorkInfoGroup();
-            group.mInfo1 = workInfos.get(index);
-            if (index + 1 < length) {
-                group.mInfo2 = workInfos.get(index + 1);
-            }
-            if (index + 2 < length) {
-                group.mInfo3 = workInfos.get(index + 2);
-            }
-            groupList.add(group);
-        }
-        index -= 3;
-        if (index < length) {
-            WorkInfoGroup group = new WorkInfoGroup();
-            if (index + 1 < length) {
-                group.mInfo1 = workInfos.get(index + 1);
-            }
-            if (index + 2 < length) {
-                group.mInfo2 = workInfos.get(index + 2);
-            }
-            groupList.add(group);
-        }*/
+
         return groupList;
-    }
+    }*/
 
     private class ViewHolder {
-        public ImageView mIv1, mIv2, mIv3;
+        public ImageView[] imageViews = new ImageView[MAX_COLUMN];
     }
 
     private class WorkInfoGroup {
-        public WorkInfo mInfo1, mInfo2, mInfo3;
+        public List<WorkInfo> mInfoList = new ArrayList<>();
+//        public WorkInfo mInfo1, mInfo2, mInfo3;
     }
 }

@@ -6,7 +6,7 @@
     <ImageView
         android:id="@+id/img_title_sub_profile"
         android:layout_width="fill_parent"
-        android:layout_height="150dp"
+        android:layout_height="180dp"
         android:scaleType="centerCrop"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="10dp"

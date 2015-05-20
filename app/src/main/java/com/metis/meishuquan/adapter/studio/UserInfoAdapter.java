@@ -102,7 +102,7 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
 
         ImageLoaderUtils.getImageLoader(mContext).displayImage(
                 mUser.getUserAvatar(), mProfile,
-                ImageLoaderUtils.getRoundDisplayOptionsStill(mContext.getResources().getDimensionPixelSize(R.dimen.info_profile_size))
+                ImageLoaderUtils.getRoundDisplayOptions(mContext.getResources().getDimensionPixelSize(R.dimen.info_profile_size))
         );
 
         mProfileContainer.findViewById(R.id.my_info_btn_arrow).setVisibility(canEdit ? View.VISIBLE : View.INVISIBLE);

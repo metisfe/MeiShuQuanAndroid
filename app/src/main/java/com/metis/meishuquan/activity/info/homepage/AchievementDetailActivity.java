@@ -1,14 +1,11 @@
 package com.metis.meishuquan.activity.info.homepage;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.BaseActivity;
-import com.metis.meishuquan.model.BLL.Achievement;
+import com.metis.meishuquan.model.commons.Achievement;
 import com.metis.meishuquan.model.BLL.StudioOperator;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 

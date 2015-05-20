@@ -33,7 +33,7 @@ public class TeacherTeamActivity extends BaseActivity {
 
         mStudioId = getIntent().getIntExtra(StudioBaseInfo.KEY_STUDIO_ID, 0);
 
-        mGridLayoutManager = new GridLayoutManager(this, 3);
+        mGridLayoutManager = new GridLayoutManager(this, 2);
         mRecyclerView = (RecyclerView)findViewById(R.id.teacher_recycler_view);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
     }

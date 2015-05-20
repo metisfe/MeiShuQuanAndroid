@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import com.metis.meishuquan.model.BLL.StudioOperator;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.CourseArrangeInfo;
 import com.metis.meishuquan.model.commons.User;
+import com.metis.meishuquan.model.course.CourseInfo;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,7 +29,7 @@ public class CourseArrangementActivity extends BaseActivity {
 
     private int mUserId = 0;
 
-    private List<CourseArrangeInfo> mDataList = new ArrayList<CourseArrangeInfo>();
+    private List<CourseInfoDelegate> mDataList = new ArrayList<CourseInfoDelegate>();
 
     private ListView mArrangeLv = null;
 
@@ -60,12 +62,26 @@ public class CourseArrangementActivity extends BaseActivity {
                 if (succeed) {
                     //CourseArrangeInfo info = courseArrangeInfos.get(0);
                     mDataList.clear();
-                    mDataList.addAll(courseArrangeInfos);
+                    List<CourseInfoDelegate> delegates = new ArrayList<CourseInfoDelegate>();
+                    for (CourseArrangeInfo d : courseArrangeInfos) {
+                        delegates.add(new CourseInfoDelegate(d));
+                    }
+                    mDataList.addAll(delegates);
                     mAdapter.notifyDataSetChanged();
                     //Log.v(TAG, "getCourseArrangeList day = " + info.getCourseEndDate());
                 }
             }
         });
+    }
+
+    private class CourseInfoDelegate {
+
+        CourseArrangeInfo mInfo = null;
+        boolean showDetails = false;
+
+        CourseInfoDelegate (CourseArrangeInfo info) {
+            mInfo = info;
+        }
     }
 
     private SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -82,7 +98,7 @@ public class CourseArrangementActivity extends BaseActivity {
         }
 
         @Override
-        public CourseArrangeInfo getItem(int i) {
+        public CourseInfoDelegate getItem(int i) {
             return mDataList.get(i);
         }
 
@@ -100,18 +116,31 @@ public class CourseArrangementActivity extends BaseActivity {
                 holder.titleView = (TextView)view.findViewById(R.id.item_title);
                 holder.subTitleView = (TextView)view.findViewById(R.id.item_sub_title);
                 holder.detailsView = (TextView)view.findViewById(R.id.item_details);
+                holder.arrow = (ImageView)view.findViewById(R.id.arrow);
                 view.setTag(holder);
             } else {
                 holder = (ViewHolder)view.getTag();
             }
-            holder.titleView.setText(mFormat.format(getItem(i).getCourseBeginDate()) + "/" + mFormat.format(getItem(i).getCourseEndDate()));
-            holder.subTitleView.setText(getItem(i).getCourseName());
-            holder.detailsView.setText(getItem(i).getCourseInfo());
+            final CourseInfoDelegate delegate = getItem(i);
+            CourseArrangeInfo info = getItem(i).mInfo;
+            holder.titleView.setText(mFormat.format(info.getCourseBeginDate()) + "/" + mFormat.format(info.getCourseEndDate()));
+            holder.subTitleView.setText(info.getCourseName());
+            holder.detailsView.setText(info.getCourseInfo());
+            holder.detailsView.setVisibility(delegate.showDetails ? View.VISIBLE : View.GONE);
+            holder.arrow.setRotation(delegate.showDetails ? 180 : 0);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    delegate.showDetails = !delegate.showDetails;
+                    notifyDataSetChanged();
+                }
+            });
             return view;
         }
     }
 
     private class ViewHolder {
         TextView titleView, subTitleView, detailsView;
+        ImageView arrow;
     }
 }

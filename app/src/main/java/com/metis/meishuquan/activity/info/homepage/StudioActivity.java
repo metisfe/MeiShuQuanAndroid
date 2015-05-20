@@ -9,8 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,13 +24,11 @@ import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.activity.InputActivity;
 import com.metis.meishuquan.activity.WebActivity;
 import com.metis.meishuquan.activity.course.ChooseCourseActivity;
 import com.metis.meishuquan.activity.info.BaseActivity;
 import com.metis.meishuquan.activity.info.DepartmentActivity;
 import com.metis.meishuquan.activity.info.InfoActivity;
-import com.metis.meishuquan.activity.info.TextActivity;
 import com.metis.meishuquan.adapter.circle.CircleMomentAdapter;
 import com.metis.meishuquan.adapter.commons.ConstellationAdapter;
 import com.metis.meishuquan.adapter.commons.SimplePrvsAdapter;
@@ -41,22 +37,18 @@ import com.metis.meishuquan.adapter.studio.CircleListAdapter;
 import com.metis.meishuquan.adapter.studio.InfoAdapter;
 import com.metis.meishuquan.adapter.studio.UserInfoAdapter;
 import com.metis.meishuquan.adapter.studio.WorkAdapter;
-import com.metis.meishuquan.adapter.topline.ToplineAdapter;
 import com.metis.meishuquan.adapter.topline.ToplineCustomAdapter;
-import com.metis.meishuquan.fragment.assess.ChooseCityFragment;
 import com.metis.meishuquan.fragment.commons.InputDialogFragment;
 import com.metis.meishuquan.fragment.commons.ListDialogFragment;
 import com.metis.meishuquan.fragment.commons.StudioFragment;
 import com.metis.meishuquan.manager.common.UserManager;
-import com.metis.meishuquan.model.BLL.Achievement;
+import com.metis.meishuquan.model.commons.Achievement;
 import com.metis.meishuquan.model.BLL.StudioBaseInfo;
 import com.metis.meishuquan.model.BLL.StudioOperator;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.BLL.WorkInfo;
-import com.metis.meishuquan.model.assess.City;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.commons.User;
-import com.metis.meishuquan.model.contract.Moment;
 import com.metis.meishuquan.model.course.CourseChannelItem;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.topline.News;
@@ -66,6 +58,7 @@ import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -100,7 +93,7 @@ public class StudioActivity extends BaseActivity implements
 
     private User mUser = null;
 
-    private List<Achievement> mAchievementList = null;
+    private List<AchievementAdapter.AchievementDelegate> mAchievementList = null;
     private List<WorkInfo> mWorkInfoList = null;
     private List<News> mNewsList = null;
     private List<CCircleDetailModel> mCircleList = null;
@@ -396,9 +389,13 @@ public class StudioActivity extends BaseActivity implements
                         @Override
                         public void onGet(boolean succeed, List<Achievement> achievements) {
                             if (succeed) {
-                                mAchievementList = achievements;
+                                List<AchievementAdapter.AchievementDelegate> delegates = new ArrayList<AchievementAdapter.AchievementDelegate>();
+                                for (Achievement a : achievements) {
+                                    delegates.add(new AchievementAdapter.AchievementDelegate(a));
+                                }
+                                mAchievementList = delegates;
                                 if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab2) {
-                                    mAdapter = new AchievementAdapter(StudioActivity.this, achievements);
+                                    mAdapter = new AchievementAdapter(StudioActivity.this, mAchievementList);
                                     mStudioFragment.setAdapter(mAdapter);
                                 }
                             }
@@ -410,8 +407,8 @@ public class StudioActivity extends BaseActivity implements
                         mAdapter = new AchievementAdapter(this, mAchievementList);
                         mStudioFragment.setAdapter(mAdapter);
                     }
-                    final Achievement lastAchievement = mAchievementList.get(mAchievementList.size() - 1);
-                    StudioOperator.getInstance().getAchievementList(mUser.getUserId(), lastAchievement.getAchievementId(), new UserInfoOperator.OnGetListener<List<Achievement>>() {
+                    final AchievementAdapter.AchievementDelegate lastAchievement = mAchievementList.get(mAchievementList.size() - 1);
+                    StudioOperator.getInstance().getAchievementList(mUser.getUserId(), lastAchievement.achievement.getAchievementId(), new UserInfoOperator.OnGetListener<List<Achievement>>() {
                         @Override
                         public void onGet(boolean succeed, List<Achievement> achievements) {
                             if (succeed) {
@@ -420,9 +417,9 @@ public class StudioActivity extends BaseActivity implements
                                     if (index >= 0) {
                                         continue;
                                     }
-                                    mAchievementList.add(a);
+                                    mAchievementList.add(new AchievementAdapter.AchievementDelegate(a));
                                 }
-                                mAchievementList.addAll(achievements);
+                                //mAchievementList.addAll(achievements);
                                 if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab2) {
                                     mAdapter.notifyDataSetChanged();
                                 }

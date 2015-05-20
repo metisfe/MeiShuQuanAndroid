@@ -170,6 +170,7 @@
     <string name="act_deals_1">点击“我要报名”，即表示您同意</string>
     <string name="act_deals_2">《美术圈软件许可及服务协议》</string>
     <string name="act_not_found_exception">未找到程序访问网页</string>
+    <string name="act_no_chance">亲，您已使用过三次修改画室的机会</string>
 
     <string-array name="act_filter_1">
         <item>学生PK榜</item>

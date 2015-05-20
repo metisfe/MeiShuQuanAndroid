@@ -76,7 +76,7 @@ public class StudioAlbumActivity extends BaseActivity {
         return getString(R.string.studio_album);
     }
 
-    private class AlbumAdapter extends BaseAdapter implements StickyGridHeadersSimpleAdapter {
+    private class AlbumAdapter extends BaseAdapter/* implements StickyGridHeadersSimpleAdapter*/ {
 
         private List<WorkInfo> mWorkList = null;
         private Map<String, List<WorkInfo>> mGroupMap = new HashMap<String, List<WorkInfo>>();
@@ -92,7 +92,7 @@ public class StudioAlbumActivity extends BaseActivity {
             parseWorkList(list);
         }
 
-        @Override
+        /*@Override
         public long getHeaderId(int position) {
             return getTimeTitle(getItem(position).getCreateTime()).hashCode();
         }
@@ -102,7 +102,7 @@ public class StudioAlbumActivity extends BaseActivity {
             TextView tv = new TextView(StudioAlbumActivity.this);
             tv.setText(getTimeTitle(getItem(position).getCreateTime()));
             return tv;
-        }
+        }*/
 
         @Override
         public int getCount() {

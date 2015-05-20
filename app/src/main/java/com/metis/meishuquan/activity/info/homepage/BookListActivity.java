@@ -28,7 +28,7 @@ public class BookListActivity extends BaseActivity {
         setContentView(R.layout.activity_book_list);
 
         mRecyclerView = (RecyclerView)findViewById(R.id.book_recycler_view);
-        mGridLayoutManager = new GridLayoutManager(this, 3);
+        mGridLayoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
 
         mStudioId = getIntent().getIntExtra(StudioBaseInfo.KEY_STUDIO_ID, 0);

@@ -5,5 +5,7 @@
     <ImageView
         android:id="@+id/album_item_img"
         android:layout_width="fill_parent"
-        android:layout_height="120dp" />
+        android:layout_height="125dp"
+        android:scaleType="centerCrop"
+        />
 </RelativeLayout>

@@ -1,6 +1,7 @@
-package com.metis.meishuquan.model.BLL;
+package com.metis.meishuquan.model.commons;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by WJ on 2015/5/6.
@@ -11,6 +12,8 @@ public class Achievement implements Serializable {
     private String achievementTitle;
     private String achievementInfo;
     private String createTime;
+
+    private List<ImageItem> imglist;
 
     public int getAchievementId() {
         return achievementId;
@@ -52,6 +55,14 @@ public class Achievement implements Serializable {
         this.createTime = createTime;
     }
 
+    public List<ImageItem> getImglist() {
+        return imglist;
+    }
+
+    public void setImglist(List<ImageItem> imglist) {
+        this.imglist = imglist;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null) {
@@ -61,5 +72,43 @@ public class Achievement implements Serializable {
             return ((Achievement) o).getAchievementId() == getAchievementId();
         }
         return false;
+    }
+
+    public static class ImageItem  implements Serializable {
+
+        private String imgUrl, imgThumbnailUrl;
+        private int imgWidth, imgHeight;
+
+        public String getImgUrl() {
+            return imgUrl;
+        }
+
+        public void setImgUrl(String imgUrl) {
+            this.imgUrl = imgUrl;
+        }
+
+        public String getImgThumbnailUrl() {
+            return imgThumbnailUrl;
+        }
+
+        public void setImgThumbnailUrl(String imgThumbnailUrl) {
+            this.imgThumbnailUrl = imgThumbnailUrl;
+        }
+
+        public int getImgWidth() {
+            return imgWidth;
+        }
+
+        public void setImgWidth(int imgWidth) {
+            this.imgWidth = imgWidth;
+        }
+
+        public int getImgHeight() {
+            return imgHeight;
+        }
+
+        public void setImgHeight(int imgHeight) {
+            this.imgHeight = imgHeight;
+        }
     }
 }

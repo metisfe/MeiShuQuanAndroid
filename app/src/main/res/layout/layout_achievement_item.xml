@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.metis.meishuquan.view.shared.MyInfoBtn
+        android:id="@+id/achievement_item_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:id="@+id/achievement_item_img_container"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/achievement_item_title"
+        android:visibility="gone"
+        >
+    </LinearLayout>
+</RelativeLayout>

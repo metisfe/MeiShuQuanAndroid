@@ -369,6 +369,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.info.ImagePreviewActivity"
+            android:launchMode="singleInstance"
             android:label="@string/title_activity_image_preview" />
         <activity
             android:name=".activity.course.ChooseCourseActivity"

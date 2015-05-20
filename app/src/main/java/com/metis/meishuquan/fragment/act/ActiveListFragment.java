@@ -350,6 +350,12 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
                                 final int remainCount = 3 - simpleActiveInfo.getUpdateCount();
                                 final boolean canChooseStudio = remainCount > 0;
                                 if (!canChooseStudio) {
+                                    showDialog(MainApplication.UIContext.getString(R.string.act_no_chance), new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                                        }
+                                    });
                                     return;
                                 }
                                 if (mSelectedDelegate != null) {
