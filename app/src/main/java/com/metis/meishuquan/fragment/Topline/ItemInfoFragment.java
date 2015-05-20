@@ -240,6 +240,7 @@ public class ItemInfoFragment extends Fragment {
                 lvRelatedRead.setAdapter(commonAdapter);
                 setListViewHeightBasedOnChildren(lvRelatedRead);
             } else {
+                ll_relatedReadAndSupportContainer.setVisibility(View.VISIBLE);
                 llRelatedRead.setVisibility(View.GONE);
             }
         }
@@ -401,6 +402,8 @@ public class ItemInfoFragment extends Fragment {
                         public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                             if (result != null && result.getInfo().equals(String.valueOf(0))) {
                                 Log.i("supportOrStep", "赞成功");
+                            } else if (result != null && !result.isSuccess()) {
+                                Log.i("support", result.getErrorCode() + ":" + result.getMessage());
                             }
                         }
                     });
@@ -435,7 +438,7 @@ public class ItemInfoFragment extends Fragment {
 
                 //判断登录状态
                 if (MainApplication.isLogin()) {
-                    CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), newsId, SupportTypeEnum.News, 1, new ApiOperationCallback<ReturnInfo<String>>() {
+                    CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), newsId, SupportTypeEnum.News, 2, new ApiOperationCallback<ReturnInfo<String>>() {
                         @Override
                         public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                             if (result != null && result.getInfo().equals(String.valueOf(0))) {
@@ -494,9 +497,12 @@ public class ItemInfoFragment extends Fragment {
                         CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), newsId, PrivateTypeEnum.NEWS, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
-
+                                if (result != null && result.isSuccess()) {
+                                    Log.i("private_state", "收藏成功");
                                 }
+//                                else if (result != null && result.getInfo().equals(String.valueOf(1)) && result.getErrorCode().equals(4)) {
+//                                    startActivity(new Intent(getActivity(), LoginActivity.class));
+//                                }
                             }
                         });
                     } else {
@@ -524,6 +530,10 @@ public class ItemInfoFragment extends Fragment {
         this.rl_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!MainApplication.isLogin()) {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    return;
+                }
                 if (newsInfo != null && newsInfo.getData() != null) {
                     SharePopupWindow sharePopupWindow = new SharePopupWindow(getActivity(), rootView);
                     sharePopupWindow.setShareInfo(newsInfo.getData().getTitle(), newsInfo.getData().getTitle(), newsInfo.getData().getShareUrl(), shareImageUrl, SupportTypeEnum.News.getVal(), newsInfo.getData().getNewsId());
@@ -645,7 +655,9 @@ public class ItemInfoFragment extends Fragment {
             }
         }
     }
+
     private static final String TAG = ItemInfoFragment.class.getSimpleName();
+
     public void getInfoData(final int newsId, final UserInfoOperator.OnGetListener<TopLineNewsInfo> listener) {
         TopLineOperator.getInstance().getNewsInfoById(newsId, new ApiOperationCallback<ReturnInfo<String>>() {
             @Override

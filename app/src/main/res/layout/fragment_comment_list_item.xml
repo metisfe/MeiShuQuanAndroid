@@ -6,11 +6,12 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/id_rl_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#cccccc"
         android:padding="10dp"
-        android:visibility="gone"
-        android:background="#cccccc">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/id_tv_listview_tag"
@@ -24,6 +25,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/id_rl_comment_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
@@ -34,19 +36,19 @@
             android:id="@+id/id_img_portrait"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:background="@drawable/default_user_dynamic"
-            android:scaleType="fitCenter" />
+            android:background="@drawable/default_portrait_fang"
+            android:scaleType="centerCrop" />
 
         <TextView
             android:id="@+id/id_username"
+            style="@style/info_textStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/id_img_portrait"
             android:layout_marginLeft="10dp"
             android:layout_toEndOf="@+id/id_img_portrait"
             android:layout_toRightOf="@+id/id_img_portrait"
-            android:singleLine="true"
-            style="@style/info_textStyle" />
+            android:singleLine="true" />
 
         <TextView
             android:id="@+id/id_tv_region"
@@ -117,7 +119,7 @@
             android:layout_marginTop="10dp"
             android:layout_toLeftOf="@+id/id_rl_reply">
 
-            <Button
+            <ImageView
                 android:id="@+id/id_btn_support"
                 android:layout_width="20dp"
                 android:layout_height="20dp"

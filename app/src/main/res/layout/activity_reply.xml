@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_color_e2e2e2">
+    android:background="@color/white">
 
     <RelativeLayout
         android:id="@+id/id_rl_title_bar"
@@ -45,13 +45,13 @@
                 android:id="@+id/id_btn_send"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
-                android:background="@color/transparent"
-                android:layout_alignParentRight="true"
-                android:layout_toRightOf="@+id/id_img_dynamic"
-                android:text="发送"
                 android:layout_marginRight="5dp"
+                android:layout_toRightOf="@+id/id_img_dynamic"
+                android:background="@color/transparent"
+                android:text="发送"
                 android:textColor="@color/common_color_cfd5e0"
                 android:textSize="18sp" />
         </RelativeLayout>
@@ -62,25 +62,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/id_rl_title_bar"
+        android:background="@color/transparent"
+        android:gravity="top"
+        android:hint="说两句…"
         android:minHeight="150dp"
         android:paddingLeft="10dp"
         android:paddingTop="20dp"
-        android:gravity="top"
-        android:textSize="16sp"
-        android:hint="说两句…" />
+        android:textSize="16sp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_below="@+id/id_et_input_reply"
-        android:background="@color/common_color_f0f0f0"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/fragment_circle_postmoment_bottom_container"
-        android:padding="10dp">
+        android:layout_below="@+id/id_et_input_reply"
+        android:layout_margin="10dp"
+        android:background="#f1f2f4">
 
         <ImageView
             android:id="@+id/id_img_pic"
             android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_height="65dp"
             android:scaleType="centerCrop"
             android:src="#ccc" />
 
@@ -88,24 +89,25 @@
             android:id="@+id/id_tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/id_img_pic"
             android:layout_marginLeft="5dp"
-            android:textSize="14sp"
+            android:layout_toRightOf="@+id/id_img_pic"
+            android:text="标题"
             android:textColor="#424242"
-            android:text="标题" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/id_tv_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toRightOf="@+id/id_img_pic"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/id_img_pic"
             android:layout_below="@+id/id_tv_title"
-            android:layout_marginTop="5dp"
-            android:maxLines="5"
             android:layout_marginLeft="5dp"
-            android:textSize="12sp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/id_img_pic"
+            android:maxLines="5"
+            android:text="详情"
             android:textColor="#7e7e7e"
-            android:text="详情" />
+            android:textSize="12sp" />
 
     </RelativeLayout>
 
@@ -113,10 +115,10 @@
         android:id="@+id/fragment_circle_postmoment_bottom_container"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:visibility="gone"
-        android:background="@drawable/fragment_circle_postmoment_bottom_container_shape">
+        android:background="@drawable/fragment_circle_postmoment_bottom_container_shape"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <RelativeLayout
             android:id="@+id/id_rl__at"
@@ -127,8 +129,8 @@
             <ImageView
                 android:layout_width="22.5dp"
                 android:layout_height="22.5dp"
-                android:src="@drawable/icon_at"
                 android:layout_centerInParent="true"
+                android:src="@drawable/icon_at"
                 android:text="take picture" />
         </RelativeLayout>
 
@@ -141,8 +143,8 @@
             <ImageView
                 android:layout_width="22.5dp"
                 android:layout_height="22.5dp"
-                android:src="@drawable/icon_emotion"
                 android:layout_centerInParent="true"
+                android:src="@drawable/icon_emotion"
                 android:text="take picture" />
         </RelativeLayout>
     </LinearLayout>

@@ -157,7 +157,6 @@ public class ReplyActivity extends FragmentActivity {
                                 if (succeed) {
                                     Intent it = new Intent("join_succeed");
                                     LocalBroadcastManager.getInstance(ReplyActivity.this).sendBroadcast(it);
-
                                 }
                             }
                         });

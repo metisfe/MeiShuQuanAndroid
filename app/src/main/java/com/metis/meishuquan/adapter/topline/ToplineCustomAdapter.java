@@ -93,7 +93,7 @@ public class ToplineCustomAdapter extends ToplineAdapter {
         }
 
         News news = lstData.get(position);
-        ImageLoaderUtils.getImageLoader(this.context).displayImage(news.getImgUrl().trim(), holder.img_thumbnail, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.img_topline_default));
+        ImageLoaderUtils.getImageLoader(this.context).displayImage(news.getImgUrl().trim(), holder.img_thumbnail);
         holder.tv_title.setText(news.getTitle());
         String source = news.getSource().getTitle().trim();
         holder.tv_source.setText(source);

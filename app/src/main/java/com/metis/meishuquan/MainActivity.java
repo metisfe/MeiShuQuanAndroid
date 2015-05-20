@@ -336,7 +336,10 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
         });
     }
 
-    private void checkLoginState() {
+    private static void checkLoginState() {
+        if (!MainApplication.isLogin()) {
+            return;
+        }
         CommonOperator.getInstance().checkLoginState(new ApiOperationCallback<ReturnInfo<String>>() {
             @Override
             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
@@ -344,7 +347,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
                 } else {
                     MainApplication.userInfo = new User();
                     Toast.makeText(MainApplication.UIContext, "账号异常！请重新登录，建议您修改密码", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(MainApplication.UIContext, LoginActivity.class));
+//                    startActivity(new Intent(MainApplication.UIContext, LoginActivity.class));
                 }
             }
         });

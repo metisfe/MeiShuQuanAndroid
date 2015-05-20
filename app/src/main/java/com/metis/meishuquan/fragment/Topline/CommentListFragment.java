@@ -96,8 +96,6 @@ public class CommentListFragment extends Fragment {
             listView.setResultSize(result.size());
             adapter.notifyDataSetChanged();
         }
-
-        ;
     };
 
     @Override
@@ -339,17 +337,19 @@ public class CommentListFragment extends Fragment {
 
     private class CommentsAdapter extends BaseAdapter {
         private List<Comment> lstAllComments = new ArrayList<Comment>();
-        private ViewHolder holder;
 
         public CommentsAdapter(List<Comment> lstAllComments) {
             this.lstAllComments = lstAllComments;
         }
 
         private class ViewHolder {
+            RelativeLayout rl_group, rl_content;
+            TextView tvGroup;
+
             ImageView portrait;
             TextView userName, source, notifyTime, content, tag;
             TextView tvSupportCount, tvAddOne;
-            Button btnSupport;
+            ImageView btnSupport;
             RelativeLayout rl_support, rl_reply;
 
         }
@@ -379,36 +379,41 @@ public class CommentListFragment extends Fragment {
 
         @Override
         public View getView(final int i, View convertView, ViewGroup viewGroup) {
-            View view = convertView;
+            ViewHolder holder = null;
+            Comment comment = this.lstAllComments.get(i);
             if (convertView == null) {
                 holder = new ViewHolder();
-                Comment comment = this.lstAllComments.get(i);
-                if (comment.getGroup().equals("热门评论") || comment.getGroup().equals(("最新评论"))) {
-                    view = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_topline_comment_list_item_tag, null);
-                    holder.tag = (TextView) view.findViewById(R.id.id_tv_listview_tag);
-                    holder.tag.setText(comment.getGroup());
-                } else {
-                    view = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_comment_list_item, null);
-                    initView(view, holder);
-                    initEvent(comment, holder);
-                    bindData(comment, holder);
-                }
-                holder = (ViewHolder) view.getTag();
+                convertView = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_comment_list_item, null);
+                holder.rl_group = (RelativeLayout) convertView.findViewById(R.id.id_rl_group);
+                holder.rl_content = (RelativeLayout) convertView.findViewById(R.id.id_rl_comment_content);
+                holder.tvGroup = (TextView) convertView.findViewById(R.id.id_tv_listview_tag);
+                holder.portrait = (ImageView) convertView.findViewById(R.id.id_img_portrait);
+                holder.userName = (TextView) convertView.findViewById(R.id.id_username);
+                holder.source = (TextView) convertView.findViewById(R.id.id_tv_region);
+                holder.notifyTime = (TextView) convertView.findViewById(R.id.id_notifytime);
+                holder.content = (TextView) convertView.findViewById(R.id.id_textview_comment_content);
+                holder.rl_support = (RelativeLayout) convertView.findViewById(R.id.id_rl_support);//顶
+                holder.rl_reply = (RelativeLayout) convertView.findViewById(R.id.id_rl_reply);//回复
+                holder.tvSupportCount = (TextView) convertView.findViewById(R.id.id_tv_support_count);
+                holder.tvAddOne = (TextView) convertView.findViewById(R.id.id_tv_add_one);
+                holder.btnSupport = (ImageView) convertView.findViewById(R.id.id_btn_support);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
             }
-            return view;
-        }
 
-        private void initView(View view, ViewHolder holder) {
-            holder.portrait = (ImageView) view.findViewById(R.id.id_img_portrait);
-            holder.userName = (TextView) view.findViewById(R.id.id_username);
-            holder.source = (TextView) view.findViewById(R.id.id_tv_region);
-            holder.notifyTime = (TextView) view.findViewById(R.id.id_notifytime);
-            holder.content = (TextView) view.findViewById(R.id.id_textview_comment_content);
-            holder.rl_support = (RelativeLayout) view.findViewById(R.id.id_rl_support);//顶
-            holder.rl_reply = (RelativeLayout) view.findViewById(R.id.id_rl_reply);//回复
-            holder.tvSupportCount = (TextView) view.findViewById(R.id.id_tv_support_count);
-            holder.tvAddOne = (TextView) view.findViewById(R.id.id_tv_add_one);
-            holder.btnSupport = (Button) view.findViewById(R.id.id_btn_support);
+            if (comment.getGroup().equals("热门评论") || comment.getGroup().equals(("最新评论"))) {
+                holder.rl_group.setVisibility(View.VISIBLE);
+                holder.rl_content.setVisibility(View.GONE);
+                holder.tvGroup.setText(comment.getGroup());
+            } else {
+                holder.rl_group.setVisibility(View.GONE);
+                holder.rl_content.setVisibility(View.VISIBLE);
+                initEvent(comment, holder);
+                bindData(comment, holder);
+            }
+
+            return convertView;
         }
 
         private void initEvent(final Comment comment, final ViewHolder holder) {
@@ -422,7 +427,7 @@ public class CommentListFragment extends Fragment {
                     if (supportCount != null) {
                         int temp = (int) supportCount;
                         if (temp == count + 1) {
-                            Toast.makeText(MainApplication.UIContext, "已顶", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainApplication.UIContext, "您已顶", Toast.LENGTH_SHORT).show();
                             return;
                         }
                     }
@@ -432,7 +437,7 @@ public class CommentListFragment extends Fragment {
                     holder.tvSupportCount.setText("(" + addCount + ")");
                     holder.tvSupportCount.setTag(count + 1);
                     holder.tvSupportCount.setTextColor(Color.RED);
-                    holder.btnSupport.setBackground(getResources().getDrawable(R.drawable.icon_support));
+                    holder.btnSupport.setImageDrawable(getResources().getDrawable(R.drawable.icon_support));
                     new Handler().postDelayed(new Runnable() {
                         public void run() {
                             holder.tvAddOne.setVisibility(View.GONE);
@@ -465,17 +470,18 @@ public class CommentListFragment extends Fragment {
                     }
                 }
             });
-        }
 
-        private void bindData(final Comment comment, ViewHolder holder) {
-            ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(comment.getUser().getAvatar(), holder.portrait,
-                    ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height), R.drawable.default_user_dynamic));
             holder.portrait.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     ActivityUtils.startNameCardActivity(getActivity(), comment.getUser().getUserId());
                 }
             });
+        }
+
+        private void bindData(final Comment comment, ViewHolder holder) {
+            ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(comment.getUser().getAvatar(), holder.portrait,
+                    ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height), R.drawable.default_portrait_fang));
             holder.userName.setText(comment.getUser().getName());
             holder.source.setText(comment.getUser().getLocationAddress());
             String notifyTimeStr = comment.getCommentDateTime();
