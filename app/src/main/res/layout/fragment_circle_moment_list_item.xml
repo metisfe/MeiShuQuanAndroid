@@ -3,8 +3,54 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
-    android:background="#f0f0f0"
+    android:background="@color/white"
     android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/id_rl_topbar"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="35dp">
+
+        <RelativeLayout
+            android:id="@+id/id_btn_top"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true">
+
+            <ImageView
+                android:id="@+id/id_img_top"
+                android:layout_width="42.5dp"
+                android:layout_height="13.5dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="10dp"
+                android:visibility="gone"
+                android:background="@drawable/bg_btn_circle_moment_top"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/id_btn_more"
+            android:layout_width="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/id_img_more"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/down_arrow"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#e2e2e2" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,7 +61,8 @@
             android:id="@+id/id_img_portrait"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/default_user_dynamic" />
+            android:scaleType="centerCrop"
+            android:background="@drawable/default_portrait_fang" />
 
         <TextView
             android:id="@+id/id_username"
@@ -109,7 +156,8 @@
         android:id="@+id/id_ll_not_circle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:background="#f1f2f4"
+        android:layout_margin="10dp"
         android:visibility="visible">
 
         <ImageView
@@ -133,6 +181,7 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
                 android:text="标题"
                 android:textColor="@color/blue"
                 android:textSize="14sp" />
@@ -153,10 +202,10 @@
 
     <LinearLayout
         android:id="@+id/id_ll_circle"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/common_color_f0f0f0"
-        android:padding="10dp">
+        android:background="#f1f2f4"
+        android:layout_margin="10dp">
 
         <ImageView
             android:id="@+id/id_img_for_circle"
@@ -169,7 +218,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#ccc" />
+        android:background="#e2e2e2" />
 
     <com.metis.meishuquan.view.circle.moment.MomentActionBar
         android:id="@+id/moment_action_bar"

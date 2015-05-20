@@ -33,7 +33,7 @@ public class PopupAttentionWindow extends RelativeLayout {
         int arrowHeight = getResources().getDimensionPixelOffset(R.dimen.view_circle_popupaddwindow_arrow_height);
         arrowView.SetData(new Point(0, arrowHeight), new Point(arrowWidth, arrowHeight), new Point(arrowWidth / 2, 0), getResources().getColor(R.color.black));
         this.setOnClickListener(onFinish);
-        adapter = new CircleAttentionAdapter(getContext());
+        adapter = new CircleAttentionAdapter(getContext(),0);
         listView.setAdapter(adapter);
         setListViewHeightBasedOnChildren(listView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

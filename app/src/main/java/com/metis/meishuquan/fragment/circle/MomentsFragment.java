@@ -1,11 +1,16 @@
 package com.metis.meishuquan.fragment.circle;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +23,9 @@ import com.metis.meishuquan.MainApplication;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.adapter.circle.CircleMomentAdapter;
+import com.metis.meishuquan.model.BLL.StudioOperator;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
+import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CircleMoments;
 import com.metis.meishuquan.model.contract.ReturnInfo;
@@ -61,6 +68,17 @@ public class MomentsFragment extends CircleBaseFragment {
     private CircleMomentAdapter circleMomentAdapter;
     private FragmentManager fm = null;
 
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (GlobalData.momentsGroupId != -2) {
+                getData(GlobalData.momentsGroupId, 0, DragListView.REFRESH);
+            } else {
+                getMyMoments();
+            }
+        }
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View contextView = inflater.inflate(R.layout.fragment_circle_momentsfragment, container, false);
@@ -69,12 +87,16 @@ public class MomentsFragment extends CircleBaseFragment {
         circleMomentAdapter = new CircleMomentAdapter(getActivity(), list, contextView);
         this.listView.setAdapter(circleMomentAdapter);
 
-        getData(GlobalData.momentsGroupId, 0, DragListView.REFRESH);
+        if (GlobalData.momentsGroupId != -2) {
+            getData(GlobalData.momentsGroupId, 0, DragListView.REFRESH);
+        } else {
+            getMyMoments();
+        }
 
         this.listView.setOnRefreshListener(new DragListView.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getData(0, 0, DragListView.REFRESH);
+                getData(GlobalData.momentsGroupId, 0, DragListView.REFRESH);
             }
         });
 
@@ -82,7 +104,7 @@ public class MomentsFragment extends CircleBaseFragment {
             @Override
             public void onLoad() {
                 int momentLastId = list != null && list.size() > 0 ? list.get(list.size() - 1).id : 0;
-                getData(0, momentLastId, DragListView.LOAD);
+                getData(GlobalData.momentsGroupId, momentLastId, DragListView.LOAD);
             }
         });
 
@@ -118,7 +140,31 @@ public class MomentsFragment extends CircleBaseFragment {
 //            ft.commit();
 //        }
 
+        LocalBroadcastManager.getInstance(MainApplication.UIContext).registerReceiver(receiver, new IntentFilter("update_moments_list"));
+
         return contextView;
+    }
+
+    @Override
+    public void onDestroy() {
+        LocalBroadcastManager.getInstance(MainApplication.UIContext).unregisterReceiver(receiver);
+        super.onDestroy();
+    }
+
+    public void getMyMoments() {
+        StudioOperator.getInstance().getMyCircleList(MainApplication.userInfo.getUserId(), 0, new UserInfoOperator.OnGetListener<List<CCircleDetailModel>>() {
+            @Override
+            public void onGet(boolean succeed, List<CCircleDetailModel> cCircleDetailModels) {
+                if (succeed) {
+                    circleMomentAdapter = new CircleMomentAdapter(getActivity(), cCircleDetailModels, null);
+                    listView.onRefreshComplete();
+                    list.clear();
+                    list.addAll(cCircleDetailModels);
+                    listView.setResultSize(cCircleDetailModels.size());
+                    listView.setAdapter(circleMomentAdapter);
+                }
+            }
+        });
     }
 
     public void getData(final int groupId, final int lastId, final int mode) {

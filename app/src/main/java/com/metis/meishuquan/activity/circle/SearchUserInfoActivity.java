@@ -62,7 +62,7 @@ public class SearchUserInfoActivity extends FragmentActivity {
         if (userInfo != null) {
             //头像
             ImageLoaderUtils.getImageLoader(this).displayImage(userInfo.avatar, this.imgAvatar,
-                    ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height), R.drawable.default_user_dynamic));
+                    ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height)));
             //昵称
             this.tvUsername.setText(userInfo.name);
         }

@@ -4,10 +4,15 @@ import android.content.Context;
 import android.graphics.Point;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.adapter.circle.CircleAttentionAdapter;
 import com.metis.meishuquan.view.shared.ArrowView;
 
 /**
@@ -15,78 +20,58 @@ import com.metis.meishuquan.view.shared.ArrowView;
  */
 public class PopupMomentsWindow extends RelativeLayout {
     private ArrowView arrowView;
-    private TextView tv1, tv2, tv3, tv4, tv5, tv6;
+    private ListView listView;
+    private CircleAttentionAdapter adapter;
 
-    public PopupMomentsWindow(Context context, final OnClickListener onFinish, final OnClickListener onTV1Click, final OnClickListener onTV2Click, final OnClickListener onTV3Click, final OnClickListener onTV4Click, final OnClickListener onTV5Click, final OnClickListener onTV6Click) {
+    public PopupMomentsWindow(Context context, final OnClickListener onFinish, final AdapterView.OnItemClickListener onItemClickListener) {
         super(context);
         LayoutInflater.from(getContext()).inflate(R.layout.view_circle_popupmomentswindow, this);
-        this.tv1 = (TextView) this.findViewById(R.id.view_circle_popupaddwindow_tv1);
-        this.tv2 = (TextView) this.findViewById(R.id.view_circle_popupaddwindow_tv2);
-        this.tv3 = (TextView) this.findViewById(R.id.view_circle_popupaddwindow_tv3);
-        this.tv4 = (TextView) this.findViewById(R.id.view_circle_popupaddwindow_tv4);
-        this.tv5 = (TextView) this.findViewById(R.id.view_circle_popupaddwindow_tv5);
-        this.tv6 = (TextView) this.findViewById(R.id.view_circle_popupaddwindow_tv6);
+        this.listView = (ListView) this.findViewById(R.id.id_listview_group_filter);
         this.arrowView = (ArrowView) this.findViewById(R.id.view_circle_popupaddwindow_arrow);
         int arrowWidth = getResources().getDimensionPixelOffset(R.dimen.view_circle_popupaddwindow_arrow_width);
         int arrowHeight = getResources().getDimensionPixelOffset(R.dimen.view_circle_popupaddwindow_arrow_height);
 
         arrowView.SetData(new Point(0, arrowHeight), new Point(arrowWidth, arrowHeight), new Point(arrowWidth / 2, 0), getResources().getColor(R.color.black));
         this.setOnClickListener(onFinish);
-
-        tv1.setOnClickListener(new OnClickListener() {
+        adapter = new CircleAttentionAdapter(getContext(), 1);
+        listView.setAdapter(adapter);
+        setListViewHeightBasedOnChildren(listView);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 onFinish.onClick(null);
-                onTV1Click.onClick(null);
+                onItemClickListener.onItemClick(adapterView, view, i, l);
             }
         });
+    }
 
-        tv2.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onFinish.onClick(null);
-                onTV2Click.onClick(null);
-            }
-        });
+    public int getGroupId(int i) {
+        return (int) adapter.getItemId(i);
+    }
 
-        tv3.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onFinish.onClick(null);
-                onTV3Click.onClick(null);
-            }
-        });
+    public String getGroupName(int i) {
+        return adapter.getItem(i).name;
+    }
 
-        tv4.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onFinish.onClick(null);
-                onTV4Click.onClick(null);
-            }
-        });
-
-        tv5.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onFinish.onClick(null);
-                onTV5Click.onClick(null);
-            }
-        });
-
-        tv5.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onFinish.onClick(null);
-                onTV5Click.onClick(null);
-            }
-        });
-
-        tv6.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onFinish.onClick(null);
-                onTV5Click.onClick(null);
-            }
-        });
+    /**
+     * 动态设置ListView的高度
+     *
+     * @param listView
+     */
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        if (listView == null) return;
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0); // 计算子项View的宽高
+            totalHeight += listItem.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
     }
 }

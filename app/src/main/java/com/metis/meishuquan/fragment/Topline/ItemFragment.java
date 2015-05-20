@@ -143,7 +143,7 @@ public class ItemFragment extends Fragment {
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if ((i + 1) < (list.size())) {
+                if ((i) < (list.size()+1)) {
                     int newsId = 0;
                     if (headerView == null) {
                         newsId = list.get(i - 1).getNewsId();//获取新闻Id

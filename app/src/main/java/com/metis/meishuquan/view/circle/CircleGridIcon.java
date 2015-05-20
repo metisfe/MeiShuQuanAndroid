@@ -45,7 +45,7 @@ public class CircleGridIcon extends RelativeLayout {
 
     public void setData(String url, String name, final String uid) {
         if (TextUtils.isEmpty(url)) {
-            imageView.setImageResource(R.drawable.default_user_dynamic);
+            imageView.setImageResource(R.drawable.default_portrait_fang);
         } else {
             ImageLoaderUtils.getImageLoader(context).displayImage(url, imageView, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height)));
         }

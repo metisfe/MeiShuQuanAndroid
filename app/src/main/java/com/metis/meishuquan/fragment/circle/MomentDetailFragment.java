@@ -322,6 +322,8 @@ public class MomentDetailFragment extends Fragment {
                 } else {
                     //取消关注
                     isAttention = false;
+                    //切换至已关注状态
+                    imgAttention.setImageDrawable(getResources().getDrawable(R.drawable.bg_btn_unattention));
 
                     CircleOperator.getInstance().cancelAttention(moment.user.userId, new ApiOperationCallback<ReturnInfo<String>>() {
                         @Override
@@ -578,7 +580,7 @@ public class MomentDetailFragment extends Fragment {
                 params.setMargins(padding, 0, padding, 0);
 
                 image.setLayoutParams(params);
-                ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(user.avatar, image, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height), R.drawable.default_user_dynamic));
+                ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(user.avatar, image, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height)));
 
                 viewHolder.container.addView(image);
             }

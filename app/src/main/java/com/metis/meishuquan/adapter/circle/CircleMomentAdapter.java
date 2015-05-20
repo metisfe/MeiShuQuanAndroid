@@ -1,12 +1,10 @@
 package com.metis.meishuquan.adapter.circle;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.content.Intent;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +23,6 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.act.ActDetailActivity;
 import com.metis.meishuquan.activity.act.SelectStudioActivity;
 import com.metis.meishuquan.activity.circle.ReplyActivity;
-import com.metis.meishuquan.activity.info.homepage.StudioActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.Topline.ItemInfoFragment;
 import com.metis.meishuquan.fragment.circle.MomentCommentFragment;
@@ -43,7 +41,6 @@ import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.circle.moment.MomentActionBar;
 import com.metis.meishuquan.view.circle.moment.comment.EmotionTextView;
 import com.metis.meishuquan.view.course.FlowLayout;
-import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
@@ -75,9 +72,13 @@ public class CircleMomentAdapter extends BaseAdapter {
         EmotionTextView content;
         TextView device;
         ImageView imgForCircle;
+        ImageView imgTop, imgMore;
         MomentActionBar momentActionBar;
 
         FlowLayout fl_atUsers;//@用户集合
+        RelativeLayout rl_topbar;
+        RelativeLayout btnTop;
+        RelativeLayout btnMore;
         LinearLayout ll_circle;//非转发
         LinearLayout ll_not_circle;//转发
         ImageView imgForReply;
@@ -115,9 +116,14 @@ public class CircleMomentAdapter extends BaseAdapter {
             viewHolder.content = (EmotionTextView) convertView.findViewById(R.id.id_tv_content);
             viewHolder.device = (TextView) convertView.findViewById(R.id.tv_device);
             viewHolder.imgForCircle = (ImageView) convertView.findViewById(R.id.id_img_for_circle);
+            viewHolder.imgTop = (ImageView) convertView.findViewById(R.id.id_img_top);
+            viewHolder.imgMore = (ImageView) convertView.findViewById(R.id.id_img_more);
             viewHolder.momentActionBar = (MomentActionBar) convertView.findViewById(R.id.moment_action_bar);
 
             viewHolder.fl_atUsers = (FlowLayout) convertView.findViewById(R.id.id_flowlayout_at_users);
+            viewHolder.rl_topbar = (RelativeLayout) convertView.findViewById(R.id.id_rl_topbar);
+            viewHolder.btnTop = (RelativeLayout) convertView.findViewById(R.id.id_btn_top);
+            viewHolder.btnMore = (RelativeLayout) convertView.findViewById(R.id.id_btn_more);
             viewHolder.ll_circle = (LinearLayout) convertView.findViewById(R.id.id_ll_circle);
             viewHolder.ll_not_circle = (LinearLayout) convertView.findViewById(R.id.id_ll_not_circle);
             viewHolder.chooseHuashi = (ImageView) convertView.findViewById(R.id.id_img_choose_huashi);
@@ -127,6 +133,21 @@ public class CircleMomentAdapter extends BaseAdapter {
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
+        }
+
+        //顶部条的显示
+        if (moment.user.userId == MainApplication.userInfo.getUserId()) {
+            viewHolder.rl_topbar.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.rl_topbar.setVisibility(View.GONE);
+        }
+
+        //标识置顶状态
+        if (moment.user.userId == MainApplication.userInfo.getUserId() && moment.relayCircle != null
+                && (moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal() || moment.relayCircle.type == SupportTypeEnum.CircleActivity.getVal())) {
+            viewHolder.imgTop.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.imgTop.setVisibility(View.GONE);
         }
 
         if (moment.relayCircle == null) {//朋友圈类型

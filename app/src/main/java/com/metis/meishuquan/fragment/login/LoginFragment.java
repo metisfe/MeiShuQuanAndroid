@@ -46,6 +46,7 @@ public class LoginFragment extends Fragment {
     private UserOperator userOperator;
 
     private boolean isPressLogin = false;
+    private ProgressDialog progressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -83,8 +84,7 @@ public class LoginFragment extends Fragment {
         btnLogin.setOnClickListener(new View.OnClickListener() {//登录
             @Override
             public void onClick(View view) {
-                final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-                progressDialog.show(getActivity(), "", "正在登录，请稍候！");
+                progressDialog = ProgressDialog.show(getActivity(), "", "正在登录，请稍候！");
                 if (isPressLogin) {
                     return;
                 }
@@ -98,6 +98,7 @@ public class LoginFragment extends Fragment {
                     @Override
                     public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                         if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                            progressDialog.dismiss();
                             Gson gson = new Gson();
                             String json = gson.toJson(result);
                             Log.e("userInfo", json);
@@ -127,19 +128,17 @@ public class LoginFragment extends Fragment {
                             Utils.hideInputMethod(getActivity(), etUserName);
                             Toast.makeText(MainApplication.UIContext, "登录成功", Toast.LENGTH_SHORT).show();
                             getActivity().setResult(Activity.RESULT_OK);
-                            progressDialog.dismiss();
-                            getActivity().finish();
                             isPressLogin = false;
+                            getActivity().finish();
                         } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
                             Toast.makeText(MainApplication.UIContext, result.getMessage(), Toast.LENGTH_SHORT).show();
                             progressDialog.dismiss();
                             isPressLogin = false;
                         } else if (result != null || exception != null) {
-                            Log.e("**LoginFragment", exception.getCause().toString());
                             progressDialog.dismiss();
+                            Log.e("**LoginFragment", exception.getCause().toString());
                             isPressLogin = false;
                         }
-                        progressDialog.cancel();
                     }
                 });
 

@@ -27,15 +27,38 @@ public class CircleAttentionAdapter extends BaseAdapter {
     private Context context;
     private List<MomentsGroup> lstMomentsGroup;
 
-    public CircleAttentionAdapter(Context context) {
+    public CircleAttentionAdapter(Context context, int type) {
         this.context = context;
-        this.lstMomentsGroup = getMomentsGroupInfo();
+        this.lstMomentsGroup = getMomentsGroupInfo(type);
     }
 
-    private List<MomentsGroup> getMomentsGroupInfo() {
+    private List<MomentsGroup> getMomentsGroupInfo(int type) {
+        ReturnInfo<List<MomentsGroup>> returnInfo = null;
         String json = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey(SharedPreferencesUtil.MOMENTS_GROUP_INFO);
-        ReturnInfo<List<MomentsGroup>> returnInfo = new Gson().fromJson(json, new TypeToken<ReturnInfo<List<MomentsGroup>>>() {
-        }.getType());
+        if (type == 0) {
+            ReturnInfo<List<MomentsGroup>> result = new Gson().fromJson(json, new TypeToken<ReturnInfo<List<MomentsGroup>>>() {
+            }.getType());
+            returnInfo = result;
+        } else if (type == 1) {
+            returnInfo = new ReturnInfo<List<MomentsGroup>>();
+            ReturnInfo<List<MomentsGroup>> result = new Gson().fromJson(json, new TypeToken<ReturnInfo<List<MomentsGroup>>>() {
+            }.getType());
+            List<MomentsGroup> list = new ArrayList<MomentsGroup>();
+
+            MomentsGroup group1 = new MomentsGroup();
+            group1.id = -1;
+            group1.name = "全部";
+            MomentsGroup group2 = new MomentsGroup();
+            group2.id = -2;
+            group2.name = "我的微博";
+            list.add(group1);
+            list.add(group2);
+
+            for (int i = 0; i < result.getData().size(); i++) {
+                list.add(result.getData().get(i));
+            }
+            returnInfo.setData(list);
+        }
         return returnInfo.getData();
     }
 

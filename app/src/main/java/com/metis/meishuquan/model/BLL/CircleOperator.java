@@ -1,5 +1,7 @@
 package com.metis.meishuquan.model.BLL;
 
+import android.util.Log;
+
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CirclePushBlogParm;
@@ -59,6 +61,7 @@ public class CircleOperator {
                 PATH.append("userId=" + userId);
                 PATH.append("&groupId=" + groupId);
                 PATH.append("&session=" + SESSION);
+                Log.i("attention_url", PATH.toString());
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }

@@ -139,10 +139,10 @@ public class RegisterFragment extends Fragment {
                     }
                     final ProgressDialog progressDialog = new ProgressDialog(getActivity());
                     progressDialog.show(getActivity(), "", "正在注册，请稍候！");
-                    progressDialog.setCancelable(false);
                     userOperator.register(phone, verCode, pwd, selectedId, new ApiOperationCallback<ReturnInfo<String>>() {
                         @Override
                         public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                            progressDialog.cancel();
                             if (result != null && result.getInfo().equals(String.valueOf(0))) {
                                 Gson gson = new Gson();
                                 String json = gson.toJson(result);
@@ -170,7 +170,6 @@ public class RegisterFragment extends Fragment {
                                 Utils.hideInputMethod(getActivity(), etPwd);
                                 Utils.hideInputMethod(getActivity(), etUserName);
                                 Toast.makeText(MainApplication.UIContext, "注册成功", Toast.LENGTH_SHORT).show();
-                                progressDialog.dismiss();
                                 getActivity().finish();
                             } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
                                 Toast.makeText(MainApplication.UIContext, result.getMessage(), Toast.LENGTH_SHORT).show();

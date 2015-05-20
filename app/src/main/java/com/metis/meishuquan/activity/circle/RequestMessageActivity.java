@@ -63,7 +63,7 @@ public class RequestMessageActivity extends FragmentActivity {
                             public void onCompleted(ReturnOnlyInfo result, Exception exception, ServiceFilterResponse response) {
                                 progressDialog.cancel();
                                 if (result != null && result.option != null && result.option.isSuccess()) {
-                                    Toast.makeText(RequestMessageActivity.this, "请求成功，等待好友验证", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(RequestMessageActivity.this, "请求成功，等待对方验证", Toast.LENGTH_LONG).show();
                                     finish();
                                 } else {
                                     Toast.makeText(RequestMessageActivity.this, "请求失败，请重试", Toast.LENGTH_LONG).show();

@@ -1,15 +1,20 @@
 package com.metis.meishuquan.fragment.main;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -37,16 +42,20 @@ import java.util.List;
  */
 public class CircleFragment extends CircleBaseFragment {
 
+    private static final String arrowUp = "∧";
+    private static final String arrowDown = "∨";
+
     private TabBar tabBar;
     private CircleTitleBar titleBar;
     private ViewPager viewPager;
     private TabPageIndicatorAdapter fragmentPagerAdapter;
     private TabPageIndicator indicator;
+    private PopupMomentsWindow momentsGroupWindow;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_circlefragment, container, false);
-        getMomentsGroupInfo();
+        //getMomentsGroupInfo();
 
 
         this.tabBar = (TabBar) rootView.findViewById(R.id.fragment_shared_circlefragment_tab_bar);
@@ -60,51 +69,27 @@ public class CircleFragment extends CircleBaseFragment {
         this.indicator.setOnTabReselectedListener(new TabPageIndicator.OnTabReselectedListener() {
             @Override
             public void onTabReselected(int position) {
+                final String groupName = fragmentPagerAdapter.titles[0].substring(0, fragmentPagerAdapter.titles[0].length() - 1);
+                updateIndicator(new String[]{groupName + arrowUp, "消息", "通讯录"});
                 if (position == 0) {
-                    PopupMomentsWindow addWindow = new PopupMomentsWindow(getActivity(), new View.OnClickListener() {
+                    momentsGroupWindow = new PopupMomentsWindow(getActivity(), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             ((MainActivity) getActivity()).removeAllAttachedView();
+                            updateIndicator(new String[]{groupName + arrowDown, "消息", "通讯录"});
                         }
-                    }, new View.OnClickListener() {//全部
+                    }, new AdapterView.OnItemClickListener() {
                         @Override
-                        public void onClick(View v) {
-                            GlobalData.momentsGroupId = 0;
-                            indicator.setCurrentItem(0);
-                        }
-                    }, new View.OnClickListener() {//我的主页
-                        @Override
-                        public void onClick(View v) {
-                            GlobalData.momentsGroupId = 0;
-                            indicator.setCurrentItem(0);
-                        }
-                    }, new View.OnClickListener() {//朋友圈
-                        @Override
-                        public void onClick(View v) {
-                            GlobalData.momentsGroupId = 0;
-                            indicator.setCurrentItem(0);
-                        }
-                    }, new View.OnClickListener() {//特别关注
-                        @Override
-                        public void onClick(View view) {
-                            GlobalData.momentsGroupId = 0;
-                            indicator.setCurrentItem(0);
-                        }
-                    }, new View.OnClickListener() {//我的老师
-                        @Override
-                        public void onClick(View view) {
-                            GlobalData.momentsGroupId = 0;
-                            indicator.setCurrentItem(0);
-                        }
-                    }, new View.OnClickListener() {//我的同学
-                        @Override
-                        public void onClick(View view) {
-                            GlobalData.momentsGroupId = 0;
-                            indicator.setCurrentItem(0);
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            int groupId = momentsGroupWindow.getGroupId(i);
+                            String groupName = momentsGroupWindow.getGroupName(i);
+                            GlobalData.momentsGroupId = groupId;
+                            updateIndicator(new String[]{groupName + arrowDown, "消息", "通讯录"});
+                            LocalBroadcastManager.getInstance(MainApplication.UIContext).sendBroadcast(new Intent("update_moments_list"));
                         }
                     });
 
-                    ((MainActivity) getActivity()).addAttachView(addWindow);
+                    ((MainActivity) getActivity()).addAttachView(momentsGroupWindow);
                 }
             }
         });
@@ -133,11 +118,10 @@ public class CircleFragment extends CircleBaseFragment {
         return rootView;
     }
 
-    private List<MomentsGroup> getMomentsGroupInfo() {
-        String json = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey(SharedPreferencesUtil.MOMENTS_GROUP_INFO);
-        ReturnInfo<List<MomentsGroup>> returnInfo = new Gson().fromJson(json, new TypeToken<ReturnInfo<List<MomentsGroup>>>() {
-        }.getType());
-        return returnInfo.getData();
+    private void updateIndicator(String[] title) {
+        fragmentPagerAdapter.titles = title;
+        indicator.notifyDataSetChanged();
+        fragmentPagerAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -157,6 +141,7 @@ public class CircleFragment extends CircleBaseFragment {
 
     class TabPageIndicatorAdapter extends FragmentStatePagerAdapter {
         boolean firstTimeLoad = true;
+        public String[] titles = new String[]{"全部" + arrowDown, "消息", "通讯录"};
 
         public TabPageIndicatorAdapter(FragmentManager fm) {
             super(fm);
@@ -201,15 +186,7 @@ public class CircleFragment extends CircleBaseFragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "朋友圈";
-                case 1:
-                    return "消息";
-                case 2:
-                    return "通讯录";
-            }
-            return "";
+            return titles[position];
         }
 
         @Override
