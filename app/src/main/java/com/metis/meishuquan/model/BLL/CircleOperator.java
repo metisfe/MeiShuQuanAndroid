@@ -56,14 +56,14 @@ public class CircleOperator {
         }
     }
 
-    public void deleteCircle (int circleId, ApiOperationCallback<Result> callback) {
+    public void deleteCircle (int circleId, ApiOperationCallback<Result<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuffer PATH = new StringBuffer(URL_DELETE_CIRCLE);
                 PATH.append(circleId);
                 PATH.append("&session=" + SESSION);
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
-                        (Class<Result>) new Result().getClass(), callback);
+                        (Class<Result<String>>) new Result().getClass(), callback);
             }
         }
     }

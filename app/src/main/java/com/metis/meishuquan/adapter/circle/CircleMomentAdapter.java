@@ -152,13 +152,16 @@ public class CircleMomentAdapter extends BaseAdapter {
                     ListDialogFragment.getInstance().setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            CircleOperator.getInstance().deleteCircle(moment.id, new ApiOperationCallback<Result> () {
+                            CircleOperator.getInstance().deleteCircle(moment.id, new ApiOperationCallback<Result<String>> () {
 
                                 @Override
-                                public void onCompleted(Result result, Exception exception, ServiceFilterResponse response) {
+                                public void onCompleted(Result<String> result, Exception exception, ServiceFilterResponse response) {
+                                    Log.v(TAG, "deleteCircle=" + result.getData());
                                     if (result.getOption().getStatus() == 0) {
                                         momentList.remove(moment);
                                         notifyDataSetChanged();
+                                    } else {
+                                        Toast.makeText(mContext, R.string.delete_failed, Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
