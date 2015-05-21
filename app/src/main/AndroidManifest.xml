@@ -164,7 +164,7 @@
         <!-- Begin Rong Cloud -->
         <meta-data
             android:name="RONG_CLOUD_APP_KEY"
-            android:value="8luwapkvuf53l" />
+            android:value="8brlm7ufr4pw3" />
 
         <service android:name="io.rong.imlib.RongService" />
 

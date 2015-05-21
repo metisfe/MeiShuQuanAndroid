@@ -116,7 +116,7 @@ public class Comment {
 
     @Override
     public boolean equals(Object o) {
-        if (id == ((Comment) o).getId()) {
+        if (o != null && id == ((Comment) o).getId()) {
             return true;
         }
         return false;

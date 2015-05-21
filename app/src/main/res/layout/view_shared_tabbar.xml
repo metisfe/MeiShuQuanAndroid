@@ -7,7 +7,6 @@
     android:orientation="horizontal">
 
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="44dp"
@@ -192,7 +191,7 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/icon_tabbar_circle_selected"
+        android:background="@drawable/icon_tabbar_circle_selected2"
         android:clickable="false"
         android:scaleType="fitCenter" />
 

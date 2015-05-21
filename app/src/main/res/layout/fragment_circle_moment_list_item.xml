@@ -205,7 +205,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#f1f2f4"
-        android:layout_margin="10dp">
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+        <com.metis.meishuquan.view.circle.moment.comment.EmotionTextView
+            android:id="@+id/id_emotion_tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <ImageView
             android:id="@+id/id_img_for_circle"

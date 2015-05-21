@@ -11,6 +11,8 @@ import java.util.List;
  * Created by wudi on 4/14/2015.
  */
 public class CCircleDetailModel {
+    private static String shareUrl = "http://meishuquan.net/H5/CircleShare.aspx?id=";
+
     @SerializedName("id")
     public int id;
 
@@ -27,7 +29,7 @@ public class CCircleDetailModel {
     public int relayCount;
 
     @SerializedName("supportCount")
-    public int supportCount=0;
+    public int supportCount = 0;
 
     @SerializedName("device")
     public String device;
@@ -37,6 +39,9 @@ public class CCircleDetailModel {
 
     @SerializedName("viewCount")
     public int viewCount;
+
+    @SerializedName("relayImgUrl")
+    public String relayImgUrl;
 
     @SerializedName("images")
     public List<CircleImage> images;
@@ -57,6 +62,10 @@ public class CCircleDetailModel {
 
     public boolean isValid() {
         return user != null /*&& user.name != null*/ /* && user.grade != null */ && createTime != null && content != null;
+    }
+
+    public String getShareUrl() {
+        return shareUrl;
     }
 
     @Override

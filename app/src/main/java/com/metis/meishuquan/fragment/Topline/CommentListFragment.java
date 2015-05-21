@@ -96,6 +96,7 @@ public class CommentListFragment extends Fragment {
             }
             listView.setResultSize(result.size());
             adapter.notifyDataSetChanged();
+            tvCommentCount.setText(adapter.getCount() + "");
         }
     };
 
@@ -314,8 +315,7 @@ public class CommentListFragment extends Fragment {
                     if (commentsData != null) {
                         List<Comment> lstHostComments = commentsData.getData().getHotComments();
                         List<Comment> lstNewComments = commentsData.getData().getNewComments();
-                        adapter.lstHostComments = lstHostComments;
-                        adapter.lstNewComments = lstNewComments;
+
                         for (int i = 0; i < lstHostComments.size(); i++) {
                             lstHostComments.get(i).setGroup("热门评论");
                         }
@@ -323,8 +323,11 @@ public class CommentListFragment extends Fragment {
                         for (int i = 0; i < lstNewComments.size(); i++) {
                             lstNewComments.get(i).setGroup("最新评论");
                         }
+
                         data.addAll(lstHostComments);
                         data.addAll(lstNewComments);
+                        adapter.lstHostComments = lstHostComments;
+                        adapter.lstNewComments = lstNewComments;
                     }
                     Message msg = handler.obtainMessage();
                     msg.what = type;
@@ -407,14 +410,14 @@ public class CommentListFragment extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            if (lstHostComments.contains(comment)) {
+            if (comment.getGroup().equals("热门评论") && lstHostComments.contains(comment)) {
                 if (lstHostComments.indexOf(comment) == 0) {
                     holder.rl_group.setVisibility(View.VISIBLE);
                     holder.tvGroup.setText(comment.getGroup());
                 } else {
                     holder.rl_group.setVisibility(View.GONE);
                 }
-            } else if (lstNewComments.contains(comment)) {
+            } else if (comment.getGroup().equals("最新评论") && lstNewComments.contains(comment)) {
                 if (lstNewComments.indexOf(comment) == 0) {
                     holder.rl_group.setVisibility(View.VISIBLE);
                     holder.tvGroup.setText(comment.getGroup());
@@ -509,6 +512,7 @@ public class CommentListFragment extends Fragment {
 
     private void hideInputView() {
         childCommentId = -1;
+        editText.setText("");
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
         rlInput.setVisibility(View.GONE);
@@ -521,7 +525,6 @@ public class CommentListFragment extends Fragment {
 
         rlInput.setVisibility(View.VISIBLE);
 
-        editText.setText("");
         editText.setFocusableInTouchMode(true);
         editText.requestFocus();
     }

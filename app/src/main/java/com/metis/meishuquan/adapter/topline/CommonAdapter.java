@@ -72,7 +72,7 @@ public class CommonAdapter extends BaseAdapter {
         RelatedRead relatedRead = lstRelatedRead.get(i);
         holder.tvTitle.setText(relatedRead.getTitle());
         holder.tvSourse.setText(relatedRead.getSource());
-        holder.tvReadCount.setText("阅读（" + relatedRead.getPageViewCount() + ")");
+        holder.tvReadCount.setText("阅读(" + relatedRead.getPageViewCount() + ")");
         holder.tvCommentCount.setText("评论(" + relatedRead.getCommentCount() + ")");
         return convertView;
     }

@@ -235,10 +235,10 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
     private void selectedCircleTab(boolean isSelected) {
 //        this.circleTitle.setText(R.string.tab_circle);
         if (isSelected) {
-            this.circleIcon.setImageResource(R.drawable.icon_tabbar_circle_selected);
+            this.circleIcon.setImageResource(R.drawable.icon_tabbar_circle_selected2);
 //            this.circleTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_selected_title_color));
         } else {
-            this.circleIcon.setImageResource(R.drawable.icon_tabbar_circle_selected);
+            this.circleIcon.setImageResource(R.drawable.icon_tabbar_circle_selected2);
 //            this.circleTitle.setTextColor(this.getResources().getColor(R.color.view_shared_tab_bar_unselected_title_color));
         }
     }

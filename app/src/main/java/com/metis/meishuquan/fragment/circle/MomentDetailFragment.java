@@ -38,6 +38,7 @@ import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.ActivityUtils;
 import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.ImageLoaderUtils;
+import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.view.circle.PopupAttentionWindow;
 import com.metis.meishuquan.view.circle.moment.MomentActionBar;
@@ -230,8 +231,13 @@ public class MomentDetailFragment extends Fragment {
             ll_not_circle.setVisibility(View.GONE);
             ll_circle.setVisibility(View.VISIBLE);
         } else {
-            ll_not_circle.setVisibility(View.VISIBLE);
-            ll_circle.setVisibility(View.GONE);
+            if (moment.relayCircle.type == SupportTypeEnum.Circle.getVal()) {
+                ll_not_circle.setVisibility(View.GONE);
+                ll_circle.setVisibility(View.VISIBLE);
+            } else {
+                ll_not_circle.setVisibility(View.VISIBLE);
+                ll_circle.setVisibility(View.GONE);
+            }
         }
 
         actionBar.setOnActionButtonClickListener(OnActionButtonClickListener);
@@ -241,7 +247,7 @@ public class MomentDetailFragment extends Fragment {
         return headerView;
     }
 
-    public void setTitleViewVisible (int visible) {
+    public void setTitleViewVisible(int visible) {
         mActionBarVisible = visible;
         if (mTitleView != null) {
             mTitleView.setVisibility(visible);
@@ -266,8 +272,7 @@ public class MomentDetailFragment extends Fragment {
             } else {
                 ll_circle.setVisibility(View.GONE);
             }
-        }
-        if (ll_not_circle.getVisibility() == View.VISIBLE) {
+        } else if (ll_not_circle.getVisibility() == View.VISIBLE) {
             ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.relayCircle.activityImg, imgForReply);
             tvTitle.setText(moment.relayCircle.title.trim());
             tvInfo.setText(moment.relayCircle.desc.trim());
@@ -301,6 +306,13 @@ public class MomentDetailFragment extends Fragment {
         imgAttention.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final String key = "attention" + moment.id + MainApplication.userInfo.getUserId();
+                String isAttentionStr = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey(key);
+                if (!isAttentionStr.isEmpty() && isAttentionStr.equals("已关注")) {
+                    isAttention = true;
+                } else {
+                    isAttention = false;
+                }
                 if (!isAttention) {//关注
                     isAttention = true;
                     popupAttentionWindow = new PopupAttentionWindow(getActivity(),
@@ -320,6 +332,8 @@ public class MomentDetailFragment extends Fragment {
                                 @Override
                                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                     if (result != null && result.isSuccess()) {
+                                        //保存关注的状态
+                                        SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(key, "已关注");
                                         Toast.makeText(getActivity(), "关注成功", Toast.LENGTH_SHORT).show();
                                     } else if (result != null && !result.isSuccess()) {
                                         Log.e("attention", result.getMessage());
@@ -438,7 +452,20 @@ public class MomentDetailFragment extends Fragment {
         this.btnShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new SharePopupWindow(getActivity(), rootView);
+                SharePopupWindow sharePopupWindow = new SharePopupWindow(getActivity(), rootView);
+
+                String title = "分享 " + moment.user.name + " 的微博";
+                String content = moment.content.isEmpty() ? "分享图片" : moment.content;
+                String shareUrl = moment.getShareUrl() + moment.id;
+                String imgUrl = moment.relayImgUrl;
+                int type = 0;
+                if (moment.relayCircle == null) {
+                    type = SupportTypeEnum.Circle.getVal();
+                } else {
+                    type = moment.relayCircle.type;
+                }
+
+                sharePopupWindow.setShareInfo(title, content, shareUrl, imgUrl, type, moment.id);
             }
         });
     }

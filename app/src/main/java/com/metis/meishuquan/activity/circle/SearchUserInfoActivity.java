@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.circle.CUserModel;
+import com.metis.meishuquan.model.circle.UserAdvanceInfo;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 
 public class SearchUserInfoActivity extends FragmentActivity {
@@ -90,6 +91,26 @@ public class SearchUserInfoActivity extends FragmentActivity {
                 Intent intent = new Intent(SearchUserInfoActivity.this, RequestMessageActivity.class);
                 intent.putExtra(RequestMessageActivity.KEY_TATGETID, userInfo.userId);
                 startActivity(intent);
+                finish();
+            }
+        });
+
+        this.btnSendRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                
+            }
+        });
+
+        this.btnSendChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SearchUserInfoActivity.this, ChatActivity.class);
+                intent.putExtra("title", userInfo.name);
+                intent.putExtra("targetId", userInfo.rongCloud);
+                intent.putExtra("type", "PRIVATE");
+                startActivity(intent);
+                finish();
             }
         });
     }

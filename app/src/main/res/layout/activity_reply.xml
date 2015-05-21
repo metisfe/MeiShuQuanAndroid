@@ -71,6 +71,7 @@
         android:textSize="16sp" />
 
     <RelativeLayout
+        android:id="@+id/id_rl_reply"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/fragment_circle_postmoment_bottom_container"
@@ -89,6 +90,7 @@
             android:id="@+id/id_tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@+id/id_img_pic"
             android:text="标题"
@@ -104,7 +106,50 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:layout_toRightOf="@+id/id_img_pic"
-            android:maxLines="5"
+            android:maxLines="2"
+            android:text="详情"
+            android:textColor="#7e7e7e"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/id_rl_circle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/fragment_circle_postmoment_bottom_container"
+        android:layout_below="@+id/id_rl_reply"
+        android:layout_margin="10dp"
+        android:background="#f1f2f4">
+
+        <ImageView
+            android:id="@+id/id_img_circle_pic"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:scaleType="centerCrop"
+            android:src="#ccc" />
+
+        <TextView
+            android:id="@+id/id_tv_circle_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/id_img_circle_pic"
+            android:text="aadf"
+            android:textColor="#424242"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/id_tv_circle_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/id_img_circle_pic"
+            android:layout_below="@+id/id_tv_circle_title"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/id_img_circle_pic"
+            android:maxLines="2"
             android:text="详情"
             android:textColor="#7e7e7e"
             android:textSize="12sp" />

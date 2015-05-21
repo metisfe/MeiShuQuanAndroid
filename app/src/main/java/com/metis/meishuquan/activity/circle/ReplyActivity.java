@@ -1,16 +1,10 @@
 package com.metis.meishuquan.activity.circle;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,11 +43,17 @@ public class ReplyActivity extends FragmentActivity {
     private Button btnBack;
     private Button btnSend;
     private EditText etInput;
-    private ImageView imgPic;
-    private TextView tvTitle;
-    private TextView tvContent;
+    private ImageView imgReplyPic;
+    private ImageView imgCirclePic;
+    private TextView tvReplyTitle;
+    private TextView tvReplyContent;
+    private TextView tvCircleTitle;
+    private TextView tvCircleContent;
+
     private RelativeLayout rl_at;
     private RelativeLayout rl_emotion;
+    private RelativeLayout rl_reply;
+    private RelativeLayout rl_circle;
 
     private boolean isPressed;
     private CirclePushBlogParm parm;
@@ -73,7 +73,7 @@ public class ReplyActivity extends FragmentActivity {
             this.parm = (CirclePushBlogParm) bundle.getSerializable(PARM);
             this.title = bundle.getString(TITLE, "");
             this.content = bundle.getString(CONTENT, "");
-            this.imgUrl = bundle.getString(IMAGEURL);
+            this.imgUrl = bundle.getString(IMAGEURL, "");
         }
 
         initView();
@@ -83,12 +83,22 @@ public class ReplyActivity extends FragmentActivity {
     }
 
     public void bindData() {
-
-        this.tvTitle.setText(title);
-        this.tvContent.setText(content);
-
-        if (imgUrl != null && !imgUrl.isEmpty()) {
-            ImageLoaderUtils.getImageLoader(this).displayImage(imgUrl, imgPic);
+        if (parm.getType() == SupportTypeEnum.Circle.getVal()) {
+            this.rl_circle.setVisibility(View.VISIBLE);
+            this.rl_reply.setVisibility(View.GONE);
+            this.tvCircleTitle.setText("@" + title);
+            this.tvCircleContent.setText(content);
+            if (imgUrl != null && !imgUrl.isEmpty()) {
+                ImageLoaderUtils.getImageLoader(this).displayImage(imgUrl, imgCirclePic);
+            }
+        } else {
+            this.rl_circle.setVisibility(View.GONE);
+            this.rl_reply.setVisibility(View.VISIBLE);
+            this.tvReplyTitle.setText(title);
+            this.tvReplyContent.setText(content);
+            if (imgUrl != null && !imgUrl.isEmpty()) {
+                ImageLoaderUtils.getImageLoader(this).displayImage(imgUrl, imgReplyPic);
+            }
         }
     }
 
@@ -96,12 +106,18 @@ public class ReplyActivity extends FragmentActivity {
         this.btnBack = (Button) this.findViewById(R.id.id_btn_back);
         this.btnSend = (Button) this.findViewById(R.id.id_btn_send);
         this.etInput = (EditText) this.findViewById(R.id.id_et_input_reply);
-        this.imgPic = (ImageView) this.findViewById(R.id.id_img_pic);
-        this.tvTitle = (TextView) this.findViewById(R.id.id_tv_title);
-        this.tvContent = (TextView) this.findViewById(R.id.id_tv_content);
+        this.imgReplyPic = (ImageView) this.findViewById(R.id.id_img_pic);
+        this.imgCirclePic = (ImageView) this.findViewById(R.id.id_img_circle_pic);
+        this.tvReplyTitle = (TextView) this.findViewById(R.id.id_tv_title);
+        this.tvReplyContent = (TextView) this.findViewById(R.id.id_tv_content);
+        this.tvCircleTitle = (TextView) this.findViewById(R.id.id_tv_circle_title);
+        this.tvCircleContent = (TextView) this.findViewById(R.id.id_tv_circle_content);
 
         this.rl_at = (RelativeLayout) this.findViewById(R.id.id_rl_emotion);
         this.rl_emotion = (RelativeLayout) this.findViewById(R.id.id_rl_emotion);
+
+        this.rl_reply = (RelativeLayout) this.findViewById(R.id.id_rl_reply);
+        this.rl_circle = (RelativeLayout) this.findViewById(R.id.id_rl_circle);
 
         if (this.parm.getType() == SupportTypeEnum.Activity.getVal()) {
             this.etInput.setText("我正在参加#超级美术生#海选，一定要帮我到美术圈APP集齐10个赞哦！这样我就有机会免费进全国最好画室中最贵的VIP班学习啦！");
@@ -120,7 +136,6 @@ public class ReplyActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 if (!isPressed) {
-
                     send(parm);
                     isPressed = true;
                 }

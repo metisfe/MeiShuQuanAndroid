@@ -70,6 +70,7 @@ public class CircleMomentAdapter extends BaseAdapter {
         TextView grade;
         TextView createTime;
         EmotionTextView content;
+        EmotionTextView replyContent;
         TextView device;
         ImageView imgForCircle;
         ImageView imgTop, imgMore;
@@ -114,6 +115,7 @@ public class CircleMomentAdapter extends BaseAdapter {
             viewHolder.grade = (TextView) convertView.findViewById(R.id.id_tv_grade);
             viewHolder.createTime = (TextView) convertView.findViewById(R.id.id_createtime);
             viewHolder.content = (EmotionTextView) convertView.findViewById(R.id.id_tv_content);
+            viewHolder.replyContent = (EmotionTextView) convertView.findViewById(R.id.id_emotion_tv_content);
             viewHolder.device = (TextView) convertView.findViewById(R.id.tv_device);
             viewHolder.imgForCircle = (ImageView) convertView.findViewById(R.id.id_img_for_circle);
             viewHolder.imgTop = (ImageView) convertView.findViewById(R.id.id_img_top);
@@ -155,7 +157,6 @@ public class CircleMomentAdapter extends BaseAdapter {
             viewHolder.ll_circle.setVisibility(View.VISIBLE);
         } else {
             viewHolder.ll_not_circle.setVisibility(View.VISIBLE);
-            viewHolder.ll_circle.setVisibility(View.GONE);
 
             if (moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal()) {
                 if (moment.user.identity == IdTypeEnum.STUDENT.getVal() && moment.user.userId == MainApplication.userInfo.getUserId()) {
@@ -169,8 +170,22 @@ public class CircleMomentAdapter extends BaseAdapter {
                         }
                     });
                 }
+            } else if (moment.relayCircle.type == SupportTypeEnum.Circle.getVal()) {//朋友圈类型
+                viewHolder.ll_not_circle.setVisibility(View.GONE);
+                viewHolder.ll_circle.setVisibility(View.VISIBLE);
+                //纯文字
+                if (moment.relayCircle.images == null || moment.relayCircle.images.size() == 0) {
+                    viewHolder.replyContent.setText(moment.relayCircle.desc);
+                } else if (moment.relayCircle.desc.equals("") && moment.relayCircle.images != null && moment.relayCircle.images.size() > 0) {//纯图片
+                    viewHolder.replyContent.setVisibility(View.GONE);//隐藏转发内容
+                    ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.relayCircle.images.get(0).Thumbnails, viewHolder.imgForReply);
+                } else {//有文字和图片
+                    viewHolder.replyContent.setVisibility(View.VISIBLE);
+                    viewHolder.replyContent.setText(moment.relayCircle.desc);
+                    ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.relayCircle.images.get(0).Thumbnails, viewHolder.imgForReply);
+                }
             } else {
-                viewHolder.chooseHuashi.setVisibility(View.GONE);
+                viewHolder.chooseHuashi.setVisibility(View.GONE);//隐藏选画室
             }
         }
         //头像
@@ -362,6 +377,10 @@ public class CircleMomentAdapter extends BaseAdapter {
             it.putExtra(ReplyActivity.TITLE, moment.relayCircle.title);
             it.putExtra(ReplyActivity.CONTENT, moment.relayCircle.desc);
             it.putExtra(ReplyActivity.IMAGEURL, moment.relayCircle.activityImg);
+        } else {
+            it.putExtra(ReplyActivity.TITLE, moment.user.name);
+            it.putExtra(ReplyActivity.CONTENT, moment.content);
+            it.putExtra(ReplyActivity.IMAGEURL, moment.user.avatar);
         }
 
         mContext.startActivity(it);
