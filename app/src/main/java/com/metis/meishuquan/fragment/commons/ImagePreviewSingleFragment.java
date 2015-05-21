@@ -55,6 +55,14 @@ public class ImagePreviewSingleFragment extends Fragment {
                 mRootPath = new File(externalCacheDir, "temp").getAbsolutePath();
             }
             mImagePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath();
+            if (mImagePath == null) {
+                mImagePath = activity.getExternalCacheDir().getAbsolutePath();
+            }
+            Log.v(TAG, "loadImageUrl mImagePath=" + mImagePath);
+        } else {
+            mRootPath = activity.getFilesDir().getAbsolutePath();
+            mImagePath = mRootPath;
+            Log.v(TAG, "else loadImageUrl mImagePath=" + mImagePath);
         }
 
         /*File cacheDir = activity.getCacheDir();

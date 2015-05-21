@@ -5,6 +5,7 @@ import android.util.Log;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CirclePushBlogParm;
+import com.metis.meishuquan.model.commons.Result;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.SystemUtil;
@@ -21,6 +22,7 @@ public class CircleOperator {
     private static final String URL_PUSHBLOG = "v1.1/Circle/PushBlog?";
     private static final String URL_ATTENTION = "v1.1/Circle/FocusUserForGroup?";
     private static final String URL_CANCEL_ATTENTION = "v1.1/Circle/CancelAttention?";
+    private static final String URL_DELETE_CIRCLE = "v1.1/Circle/DeleteMyCircle?circleid=";
 
     private static CircleOperator operator = null;
     private static final String SESSION = MainApplication.userInfo.getCookie();
@@ -50,6 +52,18 @@ public class CircleOperator {
                 PATH.append("session=" + SESSION);
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), param, HttpPost.METHOD_NAME, null,
                         (Class<ReturnInfo<CCircleDetailModel>>) new ReturnInfo<CCircleDetailModel>().getClass(), callback);
+            }
+        }
+    }
+
+    public void deleteCircle (int circleId, ApiOperationCallback<Result<String>> callback) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuffer PATH = new StringBuffer(URL_DELETE_CIRCLE);
+                PATH.append(circleId);
+                PATH.append("&session=" + SESSION);
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
+                        (Class<Result<String>>) new Result().getClass(), callback);
             }
         }
     }

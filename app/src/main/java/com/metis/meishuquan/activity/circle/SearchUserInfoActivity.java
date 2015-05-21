@@ -1,6 +1,7 @@
 package com.metis.meishuquan.activity.circle;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -101,6 +102,9 @@ public class SearchUserInfoActivity extends FragmentActivity {
             public void onClick(View view) {
                 Toast.makeText(SearchUserInfoActivity.this, "发送邀请成功", Toast.LENGTH_SHORT).show();
                 finish();
+                if (userInfo != null) {
+                    send(userInfo.name, "Hi, 我在美术圈，你可以通过我的手机号加我为好友#美术圈是你最好的朋友圈#下载地址:http://www.meishuquan.net/Down.aspx");
+                }
             }
         });
 
@@ -115,5 +119,17 @@ public class SearchUserInfoActivity extends FragmentActivity {
                 finish();
             }
         });
+    }
+
+    private void send(String number, String message) {
+        Uri uri = Uri.parse("smsto:" + number);
+        Intent sendIntent = new Intent(Intent.ACTION_VIEW, uri);
+        sendIntent.putExtra("sms_body", message);
+        try {
+            startActivity(sendIntent);
+        } catch (Exception e) {
+            Toast.makeText(this, R.string.act_not_found_exception, Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

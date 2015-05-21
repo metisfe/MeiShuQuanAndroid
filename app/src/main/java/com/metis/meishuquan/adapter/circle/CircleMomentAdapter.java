@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,9 +28,13 @@ import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.Topline.ItemInfoFragment;
 import com.metis.meishuquan.fragment.circle.MomentCommentFragment;
 import com.metis.meishuquan.fragment.circle.MomentDetailFragment;
+import com.metis.meishuquan.fragment.commons.ListDialogFragment;
+import com.metis.meishuquan.model.BLL.CircleOperator;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CirclePushBlogParm;
 import com.metis.meishuquan.model.circle.CirclePushCommentResult;
+import com.metis.meishuquan.model.commons.Result;
+import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
@@ -136,6 +141,37 @@ public class CircleMomentAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+        final boolean isMyWeibo = MainApplication.userInfo != null && moment.user.userId == MainApplication.userInfo.getUserId();
+        viewHolder.imgMore.setVisibility(isMyWeibo ? View.VISIBLE : View.GONE);
+        viewHolder.imgMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isMyWeibo) {
+                    ListDialogFragment.getInstance().setAdapter(new ListDialogFragment.SimpleAdapter(mContext, new String[]{"删除"}));
+                    ListDialogFragment.getInstance().show(fm, TAG);
+                    ListDialogFragment.getInstance().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            CircleOperator.getInstance().deleteCircle(moment.id, new ApiOperationCallback<Result<String>> () {
+
+                                @Override
+                                public void onCompleted(Result<String> result, Exception exception, ServiceFilterResponse response) {
+                                    Log.v(TAG, "deleteCircle=" + result.getData());
+                                    if (result.getOption().getStatus() == 0) {
+                                        momentList.remove(moment);
+                                        notifyDataSetChanged();
+                                    } else {
+                                        Toast.makeText(mContext, R.string.delete_failed, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                            ListDialogFragment.getInstance().dismiss();
+                            ListDialogFragment.getInstance().setOnItemClickListener(null);
+                        }
+                    });
+                }
+            }
+        });
 
         //顶部条的显示
         if (moment.user.userId == MainApplication.userInfo.getUserId()) {
