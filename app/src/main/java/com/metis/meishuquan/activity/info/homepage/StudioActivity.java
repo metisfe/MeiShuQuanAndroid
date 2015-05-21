@@ -42,6 +42,7 @@ import com.metis.meishuquan.adapter.studio.InfoAdapter;
 import com.metis.meishuquan.adapter.studio.UserInfoAdapter;
 import com.metis.meishuquan.adapter.studio.WorkAdapter;
 import com.metis.meishuquan.adapter.topline.ToplineCustomAdapter;
+import com.metis.meishuquan.fragment.Topline.ItemInfoFragment;
 import com.metis.meishuquan.fragment.circle.MomentDetailFragment;
 import com.metis.meishuquan.fragment.commons.InputDialogFragment;
 import com.metis.meishuquan.fragment.commons.ListDialogFragment;
@@ -53,10 +54,13 @@ import com.metis.meishuquan.model.BLL.StudioOperator;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.BLL.WorkInfo;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
+import com.metis.meishuquan.model.commons.Profile;
+import com.metis.meishuquan.model.commons.Studio;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.course.CourseChannelItem;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.topline.News;
+import com.metis.meishuquan.model.topline.NewsInfo;
 import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.PatternUtils;
@@ -305,6 +309,27 @@ public class StudioActivity extends BaseActivity implements
                                 if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab1) {
                                     mAdapter = new ToplineCustomAdapter(StudioActivity.this, mNewsList);
                                     mStudioFragment.setAdapter(mAdapter);
+                                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                            News news = mNewsList.get(i - 1);
+                                            int newsId = news.getNewsId();
+
+                                            ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
+                                            itemInfoFragment.setTitleBarVisible(false);
+                                            Bundle args = new Bundle();
+                                            args.putInt("newsId", newsId);
+                                            args.putString(ItemInfoFragment.KEY_SHARE_IMG_URL, news.getImgUrl());
+                                            itemInfoFragment.setArguments(args);
+
+                                            FragmentManager fm = StudioActivity.this.getSupportFragmentManager();
+                                            FragmentTransaction ft = fm.beginTransaction();
+//            ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                                            ft.add(R.id.content_container, itemInfoFragment);
+                                            ft.addToBackStack(null);
+                                            ft.commit();
+                                            }
+                                    });
                                 }
                             }
                         }
@@ -480,8 +505,32 @@ public class StudioActivity extends BaseActivity implements
                     });
                 }
             } else {
+                if (mWorkInfoList == null || mWorkInfoList.isEmpty()) {
+                    mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
+                    UserInfoOperator.getInstance().getMyPhoto(mUser.getUserId(), new UserInfoOperator.OnGetListener<List<Profile>>() {
+                        @Override
+                        public void onGet(boolean succeed, List<Profile> profiles) {
+                            if (succeed) {
+                                List<WorkInfo> workInfos = new ArrayList<WorkInfo>();
+                                for (Profile p : profiles) {
+                                    workInfos.add(convertFrom(p));
+                                }
+                                mWorkInfoList = workInfos;
+                                if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab2) {
+                                    mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
+                                    mStudioFragment.setAdapter(mAdapter);
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    if (!(mAdapter instanceof WorkAdapter)) {
+                        mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
+                        mStudioFragment.setAdapter(mAdapter);
+                    }
+                }
                 //获取个人相册
-                Log.v(TAG, "1 getWorks mWorkInfoList == null " + (mWorkInfoList == null));
+                /*Log.v(TAG, "1 getWorks mWorkInfoList == null " + (mWorkInfoList == null));
                 if (mWorkInfoList == null || mWorkInfoList.isEmpty()) {
                     mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
                     StudioOperator.getInstance().getWorks(mUser.getUserId(), 0, 0, new UserInfoOperator.OnGetListener<List<WorkInfo>>() {
@@ -516,8 +565,8 @@ public class StudioActivity extends BaseActivity implements
                                     mWorkInfoList.add(info);
                                 }
                                 if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab2) {
-                                    /*mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
-                                    mStudioFragment.setAdapter(mAdapter);*/
+                                    *//*mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
+                                    mStudioFragment.setAdapter(mAdapter);*//*
                                     mAdapter.notifyDataSetChanged();
                                 }
                                 Log.v(TAG, "2 getWorks mWorkInfoList == null " + (mWorkInfoList == null));
@@ -525,30 +574,19 @@ public class StudioActivity extends BaseActivity implements
                             }
                         }
                     });
-                }
-                /*if (mWorkInfoList != null) {
-                    mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
-                } else {
-                    mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
-                    StudioOperator.getInstance().getWorks(mUser.getUserId(), 0, 0, new UserInfoOperator.OnGetListener<List<WorkInfo>>() {
-                        @Override
-                        public void onGet(boolean succeed, List<WorkInfo> workInfo) {
-                            if (succeed) {
-                                mWorkInfoList = workInfo;
-                                if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab2) {
-                                    mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
-                                    mStudioFragment.setAdapter(mAdapter);
-                                }
-                                Log.v(TAG, "2 getWorks mWorkInfoList == null " + (mWorkInfoList == null));
-
-                            }
-                        }
-                    });
                 }*/
+
             }
         } else {
             mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
         }
+    }
+
+    private WorkInfo convertFrom (Profile profile) {
+        WorkInfo info = new WorkInfo();
+        info.setPhotoThumbnail(profile.getThumbnails());
+        info.setPhotoUrl(profile.getOriginalImage());
+        return info;
     }
 
     private void loadThirdTab () {

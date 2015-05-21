@@ -73,6 +73,7 @@
         <attr name="arrowVisible" format="boolean"/>
         <attr name="secondaryText" format="string|reference"/>
         <attr name="secondaryTextVisible" format="boolean"/>
+        <attr name="arrowImage" format="reference"/>
     </declare-styleable>
 
     <declare-styleable name="TitleView">

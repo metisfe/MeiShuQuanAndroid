@@ -32,6 +32,8 @@
 
             <GridView
                 android:id="@+id/activity_circle_chatconfigactivity_gridview"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
                 android:numColumns="4"
                 android:columnWidth="50dp"
                 android:stretchMode="columnWidth"
@@ -40,8 +42,11 @@
                 android:horizontalSpacing="2dp"
                 android:isScrollContainer="false"
                 android:scrollbars="none"
-                android:layout_width="match_parent"
-                android:layout_height="72dp" />
+                android:paddingLeft="20dp"
+                android:paddingTop="15dp"
+                android:listSelector="@android:color/transparent"
+                android:background="@android:color/white"
+                />
 
             <RelativeLayout
                 android:id="@+id/activity_circle_chatconfigactivity_namegroup"
@@ -87,6 +92,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
                     android:text="免打扰" />
 
                 <com.metis.meishuquan.view.shared.SwitchButton
@@ -94,6 +100,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
+                    android:layout_marginRight="20dp"
+                    android:layout_centerVertical="true"
                     android:layout_alignParentRight="true" />
 
             </RelativeLayout>
@@ -112,6 +120,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
                     android:text="关注该群组" />
 
                 <com.metis.meishuquan.view.shared.SwitchButton
@@ -119,6 +128,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
+                    android:layout_marginRight="20dp"
+                    android:layout_centerVertical="true"
                     android:layout_alignParentRight="true" />
 
             </RelativeLayout>
@@ -136,6 +147,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
                     android:text="Clear Chat History" />
 
             </RelativeLayout>

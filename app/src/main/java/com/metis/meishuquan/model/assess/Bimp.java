@@ -9,8 +9,12 @@ import java.util.List;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 public class Bimp {
+
+    private static final String TAG = Bimp.class.getSimpleName();
+
     public static int max = 0;
     public static boolean act_bool = true;
     public static Bimp bimp = null;
@@ -30,6 +34,9 @@ public class Bimp {
     }
 
     public Bitmap revitionImageSize(String path) throws IOException {
+        if (path == null) {
+            return null;
+        }
         BufferedInputStream in = new BufferedInputStream(new FileInputStream(
                 new File(path)));
         BitmapFactory.Options options = new BitmapFactory.Options();

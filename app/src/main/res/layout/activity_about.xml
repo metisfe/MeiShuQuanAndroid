@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#cccccc"
+    android:background="#e2e2e2"
     tools:context="com.metis.meishuquan.activity.info.AboutActivity">
     <com.metis.meishuquan.view.shared.MyInfoBtn
         android:id="@+id/about_score"

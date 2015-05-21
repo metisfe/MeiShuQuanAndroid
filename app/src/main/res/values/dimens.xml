@@ -12,4 +12,6 @@
 
     <dimen name="user_portrait_height">40dp</dimen>
     <dimen name="user_portrait_width">40dp</dimen>
+
+    <dimen name="item_info_title_profile_size">30dp</dimen>
 </resources>

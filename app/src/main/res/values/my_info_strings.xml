@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="back">返回</string>
+
     <string name="my_info_login">立即登录</string>
     <string name="my_info_artist_circle_id">艺术圈号:%1$s</string>
     <string name="my_info_count">(%1$d)</string>
@@ -136,6 +138,12 @@
     <string name="studio_tab_album">相册</string>
     <string name="studio_tab_info_details">个人信息</string>
     <string name="studio_wrong_format">格式不合法</string>
+    <string name="month">%1$s月</string>
+    <string name="studio_address">地址:%1$s</string>
+    <string name="studio_phone">电话:%1$s</string>
+    <string name="studio_weibo">微博:%1$s</string>
+    <string name="studio_wechat">微信:%1$s</string>
+    <string name="studio_website">网站:%1$s</string>
 
     <string name="my_course_comment_count">评论(%1$d)</string>
     <string name="my_course_read_count">阅读(%1$d)</string>

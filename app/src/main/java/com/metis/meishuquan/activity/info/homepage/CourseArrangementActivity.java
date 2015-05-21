@@ -84,7 +84,7 @@ public class CourseArrangementActivity extends BaseActivity {
         }
     }
 
-    private SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private SimpleDateFormat mFormat = new SimpleDateFormat("MM");
 
     private class ArrangeAdapter extends BaseAdapter {
 
@@ -123,7 +123,7 @@ public class CourseArrangementActivity extends BaseActivity {
             }
             final CourseInfoDelegate delegate = getItem(i);
             CourseArrangeInfo info = getItem(i).mInfo;
-            holder.titleView.setText(mFormat.format(info.getCourseBeginDate()) + "/" + mFormat.format(info.getCourseEndDate()));
+            holder.titleView.setText(getString(R.string.month, mFormat.format(info.getCourseBeginDate())));
             holder.subTitleView.setText(info.getCourseName());
             holder.detailsView.setText(info.getCourseInfo());
             holder.detailsView.setVisibility(delegate.showDetails ? View.VISIBLE : View.GONE);

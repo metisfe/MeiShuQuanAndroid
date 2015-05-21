@@ -9,6 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/transparent"
-        android:listSelector="#e2e2e2" />
+        android:listSelector="@android:color/white" />
 
 </LinearLayout>

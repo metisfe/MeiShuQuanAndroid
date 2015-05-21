@@ -12,8 +12,8 @@
 
         <ImageView
             android:id="@+id/id_img_dynamic"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/item_info_title_profile_size"
+            android:layout_height="@dimen/item_info_title_profile_size"
             android:layout_centerVertical="true"
             android:src="@drawable/default_user_dynamic" />
 

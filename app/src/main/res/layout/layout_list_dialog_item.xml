@@ -4,7 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:padding="8dp"
-    android:textSize="16sp"
+    android:textSize="18sp"
     android:textColor="#424242"
     android:background="@drawable/single_choose_tv_bg_sel"
     >

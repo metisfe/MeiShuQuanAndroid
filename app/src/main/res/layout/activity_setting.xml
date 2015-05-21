@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.metis.meishuquan.activity.info.SettingActivity"
-    android:background="#cccccc"
+    android:background="#e2e2e2"
     >
     <com.metis.meishuquan.view.shared.MyInfoBtn
         android:id="@+id/setting_modify_pwd"

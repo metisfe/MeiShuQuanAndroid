@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#cccccc"
+    android:background="#e2e2e2"
     android:orientation="vertical"
     tools:context="com.metis.meishuquan.activity.info.ChangePwdActivity">
     <EditText
@@ -14,7 +14,7 @@
         android:inputType="textPassword"
         android:padding="5dp"
         android:textSize="14sp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         />
     <EditText
         android:id="@+id/change_pwd_new"
@@ -25,7 +25,7 @@
         android:inputType="textPassword"
         android:padding="5dp"
         android:textSize="14sp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         />
     <EditText
         android:id="@+id/change_pwd_confirm"
@@ -36,7 +36,7 @@
         android:inputType="textPassword"
         android:padding="5dp"
         android:textSize="14sp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         />
     <Button
         android:id="@+id/change_pwd_ok"
