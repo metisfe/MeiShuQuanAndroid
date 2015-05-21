@@ -141,6 +141,7 @@ public class CircleMomentAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+
         final boolean isMyWeibo = MainApplication.userInfo != null && moment.user.userId == MainApplication.userInfo.getUserId();
         viewHolder.imgMore.setVisibility(isMyWeibo ? View.VISIBLE : View.GONE);
         viewHolder.imgMore.setOnClickListener(new View.OnClickListener() {

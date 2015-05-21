@@ -102,9 +102,9 @@ public class SearchUserInfoActivity extends FragmentActivity {
             public void onClick(View view) {
                 Toast.makeText(SearchUserInfoActivity.this, "发送邀请成功", Toast.LENGTH_SHORT).show();
                 finish();
-                if (userInfo != null) {
-                    send(userInfo.name, "Hi, 我在美术圈，你可以通过我的手机号加我为好友#美术圈是你最好的朋友圈#下载地址:http://www.meishuquan.net/Down.aspx");
-                }
+//                if (userInfo != null) {
+//                    send(userInfo.name, "Hi, 我在美术圈，你可以通过我的手机号加我为好友#美术圈是你最好的朋友圈#下载地址:http://www.meishuquan.net/Down.aspx");
+//                }
             }
         });
 
