@@ -29,6 +29,7 @@ public class MyInfoBtn extends RelativeLayout {
     private boolean mImageVisible = true;
     private boolean mSecondaryTextVisible = true;
     private boolean mArrowVisible = true;
+    private Drawable mArrowDrawable = null;
 
     public MyInfoBtn(Context context) {
         this(context, null);
@@ -49,6 +50,8 @@ public class MyInfoBtn extends RelativeLayout {
             mImageVisible = typed.getBoolean(R.styleable.MyInfoBtn_imageVisible, true);
             mSecondaryTextVisible = typed.getBoolean(R.styleable.MyInfoBtn_secondaryTextVisible, true);
             mArrowVisible = typed.getBoolean(R.styleable.MyInfoBtn_arrowVisible, true);
+            mArrowDrawable = typed.getDrawable(R.styleable.MyInfoBtn_arrowImage);
+
         } finally {
             typed.recycle();
         }
@@ -70,6 +73,23 @@ public class MyInfoBtn extends RelativeLayout {
         setImageVisible(mImageVisible);
         mSecondaryTv.setVisibility(mSecondaryTextVisible ? View.VISIBLE : View.GONE);
         mArrowIv.setVisibility(mArrowVisible ? View.VISIBLE : View.INVISIBLE);
+        if (mArrowDrawable != null) {
+            setArrowDrawable(mArrowDrawable);
+        }
+    }
+
+    public void setArrowImageResource (int resource) {
+        mArrowDrawable = getResources().getDrawable(resource);
+        mArrowIv.setImageDrawable(mArrowDrawable);
+    }
+
+    public void setArrowDrawable (Drawable drawable) {
+        mArrowDrawable = drawable;
+        mArrowIv.setImageDrawable(mArrowDrawable);
+    }
+
+    public void setArrowRotation (float rotation) {
+        mArrowIv.setRotation(rotation);
     }
 
     public void setText (int stringId) {

@@ -42,6 +42,7 @@ import com.metis.meishuquan.adapter.studio.InfoAdapter;
 import com.metis.meishuquan.adapter.studio.UserInfoAdapter;
 import com.metis.meishuquan.adapter.studio.WorkAdapter;
 import com.metis.meishuquan.adapter.topline.ToplineCustomAdapter;
+import com.metis.meishuquan.fragment.Topline.ItemInfoFragment;
 import com.metis.meishuquan.fragment.circle.MomentDetailFragment;
 import com.metis.meishuquan.fragment.commons.InputDialogFragment;
 import com.metis.meishuquan.fragment.commons.ListDialogFragment;
@@ -59,6 +60,7 @@ import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.course.CourseChannelItem;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.topline.News;
+import com.metis.meishuquan.model.topline.NewsInfo;
 import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.PatternUtils;
@@ -307,6 +309,27 @@ public class StudioActivity extends BaseActivity implements
                                 if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab1) {
                                     mAdapter = new ToplineCustomAdapter(StudioActivity.this, mNewsList);
                                     mStudioFragment.setAdapter(mAdapter);
+                                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                            News news = mNewsList.get(i - 1);
+                                            int newsId = news.getNewsId();
+
+                                            ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
+                                            itemInfoFragment.setTitleBarVisible(false);
+                                            Bundle args = new Bundle();
+                                            args.putInt("newsId", newsId);
+                                            args.putString(ItemInfoFragment.KEY_SHARE_IMG_URL, news.getImgUrl());
+                                            itemInfoFragment.setArguments(args);
+
+                                            FragmentManager fm = StudioActivity.this.getSupportFragmentManager();
+                                            FragmentTransaction ft = fm.beginTransaction();
+//            ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                                            ft.add(R.id.content_container, itemInfoFragment);
+                                            ft.addToBackStack(null);
+                                            ft.commit();
+                                            }
+                                    });
                                 }
                             }
                         }

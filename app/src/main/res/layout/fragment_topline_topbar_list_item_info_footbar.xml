@@ -66,7 +66,7 @@
                 android:layout_marginLeft="-12dp"
                 android:layout_marginTop="9dp"
                 android:layout_toRightOf="@+id/id_img_comment_count"
-                android:background="@color/red"
+                android:background="@drawable/red_round_conner_bg"
                 android:clickable="false"
                 android:gravity="center"
                 android:includeFontPadding="false"

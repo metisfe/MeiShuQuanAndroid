@@ -91,7 +91,7 @@ public class NameCardQrActivity extends BaseActivity {
     public void onTitleRightPressed() {
         //startActivity(new Intent (QrActivity.this, ImagePreviewActivity.class));
         //startActivity(new Intent(NameCardQrActivity.this, QrScanActivity.class));
-        startActivity(new Intent (this, ActDetailActivity.class));
+        //startActivity(new Intent (this, ActDetailActivity.class));
     }
 
     private class ActionAdapter extends BaseAdapter {

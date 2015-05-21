@@ -2,8 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/bg_listview"
+    android:background="@android:color/white"
     android:padding="7.5dp">
+    <!--android:background="@color/bg_listview"-->
 
     <ImageView
         android:id="@+id/img_thumbnail"

@@ -48,13 +48,28 @@ public class ContactUsActivity extends BaseActivity {
                 if (!succeed) {
                     return;
                 }
-                mDetailsTv.setText(
-                        studioBaseInfo.getAddress() + "\n" +
-                                studioBaseInfo.getTelephone() + "\n" +
-                                studioBaseInfo.getMicroblog() + "\n" +
-                                studioBaseInfo.getWeChat() + "\n" +
-                                studioBaseInfo.getWebSite() + "\n"
-                );
+                StringBuilder sb = new StringBuilder();
+                String address = studioBaseInfo.getAddress();
+                if (!TextUtils.isEmpty(address)) {
+                    sb.append(getString(R.string.studio_address, address) + "\n");
+                }
+                String phone = studioBaseInfo.getTelephone();
+                if (!TextUtils.isEmpty(phone)) {
+                    sb.append(getString(R.string.studio_phone, phone) + "\n");
+                }
+                String weibo = studioBaseInfo.getMicroblog();
+                if (!TextUtils.isEmpty(weibo)) {
+                    sb.append(getString(R.string.studio_weibo, weibo) + "\n");
+                }
+                String wechat = studioBaseInfo.getWeChat();
+                if (!TextUtils.isEmpty(wechat)) {
+                    sb.append(getString(R.string.studio_wechat, wechat) + "\n");
+                }
+                String website = studioBaseInfo.getWebSite();
+                if (!TextUtils.isEmpty(website)) {
+                    sb.append(getString(R.string.studio_website, website) + "\n");
+                }
+                mDetailsTv.setText(sb.toString());
                 Log.v(TAG, "onPostCreate=" + studioBaseInfo.getAddressPhoto());
                 if (!TextUtils.isEmpty(studioBaseInfo.getAddressPhoto())) {
                     ImageLoaderUtils.getImageLoader(ContactUsActivity.this).displayImage(

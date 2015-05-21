@@ -16,6 +16,7 @@ import com.google.gson.JsonObject;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.assess.Assess;
+import com.metis.meishuquan.model.assess.Bimp;
 import com.metis.meishuquan.model.assess.City;
 import com.metis.meishuquan.model.commons.College;
 import com.metis.meishuquan.model.commons.Comment;
@@ -167,7 +168,15 @@ public class UserInfoOperator {
     }
 
     public void updateUserProfile (final long userId, String path) {
-        Bitmap bmp = BitmapFactory.decodeFile(path);
+        Bitmap bmp = null;
+        try {
+            bmp = Bimp.getInstance().revitionImageSize(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (bmp == null) {
+            return;
+        }
         updateUserProfile(userId, bmp);
     }
 
@@ -203,7 +212,15 @@ public class UserInfoOperator {
     }
 
     public void updateUserCover (final long userId, String path) {
-        Bitmap bmp = BitmapFactory.decodeFile(path);
+        Bitmap bmp = null;
+        try {
+            bmp = Bimp.getInstance().revitionImageSize(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (bmp == null) {
+            return;
+        }
         updateUserCover(userId, bmp);
     }
 

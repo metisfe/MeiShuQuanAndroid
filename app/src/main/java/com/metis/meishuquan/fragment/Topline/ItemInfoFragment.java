@@ -17,6 +17,7 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -47,6 +48,7 @@ import com.metis.meishuquan.adapter.topline.CommonAdapter;
 import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
+import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.BlockTypeEnum;
 import com.metis.meishuquan.model.enums.PrivateResultEnum;
@@ -100,6 +102,8 @@ public class ItemInfoFragment extends Fragment {
     private MeasureableListView lvRelatedRead;
     private EditText editText;
     private RelativeLayout rlSend;
+
+    private ImageView mProfileIv;
 
     private CommonAdapter commonAdapter;
 
@@ -183,6 +187,8 @@ public class ItemInfoFragment extends Fragment {
         rl_main = (RelativeLayout) rootView.findViewById(R.id.ll_parent);
         rlSend = (RelativeLayout) rootView.findViewById(R.id.id_rl_send);//发送评论
         contentScrollView = (ScrollView) rootView.findViewById(R.id.id_scrollview_info_content);
+        mProfileIv = (ImageView)rootView.findViewById(R.id.id_img_dynamic);
+        mProfileIv.setVisibility(View.GONE);
 
         ll_relatedReadAndSupportContainer = (LinearLayout) rootView.findViewById(R.id.id_ll_related_read_and_support_container);
         llRelatedRead = (LinearLayout) rootView.findViewById(R.id.id_ll_related_read);//相关阅读父容器
@@ -248,7 +254,7 @@ public class ItemInfoFragment extends Fragment {
 
     //添加视图控件
     private void addImageView(final String url, int width, int height) {
-        if (isDetached()) {
+        if (!isResumed()) {
             return;
         }
         if (ll_content == null) {
@@ -278,7 +284,7 @@ public class ItemInfoFragment extends Fragment {
 
     //添加文本控件
     private void addTextView(String words) {
-        if (isResumed()) {
+        if (!isResumed()) {
             return;
         }
         if (ll_content == null) {
@@ -288,7 +294,7 @@ public class ItemInfoFragment extends Fragment {
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.setMargins(20, 10, 20, 10);
         textView.setLayoutParams(lp);
-        textView.setTextSize(16);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
         textView.setLineSpacing(1.2f, 1.2f);
         textView.setTextColor(getResources().getColor(R.color.tv_channel_item));
 
@@ -620,6 +626,18 @@ public class ItemInfoFragment extends Fragment {
     //为控件绑定数据
     private void bindData() {
         if (newsInfo != null && newsInfo.getData() != null) {
+
+            User user = newsInfo.getData().getUser();
+            if (user != null) {
+                mProfileIv.setVisibility(View.VISIBLE);
+                ImageLoaderUtils.getImageLoader(getActivity())
+                        .displayImage(user.getUserAvatar(), mProfileIv,
+                                ImageLoaderUtils.getRoundDisplayOptionsStill(getResources().getDimensionPixelSize(R.dimen.item_info_title_profile_size)));
+                tv_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+            } else {
+                tv_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+            }
+
             this.tv_title.setText(newsInfo.getData().getTitle());
             this.tv_createtime.setText(newsInfo.getData().getModifyTime());
             String sourse = newsInfo.getData().getSource().getTitle().trim();

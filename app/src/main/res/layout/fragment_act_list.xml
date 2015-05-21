@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    >
     <!--<RelativeLayout
         android:id="@+id/search_container"
         android:layout_width="fill_parent"
@@ -27,8 +29,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="#e5e7ec"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
         >
         <Button
             android:id="@+id/act_list_filter_3"
@@ -43,6 +43,7 @@
         <Button
             android:id="@+id/act_list_filter_1"
             android:drawableRight="@drawable/down_arrow"
+            android:paddingRight="10dp"
             style="@style/act_list_spanner"
             />
     </LinearLayout>

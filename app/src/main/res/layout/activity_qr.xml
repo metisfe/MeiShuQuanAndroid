@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#e2e2e2"
     tools:context="com.metis.meishuquan.activity.info.NameCardQrActivity">
     <RelativeLayout
         android:id="@+id/qr_user_info"
@@ -51,7 +52,7 @@
         android:id="@+id/qr_fragment"
         android:name="com.metis.meishuquan.fragment.commons.QRFragment"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/qr_user_info"
         />
     <TextView
@@ -61,5 +62,8 @@
         android:textSize="12sp"
         android:textColor="#7c7c7c"
         android:layout_below="@+id/qr_fragment"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="10dp"
         />
 </RelativeLayout>

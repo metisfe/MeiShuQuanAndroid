@@ -66,6 +66,7 @@ public class AchievementAdapter extends BaseAdapter {
         final Achievement achievement = delegate.achievement;
         holder.myInfoBtn.setText(achievement.getAchievementTitle());
         holder.layout.setVisibility(delegate.isShow ? View.VISIBLE : View.GONE);
+        holder.myInfoBtn.setArrowRotation(delegate.isShow ? 180 : 0);
         //final LinearLayout layout = holder.layout;
 
         holder.myInfoBtn.setOnClickListener(new View.OnClickListener() {
