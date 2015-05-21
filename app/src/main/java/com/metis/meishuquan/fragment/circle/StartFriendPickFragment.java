@@ -103,7 +103,7 @@ public class StartFriendPickFragment extends Fragment {
             }
         };
 
-        titleBar.setLeftButton("back", 0, new View.OnClickListener() {
+        titleBar.setLeftButton("返回", 0, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

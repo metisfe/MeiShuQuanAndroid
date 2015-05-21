@@ -251,15 +251,15 @@ public class ChatConfigActivity extends FragmentActivity {
 
                     editText.requestFocus();
 
-                    titleBar.setText("edit group name");
-                    titleBar.setLeftButton("返回", 0, new View.OnClickListener() {
+                    titleBar.setText("");
+                    titleBar.setLeftButton("取消", 0, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             setData();
                         }
                     });
 
-                    titleBar.setRightButton("confirm", 0, new View.OnClickListener() {
+                    titleBar.setRightButton("确定", 0, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (!TextUtils.isEmpty(editText.getText().toString()) && MainApplication.rongClient != null) {
@@ -291,7 +291,7 @@ public class ChatConfigActivity extends FragmentActivity {
                 }
             });
             this.adapter.setDiscussionData(targetId);
-            this.titleBar.setText("Chat Info(" + adapter.getMemberCount() + ")");
+            this.titleBar.setText("群聊(" + adapter.getMemberCount() + ")");
             this.watchGroup.setVisibility(View.VISIBLE);
             this.watchButton.setStatus(ChatManager.getMyWatchGroup().contains(targetId));
             this.watchButton.setOnChangeListener(new SwitchButton.OnChangeListener() {
