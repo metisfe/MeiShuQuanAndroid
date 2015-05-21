@@ -9,14 +9,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -38,6 +42,7 @@ import com.metis.meishuquan.adapter.studio.InfoAdapter;
 import com.metis.meishuquan.adapter.studio.UserInfoAdapter;
 import com.metis.meishuquan.adapter.studio.WorkAdapter;
 import com.metis.meishuquan.adapter.topline.ToplineCustomAdapter;
+import com.metis.meishuquan.fragment.circle.MomentDetailFragment;
 import com.metis.meishuquan.fragment.commons.InputDialogFragment;
 import com.metis.meishuquan.fragment.commons.ListDialogFragment;
 import com.metis.meishuquan.fragment.commons.StudioFragment;
@@ -52,9 +57,11 @@ import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.course.CourseChannelItem;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.topline.News;
+import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.PatternUtils;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
+import com.tencent.connect.UserInfo;
 
 import java.io.File;
 import java.io.Serializable;
@@ -282,6 +289,10 @@ public class StudioActivity extends BaseActivity implements
     }
 
     private void loadFirstTab () {
+        final ListView lv = mStudioFragment.getListView();
+        if (lv != null) {
+            lv.setOnItemClickListener(null);
+        }
         if (mUser != null) {
             if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
                 if (mNewsList == null || mNewsList.isEmpty()) {
@@ -331,23 +342,38 @@ public class StudioActivity extends BaseActivity implements
                         public void onGet(boolean succeed, List<CCircleDetailModel> cCircleDetailModels) {
                             if (succeed) {
                                 mCircleList = cCircleDetailModels;
-                                for (CCircleDetailModel model : mCircleList) {
-                                    if (model.id == 1429) {
-                                        Log.e(TAG, "MyCircle first load contains 1429");
-                                    }
-                                }
 
                                 if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab1) {
                                     mAdapter = new CircleMomentAdapter(StudioActivity.this, cCircleDetailModels, null);
                                     mStudioFragment.setAdapter(mAdapter);
+                                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                            MomentDetailFragment momentDetailFragment = new MomentDetailFragment();
+                                            momentDetailFragment.setTitleViewVisible(View.GONE);
+//                Bundle args = new Bundle();
+//                args.putInt("newsId", newsId);
+//                itemInfoFragment.setArguments(args);
+
+                                            // refresh load more listview has header
+                                            GlobalData.moment = mCircleList.get(position - 1);
+
+                                            FragmentManager fm = StudioActivity.this.getSupportFragmentManager();
+                                            FragmentTransaction ft = fm.beginTransaction();
+                                            ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                                            ft.add(R.id.content_container, momentDetailFragment);
+                                            ft.addToBackStack(null);
+                                            ft.commit();
+                                        }
+                                    });
                                 }
 
                             }
                         }
                     });
                 } else {
-                    if (!(mAdapter instanceof  CircleListAdapter)) {
-                        mAdapter = new CircleListAdapter(mCircleList);
+                    if (!(mAdapter instanceof  CircleMomentAdapter)) {
+                        mAdapter = new CircleMomentAdapter(StudioActivity.this, mCircleList, null);
                         mStudioFragment.setAdapter(mAdapter);
                     }
                     final CCircleDetailModel lastMode = mCircleList.get(mCircleList.size() - 1);
@@ -366,6 +392,26 @@ public class StudioActivity extends BaseActivity implements
                                 }
                                 if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab1) {
                                     mAdapter.notifyDataSetChanged();
+                                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                            MomentDetailFragment momentDetailFragment = new MomentDetailFragment();
+                                            momentDetailFragment.setTitleViewVisible(View.GONE);
+//                Bundle args = new Bundle();
+//                args.putInt("newsId", newsId);
+//                itemInfoFragment.setArguments(args);
+
+                                            // refresh load more listview has header
+                                            GlobalData.moment = mCircleList.get(position - 1);
+
+                                            FragmentManager fm = StudioActivity.this.getSupportFragmentManager();
+                                            FragmentTransaction ft = fm.beginTransaction();
+                                            ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                                            ft.add(R.id.content_container, momentDetailFragment);
+                                            ft.addToBackStack(null);
+                                            ft.commit();
+                                        }
+                                    });
                                 }
                             }
                         }
@@ -380,6 +426,10 @@ public class StudioActivity extends BaseActivity implements
 
     private void loadSecondTab () {
         Log.v(TAG, "loadSecondTab");
+        ListView lv = mStudioFragment.getListView();
+        if (lv != null) {
+            lv.setOnItemClickListener(null);
+        }
         if (mUser != null) {
             if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
                 //辉煌成绩
@@ -503,6 +553,10 @@ public class StudioActivity extends BaseActivity implements
 
     private void loadThirdTab () {
         Log.v(TAG, "loadThirdTab");
+        ListView lv = mStudioFragment.getListView();
+        if (lv != null) {
+            lv.setOnItemClickListener(null);
+        }
         if (mUser != null) {
             if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
                 //获取画室作品信息
@@ -791,6 +845,7 @@ public class StudioActivity extends BaseActivity implements
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mDialog.dismiss();
+                mAdapter.notifyDataSetChanged();
             }
         });
         RadioGroup group = (RadioGroup)contentView.findViewById(R.id.gender_group);
@@ -798,8 +853,9 @@ public class StudioActivity extends BaseActivity implements
         RadioButton male = (RadioButton)contentView.findViewById(R.id.gender_male);
         final String femaleStr = getString(R.string.gender_famale);
         final String maleStr = getString(R.string.gender_male);
+
         if (mGender == null) {
-            mGender = MainApplication.userInfo.getGender();
+            mGender = mUser.getGender();
         }
         if (mGender.equals(femaleStr)) {
             female.setChecked(true);
@@ -818,6 +874,7 @@ public class StudioActivity extends BaseActivity implements
                 mUser.setGender(mGender);
                 UserManager.updateMyInfo(User.KEY_GENDER, mGender);
                 if (mAdapter != null && mAdapter instanceof UserInfoAdapter) {
+                    Log.v(TAG, "showDialog " + mGender + " try to notify refresh");
                     UserInfoAdapter adapter = (UserInfoAdapter) mAdapter;
                     adapter.notifyDataSetChanged();
                 }
@@ -830,7 +887,7 @@ public class StudioActivity extends BaseActivity implements
 
     private DatePickerDialog.OnDateSetListener mDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
-        public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+        public void onDateSet(DatePicker datePicker, final int i, final int i1, final int i2) {
             int nowYear = Calendar.getInstance().get(Calendar.YEAR);
             int nowMonth = Calendar.getInstance().get(Calendar.MONTH);
             int nowDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
@@ -848,13 +905,22 @@ public class StudioActivity extends BaseActivity implements
                     }
                 }
             }
-            if (mAdapter != null && mAdapter instanceof UserInfoAdapter) {
-                UserInfoAdapter adapter = (UserInfoAdapter) mAdapter;
-                mUser.setBirthday(PatternUtils.formatToDateStr(i, i1 + 1, i2));
-                UserManager.updateMyInfo(User.KEY_BIRTHDAY, PatternUtils.formatToDateStr(i, i1 + 1, i2));
-                adapter.notifyDataSetChanged();
-            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (mAdapter != null && mAdapter instanceof UserInfoAdapter) {
+                        String birthday = PatternUtils.formatToDateStr(i, i1 + 1, i2);
+                        Log.v(TAG, "onDateSet birthday=" + birthday + " adapter=" + mAdapter.getClass().getSimpleName());
+                        mUser.setBirthday(birthday + "T00:00:00Z");
+                        UserManager.updateMyInfo(User.KEY_BIRTHDAY, birthday);
+                    }
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
+
             Log.v(TAG, "onDateSet " + i + " " + i1 + " " + i2);
+
+
         }
     };
 

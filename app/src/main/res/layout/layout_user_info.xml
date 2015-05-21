@@ -28,6 +28,7 @@
             android:layout_height="50dp"
             android:layout_toLeftOf="@+id/my_info_btn_arrow"
             android:layout_margin="10dp"
+            android:scaleType="centerCrop"
             />
         <ImageView
             android:id="@+id/my_info_btn_arrow"

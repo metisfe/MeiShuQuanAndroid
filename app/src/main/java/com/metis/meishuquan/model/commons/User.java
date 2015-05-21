@@ -167,7 +167,7 @@ public class User implements Serializable {
     }
 
     public String getGender() {
-        return gender;
+        return gender.trim();
     }
 
     public void setGender(String gender) {

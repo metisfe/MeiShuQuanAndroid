@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -255,6 +256,10 @@ public class StudioFragment extends Fragment{
         mMenuClick = listener;
     }
 
+    public ListView getListView () {
+        return mListView;
+    }
+
     public static interface OnMenuItemClickListener {
         public void onMenuItemClick (MenuItem item, int position);
     }
@@ -307,6 +312,7 @@ public class StudioFragment extends Fragment{
         public View getView(int position, View convertView, ViewGroup parent) {
             TextView tv = new TextView(mContext);
             tv.setText(getItem(position));
+            tv.setGravity(Gravity.CENTER);
             tv.setTextColor(mContext.getResources().getColor(android.R.color.black));
             return tv;
         }

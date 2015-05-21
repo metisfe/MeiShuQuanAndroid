@@ -88,7 +88,7 @@ public class Achievement implements Serializable {
         }
 
         public String getImgThumbnailUrl() {
-            return imgThumbnailUrl;
+            return imgThumbnailUrl.trim();
         }
 
         public void setImgThumbnailUrl(String imgThumbnailUrl) {

@@ -87,6 +87,8 @@ public class MomentDetailFragment extends Fragment {
     private TextView tvTitle;
     private TextView tvInfo;
 
+    private View mTitleView = null;
+
     private boolean isAttention;
 
     private FragmentManager fm;
@@ -101,6 +103,8 @@ public class MomentDetailFragment extends Fragment {
     List<CUserModel> likeList = new ArrayList<CUserModel>();
     private boolean isCommentShown = true;
     private PopupAttentionWindow popupAttentionWindow;
+
+    private int mActionBarVisible = View.VISIBLE;
 
     public interface OnCommentSuccessListner {
         void onSuccess();
@@ -129,6 +133,7 @@ public class MomentDetailFragment extends Fragment {
     }
 
     private void initView(final ViewGroup rootView) {
+        mTitleView = rootView.findViewById(R.id.circle_moment_detail_header);
         btnBack = (Button) rootView.findViewById(R.id.btn_back);
         tv_nickname = (TextView) rootView.findViewById(R.id.moment_detail_tv_nickname);
 
@@ -230,10 +235,17 @@ public class MomentDetailFragment extends Fragment {
         }
 
         actionBar.setOnActionButtonClickListener(OnActionButtonClickListener);
-
+        setTitleViewVisible(mActionBarVisible);
         bindHeaderViewData(moment);
         initHeaderViewEvent(moment);
         return headerView;
+    }
+
+    public void setTitleViewVisible (int visible) {
+        mActionBarVisible = visible;
+        if (mTitleView != null) {
+            mTitleView.setVisibility(visible);
+        }
     }
 
     private void bindHeaderViewData(CCircleDetailModel moment) {

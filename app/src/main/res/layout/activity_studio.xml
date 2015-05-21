@@ -9,4 +9,8 @@
         android:name="com.metis.meishuquan.fragment.commons.StudioFragment"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"/>
+    <FrameLayout
+        android:id="@+id/content_container"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
 </RelativeLayout>

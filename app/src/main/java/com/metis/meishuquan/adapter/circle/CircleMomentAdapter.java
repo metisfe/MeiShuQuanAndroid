@@ -275,7 +275,24 @@ public class CircleMomentAdapter extends BaseAdapter {
                 }
             });
         }
+        /*convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MomentDetailFragment momentDetailFragment = new MomentDetailFragment();
+//                Bundle args = new Bundle();
+//                args.putInt("newsId", newsId);
+//                itemInfoFragment.setArguments(args);
 
+                // refresh load more listview has header
+                GlobalData.moment = momentList.get(i);
+
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                ft.add(R.id.content_container, momentDetailFragment);
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });*/
         return convertView;
     }
 
@@ -319,7 +336,7 @@ public class CircleMomentAdapter extends BaseAdapter {
 
             }
         });
-        FragmentManager fm = ((MainActivity) mContext).getSupportFragmentManager();
+        FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
         ft.add(R.id.content_container, momentCommentFragment);

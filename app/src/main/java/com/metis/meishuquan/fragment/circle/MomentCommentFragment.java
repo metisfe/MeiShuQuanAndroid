@@ -105,14 +105,15 @@ public class MomentCommentFragment extends Fragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MomentDetailFragment momentDetailFragment = new MomentDetailFragment();
+                getActivity().getSupportFragmentManager().beginTransaction().remove(MomentCommentFragment.this).commit();
+                /*MomentDetailFragment momentDetailFragment = new MomentDetailFragment();
 
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
                 ft.add(R.id.content_container, momentDetailFragment);
                 ft.remove(MomentCommentFragment.this);
-                ft.commit();
+                ft.commit();*/
                 hideKeyBoard();
             }
         });
@@ -221,7 +222,7 @@ public class MomentCommentFragment extends Fragment {
     }
 
     protected void hideKeyBoard() {
-        ((InputMethodManager) MainApplication.MainActivity.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(MainApplication.MainActivity
+        ((InputMethodManager) MainApplication.MainActivity.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getActivity()
                 .getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 

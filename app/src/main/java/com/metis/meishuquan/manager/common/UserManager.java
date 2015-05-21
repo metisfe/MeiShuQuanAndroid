@@ -26,7 +26,6 @@ public class UserManager {
     }
 
     public static int caculateAgeByBirthday (String birthdayStr) {
-        Log.v(TAG, "caculateAgeByBirthday " + birthdayStr);
         if (TextUtils.isEmpty(birthdayStr)) {
             return 0;
         }
