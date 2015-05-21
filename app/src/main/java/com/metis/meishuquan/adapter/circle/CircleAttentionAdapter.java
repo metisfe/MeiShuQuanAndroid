@@ -57,6 +57,8 @@ public class CircleAttentionAdapter extends BaseAdapter {
             for (int i = 0; i < result.getData().size(); i++) {
                 list.add(result.getData().get(i));
             }
+            MomentsGroup temp = list.remove(2);
+            list.add(1, temp);
             returnInfo.setData(list);
         }
         return returnInfo.getData();
