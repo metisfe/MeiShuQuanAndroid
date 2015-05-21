@@ -85,6 +85,7 @@ public class ChatConfigActivity extends FragmentActivity {
         this.scrollView = (ScrollView) this.findViewById(R.id.activity_circle_chatconfigactivity_scrollview);
         this.editText = (EditText) this.findViewById(R.id.activity_circle_chatconfigactivity_edittext);
         this.adapter = new FriendGridViewAdapter();
+
     }
 
     @Override
@@ -135,7 +136,7 @@ public class ChatConfigActivity extends FragmentActivity {
 
     private void setGridViewHeight(int itemNumber) {
         ViewGroup.LayoutParams params = this.gridView.getLayoutParams();
-        params.height = ((itemNumber - 1) / 4 + 1) * Utils.dip2px(this, 90) - Utils.dip2px(this, 20);
+        params.height = ((itemNumber - 1) / 4 + 1) * Utils.dip2px(this, 120)/* - Utils.dip2px(this, 20)*/;
         gridView.setLayoutParams(params);
     }
 
@@ -143,10 +144,10 @@ public class ChatConfigActivity extends FragmentActivity {
         onEditTextMode = false;
         this.scrollView.setVisibility(View.VISIBLE);
         this.editText.setVisibility(View.GONE);
-        this.titleBar.setLeftButton("back", 0, new View.OnClickListener() {
+        this.titleBar.setLeftButton(getString(R.string.back), 0, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                onBackPressed();
             }
         });
 

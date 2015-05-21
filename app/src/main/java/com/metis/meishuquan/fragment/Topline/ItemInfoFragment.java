@@ -690,6 +690,9 @@ public class ItemInfoFragment extends Fragment {
         TopLineOperator.getInstance().getNewsInfoById(newsId, new ApiOperationCallback<ReturnInfo<String>>() {
             @Override
             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                if (isDetached()) {
+                    return;
+                }
                 if (result != null) {
 
                     if (result.getInfo().equals(String.valueOf(0))) {
