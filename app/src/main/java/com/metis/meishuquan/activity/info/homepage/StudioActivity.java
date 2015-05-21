@@ -53,6 +53,8 @@ import com.metis.meishuquan.model.BLL.StudioOperator;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.BLL.WorkInfo;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
+import com.metis.meishuquan.model.commons.Profile;
+import com.metis.meishuquan.model.commons.Studio;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.course.CourseChannelItem;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
@@ -480,8 +482,32 @@ public class StudioActivity extends BaseActivity implements
                     });
                 }
             } else {
+                if (mWorkInfoList == null || mWorkInfoList.isEmpty()) {
+                    mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
+                    UserInfoOperator.getInstance().getMyPhoto(mUser.getUserId(), new UserInfoOperator.OnGetListener<List<Profile>>() {
+                        @Override
+                        public void onGet(boolean succeed, List<Profile> profiles) {
+                            if (succeed) {
+                                List<WorkInfo> workInfos = new ArrayList<WorkInfo>();
+                                for (Profile p : profiles) {
+                                    workInfos.add(convertFrom(p));
+                                }
+                                mWorkInfoList = workInfos;
+                                if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab2) {
+                                    mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
+                                    mStudioFragment.setAdapter(mAdapter);
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    if (!(mAdapter instanceof WorkAdapter)) {
+                        mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
+                        mStudioFragment.setAdapter(mAdapter);
+                    }
+                }
                 //获取个人相册
-                Log.v(TAG, "1 getWorks mWorkInfoList == null " + (mWorkInfoList == null));
+                /*Log.v(TAG, "1 getWorks mWorkInfoList == null " + (mWorkInfoList == null));
                 if (mWorkInfoList == null || mWorkInfoList.isEmpty()) {
                     mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
                     StudioOperator.getInstance().getWorks(mUser.getUserId(), 0, 0, new UserInfoOperator.OnGetListener<List<WorkInfo>>() {
@@ -516,8 +542,8 @@ public class StudioActivity extends BaseActivity implements
                                     mWorkInfoList.add(info);
                                 }
                                 if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab2) {
-                                    /*mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
-                                    mStudioFragment.setAdapter(mAdapter);*/
+                                    *//*mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
+                                    mStudioFragment.setAdapter(mAdapter);*//*
                                     mAdapter.notifyDataSetChanged();
                                 }
                                 Log.v(TAG, "2 getWorks mWorkInfoList == null " + (mWorkInfoList == null));
@@ -525,30 +551,19 @@ public class StudioActivity extends BaseActivity implements
                             }
                         }
                     });
-                }
-                /*if (mWorkInfoList != null) {
-                    mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
-                } else {
-                    mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
-                    StudioOperator.getInstance().getWorks(mUser.getUserId(), 0, 0, new UserInfoOperator.OnGetListener<List<WorkInfo>>() {
-                        @Override
-                        public void onGet(boolean succeed, List<WorkInfo> workInfo) {
-                            if (succeed) {
-                                mWorkInfoList = workInfo;
-                                if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab2) {
-                                    mAdapter = new WorkAdapter(StudioActivity.this, mWorkInfoList);
-                                    mStudioFragment.setAdapter(mAdapter);
-                                }
-                                Log.v(TAG, "2 getWorks mWorkInfoList == null " + (mWorkInfoList == null));
-
-                            }
-                        }
-                    });
                 }*/
+
             }
         } else {
             mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
         }
+    }
+
+    private WorkInfo convertFrom (Profile profile) {
+        WorkInfo info = new WorkInfo();
+        info.setPhotoThumbnail(profile.getThumbnails());
+        info.setPhotoUrl(profile.getOriginalImage());
+        return info;
     }
 
     private void loadThirdTab () {

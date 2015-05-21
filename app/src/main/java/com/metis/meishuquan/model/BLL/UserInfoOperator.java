@@ -74,7 +74,8 @@ public class UserInfoOperator {
                             URL_SCHOOL = "v1.1/UserCenter/SchoolList?query=",
                             URL_COLLEGE = "v1.1/UserCenter/CollegeList?query=",
                             URL_GET_AREA_LIST = "v1.1/UserCenter/ProvinceLink?id=",
-                            URL_GET_MY_FRIENDS = "v1.1/Message/MyFriendList?type=";
+                            URL_GET_MY_FRIENDS = "v1.1/Message/MyFriendList?type=",
+                            URL_GET_MY_PHOTOS = "v1.1/UserCenter/MyPhotos?userid=";
 
     private static String KEY_USER_ID = "userId",
                         KEY_INDEX = "index",
@@ -356,6 +357,41 @@ public class UserInfoOperator {
                         }
 
                     }
+                }
+            });
+        }
+    }
+
+    public void getMyPhoto (long uid, final OnGetListener<List<Profile>> listener) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            StringBuilder sb = new StringBuilder(URL_GET_MY_PHOTOS);
+            sb.append(uid);
+            sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+            Log.v(TAG, "getMyPhoto request=" + sb.toString());
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    Log.v(TAG, "getMyPhoto callback=" + response.getContent());
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String json = gson.toJson(result);
+                        Log.v(TAG, "getMyPhoto result=" + json);
+                        Result<List<Profile>> listResult = gson.fromJson(json, new TypeToken<Result<List<Profile>>>(){}.getType());
+                        if (listener != null) {
+                            if (listResult.getOption().getStatus() == 0) {
+                                listener.onGet(true, listResult.getData());
+                            } else {
+                                listener.onGet(false, null);
+                            }
+                        }
+
+                    } else {
+                        if (listener != null) {
+                            listener.onGet(false, null);
+                        }
+                    }
+
                 }
             });
         }
