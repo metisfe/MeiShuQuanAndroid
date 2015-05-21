@@ -140,9 +140,10 @@ public class MainApplication extends Application {
     public static boolean isLogin() {
         if (userInfo.getAppLoginState() == LoginStateEnum.NO) {
             return false;
-        } else if (userInfo.getAppLoginState() == LoginStateEnum.YES) {
-            return checkLoginState();
         }
+//        else if (userInfo.getAppLoginState() == LoginStateEnum.YES) {
+//            return checkLoginState();
+//        }
         return true;
     }
 

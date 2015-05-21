@@ -378,6 +378,10 @@ public class ItemInfoFragment extends Fragment {
         rlSupport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (newsInfo.getData().getUserMark() != null && newsInfo.getData().getUserMark().isSupport()) {
+                    Toast.makeText(MainApplication.UIContext, "您已赞", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 int count = newsInfo.getData().getSupportCount();
                 Object supportCount = tvSupportCount.getTag();
                 if (tvStepCount.getTag() != null) {
@@ -497,7 +501,7 @@ public class ItemInfoFragment extends Fragment {
                         Toast.makeText(MainApplication.UIContext, "收藏成功", Toast.LENGTH_SHORT).show();
                         isPrivate = true;
                         imgPrivate.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_topline_private));
-                        CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), newsId, PrivateTypeEnum.NEWS, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
+                        CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), newsId, SupportTypeEnum.News, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 if (result != null && result.isSuccess()) {

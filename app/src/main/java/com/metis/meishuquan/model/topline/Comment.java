@@ -2,6 +2,7 @@ package com.metis.meishuquan.model.topline;
 
 
 import com.metis.meishuquan.model.commons.User;
+import com.metis.meishuquan.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,4 +110,15 @@ public class Comment {
         this.group = group;
     }
 
+    public String getTimeText() {
+        return Utils.getDateFromNow(Utils.getDate(commentDateTime, null));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (id == ((Comment) o).getId()) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -126,7 +126,7 @@ public class CommonOperator {
      * @param result   收藏或取消收藏
      * @param callback
      */
-    public void favorite(int userid, int id, PrivateTypeEnum type, PrivateResultEnum result, ApiOperationCallback<ReturnInfo<String>> callback) {
+    public void favorite(int userid, int id, SupportTypeEnum type, PrivateResultEnum result, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuffer path = new StringBuffer(PRIVATE);
@@ -154,7 +154,7 @@ public class CommonOperator {
         }
     }*/
 
-    public void fileUpload (FileUploadTypeEnum type, List<File> path, ServiceFilterResponseCallback callback) throws IOException {
+    public void fileUpload(FileUploadTypeEnum type, List<File> path, ServiceFilterResponseCallback callback) throws IOException {
         final int length = path.size();
         StringBuilder sb = new StringBuilder();
         long totalLength = 0;
@@ -165,14 +165,14 @@ public class CommonOperator {
             sb.append("," + len);
         }
         byte[] array = new byte[0];
-        ByteArrayOutputStream baos = new ByteArrayOutputStream((int)totalLength);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream((int) totalLength);
         for (int i = 0; i < length; i++) {
             File file = path.get(i);
             long len = file.length();
-            byte[] data = new byte[(int)len];
+            byte[] data = new byte[(int) len];
             FileInputStream fis = new FileInputStream(file);
             fis.read(data);
-            baos.write(data, 0, (int)len);
+            baos.write(data, 0, (int) len);
             baos.close();
             byte[] newArray = baos.toByteArray();
             array = byteMerger(array, newArray);
@@ -183,7 +183,7 @@ public class CommonOperator {
         this.fileUpload(type, sb.toString(), array, callback);
     }
 
-    public static byte[] byteMerger(byte[] byte_1, byte[] byte_2){
+    public static byte[] byteMerger(byte[] byte_1, byte[] byte_2) {
         byte[] byte_3 = new byte[byte_1.length + byte_2.length];
         System.arraycopy(byte_1, 0, byte_3, 0, byte_1.length);
         System.arraycopy(byte_2, 0, byte_3, byte_1.length, byte_2.length);

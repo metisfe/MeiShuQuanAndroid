@@ -72,6 +72,7 @@ public class CommentListFragment extends Fragment {
     private int newsId = 0;
     private int totalCommentCount = 0;
     private int childCommentId = -1;
+    private int lastCommentId = 0;
     private boolean isPrivate = false;
     private List<Comment> lstAllComments = new ArrayList<Comment>();
     private CommentsAdapter adapter;
@@ -115,7 +116,7 @@ public class CommentListFragment extends Fragment {
             newsId = args.getInt("newsId");
             totalCommentCount = args.getInt("totalCommentCount");
             //加载评论列表数据
-            getData(newsId, DragListView.REFRESH);
+            getData(newsId, 0, DragListView.REFRESH);
         }
 
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_topline_comment_list, null, false);
@@ -137,10 +138,10 @@ public class CommentListFragment extends Fragment {
 
         //设置评论数
         if (totalCommentCount > 0) {
-            this.tvCommentCount.setVisibility(View.VISIBLE);
-            this.tvCommentCount.setText(String.valueOf(totalCommentCount));
+            tvCommentCount.setVisibility(View.VISIBLE);
+            tvCommentCount.setText(String.valueOf(totalCommentCount));
         } else {
-            this.tvCommentCount.setVisibility(View.GONE);
+            tvCommentCount.setVisibility(View.GONE);
         }
 
         editText = (EditText) rootView.findViewById(R.id.id_comment_edittext);
@@ -157,14 +158,15 @@ public class CommentListFragment extends Fragment {
         listView.setOnRefreshListener(new DragListView.OnRefreshListener() {//列表刷新
             @Override
             public void onRefresh() {
-                getData(newsId, DragListView.REFRESH);
+                getData(newsId, lastCommentId, DragListView.REFRESH);
             }
         });
 
         listView.setOnLoadListener(new DragListView.OnLoadListener() {//列表加载
             @Override
             public void onLoad() {
-                getData(newsId, DragListView.LOAD);
+                lastCommentId = lstAllComments.get(lstAllComments.size() - 1).getId();
+                getData(newsId, lastCommentId, DragListView.LOAD);
             }
         });
 
@@ -194,7 +196,8 @@ public class CommentListFragment extends Fragment {
         this.rl_Commentlist.setOnClickListener(new View.OnClickListener() {//评论列表
             @Override
             public void onClick(View view) {//查看评论列表
-
+                hideInputView();
+                getActivity().getSupportFragmentManager().popBackStack();
             }
         });
 
@@ -273,14 +276,14 @@ public class CommentListFragment extends Fragment {
                     } else {
                         Toast.makeText(getActivity(), "请输入评论内容", Toast.LENGTH_SHORT).show();
                     }
-                } else {
+                } else {//发表子评论
                     String content = editText.getText().toString();
                     if (!content.isEmpty()) {
                         CommonOperator.getInstance().publishComment(MainApplication.userInfo.getUserId(), newsId, content, childCommentId, BlockTypeEnum.TOPLINE, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                                    getData(newsId, DragListView.REFRESH);
+                                    getData(newsId, lastCommentId, DragListView.REFRESH);
                                     hideInputView();
                                 }
                             }
@@ -295,9 +298,9 @@ public class CommentListFragment extends Fragment {
     }
 
     //加载评论列表数据
-    private void getData(int newsId, final int type) {
+    private void getData(int newsId, int lastCommentId, final int type) {
         TopLineOperator topLineOperator = TopLineOperator.getInstance();
-        topLineOperator.getCommentListByNewId(0, newsId, 0, new ApiOperationCallback<ReturnInfo<String>>() {
+        topLineOperator.getCommentListByNewId(0, newsId, lastCommentId, new ApiOperationCallback<ReturnInfo<String>>() {
             @Override
             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                 AllComments commentsData = new AllComments();
@@ -311,19 +314,17 @@ public class CommentListFragment extends Fragment {
                     if (commentsData != null) {
                         List<Comment> lstHostComments = commentsData.getData().getHotComments();
                         List<Comment> lstNewComments = commentsData.getData().getNewComments();
+                        adapter.lstHostComments = lstHostComments;
+                        adapter.lstNewComments = lstNewComments;
+                        for (int i = 0; i < lstHostComments.size(); i++) {
+                            lstHostComments.get(i).setGroup("热门评论");
+                        }
 
-                        if (lstHostComments != null && lstHostComments.size() > 0) {
-                            Comment commentGroup = new Comment();
-                            commentGroup.setGroup("热门评论");
-                            data.add(commentGroup);
-                            data.addAll(lstHostComments);
+                        for (int i = 0; i < lstNewComments.size(); i++) {
+                            lstNewComments.get(i).setGroup("最新评论");
                         }
-                        if (lstNewComments != null && lstNewComments.size() > 0) {
-                            Comment commentGroup = new Comment();
-                            commentGroup.setGroup("最新评论");
-                            data.add(commentGroup);
-                            data.addAll(lstNewComments);
-                        }
+                        data.addAll(lstHostComments);
+                        data.addAll(lstNewComments);
                     }
                     Message msg = handler.obtainMessage();
                     msg.what = type;
@@ -334,13 +335,17 @@ public class CommentListFragment extends Fragment {
         });
     }
 
-
     private class CommentsAdapter extends BaseAdapter {
         private List<Comment> lstAllComments = new ArrayList<Comment>();
+
+        public List<Comment> lstHostComments = new ArrayList<Comment>();
+
+        public List<Comment> lstNewComments = new ArrayList<Comment>();
 
         public CommentsAdapter(List<Comment> lstAllComments) {
             this.lstAllComments = lstAllComments;
         }
+
 
         private class ViewHolder {
             RelativeLayout rl_group, rl_content;
@@ -402,16 +407,26 @@ public class CommentListFragment extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            if (comment.getGroup().equals("热门评论") || comment.getGroup().equals(("最新评论"))) {
-                holder.rl_group.setVisibility(View.VISIBLE);
-                holder.rl_content.setVisibility(View.GONE);
-                holder.tvGroup.setText(comment.getGroup());
+            if (lstHostComments.contains(comment)) {
+                if (lstHostComments.indexOf(comment) == 0) {
+                    holder.rl_group.setVisibility(View.VISIBLE);
+                    holder.tvGroup.setText(comment.getGroup());
+                } else {
+                    holder.rl_group.setVisibility(View.GONE);
+                }
+            } else if (lstNewComments.contains(comment)) {
+                if (lstNewComments.indexOf(comment) == 0) {
+                    holder.rl_group.setVisibility(View.VISIBLE);
+                    holder.tvGroup.setText(comment.getGroup());
+                } else {
+                    holder.rl_group.setVisibility(View.GONE);
+                }
             } else {
                 holder.rl_group.setVisibility(View.GONE);
-                holder.rl_content.setVisibility(View.VISIBLE);
-                initEvent(comment, holder);
-                bindData(comment, holder);
             }
+
+            initEvent(comment, holder);
+            bindData(comment, holder);
 
             return convertView;
         }
@@ -463,6 +478,7 @@ public class CommentListFragment extends Fragment {
                 public void onClick(View view) {
                     if (MainApplication.isLogin()) {
                         childCommentId = comment.getId();
+                        editText.setText("//@" + comment.getUser().getName() + ":" + comment.getContent());
                         showInputView();
                     } else {
                         Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -484,7 +500,7 @@ public class CommentListFragment extends Fragment {
                     ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height), R.drawable.default_portrait_fang));
             holder.userName.setText(comment.getUser().getName());
             holder.source.setText(comment.getUser().getLocationAddress());
-            String notifyTimeStr = comment.getCommentDateTime();
+            String notifyTimeStr = comment.getTimeText();
             holder.notifyTime.setText(notifyTimeStr);
             holder.content.setText(comment.getContent());
             holder.tvSupportCount.setText("(" + comment.getSupportCount() + ")");
@@ -492,6 +508,7 @@ public class CommentListFragment extends Fragment {
     }
 
     private void hideInputView() {
+        childCommentId = -1;
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
         rlInput.setVisibility(View.GONE);
