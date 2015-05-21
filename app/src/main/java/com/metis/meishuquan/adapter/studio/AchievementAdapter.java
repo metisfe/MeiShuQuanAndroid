@@ -2,12 +2,15 @@ package com.metis.meishuquan.adapter.studio;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.homepage.AchievementDetailActivity;
@@ -21,6 +24,8 @@ import java.util.List;
  * Created by WJ on 2015/5/7.
  */
 public class AchievementAdapter extends BaseAdapter {
+
+    private static final String TAG = AchievementAdapter.class.getSimpleName();
 
     private Context mContext = null;
     private List<AchievementDelegate> mDataList = null;
@@ -46,8 +51,8 @@ public class AchievementAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        ViewHolder holder = null;
+    public View getView(int i, View view, final ViewGroup viewGroup) {
+        final ViewHolder holder;
         if (view == null) {
             view = LayoutInflater.from(mContext).inflate(R.layout.layout_achievement_item, null);
             holder = new ViewHolder();
@@ -61,7 +66,7 @@ public class AchievementAdapter extends BaseAdapter {
         final Achievement achievement = delegate.achievement;
         holder.myInfoBtn.setText(achievement.getAchievementTitle());
         holder.layout.setVisibility(delegate.isShow ? View.VISIBLE : View.GONE);
-        final LinearLayout layout = holder.layout;
+        //final LinearLayout layout = holder.layout;
 
         holder.myInfoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,27 +74,43 @@ public class AchievementAdapter extends BaseAdapter {
                 delegate.isShow = !delegate.isShow;
                 final List<Achievement.ImageItem> imageItems = achievement.getImglist();
                 final int size = imageItems.size();
-                final int childCount = layout.getChildCount();
+                final int childCount = holder.layout.getChildCount();
                 final int length = Math.max(size, childCount);
+                Log.v(TAG, "size=" + size + " length=" + length + " childCount=" + childCount);
                 for (int i = 0; i < length; i++) {
                     if (i < childCount && i < size) {
-                        View child = layout.getChildAt(i);
+                        View child = holder.layout.getChildAt(i);
                         if (child instanceof ImageView) {
                             ImageView img = (ImageView)child;
                             img.setAdjustViewBounds(true);
+                            img.setVisibility(View.VISIBLE);
                             ImageLoaderUtils.getImageLoader(mContext).displayImage(
                                     imageItems.get(i).getImgThumbnailUrl(), img
                             );
                         }
                     } else if (i < childCount && i >= size) {
-                        layout.getChildAt(i).setVisibility(View.GONE);
+                        holder.layout.getChildAt(i).setVisibility(View.GONE);
                     } else if (i >= childCount && i < size) {
                         ImageView img = new ImageView(mContext);
                         img.setAdjustViewBounds(true);
-                        layout.addView(img);
+                        ImageLoaderUtils.getImageLoader(mContext).displayImage(
+                                imageItems.get(i).getImgThumbnailUrl(), img
+                        );
+                        /*LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)img.getLayoutParams();
+                        if (params == null) {
+                            params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, 400);
+                        }*/
+                        holder.layout.addView(img);
+                        Log.v(TAG, "AAAA i >= childCount && i < size    childCount=" + holder.layout.getChildCount());
                     }
                 }
+                /*RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, 1000);
+                layout.setLayoutParams(params);*/
+                holder.layout.requestLayout();
                 notifyDataSetChanged();
+                if (viewGroup instanceof ListView) {
+                    ((ListView) viewGroup).smoothScrollToPosition(getCount());
+                }
                 /*Intent it = new Intent(mContext, AchievementDetailActivity.class);
                 it.putExtra(AchievementDetailActivity.KEY_ACHIEVEMENT_ID, achievement.getAchievementId());
                 mContext.startActivity(it);*/
@@ -104,6 +125,17 @@ public class AchievementAdapter extends BaseAdapter {
 
         public AchievementDelegate (Achievement achievement) {
             this.achievement = achievement;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null) {
+                return false;
+            }
+            if (o instanceof AchievementDelegate) {
+                return ((AchievementDelegate) o).achievement.equals(achievement);
+            }
+            return false;
         }
     }
 

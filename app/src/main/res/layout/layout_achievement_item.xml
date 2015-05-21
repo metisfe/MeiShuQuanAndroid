@@ -14,5 +14,17 @@
         android:layout_below="@+id/achievement_item_title"
         android:visibility="gone"
         >
+        <!--<ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ic_launcher"
+            />
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ic_launcher"
+            />-->
     </LinearLayout>
 </RelativeLayout>

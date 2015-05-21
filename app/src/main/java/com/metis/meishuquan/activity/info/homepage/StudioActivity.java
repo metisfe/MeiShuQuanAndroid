@@ -403,7 +403,7 @@ public class StudioActivity extends BaseActivity implements
                         }
                     });
                 } else {
-                    if (mAdapter instanceof AchievementAdapter) {
+                    if (!(mAdapter instanceof AchievementAdapter)) {
                         mAdapter = new AchievementAdapter(this, mAchievementList);
                         mStudioFragment.setAdapter(mAdapter);
                     }
@@ -413,11 +413,12 @@ public class StudioActivity extends BaseActivity implements
                         public void onGet(boolean succeed, List<Achievement> achievements) {
                             if (succeed) {
                                 for (Achievement a : achievements) {
-                                    int index = mAchievementList.indexOf(a);
+                                    AchievementAdapter.AchievementDelegate delegate = new AchievementAdapter.AchievementDelegate(a);
+                                    int index = mAchievementList.indexOf(delegate);
                                     if (index >= 0) {
                                         continue;
                                     }
-                                    mAchievementList.add(new AchievementAdapter.AchievementDelegate(a));
+                                    mAchievementList.add(delegate);
                                 }
                                 //mAchievementList.addAll(achievements);
                                 if (mStudioFragment.getCheckTabId() == R.id.studio_list_header_tab2) {
