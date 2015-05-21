@@ -207,7 +207,7 @@ public class CommentListFragment extends Fragment {
                 if (MainApplication.userInfo.getAppLoginState() == LoginStateEnum.YES) {
                     if (!isPrivate) {
                         //收藏
-                        CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), newsId, PrivateTypeEnum.NEWS, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
+                        CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), newsId, SupportTypeEnum.News, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
@@ -219,16 +219,16 @@ public class CommentListFragment extends Fragment {
                         });
                     } else {
                         //取消收藏
-                        CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), newsId, PrivateTypeEnum.NEWS, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
-                            @Override
-                            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                                    Toast.makeText(MainApplication.UIContext, "取消收藏", Toast.LENGTH_SHORT).show();
-                                    isPrivate = false;
-                                    imgPrivate.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_topline_unprivate));
-                                }
-                            }
-                        });
+//                        CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), newsId, SupportTypeEnum.News, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
+//                            @Override
+//                            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+//                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
+//                                    Toast.makeText(MainApplication.UIContext, "取消收藏", Toast.LENGTH_SHORT).show();
+//                                    isPrivate = false;
+//                                    imgPrivate.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_topline_unprivate));
+//                                }
+//                            }
+//                        });
                     }
                 } else {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);

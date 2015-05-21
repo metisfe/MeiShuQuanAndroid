@@ -35,6 +35,7 @@ import com.metis.meishuquan.model.course.CourseInfo;
 import com.metis.meishuquan.model.enums.BlockTypeEnum;
 import com.metis.meishuquan.model.enums.PrivateResultEnum;
 import com.metis.meishuquan.model.enums.PrivateTypeEnum;
+import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -162,7 +163,7 @@ public class CourseInfoActivity extends FragmentActivity {
                 if (MainApplication.isLogin()) {
                     if (!isPrivate) {
                         //收藏
-                        CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), courseId, PrivateTypeEnum.COURSE, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
+                        CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), courseId, SupportTypeEnum.Course, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
@@ -173,17 +174,17 @@ public class CourseInfoActivity extends FragmentActivity {
                             }
                         });
                     } else {
-                        //取消收藏
-                        CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), courseId, PrivateTypeEnum.COURSE, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
-                            @Override
-                            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                                    Toast.makeText(MainApplication.UIContext, "取消收藏", Toast.LENGTH_SHORT).show();
-                                    isPrivate = false;
-                                    imgPrivate.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_topline_unprivate));
-                                }
-                            }
-                        });
+//                        //取消收藏
+//                        CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), courseId, SupportTypeEnum.Course, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
+//                            @Override
+//                            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+//                                if (result != null && result.getInfo().equals(String.valueOf(0))) {
+//                                    Toast.makeText(MainApplication.UIContext, "取消收藏", Toast.LENGTH_SHORT).show();
+//                                    isPrivate = false;
+//                                    imgPrivate.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_topline_unprivate));
+//                                }
+//                            }
+//                        });
                     }
                 } else {
                     Intent intent = new Intent(CourseInfoActivity.this, LoginActivity.class);
