@@ -278,6 +278,9 @@ public class ItemInfoFragment extends Fragment {
 
     //添加文本控件
     private void addTextView(String words) {
+        if (isResumed()) {
+            return;
+        }
         if (ll_content == null) {
             ll_content = (LinearLayout) rootView.findViewById(R.id.id_ll_news_content);//内容父布局
         }

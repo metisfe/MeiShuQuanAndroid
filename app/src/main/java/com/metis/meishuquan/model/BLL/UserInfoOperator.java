@@ -304,10 +304,20 @@ public class UserInfoOperator {
         }
     }
 
-    /*0:news 1:comment 2：点评 3：点评评论  4：课程  5：课程评论 6:圈子*/
+    /*Assess = 1,
+    AssessComment = 2,
+    News = 3,
+    NewsComment = 4,
+    Course = 5,
+    CourseComment = 6,
+    Circle = 7,
+    CircleComment = 8,
+    ActivityStudio = 9,
+    ActivityStudent = 10,*/
+
 
     public void getFavoriteList (String uid, final int index, final OnGetListener<List<Item>> listener) {
-        getFavoriteList(uid, index, 0, listener);
+        getFavoriteList(uid, index, 3, listener);
     }
 
     public void getCourseList (String uid, final int index, final OnGetListener<List<Item>> listener) {
