@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#F1F1F1"
+    android:background="@color/white"
     android:orientation="vertical"
     android:padding="10dp">
 
@@ -10,7 +10,8 @@
         android:id="@+id/comment_list_item_avatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="@drawable/default_user_dynamic" />
+        android:scaleType="centerCrop"
+        android:background="@drawable/default_portrait_fang" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -60,6 +61,7 @@
             android:layout_alignParentRight="true">
 
             <ImageView
+                android:id="@+id/id_img_support"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginTop="-5dp"

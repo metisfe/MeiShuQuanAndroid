@@ -1,6 +1,8 @@
 package com.metis.meishuquan.fragment.circle;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -26,8 +28,10 @@ import com.metis.meishuquan.activity.act.ActDetailActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.Topline.ItemInfoFragment;
 import com.metis.meishuquan.model.BLL.CircleOperator;
+import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.circle.CCircleCommentModel;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
+import com.metis.meishuquan.model.circle.CCircleReplyModel;
 import com.metis.meishuquan.model.circle.CCircleTabModel;
 import com.metis.meishuquan.model.circle.CUserModel;
 import com.metis.meishuquan.model.circle.CircleMomentDetail;
@@ -76,6 +80,7 @@ public class MomentDetailFragment extends Fragment {
     private TextView grade;
     private TextView createTime;
     private EmotionTextView content;
+    private EmotionTextView replyContent;
     private TextView device;
     private ImageView imgForCircle;
     private ImageView imgAttention;
@@ -94,12 +99,13 @@ public class MomentDetailFragment extends Fragment {
 
     private FragmentManager fm;
 
-    private List<CCircleCommentModel> list = new ArrayList<CCircleCommentModel>();
+    private CircleMomentDetailReplyAdpater circleMomentDetailReplyAdpater;
     private CircleMomentDetailCommentAdapter circleMomentCommentAdapter;
     private CircleMomentDetailLikeAdapter circleMomentLikeAdapter;
     private MomentActionBar actionBar;
     private CCircleDetailModel moment;
-
+    private List<CCircleCommentModel> list = new ArrayList<CCircleCommentModel>();
+    List<CCircleReplyModel> replyList = new ArrayList<CCircleReplyModel>();
     List<CCircleCommentModel> commentList = new ArrayList<CCircleCommentModel>();
     List<CUserModel> likeList = new ArrayList<CUserModel>();
     private boolean isCommentShown = true;
@@ -147,7 +153,13 @@ public class MomentDetailFragment extends Fragment {
         MomentActionBar.OnActionButtonClickListener OnActionButtonClickListener = new MomentActionBar.OnActionButtonClickListener() {
             @Override
             public void onReply() {
-
+                if (isCommentShown) {
+                    circleMomentDetailReplyAdpater = new CircleMomentDetailReplyAdpater(replyList);
+                    listView.setAdapter(circleMomentDetailReplyAdpater);
+                    circleMomentDetailReplyAdpater.notifyDataSetChanged();
+                    listView.setSelection(1);
+                    isCommentShown = false;
+                }
             }
 
             @Override
@@ -201,6 +213,7 @@ public class MomentDetailFragment extends Fragment {
         grade = (TextView) headerView.findViewById(R.id.id_tv_grade);
         createTime = (TextView) headerView.findViewById(R.id.id_createtime);
         content = (EmotionTextView) headerView.findViewById(R.id.id_tv_content);
+        replyContent = (EmotionTextView) headerView.findViewById(R.id.id_emotion_tv_content);
         device = (TextView) headerView.findViewById(R.id.tv_device);
         imgForCircle = (ImageView) headerView.findViewById(R.id.id_img_for_circle);
         momentActionBar = (MomentActionBar) headerView.findViewById(R.id.moment_action_bar);
@@ -218,6 +231,13 @@ public class MomentDetailFragment extends Fragment {
         if (moment.userMark.isAttention) {
             imgAttention.setImageDrawable(getResources().getDrawable(R.drawable.bg_btn_attention));
             isAttention = true;
+        }
+
+        if (moment.relayCircle == null) {
+            replyContent.setVisibility(View.GONE);
+        } else if (moment.relayCircle != null && moment.relayCircle.desc != null && moment.relayCircle.desc.isEmpty()) {
+            replyContent.setVisibility(View.VISIBLE);
+            replyContent.setText(moment.relayCircle.desc);
         }
 
         imgForReply = (ImageView) headerView.findViewById(R.id.id_img_for_not_circle);
@@ -431,18 +451,26 @@ public class MomentDetailFragment extends Fragment {
         this.btnLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (btnLike.getTag() != null && (boolean) btnLike.getTag()) {
+                    Toast.makeText(MainApplication.UIContext, "您已赞！", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 String url = String.format("v1.1/Comment/Support?userid=%s&id=%s&type=7&result=1&session=%s", MainApplication.userInfo.getUserId(), moment.id, MainApplication.userInfo.getCookie());
 
                 ApiDataProvider.getmClient().invokeApi(url, null,
                         HttpGet.METHOD_NAME, null, CirclePushCommentResult.class,
                         new ApiOperationCallback<CirclePushCommentResult>() {
+                            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
                             @Override
                             public void onCompleted(CirclePushCommentResult result, Exception exception, ServiceFilterResponse response) {
                                 if (result == null || !result.isSuccess()) {
                                     return;
                                 }
 
-                                btnLike.setClickable(false);
+//                                btnLike.setClickable(false);
+                                btnLike.setTag(true);
+                                btnLike.setBackground(getResources().getDrawable(R.drawable.icon_support));
                                 Toast.makeText(MainApplication.UIContext, "点赞成功！", Toast.LENGTH_LONG).show();
                             }
                         });
@@ -471,8 +499,8 @@ public class MomentDetailFragment extends Fragment {
     }
 
     public void getData(int type, final int lastId) {
-        String url = String.format("v1.1/Circle/CircleTabList?type=%s&id=%s&lastId=%s&session=%s", type, moment.id, lastId, MainApplication.userInfo.getCookie());
-
+        String url = String.format("v1.1/Circle/CircleTabList?type=%s&id=%s&lastId=%s&session=%s", type, moment.id, lastId, MainApplication.getSession());
+        Log.i("detail_moment", url);
         ApiDataProvider.getmClient().invokeApi(url, null,
                 HttpGet.METHOD_NAME, null, CircleMomentDetail.class,
                 new ApiOperationCallback<CircleMomentDetail>() {
@@ -486,6 +514,7 @@ public class MomentDetailFragment extends Fragment {
                         CCircleTabModel data = result.data;
                         commentList = data.commentList;
                         likeList = data.supportList;
+                        replyList = data.relayList;
 
                         if (commentList != null) {
                             for (int i = commentList.size() - 1; i >= 0; i--) {
@@ -504,7 +533,7 @@ public class MomentDetailFragment extends Fragment {
 
     class CircleMomentDetailCommentAdapter extends BaseAdapter {
         private List<CCircleCommentModel> commentList = new ArrayList<CCircleCommentModel>();
-        private ViewHolder holder;
+        private boolean isSupport;
 
         public CircleMomentDetailCommentAdapter(List<CCircleCommentModel> momentList) {
             this.commentList = momentList;
@@ -536,6 +565,7 @@ public class MomentDetailFragment extends Fragment {
                 viewHolder.grade = (TextView) convertView.findViewById(R.id.comment_list_item_grade);
                 viewHolder.time = (TextView) convertView.findViewById(R.id.comment_list_item_time);
                 viewHolder.content = (EmotionTextView) convertView.findViewById(R.id.comment_list_item_content);
+                viewHolder.support = (ImageView) convertView.findViewById(R.id.id_img_support);
                 viewHolder.likeCount = (TextView) convertView.findViewById(R.id.comment_list_item_like_count);
 
                 convertView.setTag(viewHolder);
@@ -556,11 +586,48 @@ public class MomentDetailFragment extends Fragment {
             viewHolder.time.setText(Utils.getDisplayTime(comment.createTime));
             viewHolder.content.setText(comment.content);
             viewHolder.likeCount.setText(comment.supportCount > 0 ? "" + comment.supportCount : "");
+
+            String isSupportStr = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey("circle_comment_" + comment.id + "_" + MainApplication.userInfo.getUserId());
+            if (isSupportStr.equals("已赞")) {
+                viewHolder.likeCount.setTextColor(getResources().getColor(R.color.red));
+                viewHolder.support.setImageDrawable(getResources().getDrawable(R.drawable.icon_support));
+            } else {
+                viewHolder.support.setImageDrawable(getResources().getDrawable(R.drawable.icon_unsupport));
+            }
+
+            final ViewHolder finalViewHolder = viewHolder;
+            viewHolder.support.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (isSupport) {
+                        Toast.makeText(MainApplication.UIContext, "您已赞", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    String isSupportStr = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey("circle_comment_" + comment.id + "_" + MainApplication.userInfo.getUserId());
+                    if (isSupportStr.equals("已赞")) {
+                        Toast.makeText(MainApplication.UIContext, "您已赞", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    finalViewHolder.support.setImageDrawable(getResources().getDrawable(R.drawable.icon_support));
+                    finalViewHolder.likeCount.setTextColor(getResources().getColor(R.color.red));
+                    finalViewHolder.likeCount.setText(comment.supportCount + 1 + "");
+                    CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), comment.id, SupportTypeEnum.CircleComment, 1, new ApiOperationCallback<ReturnInfo<String>>() {
+                        @Override
+                        public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                            if (result != null && result.isSuccess()) {
+                                SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update("circle_comment_" + comment.id + "_" + MainApplication.userInfo.getUserId(), "已赞");
+                                Toast.makeText(MainApplication.UIContext, "点赞成功", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            });
             return convertView;
         }
 
         private class ViewHolder {
-            ImageView avatar;
+            ImageView avatar, support;
             TextView name;
             TextView grade;
             TextView time;
@@ -619,6 +686,7 @@ public class MomentDetailFragment extends Fragment {
                 params.setMargins(padding, 0, padding, 0);
 
                 image.setLayoutParams(params);
+                image.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(user.avatar, image, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height)));
 
                 viewHolder.container.addView(image);
@@ -629,6 +697,73 @@ public class MomentDetailFragment extends Fragment {
 
         private class ViewHolder {
             LinearLayout container;
+        }
+    }
+
+    class CircleMomentDetailReplyAdpater extends BaseAdapter {
+
+        private List<CCircleReplyModel> replyList = new ArrayList<CCircleReplyModel>();
+
+        CircleMomentDetailReplyAdpater(List<CCircleReplyModel> replyList) {
+            this.replyList = replyList;
+        }
+
+        @Override
+        public int getCount() {
+            return replyList.size();
+        }
+
+        @Override
+        public CCircleReplyModel getItem(int i) {
+            return replyList.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return replyList.get(i).id;
+        }
+
+        @Override
+        public View getView(int i, View convertView, ViewGroup viewGroup) {
+            ViewHolder viewHolder = null;
+            if (convertView == null) {
+                viewHolder = new ViewHolder();
+                convertView = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_circle_moment_detail_comment_list_item, null);
+
+                viewHolder.avatar = (ImageView) convertView.findViewById(R.id.comment_list_item_avatar);
+                viewHolder.name = (TextView) convertView.findViewById(R.id.comment_list_item_username);
+                viewHolder.grade = (TextView) convertView.findViewById(R.id.comment_list_item_grade);
+                viewHolder.time = (TextView) convertView.findViewById(R.id.comment_list_item_time);
+                viewHolder.content = (EmotionTextView) convertView.findViewById(R.id.comment_list_item_content);
+                viewHolder.likeCount = (TextView) convertView.findViewById(R.id.comment_list_item_like_count);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+
+            final CCircleReplyModel reply = replyList.get(i);
+            viewHolder.avatar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ActivityUtils.startNameCardActivity(getActivity(), (int) (moment.user.userId));
+                }
+            });
+            ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(reply.user.avatar, viewHolder.avatar, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height)));
+            viewHolder.name.setText(reply.user.name);
+            viewHolder.grade.setText(reply.user.grade);
+            viewHolder.time.setText(Utils.getDisplayTime(reply.createTime));
+            viewHolder.content.setText(reply.content);
+            viewHolder.likeCount.setText(reply.supportCount > 0 ? "" + reply.supportCount : "");
+            return convertView;
+        }
+
+        private class ViewHolder {
+            ImageView avatar;
+            TextView name;
+            TextView grade;
+            TextView time;
+            EmotionTextView content;
+            TextView likeCount;
         }
     }
 }

@@ -7,6 +7,8 @@ import java.util.List;
  */
 public class CCircleTabModel {
 
+    public List<CCircleReplyModel> relayList;
+
     public List<CUserModel> supportList;
 
     public List<CCircleCommentModel> commentList;

@@ -43,6 +43,8 @@ public class NewsInfo implements Serializable {
 
     private UserMark userMark;
 
+    private String description="";
+
     private String shareUrl = "http://www.meishuquan.net/H5/ContentDetial.ASPX?ID=";
 
     public int getNewsId() {
@@ -177,6 +179,14 @@ public class NewsInfo implements Serializable {
 
     public void setShareUrl(String shareUrl) {
         this.shareUrl = shareUrl;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public User getUser() {

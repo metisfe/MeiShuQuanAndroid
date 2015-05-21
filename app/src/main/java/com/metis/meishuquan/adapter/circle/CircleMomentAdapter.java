@@ -348,10 +348,14 @@ public class CircleMomentAdapter extends BaseAdapter {
         momentCommentFragment.setOnCommentSuccessListner(new MomentDetailFragment.OnCommentSuccessListner() {
             @Override
             public void onSuccess() {
-
+                MomentDetailFragment momentDetailFragment = new MomentDetailFragment();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                ft.add(R.id.content_container, momentDetailFragment);
+                ft.addToBackStack(null);
+                ft.commit();
             }
         });
-        FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
         ft.add(R.id.content_container, momentCommentFragment);

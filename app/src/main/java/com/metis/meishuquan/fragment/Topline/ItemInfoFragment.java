@@ -187,7 +187,7 @@ public class ItemInfoFragment extends Fragment {
         rl_main = (RelativeLayout) rootView.findViewById(R.id.ll_parent);
         rlSend = (RelativeLayout) rootView.findViewById(R.id.id_rl_send);//发送评论
         contentScrollView = (ScrollView) rootView.findViewById(R.id.id_scrollview_info_content);
-        mProfileIv = (ImageView)rootView.findViewById(R.id.id_img_dynamic);
+        mProfileIv = (ImageView) rootView.findViewById(R.id.id_img_dynamic);
         mProfileIv.setVisibility(View.GONE);
 
         ll_relatedReadAndSupportContainer = (LinearLayout) rootView.findViewById(R.id.id_ll_related_read_and_support_container);
@@ -262,7 +262,8 @@ public class ItemInfoFragment extends Fragment {
         }
         ImageView imageView = new ImageView(getActivity());
 
-        ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(url.trim(), imageView, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.img_topline_default));
+        imageView.setBackgroundColor(getResources().getColor(R.color.common_color_e2e2e2));
+        ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(url.trim(), imageView);
 
         ImageUtil.setImageViewMathParent(getActivity(), ll_content, imageView, width, height);
 //        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -522,18 +523,19 @@ public class ItemInfoFragment extends Fragment {
                             }
                         });
                     } else {
-                        Toast.makeText(MainApplication.UIContext, "已收藏", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainApplication.UIContext, "取消收藏", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(MainApplication.UIContext, "已收藏", Toast.LENGTH_SHORT).show();
                         //取消收藏
-                        /*CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), newsId, PrivateTypeEnum.NEWS, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
+                        CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), newsId, SupportTypeEnum.News, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                                    Toast.makeText(MainApplication.UIContext, "取消收藏", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(MainApplication.UIContext, "取消收藏", Toast.LENGTH_SHORT).show();
                                     isPrivate = false;
                                     imgPrivate.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_topline_unprivate));
                                 }
                             }
-                        });*/
+                        });
                     }
                 } else {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -552,7 +554,9 @@ public class ItemInfoFragment extends Fragment {
                 }
                 if (newsInfo != null && newsInfo.getData() != null) {
                     SharePopupWindow sharePopupWindow = new SharePopupWindow(getActivity(), rootView);
-                    sharePopupWindow.setShareInfo(newsInfo.getData().getTitle(), newsInfo.getData().getTitle(), newsInfo.getData().getShareUrl(), shareImageUrl, SupportTypeEnum.News.getVal(), newsInfo.getData().getNewsId());
+                    sharePopupWindow.setShareInfo(newsInfo.getData().getTitle(),
+                            newsInfo.getData().getDescription().equals("") ? newsInfo.getData().getTitle() : newsInfo.getData().getDescription(),
+                            newsInfo.getData().getShareUrl(), shareImageUrl, SupportTypeEnum.News.getVal(), newsInfo.getData().getNewsId());
                 }
             }
         });
@@ -668,7 +672,8 @@ public class ItemInfoFragment extends Fragment {
             if (newsInfo.getData().getUserMark() != null) {
                 //收藏状态,根据用户当前登录状态，设置收藏状态
                 if (newsInfo.getData().getUserMark().isFavorite()) {
-                    imgPrivate.setBackgroundResource(R.drawable.ic_action_topline_private);
+                    imgPrivate.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_topline_private));
+                    isPrivate = true;
                 }
                 //根据用户是否赞
                 if (newsInfo.getData().getUserMark().isSupport()) {

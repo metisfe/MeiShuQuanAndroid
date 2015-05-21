@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.circle.CUserModel;
@@ -98,7 +99,8 @@ public class SearchUserInfoActivity extends FragmentActivity {
         this.btnSendRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                
+                Toast.makeText(SearchUserInfoActivity.this, "发送邀请成功", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
 

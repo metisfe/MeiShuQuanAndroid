@@ -114,7 +114,9 @@ public class FriendMatchFragment extends Fragment {
                         }
 
                         progressDialog.cancel();
-                        adapter.friendList = ChatManager.getGroupedFriendMatchList(result.data);
+                        List<List<UserAdvanceInfo>> matchFriendList = ChatManager.getGroupedFriendMatchList(result.data);
+
+                        adapter.friendList.addAll(matchFriendList);
                         listView.setAdapter(adapter);
                         expandAll();
                     }

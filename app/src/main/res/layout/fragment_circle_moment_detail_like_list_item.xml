@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="40dp"
     android:id="@+id/container"
-    android:background="#F1F1F1"
+    android:background="@color/white"
     android:orientation="horizontal"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
