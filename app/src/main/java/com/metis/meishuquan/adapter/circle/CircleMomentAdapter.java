@@ -131,25 +131,28 @@ public class CircleMomentAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             if (current_type == CIRCLE_TYPE) {
                 viewHolder.llCircle = new CircleMomentViewItem(mContext, null);
+                viewHolder.llCircle.bindData(moment);
                 convertView = viewHolder.llCircle;
                 convertView.setTag(R.id.msq_circle_moment_list_circle_type, viewHolder);
             } else if (current_type == REPLEY_TYPE) {
                 viewHolder.llReply = new CircleReplyMomentViewItem(mContext, null);
+                viewHolder.llReply.bindData(moment);
                 convertView = viewHolder.llReply;
                 convertView.setTag(R.id.msq_circle_moment_list_reply_type, viewHolder);
             }
         } else {
             if (current_type == CIRCLE_TYPE) {
                 viewHolder = (ViewHolder) convertView.getTag(R.id.msq_circle_moment_list_circle_type);
+                viewHolder.llReply.bindData(moment);
             } else if (current_type == REPLEY_TYPE) {
                 viewHolder = (ViewHolder) convertView.getTag(R.id.msq_circle_moment_list_reply_type);
+                viewHolder.llReply.bindData(moment);
             }
         }
 
         //传递数据并为控件赋值
         if (current_type == CIRCLE_TYPE) {
-            //viewHolder = (ViewHolder) convertView.getTag(R.id.msq_circle_moment_list_circle_type);
-            viewHolder.llCircle.bindData(moment);
+//            viewHolder.llCircle.bindData(moment);
             //进入详情
             viewHolder.llCircle.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -180,7 +183,7 @@ public class CircleMomentAdapter extends BaseAdapter {
             });
         } else if (current_type == REPLEY_TYPE) {
             //viewHolder = (ViewHolder) convertView.getTag(R.id.msq_circle_moment_list_reply_type);
-            viewHolder.llReply.bindData(moment);
+//            viewHolder.llReply.bindData(moment);
 
             //进入详情
             viewHolder.llReply.setOnClickListener(new View.OnClickListener() {
