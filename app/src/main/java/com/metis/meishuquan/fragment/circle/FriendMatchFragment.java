@@ -96,7 +96,7 @@ public class FriendMatchFragment extends Fragment {
         this.adapter = new CircleFriendListAdapter();
 
         //TODO: should use non-UI thread to read DB
-        final List<String> list = ChatManager.getPhoneNumberList();
+        List<String> list = ChatManager.getPhoneNumberList();
         StringBuilder PATH = new StringBuilder("v1.1/Message/GetFriendByPhoneNums");
         PATH.append("?&session=" + MainApplication.userInfo.getCookie());
 
@@ -114,13 +114,7 @@ public class FriendMatchFragment extends Fragment {
                         }
 
                         progressDialog.cancel();
-                        List<List<UserAdvanceInfo>> matchFriendList = ChatManager.getGroupedFriendMatchList(result.data);
-                        List<List<UserAdvanceInfo>> noMatchFriendList = new ArrayList<List<UserAdvanceInfo>>();
-                        for (int i = 0; i < list.size(); i++) {
-
-                        }
-
-                        adapter.friendList.addAll(matchFriendList);
+                        adapter.friendList = ChatManager.getGroupedFriendMatchList(result.data);
                         listView.setAdapter(adapter);
                         expandAll();
                     }

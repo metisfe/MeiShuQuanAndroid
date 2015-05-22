@@ -84,21 +84,20 @@ public class LoginFragment extends Fragment {
         btnLogin.setOnClickListener(new View.OnClickListener() {//登录
             @Override
             public void onClick(View view) {
-                progressDialog = ProgressDialog.show(getActivity(), "", "正在登录，请稍候！");
                 if (isPressLogin) {
                     return;
                 }
-                isPressLogin = true;
                 String accout = etUserName.getText().toString().trim();
                 String pwd = etPwd.getText().toString().trim();
                 if (!verify()) {
                     return;
                 }
+                progressDialog = ProgressDialog.show(getActivity(), "", "正在登录，请稍候！");
                 userOperator.login(accout, pwd, new ApiOperationCallback<ReturnInfo<String>>() {
                     @Override
                     public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                        progressDialog.cancel();
                         if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                            progressDialog.dismiss();
                             Gson gson = new Gson();
                             String json = gson.toJson(result);
                             Log.e("userInfo", json);

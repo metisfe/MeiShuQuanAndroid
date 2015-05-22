@@ -93,7 +93,6 @@ public class ContactListItemView extends LinearLayout {
         this.nextView.setVisibility(next ? VISIBLE : GONE);
     }
 
-    @SuppressLint("NewApi")
     public void setAcceptMode(String title, String url, String reason, int relation, OnClickListener onClickListener) {
         this.nameView.setText(title);
         ImageLoaderUtils.getImageLoader(getContext()).displayImage(url, imageView, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.default_portrait_fang));
@@ -107,7 +106,7 @@ public class ContactListItemView extends LinearLayout {
 //            this.buttonView.setText("接受");
             this.buttonView.setWidth(50);
             this.buttonView.setHeight(25);
-            this.buttonView.setBackground(getResources().getDrawable(R.drawable.bg_btn_accept));
+            this.buttonView.setBackgroundResource(R.drawable.bg_btn_accept);
             this.buttonView.setOnClickListener(onClickListener);
         } else if (relation == 2) {
             this.addedView.setVisibility(VISIBLE);

@@ -7,4 +7,7 @@
 
     <!--点评筛选条件-->
     <item name="msq_assess_list_filter_checked_state" type="id" />
+
+    <item name="msq_circle_moment_list_circle_type" type="id" />
+    <item name="msq_circle_moment_list_reply_type" type="id" />
 </resources>

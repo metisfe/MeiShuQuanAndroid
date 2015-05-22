@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/id_ll_circle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/id_rl_topbar"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="35dp">
+
+        <RelativeLayout
+            android:id="@+id/id_btn_top"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true">
+
+            <ImageView
+                android:id="@+id/id_img_top"
+                android:layout_width="42.5dp"
+                android:layout_height="13.5dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="10dp"
+                android:visibility="gone"
+                android:background="@drawable/bg_btn_circle_moment_top"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/id_btn_more"
+            android:layout_width="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/id_img_more"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/down_arrow"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.25dp"
+        android:background="#ccc" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:padding="5dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/id_img_portrait"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="centerCrop"
+                android:background="@drawable/default_portrait_fang" />
+
+            <TextView
+                android:id="@+id/id_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/id_img_portrait"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/id_img_portrait"
+                android:singleLine="true"
+                android:textSize="17sp"
+                android:textColor="#424242"
+                android:text="张三" />
+
+            <TextView
+                android:id="@+id/id_tv_grade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/id_username"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/id_username"
+                android:singleLine="true"
+                android:textSize="12sp"
+                android:textColor="#7e7e7e"
+                android:text="高三" />
+
+            <ImageView
+                android:id="@+id/id_img_choose_huashi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/id_username"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/bg_choose_huashi"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/id_img_attention"
+                android:layout_width="51dp"
+                android:layout_height="21.5dp"
+                android:layout_alignTop="@+id/id_username"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/bg_btn_unattention"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignLeft="@+id/id_username"
+                android:layout_below="@+id/id_username"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/id_createtime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="45分钟前"
+                    android:textSize="12sp"
+                    android:textColor="#7e7e7e" />
+
+                <TextView
+                    android:id="@+id/tv_device"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="来自"
+                    android:textSize="12sp"
+                    android:textColor="#7e7e7e" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <com.metis.meishuquan.view.circle.moment.comment.EmotionTextView
+            android:id="@+id/id_tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            android:maxLines="10"
+            android:text="本人热情、开朗、有责任感、有进取心、团队合作能力强、学习能力强"
+            android:textColor="#424242" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/id_ll_reply_circle_type_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#f1f2f4"
+        android:padding="10dp"
+        android:orientation="vertical">
+
+        <com.metis.meishuquan.view.circle.moment.comment.EmotionTextView
+            android:id="@+id/id_emotion_tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="10"
+            android:textColor="#7e7e7e"
+            android:text="微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖"
+            android:background="@color/transparent" />
+
+        <ImageView
+            android:id="@+id/id_img_for_circle"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/common_color_e2e2e2"
+            android:scaleType="centerCrop" />
+    </LinearLayout>
+
+    <com.metis.meishuquan.view.circle.moment.MomentActionBar
+        android:id="@+id/moment_action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/common_color_f0f0f0"
+        android:layout_below="@id/circle_moment_detail_header"
+        layout="@layout/fragment_circle_moment_action_bar" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#ccc" />
+</LinearLayout>

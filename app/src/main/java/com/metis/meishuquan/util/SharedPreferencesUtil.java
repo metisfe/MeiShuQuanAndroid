@@ -14,6 +14,8 @@ public class SharedPreferencesUtil {
     /*头条*/
     public static final String CHANNELS = "CHANNELS";
     public static final String CHANNELID_NEWS = "NEWS";
+    public static String KEY_PRIVATE_NEWS="";
+
     /*点评*/
     public static final String ASSESS_LIST_FILTER_DATA = "ASSESS_LIST_FILTER_DATA";//点评列表筛选条件
     public static final String ALL_ASSESS_LIST = "ALL_ASSESS_LIST";//点评列表数据

@@ -62,6 +62,7 @@ import com.metis.meishuquan.util.ActivityUtils;
 import com.metis.meishuquan.util.Helper;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.ImageUtil;
+import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.metis.meishuquan.view.topline.MeasureableListView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -262,7 +263,8 @@ public class ItemInfoFragment extends Fragment {
         }
         ImageView imageView = new ImageView(getActivity());
 
-        imageView.setBackgroundColor(getResources().getColor(R.color.common_color_e2e2e2));
+        imageView.setAdjustViewBounds(true);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(url.trim(), imageView);
 
         ImageUtil.setImageViewMathParent(getActivity(), ll_content, imageView, width, height);
@@ -501,14 +503,20 @@ public class ItemInfoFragment extends Fragment {
         });
 
         //收藏
-        //TODO
         this.rl_private.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (MainApplication.isLogin()) {
+                    //获取本地的收藏状态
+                    SharedPreferencesUtil.KEY_PRIVATE_NEWS = "新闻收藏" + MainApplication.userInfo.getUserId() + "_" + newsInfo.getData().getNewsId();
+                    String private_state = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey(SharedPreferencesUtil.KEY_PRIVATE_NEWS);
+                    if (private_state != null && !private_state.isEmpty() && private_state.equals("已收藏")) {
+                        
+                    }
                     if (!isPrivate) {
-                        //收藏
+                        //收藏(本地化)
                         Toast.makeText(MainApplication.UIContext, "收藏成功", Toast.LENGTH_SHORT).show();
+                        SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(SharedPreferencesUtil.KEY_PRIVATE_NEWS, "已收藏");
                         isPrivate = true;
                         imgPrivate.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_topline_private));
                         CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), newsId, SupportTypeEnum.News, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
@@ -524,6 +532,7 @@ public class ItemInfoFragment extends Fragment {
                         });
                     } else {
                         Toast.makeText(MainApplication.UIContext, "取消收藏", Toast.LENGTH_SHORT).show();
+                        SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(SharedPreferencesUtil.KEY_PRIVATE_NEWS, "未收藏");
 //                        Toast.makeText(MainApplication.UIContext, "已收藏", Toast.LENGTH_SHORT).show();
                         //取消收藏
                         CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), newsId, SupportTypeEnum.News, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
