@@ -9,6 +9,8 @@
         android:id="@+id/fragment_circle_moments_list"
         android:layout_width="match_parent"
         android:background="@color/transparent"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
         android:divider="@color/transparent"
         android:dividerHeight="5dp"
         android:layout_height="match_parent">

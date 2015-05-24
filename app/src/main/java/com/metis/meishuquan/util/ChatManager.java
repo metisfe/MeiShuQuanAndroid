@@ -403,6 +403,7 @@ public class ChatManager {
         Cursor phones = MainApplication.UIContext.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
         while (phones.moveToNext()) {
             String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+
             phoneNumber = normalizePhoneNumber(phoneNumber);
             if (!TextUtils.isEmpty(phoneNumber)) ret.add(phoneNumber);
         }

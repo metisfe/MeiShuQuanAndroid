@@ -38,6 +38,7 @@ public class CircleAttentionAdapter extends BaseAdapter {
         if (type == 0) {
             ReturnInfo<List<MomentsGroup>> result = new Gson().fromJson(json, new TypeToken<ReturnInfo<List<MomentsGroup>>>() {
             }.getType());
+            result.getData().remove(0);
             returnInfo = result;
         } else if (type == 1) {
             returnInfo = new ReturnInfo<List<MomentsGroup>>();

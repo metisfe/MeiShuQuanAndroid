@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -233,12 +234,12 @@ public class MomentDetailFragment extends Fragment {
             isAttention = true;
         }
 
-        if (moment.relayCircle == null) {
-            replyContent.setVisibility(View.GONE);
-        } else if (moment.relayCircle != null && moment.relayCircle.desc != null && moment.relayCircle.desc.isEmpty()) {
-            replyContent.setVisibility(View.VISIBLE);
-            replyContent.setText(moment.relayCircle.desc);
-        }
+//        if (moment.relayCircle == null) {
+//            replyContent.setVisibility(View.GONE);
+//        } else if (moment.relayCircle != null && moment.relayCircle.desc != null && moment.relayCircle.desc.isEmpty()) {
+//            replyContent.setVisibility(View.VISIBLE);
+//            replyContent.setText(moment.relayCircle.desc);
+//        }
 
         imgForReply = (ImageView) headerView.findViewById(R.id.id_img_for_not_circle);
         tvTitle = (TextView) headerView.findViewById(R.id.id_tv_title);
@@ -246,7 +247,7 @@ public class MomentDetailFragment extends Fragment {
 
         actionBar = (MomentActionBar) headerView.findViewById(R.id.moment_action_bar);
 
-        //判断是否是朋友圈类型，并显示隐藏相应区域
+        //判断朋友圈类型，并控制显示隐藏相应区域
         if (moment.relayCircle == null) {
             ll_not_circle.setVisibility(View.GONE);
             ll_circle.setVisibility(View.VISIBLE);
@@ -254,7 +255,10 @@ public class MomentDetailFragment extends Fragment {
             if (moment.relayCircle.type == SupportTypeEnum.Circle.getVal()) {
                 ll_not_circle.setVisibility(View.GONE);
                 ll_circle.setVisibility(View.VISIBLE);
-            } else {
+            } else if (moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal()) {
+                ll_not_circle.setVisibility(View.VISIBLE);
+                ll_circle.setVisibility(View.GONE);
+            } else if (moment.relayCircle.type == SupportTypeEnum.News.getVal()) {
                 ll_not_circle.setVisibility(View.VISIBLE);
                 ll_circle.setVisibility(View.GONE);
             }
@@ -287,15 +291,35 @@ public class MomentDetailFragment extends Fragment {
 
         //朋友圈类型
         if (ll_circle.getVisibility() == View.VISIBLE) {
-            if (moment.images != null && moment.images.size() > 0 && !moment.images.get(0).equals("")) {
-                ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.images.get(0).Thumbnails, imgForCircle);
+            if (moment.relayCircle == null) {
+                replyContent.setVisibility(View.GONE);
+                if (moment.images != null && moment.images.size() > 0 && !moment.images.get(0).equals("")) {
+                    ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.images.get(0).Thumbnails, imgForCircle);
+                } else {
+                    imgForCircle.setVisibility(View.GONE);
+                }
             } else {
-                ll_circle.setVisibility(View.GONE);
+                if (moment.relayCircle.desc.equals("")) {
+                    replyContent.setVisibility(View.VISIBLE);
+                    replyContent.setText("@" + moment.relayCircle.user.name);
+                } else {
+                    replyContent.setVisibility(View.VISIBLE);
+                    replyContent.setText("@" + moment.relayCircle.user.name + ":" + moment.relayCircle.desc);
+                }
+                if (moment.relayCircle.images != null && moment.relayCircle.images.size() > 0) {
+                    imgForCircle.setVisibility(View.VISIBLE);
+                    ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.relayCircle.images.get(0).Thumbnails, imgForCircle);
+                } else {
+                    imgForCircle.setVisibility(View.GONE);
+                }
             }
         } else if (ll_not_circle.getVisibility() == View.VISIBLE) {
-            ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.relayCircle.activityImg, imgForReply);
-            tvTitle.setText(moment.relayCircle.title.trim());
-            tvInfo.setText(moment.relayCircle.desc.trim());
+            //活动类型或新闻类型或其他类型
+            if (moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal() || moment.relayCircle.type == SupportTypeEnum.News.getVal()) {
+                ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.relayCircle.activityImg, imgForReply);
+                tvTitle.setText(moment.relayCircle.title.trim());
+                tvInfo.setText(moment.relayCircle.desc.trim());
+            }
         }
     }
 
@@ -481,19 +505,26 @@ public class MomentDetailFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 SharePopupWindow sharePopupWindow = new SharePopupWindow(getActivity(), rootView);
-
-                String title = "分享 " + moment.user.name + " 的微博";
+                String title = "xxx";
                 String content = moment.content.isEmpty() ? "分享图片" : moment.content;
                 String shareUrl = moment.getShareUrl() + moment.id;
                 String imgUrl = moment.relayImgUrl;
-                int type = 0;
-                if (moment.relayCircle == null) {
-                    type = SupportTypeEnum.Circle.getVal();
-                } else {
-                    type = moment.relayCircle.type;
-                }
 
-                sharePopupWindow.setShareInfo(title, content, shareUrl, imgUrl, type, moment.id);
+                sharePopupWindow.setShareInfo(title, content, shareUrl, imgUrl, moment);
+//                SharePopupWindow sharePopupWindow = new SharePopupWindow(getActivity(), rootView);
+//
+//                String title = "分享 " + moment.user.name + " 的微博";
+//                String content = moment.content.isEmpty() ? "分享图片" : moment.content;
+//                String shareUrl = moment.getShareUrl() + moment.id;
+//                String imgUrl = moment.relayImgUrl;
+//                int type = 0;
+//                if (moment.relayCircle == null) {
+//                    type = SupportTypeEnum.Circle.getVal();
+//                } else {
+//                    type = moment.relayCircle.type;
+//                }
+//
+//                sharePopupWindow.setShareInfo(title, content, shareUrl, imgUrl, type, moment.id);
             }
         });
     }

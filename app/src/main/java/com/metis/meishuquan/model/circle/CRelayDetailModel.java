@@ -3,6 +3,7 @@ package com.metis.meishuquan.model.circle;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,7 +43,7 @@ public class CRelayDetailModel implements Serializable {
     public int status;
 
     @SerializedName("upCount")
-    public int upCount=0;
+    public int upCount = 0;
 
     @SerializedName("joinCount")
     public int joinCount;
@@ -55,4 +56,14 @@ public class CRelayDetailModel implements Serializable {
 
     @SerializedName("selectStudio")
     public CUserModel selectStudio;//已经选择的机构
+
+    public ArrayList<String> getImagesUrl() {
+        ArrayList<String> imageUrls = new ArrayList<String>();
+        if (images != null && images.size() > 0) {
+            for (int i = 0; i < images.size(); i++) {
+                imageUrls.add(images.get(i).OriginalImage);
+            }
+        }
+        return imageUrls;
+    }
 }

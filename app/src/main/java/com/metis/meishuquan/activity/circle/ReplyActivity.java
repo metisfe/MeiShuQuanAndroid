@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.FriendsChooseActivity;
+import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.model.BLL.ActiveOperator;
 import com.metis.meishuquan.model.BLL.CircleOperator;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
@@ -39,6 +40,7 @@ public class ReplyActivity extends FragmentActivity {
     public static final String TITLE = "title";
     public static final String CONTENT = "content";
     public static final String IMAGEURL = "imgUrl";
+    public static final String INPUT_CONTENT = "input_content";
 
     private Button btnBack;
     private Button btnSend;
@@ -61,6 +63,7 @@ public class ReplyActivity extends FragmentActivity {
     private String title = "";
     private String content = "";
     private String imgUrl = "";
+    private String inputContent = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +77,7 @@ public class ReplyActivity extends FragmentActivity {
             this.title = bundle.getString(TITLE, "");
             this.content = bundle.getString(CONTENT, "");
             this.imgUrl = bundle.getString(IMAGEURL, "");
+            this.inputContent = bundle.getString(INPUT_CONTENT, "");
         }
 
         initView();
@@ -86,8 +90,9 @@ public class ReplyActivity extends FragmentActivity {
         if (parm.getType() == SupportTypeEnum.Circle.getVal()) {
             this.rl_circle.setVisibility(View.VISIBLE);
             this.rl_reply.setVisibility(View.GONE);
-            this.tvCircleTitle.setText("@" + title);
+            this.tvCircleTitle.setText(title);
             this.tvCircleContent.setText(content);
+            this.etInput.setText(inputContent);
             if (imgUrl != null && !imgUrl.isEmpty()) {
                 ImageLoaderUtils.getImageLoader(this).displayImage(imgUrl, imgCirclePic);
             }
@@ -96,6 +101,7 @@ public class ReplyActivity extends FragmentActivity {
             this.rl_reply.setVisibility(View.VISIBLE);
             this.tvReplyTitle.setText(title);
             this.tvReplyContent.setText(content);
+            this.etInput.setText(inputContent);
             if (imgUrl != null && !imgUrl.isEmpty()) {
                 ImageLoaderUtils.getImageLoader(this).displayImage(imgUrl, imgReplyPic);
             }
@@ -160,6 +166,9 @@ public class ReplyActivity extends FragmentActivity {
     }
 
     private void send(final CirclePushBlogParm parm) {
+        if (!MainApplication.isLogin()) {
+            startActivity(new Intent(ReplyActivity.this, LoginActivity.class));
+        }
         parm.setContent(etInput.getText().toString());
         CircleOperator.getInstance().pushBlog(parm, new ApiOperationCallback<ReturnInfo<CCircleDetailModel>>() {
             @Override

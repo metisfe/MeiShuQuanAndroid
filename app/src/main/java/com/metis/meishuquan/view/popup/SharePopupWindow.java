@@ -4,24 +4,22 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.GridLayout;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.circle.ReplyActivity;
+import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CirclePushBlogParm;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
-import com.metis.meishuquan.model.topline.TopLineNewsInfo;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeEntity;
 import com.umeng.socialize.controller.UMServiceFactory;
@@ -29,12 +27,14 @@ import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.controller.listener.SocializeListeners;
 import com.umeng.socialize.media.BaseShareContent;
 import com.umeng.socialize.media.QZoneShareContent;
-import com.umeng.socialize.media.SinaShareContent;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.sso.QZoneSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * PopupWindow:分享
@@ -49,11 +49,14 @@ public class SharePopupWindow extends PopupWindow {
     private UMSocialService mController = null;
 
     private String
-            mTitle = "",
+            mInsideTitle = "",
+            mOutsideTitle = "",
             mContent = "",
             mTargetUrl = "",
             mImageUrl = "";
-    private int mType, mSharedId;
+    private int mType = 0;
+    private int mShareId = 0;
+    private CCircleDetailModel mMoment;
 
     public SharePopupWindow(final Activity mContext, View parent) {
 
@@ -86,14 +89,63 @@ public class SharePopupWindow extends PopupWindow {
             public void onClick(View view) {
                 Intent it = new Intent(mContext, ReplyActivity.class);
                 CirclePushBlogParm parm = new CirclePushBlogParm();
-                parm.setType(mType);
-                parm.setRelayId(mSharedId);
+                if (mMoment.relayCircle != null && mMoment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal()) {
+                    parm.setType(SupportTypeEnum.CircleActivity.getVal());
+                    parm.setRelayId(mMoment.relayCircle.id);
+                } else if (mMoment.relayCircle != null && mMoment.relayCircle.type == SupportTypeEnum.News.getVal()) {
+                    parm.setType(SupportTypeEnum.News.getVal());
+                    parm.setRelayId(mMoment.relayCircle.id);
+                } else if (mMoment.relayCircle != null && mMoment.relayCircle.type == SupportTypeEnum.Circle.getVal()) {
+                    parm.setType(SupportTypeEnum.Circle.getVal());
+                    parm.setRelayId(mMoment.id);
+                    parm.setContent(mMoment.relayCircle.desc);
+                } else if (mMoment.relayCircle == null) {
+                    parm.setType(SupportTypeEnum.Circle.getVal());
+                    parm.setRelayId(mMoment.id);
+                    List<Integer> userIds = new ArrayList<Integer>();
+                    userIds.add(mMoment.user.userId);
+                    parm.setUserIds(userIds);
+                    parm.setContent(mMoment.content);
+                }
                 it.putExtra(ReplyActivity.PARM, parm);
-                it.putExtra(ReplyActivity.TITLE, mTitle);
-                it.putExtra(ReplyActivity.CONTENT, mContent);
-                it.putExtra(ReplyActivity.IMAGEURL, mImageUrl);
+                if (mMoment.relayCircle != null && (mMoment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal() || mMoment.relayCircle.type == SupportTypeEnum.News.getVal())) {
+                    it.putExtra(ReplyActivity.TITLE, mMoment.relayCircle.title);
+                    it.putExtra(ReplyActivity.CONTENT, mMoment.relayCircle.desc);
+                    it.putExtra(ReplyActivity.IMAGEURL, mMoment.relayCircle.activityImg);
+                    it.putExtra(ReplyActivity.INPUT_CONTENT, "//@" + mMoment.user.name + " " + mMoment.content);
+                } else if (mMoment.relayCircle != null && mMoment.relayCircle.type == SupportTypeEnum.Circle.getVal()) {
+                    it.putExtra(ReplyActivity.TITLE, "@" + mMoment.user.name);
+                    it.putExtra(ReplyActivity.CONTENT, mMoment.relayCircle.desc);
+                    it.putExtra(ReplyActivity.IMAGEURL, mMoment.user.avatar);
+                    it.putExtra(ReplyActivity.INPUT_CONTENT, "//@" + mMoment.user.name + " " + mMoment.content);
+                } else if (mMoment.relayCircle == null) {
+                    it.putExtra(ReplyActivity.TITLE, "@" + mMoment.user.name);
+                    it.putExtra(ReplyActivity.CONTENT, mMoment.content);
+                    it.putExtra(ReplyActivity.IMAGEURL, mMoment.user.avatar);
+                    it.putExtra(ReplyActivity.INPUT_CONTENT, "//@" + mMoment.user.name + " " + mMoment.content);
+                }
+
                 mContext.startActivity(it);
                 dismiss();
+
+//                Intent it = new Intent(mContext, ReplyActivity.class);
+//                CirclePushBlogParm parm = new CirclePushBlogParm();
+//
+////                mInsideTitle = "//@" + mMoment.user.name + " " + mMoment.content;
+//
+//                if (mMoment.relayCircle != null) {
+//                    parm.setType(mMoment.relayCircle.type);
+//                } else {
+//                    parm.setType(SupportTypeEnum.Circle.getVal());
+//                }
+//
+//                parm.setRelayId(mMoment.id);
+//                it.putExtra(ReplyActivity.PARM, parm);
+//                it.putExtra(ReplyActivity.TITLE, mInsideTitle);
+//                it.putExtra(ReplyActivity.CONTENT, mContent);
+//                it.putExtra(ReplyActivity.IMAGEURL, mImageUrl);
+//                mContext.startActivity(it);
+
             }
         });
 
@@ -206,30 +258,44 @@ public class SharePopupWindow extends PopupWindow {
         if (TextUtils.isEmpty(title) || TextUtils.isEmpty(targetUrl) || TextUtils.isEmpty(content) || TextUtils.isEmpty(imageUrl)) {
             throw new IllegalArgumentException("title or targetUrl is Empty");
         }
-        mTitle = title;
+        mOutsideTitle = title;
         mContent = content;
         mTargetUrl = targetUrl;
         mImageUrl = imageUrl;
-        /*Log.v(TAG, "setShareInfo title=" + mTitle);
+        /*Log.v(TAG, "setShareInfo title=" + mOutsideTitle);
         Log.v(TAG, "setShareInfo content=" +  mContent);
         Log.v(TAG, "setShareInfo mTargetUrl=" + mTargetUrl);
         Log.v(TAG, "setShareInfo mImageUrl=" + mImageUrl);*/
     }
 
+    //新闻模块调用
     public void setShareInfo(String title, String content, String targetUrl, String imageUrl, int type, int shareId) {
         if (TextUtils.isEmpty(title) || TextUtils.isEmpty(targetUrl) || TextUtils.isEmpty(content) || TextUtils.isEmpty(imageUrl)) {
             throw new IllegalArgumentException("title or targetUrl is Empty");
         }
-        mTitle = title;
+        mOutsideTitle = title;
         mContent = content;
         mTargetUrl = targetUrl;
         mImageUrl = imageUrl;
         mType = type;
-        mSharedId = shareId;
+        mShareId = shareId;
+    }
+
+    //微博模块调用
+    public void setShareInfo(String title, String content, String targetUrl, String imageUrl, CCircleDetailModel moment) {
+        if (TextUtils.isEmpty(targetUrl) || TextUtils.isEmpty(content) || TextUtils.isEmpty(imageUrl)) {
+            throw new IllegalArgumentException("title or targetUrl is Empty");
+        }
+        mInsideTitle = "@ " + moment.user.name;//分享至美术圈
+        mOutsideTitle = "@分享 " + moment.user.name + " 的微博";//分享至外面
+        mContent = content;
+        mTargetUrl = targetUrl;
+        mImageUrl = imageUrl;
+        mMoment = moment;
     }
 
     private void fillShareContent(Activity activity, BaseShareContent content) {
-        content.setTitle(mTitle);
+        content.setTitle(mOutsideTitle);
         content.setShareContent(mContent);
         content.setTargetUrl(mTargetUrl);
         content.setShareImage(new UMImage(activity, mImageUrl));

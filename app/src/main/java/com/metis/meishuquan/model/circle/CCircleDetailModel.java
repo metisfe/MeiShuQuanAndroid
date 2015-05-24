@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.google.gson.annotations.SerializedName;
 import com.metis.meishuquan.util.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -66,6 +67,16 @@ public class CCircleDetailModel {
 
     public String getShareUrl() {
         return shareUrl;
+    }
+
+    public ArrayList<String> getImagesUrl() {
+        ArrayList<String> imageUrls = new ArrayList<String>();
+        if (images != null && images.size() > 0) {
+            for (int i = 0; i < images.size(); i++) {
+                imageUrls.add(images.get(i).OriginalImage);
+            }
+        }
+        return imageUrls;
     }
 
     @Override
