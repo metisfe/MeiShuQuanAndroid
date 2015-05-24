@@ -11,9 +11,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -103,13 +105,23 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
             public void onClick(View view) {
                 try {
                     Uri uri = Uri.parse("http://www.meishuquan.net/UserAgreement.html");
-                    Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(intent);
                 } catch (Exception e) {
                     Toast.makeText(getActivity(), R.string.act_not_found_exception, Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+        /*WindowManager manager = (WindowManager) getActivity()
+                .getSystemService(Context.WINDOW_SERVICE);
+        Display display = manager.getDefaultDisplay();
+        final int screenWid = display.getWidth();
+        ViewGroup.LayoutParams params = mCoverIv.getLayoutParams();
+        if (params == null) {
+            params = new ViewGroup.LayoutParams(screenWid, screenWid / 2);
+        }
+        mCoverIv.setLayoutParams(params);*/
 
         Log.v(TAG, TAG + " onViewCreated");
     }

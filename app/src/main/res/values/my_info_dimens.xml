@@ -8,7 +8,7 @@
 
     <dimen name="studio_profile_size">40dp</dimen>
 
-    <dimen name="act_cover_height">160dp</dimen>
+    <dimen name="act_cover_height">180dp</dimen>
 
     <dimen name="active_list_profile_size">50dp</dimen>
 
