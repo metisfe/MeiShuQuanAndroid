@@ -2,8 +2,11 @@ package com.metis.meishuquan.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.ImagePreviewActivity;
 import com.metis.meishuquan.activity.info.homepage.StudioActivity;
 
@@ -35,5 +38,17 @@ public class ActivityUtils {
         it.putStringArrayListExtra(ImagePreviewActivity.KEY_IMAGE_URL_ARRAY, list);
         it.putExtra(ImagePreviewActivity.KEY_START_INDEX, index);
         context.startActivity(it);
+    }
+
+    public static void sendSms(Context context, String number, String message) {
+        Uri uri = Uri.parse("smsto:" + number);
+        Intent sendIntent = new Intent(Intent.ACTION_VIEW, uri);
+        sendIntent.putExtra("sms_body", message);
+        try {
+            context.startActivity(sendIntent);
+        } catch (Exception e) {
+            Toast.makeText(context, R.string.act_not_found_exception, Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

@@ -29,6 +29,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import io.rong.imlib.RongIMClient;
 import io.rong.message.TextMessage;
@@ -294,9 +295,9 @@ public class ChatManager {
         return ret;
     }
 
-    public static List<List<UserAdvanceInfo>> getGroupedFriendMatchList(List<CPhoneFriend> friends) {
+    public static List<UserAdvanceInfo> getGroupedFriendMatchList(List<CPhoneFriend> friends) {
         List<UserAdvanceInfo> fList = new ArrayList<>();
-        List<List<UserAdvanceInfo>> ret = new ArrayList<>();
+        //List<List<UserAdvanceInfo>> ret = new ArrayList<>();
         for (CPhoneFriend friend : friends) {
             RongIMClient.UserInfo info = new RongIMClient.UserInfo(String.valueOf(friend.userid), friend.userNickName, friend.userAvatar);
             if (TextUtils.isEmpty(info.getName())) info.setName(String.valueOf(friend.userid));
@@ -311,8 +312,8 @@ public class ChatManager {
                 return user1.getPinYin().compareTo(user2.getPinYin());
             }
         });
-
-        char lastChar = 0;
+        return fList;
+        /*char lastChar = 0;
         for (UserAdvanceInfo info : fList) {
             if (lastChar != info.getPinYin().charAt(0)) {
                 //new group found
@@ -326,7 +327,7 @@ public class ChatManager {
             }
         }
 
-        return ret;
+        return ret;*/
     }
 
     private static void normalizeDiscussion(RongIMClient.Discussion discussion) {
@@ -407,6 +408,19 @@ public class ChatManager {
         }
         phones.close();
         return ret;
+    }
+
+    public static Map<String, String> getPhoneNumberNameMap() {
+        Map<String, String> map = new HashMap<String, String>();
+        Cursor phones = MainApplication.UIContext.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+        while (phones.moveToNext()) {
+            String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+            phoneNumber = normalizePhoneNumber(phoneNumber);
+            if (!TextUtils.isEmpty(phoneNumber)) map.put(phoneNumber, name);
+        }
+        phones.close();
+        return map;
     }
 
     private static String normalizePhoneNumber(String s) {

@@ -244,4 +244,8 @@
     <string name="save_pics">保存图片</string>
     <string name="save_at">保存在%1$s</string>
     <string name="save_failed">保存失败</string>
+
+    <string name="friends_wait_to_add">%1$d个好友待添加</string>
+    <string name="friends_wait_to_ask">%1$d个好友待邀请</string>
+    <string name="friends_had_add">%1$d个已添加好友</string>
 </resources>

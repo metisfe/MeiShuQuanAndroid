@@ -116,8 +116,13 @@ public class ContactListItemView extends LinearLayout {
         this.nextView.setVisibility(GONE);
     }
 
+    public void setProfileVisibility (int visibility) {
+        this.imageView.setVisibility(visibility);
+    }
+
     public void setRequestMode(String title, String url, OnClickListener onClickListener) {
-        this.nameView.setText(title);
+        setRequestMode(title, url, "增加", onClickListener);
+        /*this.nameView.setText(title);
         ImageLoaderUtils.getImageLoader(getContext()).displayImage(url, imageView);
 
         this.checkView.setVisibility(GONE);
@@ -132,6 +137,25 @@ public class ContactListItemView extends LinearLayout {
         }
 
         this.buttonView.setText("增加");
+        this.nextView.setVisibility(GONE);*/
+    }
+
+    public void setRequestMode(String title, String url, String btnText, OnClickListener onClickListener) {
+        this.nameView.setText(title);
+        ImageLoaderUtils.getImageLoader(getContext()).displayImage(url, imageView);
+
+        this.checkView.setVisibility(GONE);
+        this.reasonView.setVisibility(GONE);
+        if (onClickListener != null) {
+            this.addedView.setVisibility(GONE);
+            this.buttonView.setVisibility(VISIBLE);
+            this.buttonView.setOnClickListener(onClickListener);
+        } else {
+            this.addedView.setVisibility(VISIBLE);
+            this.buttonView.setVisibility(GONE);
+        }
+
+        this.buttonView.setText(btnText);
         this.nextView.setVisibility(GONE);
     }
 }

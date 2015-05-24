@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:minHeight="50dp"
+    android:paddingLeft="10dp"
+    >
+    <ImageView
+        android:id="@+id/contact_item_image"
+        android:layout_width="@dimen/studio_profile_size"
+        android:layout_height="@dimen/studio_profile_size"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        />
+    <TextView
+        android:id="@+id/contact_item_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/contact_item_image"
+        android:layout_toLeftOf="@+id/contact_item_btn"
+        android:layout_alignWithParentIfMissing="true"
+        android:singleLine="true"
+        />
+    <Button
+        android:id="@+id/contact_item_btn"
+        android:layout_width="48dp"
+        android:layout_height="32dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:textSize="12sp"
+        android:padding="0dp"
+        />
+</RelativeLayout>

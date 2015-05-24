@@ -2,6 +2,7 @@ package com.metis.meishuquan.model.circle;
 
 import android.os.Parcel;
 
+import com.metis.meishuquan.fragment.circle.FriendMatchFragment;
 import com.metis.meishuquan.util.Utils;
 
 import io.rong.imlib.RongIMClient;
@@ -9,7 +10,7 @@ import io.rong.imlib.RongIMClient;
 /**
  * Created by wudi on 4/11/2015.
  */
-public class UserAdvanceInfo extends RongIMClient.UserInfo {
+public class UserAdvanceInfo extends RongIMClient.UserInfo implements FriendMatchFragment.UserInfoImpl {
     private String pinYin;
     private int resourceId;
     public boolean mode;
@@ -40,5 +41,15 @@ public class UserAdvanceInfo extends RongIMClient.UserInfo {
     public int getResourceId()
     {
         return resourceId;
+    }
+
+    @Override
+    public String getUserName() {
+        return this.getName();
+    }
+
+    @Override
+    public String getUserTelephone() {
+        return null;
     }
 }
