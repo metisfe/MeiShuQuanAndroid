@@ -511,7 +511,7 @@ public class ItemInfoFragment extends Fragment {
                     SharedPreferencesUtil.KEY_PRIVATE_NEWS = "新闻收藏" + MainApplication.userInfo.getUserId() + "_" + newsInfo.getData().getNewsId();
                     String private_state = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey(SharedPreferencesUtil.KEY_PRIVATE_NEWS);
                     if (private_state != null && !private_state.isEmpty() && private_state.equals("已收藏")) {
-                        
+
                     }
                     if (!isPrivate) {
                         //收藏(本地化)
@@ -716,7 +716,11 @@ public class ItemInfoFragment extends Fragment {
                         if (!TextUtils.isEmpty(json)) {
                             newsInfo = gson.fromJson(json, new TypeToken<TopLineNewsInfo>() {
                             }.getType());
-                            //Log.v(TAG, "getNewsInfoById result=" + newsInfo.getData().getUserMark().isFavorite());
+                            if (newsInfo.getData().getUserMark() != null) {
+                                Log.v(TAG, "getNewsInfoById result=" + newsInfo.getData().getUserMark().isFavorite());
+                            } else {
+                                Log.e(TAG, "getNewsInfoById NOT FOUND USER_MARK");
+                            }
                             if (listener != null) {
                                 listener.onGet(true, newsInfo);
                             }

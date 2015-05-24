@@ -25,6 +25,9 @@ import org.json.JSONObject;
  * Created by wj on 15/3/20.
  */
 public class TopLineOperator {
+
+    private static final String TAG = TopLineOperator.class.getSimpleName();
+
     private boolean flag;
     private static TopLineOperator operator = null;
 
@@ -35,7 +38,7 @@ public class TopLineOperator {
     private final String COMMENT_SUPPORT = "v1.1/Comment/Support?";//赞/踩
 
     private final String FAVORITE = "v1.1/Comment/Favorite?";//收藏
-    private final String SESSION = MainApplication.userInfo.getCookie();
+    //private final String SESSION = MainApplication.userInfo.getCookie();
 
 
     private TopLineOperator() {
@@ -59,7 +62,7 @@ public class TopLineOperator {
                 StringBuilder PATH = new StringBuilder(CHANNELLIST_URL);
                 PATH.append("userId=" + userId);
                 PATH.append("&type=" + type);
-                PATH.append("&session=" + SESSION);
+                PATH.append("&session=" + MainApplication.userInfo.getCookie());
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null,
                         HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(),
                         new ApiOperationCallback<ReturnInfo<String>>() {
@@ -106,7 +109,7 @@ public class TopLineOperator {
                 StringBuffer PATH = new StringBuffer(CHANNEL_NEW_LIST_URL);
                 PATH.append("ChanelId=" + channelId);
                 PATH.append("&lastNewsId=" + lastNewsId);
-                PATH.append("&session=" + SESSION);
+                PATH.append("&session=" + MainApplication.userInfo.getCookie());
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
 
@@ -150,7 +153,7 @@ public class TopLineOperator {
             StringBuffer PATH = new StringBuffer(CHANNEL_NEW_LIST_URL);
             PATH.append("ChanelId=" + channelId);
             PATH.append("&lastNewsId=" + lastNewsId);
-            PATH.append("&session=" + SESSION);
+            PATH.append("&session=" + MainApplication.userInfo.getCookie());
             ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                     (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
         }
@@ -167,7 +170,7 @@ public class TopLineOperator {
             if (flag) {
                 StringBuffer PATH = new StringBuffer(NEWS_INFO_URL);
                 PATH.append("newsId=" + newsId);
-                PATH.append("&session=" + SESSION);
+                PATH.append("&session=" + MainApplication.getSession());
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
@@ -190,7 +193,7 @@ public class TopLineOperator {
                 PATH.append("type=" + type);
                 PATH.append("&newsId=" + newsId);
                 PATH.append("&lastCommentId=" + lastCommentId);
-                PATH.append("&session=" + SESSION);
+                PATH.append("&session=" + MainApplication.userInfo.getCookie());
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
@@ -215,7 +218,7 @@ public class TopLineOperator {
                 PATH.append("&commentid=" + commentid);
                 PATH.append("&type=" + type);
                 PATH.append("&result=" + result);
-                PATH.append("&session=" + SESSION);
+                PATH.append("&session=" + MainApplication.userInfo.getCookie());
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override

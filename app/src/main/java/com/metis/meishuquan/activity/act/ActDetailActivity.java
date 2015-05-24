@@ -78,11 +78,11 @@ public class ActDetailActivity extends BaseActivity implements RadioGroup.OnChec
 
     @Override
     public void onTitleRightPressed() {
-        if (isSearchShowing) {
+        /*if (isSearchShowing) {
             hideSearchView();
         } else {
             showSearchView();
-        }
+        }*/
     }
 
     @Override
@@ -97,7 +97,7 @@ public class ActDetailActivity extends BaseActivity implements RadioGroup.OnChec
         mDetailBtn.setChecked(true);
         getTitleView().setTitleRightVisible(View.GONE);
         getTitleView().setImageRightVisible(View.GONE);
-        getTitleView().setImageRightResource(R.drawable.rc_ic_atfriend_search);
+        //getTitleView().setImageRightResource(R.drawable.rc_ic_atfriend_search);
 
     }
 

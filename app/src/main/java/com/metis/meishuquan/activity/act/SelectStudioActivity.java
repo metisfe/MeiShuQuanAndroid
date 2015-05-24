@@ -35,7 +35,7 @@ public class SelectStudioActivity extends BaseActivity {
         mStudioListFragment = (StudioListFragment)getSupportFragmentManager().findFragmentById(R.id.select_studio_fragment);
         mStudioListFragment.setCanEdit(true);
 
-        getTitleView().setImageRightResource(R.drawable.rc_ic_atfriend_search);
+        //getTitleView().setImageRightResource(R.drawable.rc_ic_atfriend_search);
 
     }
 
@@ -93,11 +93,11 @@ public class SelectStudioActivity extends BaseActivity {
 
     @Override
     public void onTitleRightPressed() {
-        if (isSearchShowing) {
+        /*if (isSearchShowing) {
             hideSearchView();
         } else {
             showSearchView();
-        }
+        }*/
         /*final TopListItem item = mStudioListFragment.getSelectedStudioItem();
         if (item == null) {
             Toast.makeText(this, R.string.act_choose_one_plz, Toast.LENGTH_SHORT).show();
