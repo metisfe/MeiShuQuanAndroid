@@ -41,6 +41,7 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -566,17 +567,18 @@ public class UserInfoOperator {
             }
             Log.v(TAG, "feedback upload image start ... " + imagePath);
             File file = new File (imagePath);
-            String defineStr = file.length() + "," + 1 + "," + file.length();
-            byte[] bytes = new byte[(int)file.length()];
+            Bitmap bmp = null;
             try {
-                FileInputStream fis = new FileInputStream(file);
-                fis.read(bytes);
-                fis.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                bmp = Bimp.getInstance().revitionImageSize(file.getAbsolutePath());
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            byte[] bytes = os.toByteArray();
+            String defineStr = bytes.length + "," + 1 + "," + bytes.length;
+
             if (bytes.length > 0) {
                 AssessOperator.getInstance().fileUpload(FileUploadTypeEnum.IMG, defineStr, bytes, new ServiceFilterResponseCallback () {
 

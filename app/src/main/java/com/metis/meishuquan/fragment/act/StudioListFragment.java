@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
