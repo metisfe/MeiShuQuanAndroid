@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:minHeight="50dp"
-    android:paddingLeft="10dp"
     >
     <ImageView
         android:id="@+id/contact_item_image"
@@ -12,17 +11,34 @@
         android:scaleType="centerCrop"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
         />
-    <TextView
-        android:id="@+id/contact_item_name"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/contact_item_image"
         android:layout_toLeftOf="@+id/contact_item_btn"
         android:layout_alignWithParentIfMissing="true"
-        android:singleLine="true"
-        />
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/contact_item_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            />
+        <TextView
+            android:id="@+id/contact_item_sub_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:visibility="gone"
+            style="@style/info_secondaryTextStyle"
+            />
+    </LinearLayout>
+
     <Button
         android:id="@+id/contact_item_btn"
         android:layout_width="48dp"

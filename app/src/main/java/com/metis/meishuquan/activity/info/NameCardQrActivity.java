@@ -118,7 +118,6 @@ public class NameCardQrActivity extends BaseActivity {
                     }
                     CUserModel user = result.data;
 
-                    //显示好友信息
                     Intent intent = new Intent(NameCardQrActivity.this, SearchUserInfoActivity.class);
                     intent.putExtra(SearchUserInfoActivity.KEY_USER_INFO, (java.io.Serializable) user);
                     startActivity(intent);

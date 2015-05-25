@@ -310,7 +310,7 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
             holder.supportCountTv.setText(
                     MainApplication.UIContext.getString(R.string.act_support_count, item.getUpCount())
             );
-            holder.profileIv.setOnClickListener(new View.OnClickListener() {
+            view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent it = new Intent(getActivity(), StudioActivity.class);

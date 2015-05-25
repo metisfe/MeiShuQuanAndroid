@@ -3,6 +3,8 @@ package com.metis.meishuquan.model.circle;
 import com.google.gson.annotations.SerializedName;
 import com.metis.meishuquan.fragment.circle.FriendMatchFragment;
 
+import net.sourceforge.pinyin4j.PinyinHelper;
+
 import java.io.Serializable;
 
 /**
@@ -44,6 +46,8 @@ public class CUserModel implements Serializable, FriendMatchFragment.UserInfoImp
     @SerializedName("userRole")
     public int userRole;
 
+    public String subName;
+
     @Override
     public String getUserId() {
         return userId + "";
@@ -57,5 +61,20 @@ public class CUserModel implements Serializable, FriendMatchFragment.UserInfoImp
     @Override
     public String getUserTelephone() {
         return "";
+    }
+
+    @Override
+    public String getPinYin() {
+        char[] chars = getUserName().toCharArray();
+        StringBuilder sb = new StringBuilder();
+        for (char c : chars) {
+            String[] strings = PinyinHelper.toHanyuPinyinStringArray(c);
+            if (strings == null || strings.length == 0) {
+                sb.append(c);
+            } else {
+                sb.append(strings[0]);
+            }
+        }
+        return sb.toString();
     }
 }
