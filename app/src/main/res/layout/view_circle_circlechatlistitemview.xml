@@ -9,7 +9,8 @@
         android:id="@+id/views_circle_circlechatlistitemview_image"
         android:layout_width="50dp"
         android:layout_margin="10dp"
-        android:src="@drawable/default_user_dynamic"
+        android:scaleType="centerCrop"
+        android:src="@drawable/default_portrait_fang"
         android:layout_height="50dp" />
 
     <RelativeLayout

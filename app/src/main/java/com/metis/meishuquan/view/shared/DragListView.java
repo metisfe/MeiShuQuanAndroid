@@ -148,8 +148,8 @@ public class DragListView extends ListView implements AbsListView.OnScrollListen
         measureView(header);
         headerContentHeight = header.getMeasuredHeight();
         topPadding(-headerContentHeight);
-        this.addHeaderView(header);
-        this.addFooterView(footer);
+        this.addHeaderView(header, null, true);
+        this.addFooterView(footer, null, true);
         this.setOnScrollListener(this);
     }
 

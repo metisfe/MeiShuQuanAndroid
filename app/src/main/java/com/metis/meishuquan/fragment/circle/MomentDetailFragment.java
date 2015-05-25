@@ -107,6 +107,7 @@ public class MomentDetailFragment extends Fragment {
     private CircleMomentDetailReplyAdpater circleMomentDetailReplyAdpater;
     private CircleMomentDetailCommentAdapter circleMomentCommentAdapter;
     private CircleMomentDetailLikeAdapter circleMomentLikeAdapter;
+
     private MomentActionBar actionBar;
     private CCircleDetailModel moment;
     private List<CCircleCommentModel> list = new ArrayList<CCircleCommentModel>();

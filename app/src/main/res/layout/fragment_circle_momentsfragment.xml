@@ -13,8 +13,6 @@
         android:headerDividersEnabled="false"
         android:divider="@color/transparent"
         android:dividerHeight="5dp"
-        android:layout_height="match_parent">
-
-    </com.metis.meishuquan.view.shared.DragListView>
+        android:layout_height="match_parent"></com.metis.meishuquan.view.shared.DragListView>
 
 </LinearLayout>
