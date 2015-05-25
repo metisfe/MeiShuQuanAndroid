@@ -591,7 +591,6 @@ public class CircleMomentAdapter extends BaseAdapter {
 //            return;
 //        }
         Log.v(TAG, "chooseHuaShi view.getContext=" + view.getContext());
-        Toast.makeText(view.getContext(), "chooseHuaShi", Toast.LENGTH_SHORT).show();
         Intent it = new Intent(view.getContext(), SelectStudioActivity.class);
         it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         view.getContext().startActivity(it);

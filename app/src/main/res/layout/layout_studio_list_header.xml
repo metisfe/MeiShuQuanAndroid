@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     >
     <ImageView
         android:id="@+id/studio_list_header_cover"
@@ -94,9 +95,11 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_below="@+id/studio_list_header_container"
-        android:background="#e2e2e2"
-        android:minHeight="33dp"
         android:layout_marginTop="10dp"
+        android:minHeight="30dp"
+        android:background="@color/common_color_e2e2e2"
+        android:gravity="center_vertical"
+        android:paddingTop="3dp"
         >
         <RadioButton
             android:id="@+id/studio_list_header_tab1"

@@ -400,7 +400,7 @@
         <activity
             android:name=".activity.info.homepage.StudioActivity"
             android:label="@string/title_activity_studio"
-            android:launchMode="singleTask" />
+            />
         <activity
             android:name=".activity.info.homepage.StudioAlbumActivity"
             android:label="@string/title_activity_studio_album" />

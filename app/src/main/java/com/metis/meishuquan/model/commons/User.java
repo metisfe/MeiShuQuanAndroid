@@ -124,11 +124,11 @@ public class User implements Serializable {
     @SerializedName("studio")
     private Studio studio;
 
-    @SerializedName("FansNum")
-    private int FansNum;
+    @SerializedName("fansNum")
+    private int fansNum;
 
-    @SerializedName("FocusNum")
-    private int FocusNum;
+    @SerializedName("focusNum")
+    private int focusNum;
 
     private LoginStateEnum appLoginState = LoginStateEnum.NO;
 
@@ -387,19 +387,19 @@ public class User implements Serializable {
     }*/
 
     public int getFansNum() {
-        return FansNum;
+        return fansNum;
     }
 
     public void setFansNum(int fansNum) {
-        FansNum = fansNum;
+        this.fansNum = fansNum;
     }
 
     public int getFocusNum() {
-        return FocusNum;
+        return focusNum;
     }
 
     public void setFocusNum(int focusNum) {
-        FocusNum = focusNum;
+        focusNum = focusNum;
     }
 
     public String getRegisterTimeFormated () {

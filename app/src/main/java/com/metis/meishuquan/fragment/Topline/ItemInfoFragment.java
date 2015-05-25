@@ -1,6 +1,8 @@
 package com.metis.meishuquan.fragment.Topline;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -710,12 +712,15 @@ public class ItemInfoFragment extends Fragment {
     private static final String TAG = ItemInfoFragment.class.getSimpleName();
 
     public void getInfoData(final int newsId, final UserInfoOperator.OnGetListener<TopLineNewsInfo> listener) {
+        final Dialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.show();
         TopLineOperator.getInstance().getNewsInfoById(newsId, new ApiOperationCallback<ReturnInfo<String>>() {
             @Override
             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                 if (isDetached()) {
                     return;
                 }
+                progressDialog.dismiss();
                 if (result != null) {
 
                     if (result.getInfo().equals(String.valueOf(0))) {

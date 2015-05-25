@@ -10,7 +10,7 @@ import io.rong.imlib.RongIMClient;
 /**
  * Created by wudi on 4/11/2015.
  */
-public class UserAdvanceInfo extends RongIMClient.UserInfo implements FriendMatchFragment.UserInfoImpl {
+public class UserAdvanceInfo extends RongIMClient.UserInfo {
     private String pinYin;
     private int resourceId;
     public boolean mode;
@@ -43,13 +43,4 @@ public class UserAdvanceInfo extends RongIMClient.UserInfo implements FriendMatc
         return resourceId;
     }
 
-    @Override
-    public String getUserName() {
-        return this.getName();
-    }
-
-    @Override
-    public String getUserTelephone() {
-        return null;
-    }
 }
