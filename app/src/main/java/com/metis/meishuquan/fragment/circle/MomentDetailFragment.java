@@ -224,7 +224,6 @@ public class MomentDetailFragment extends Fragment {
         fm = getActivity().getSupportFragmentManager();
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private View initHeaderView(final CCircleDetailModel moment, MomentActionBar.OnActionButtonClickListener OnActionButtonClickListener) {
         View headerView = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_circle_moment_list_item, null);
 
@@ -257,10 +256,10 @@ public class MomentDetailFragment extends Fragment {
         }
 
         if (moment.userMark.isSupport) {
-            btnLike.setBackground(getResources().getDrawable(R.drawable.icon_support));
+            btnLike.setImageDrawable(getResources().getDrawable(R.drawable.icon_support));
             btnLike.setTag(true);
         } else {
-            btnLike.setBackground(getResources().getDrawable(R.drawable.icon_unsupport));
+            btnLike.setImageDrawable(getResources().getDrawable(R.drawable.icon_unsupport));
             btnLike.setTag(false);
         }
 
@@ -502,6 +501,9 @@ public class MomentDetailFragment extends Fragment {
         if (GlobalData.moment != null) {
             GlobalData.moment.comentCount += 1;
             momentActionBar.setData(replyList != null ? replyList.size() : 0, GlobalData.moment.comentCount, likeList != null ? likeList.size() : 0);
+            if (commentList == null) {
+                commentList = new ArrayList<CCircleCommentModel>();
+            }
             commentList.add(0, circleCommentModel);
             circleMomentCommentAdapter = new CircleMomentDetailCommentAdapter(commentList);
             listView.setAdapter(circleMomentCommentAdapter);
@@ -585,7 +587,13 @@ public class MomentDetailFragment extends Fragment {
             public void onClick(View view) {
                 SharePopupWindow sharePopupWindow = new SharePopupWindow(getActivity(), rootView);
                 String title = "xxx";
-                String content = moment.content.isEmpty() ? "分享图片" : moment.content;
+                String content = "xxx";
+                if (moment.relayCircle == null) {
+                    content = moment.content.isEmpty() ? "分享图片" : moment.content;
+                } else if (moment.relayCircle != null) {
+                    content = moment.relayCircle.desc.isEmpty() ? "分享图片" : moment.relayCircle.desc;
+                }
+
                 String shareUrl = moment.getShareUrl() + moment.id;
                 String imgUrl = moment.relayImgUrl;
 
@@ -702,8 +710,7 @@ public class MomentDetailFragment extends Fragment {
             viewHolder.content.setText(comment.content);
             viewHolder.likeCount.setText(comment.supportCount > 0 ? "" + comment.supportCount : "");
 
-            String isSupportStr = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey("circle_comment_" + comment.id + "_" + MainApplication.userInfo.getUserId());
-            if (isSupport && isSupportStr.equals("已赞")) {
+            if (comment.userMark != null && comment.userMark.isSupport()) {
                 viewHolder.likeCount.setTextColor(getResources().getColor(R.color.red));
                 viewHolder.support.setImageDrawable(getResources().getDrawable(R.drawable.icon_support));
             } else {

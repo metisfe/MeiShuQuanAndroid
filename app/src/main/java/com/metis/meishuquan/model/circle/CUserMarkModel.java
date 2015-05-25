@@ -26,4 +26,7 @@ public class CUserMarkModel implements Serializable {
 
     @SerializedName("isAttention")
     public boolean isAttention;//是否关注
+
+    @SerializedName("isTop")
+    public boolean isTop;
 }

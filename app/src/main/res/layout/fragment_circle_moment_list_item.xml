@@ -205,9 +205,9 @@
                     android:id="@+id/id_tv_info"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:singleLine="true"
                     android:layout_marginLeft="10dp"
-                    android:text="详情"
+                    android:text="详情详情详情详情详情详情详情详情详情详情详情详情详情详情详情详情详情详情详情详情详情详情详情"
+                    android:maxLines="2"
                     android:textColor="#7e7e7e"
                     android:layout_marginTop="10dp"
                     android:textSize="12sp" />

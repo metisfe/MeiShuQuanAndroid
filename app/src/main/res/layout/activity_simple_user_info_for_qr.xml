@@ -41,7 +41,8 @@
             android:id="@+id/id_img_user_portrait"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:background="@drawable/default_user_dynamic" />
+            android:scaleType="centerCrop"
+            android:background="@drawable/default_portrait_fang" />
 
         <TextView
             android:id="@+id/id_tv_user_name"

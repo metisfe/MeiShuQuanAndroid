@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:text="张三"
+            android:text=""
             android:paddingLeft="80dp"
             android:textSize="20sp" />
 

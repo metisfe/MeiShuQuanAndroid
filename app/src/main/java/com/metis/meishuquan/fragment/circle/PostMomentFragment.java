@@ -192,6 +192,7 @@ public class PostMomentFragment extends Fragment {
     private void send(CirclePushBlogParm parm) {
         if (parm.getContent().toString().trim().length() == 0 && parm.getImages().size() == 0) {
             Toast.makeText(MainApplication.UIContext, "请输入日志内容，或选择图片", Toast.LENGTH_SHORT).show();
+            isSend = false;
             return;
         }
         final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "发送中...");

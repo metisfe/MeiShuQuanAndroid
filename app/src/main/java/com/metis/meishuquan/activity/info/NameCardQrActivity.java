@@ -63,7 +63,7 @@ public class NameCardQrActivity extends BaseActivity {
         json.addProperty(User.KEY_USER_ID, user.getUserId());
         json.addProperty(User.KEY_NICK_NAME, user.getName());
         json.addProperty(User.KEY_USERAVATAR, user.getUserAvatar());
-        mQrFragment = (QRFragment)getSupportFragmentManager().findFragmentById(R.id.qr_fragment);
+        mQrFragment = (QRFragment) getSupportFragmentManager().findFragmentById(R.id.qr_fragment);
         Log.v(TAG, "onCreate " + user.getPhoneNum());
         mQrFragment.showQrCodeWith(/*json.toString()*/user.getPhoneNum());
         mQrFragment.setOnImageClickListener(new View.OnClickListener() {
@@ -75,10 +75,10 @@ public class NameCardQrActivity extends BaseActivity {
             }
         });
 
-        mProfileIv = (ImageView)findViewById(R.id.qr_profile);
-        mNameTv = (TextView)findViewById(R.id.qr_name);
-        mGradeTv = (TextView)findViewById(R.id.qr_grade);
-        mIntroduceTv = (TextView)findViewById(R.id.qr_self_introduce);
+        mProfileIv = (ImageView) findViewById(R.id.qr_profile);
+        mNameTv = (TextView) findViewById(R.id.qr_name);
+        mGradeTv = (TextView) findViewById(R.id.qr_grade);
+        mIntroduceTv = (TextView) findViewById(R.id.qr_self_introduce);
 
         ImageLoaderUtils.getImageLoader(this).displayImage(
                 user.getUserAvatar(),
@@ -96,7 +96,7 @@ public class NameCardQrActivity extends BaseActivity {
 
     @Override
     public void onTitleRightPressed() {
-        Intent it = new Intent (this, QrScanActivity.class);
+        Intent it = new Intent(this, QrScanActivity.class);
         startActivityForResult(it, 100);
         //startActivity(new Intent (QrActivity.this, ImagePreviewActivity.class));
         //startActivity(new Intent(NameCardQrActivity.this, QrScanActivity.class));
@@ -118,7 +118,7 @@ public class NameCardQrActivity extends BaseActivity {
                     }
                     CUserModel user = result.data;
 
-                    //显示好友信息
+                    //鏄剧ず濂藉弸淇℃伅
                     Intent intent = new Intent(NameCardQrActivity.this, SearchUserInfoActivity.class);
                     intent.putExtra(SearchUserInfoActivity.KEY_USER_INFO, (java.io.Serializable) user);
                     startActivity(intent);
@@ -151,7 +151,7 @@ public class NameCardQrActivity extends BaseActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(NameCardQrActivity.this).inflate(R.layout.layout_list_dialog_item, null);
-            TextView tv = (TextView)convertView.findViewById(R.id.list_dialog_item);
+            TextView tv = (TextView) convertView.findViewById(R.id.list_dialog_item);
             final ActionDelegate delegate = getItem(position);
             tv.setText(delegate.getItemText());
             tv.setOnClickListener(new View.OnClickListener() {
@@ -162,7 +162,7 @@ public class NameCardQrActivity extends BaseActivity {
                     String path = ImageLoaderUtils.saveBitmapAtMediaDir("qr.jpg", bmp);
                     File qrFile = null;
                     if (path != null) {
-                       qrFile = new File (path);
+                        qrFile = new File(path);
                     } else {
                         Toast.makeText(NameCardQrActivity.this, "error to handle this", Toast.LENGTH_SHORT).show();
                         return;
@@ -192,7 +192,7 @@ public class NameCardQrActivity extends BaseActivity {
         private String mItemText = null;
         private int mId;
 
-        public ActionDelegate (int id, String name) {
+        public ActionDelegate(int id, String name) {
             mId = id;
             mItemText = name;
         }

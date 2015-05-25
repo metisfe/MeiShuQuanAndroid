@@ -1,14 +1,18 @@
 package com.metis.meishuquan.fragment.login;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +21,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
@@ -48,6 +53,7 @@ public class RegisterFragment extends Fragment {
     private Button btnBack, btnSubmit, btnGetVerificationCode;
     private EditText etUserName, etVerificationCode, etPwd;
     private CheckBox chLicense;
+    private TextView tvLicence;
 
     private FragmentManager fm;
     private TimeCount time = null;
@@ -72,10 +78,13 @@ public class RegisterFragment extends Fragment {
         btnBack = (Button) rootView.findViewById(R.id.id_btn_user_register_back);
         btnSubmit = (Button) rootView.findViewById(R.id.id_register_btn_submit);
         btnGetVerificationCode = (Button) rootView.findViewById(R.id.id_regsiter_btn_verificationCode);
+        tvLicence = (TextView) rootView.findViewById(R.id.id_tv_licence);
         etUserName = (EditText) rootView.findViewById(R.id.id_resister_et_username);
         etVerificationCode = (EditText) rootView.findViewById(R.id.id_resister_et_verificationCode);
         etPwd = (EditText) rootView.findViewById(R.id.id_register_et_pwd);
         chLicense = (CheckBox) rootView.findViewById(R.id.id_register_chb_license);
+
+        tvLicence.setText(Html.fromHtml("<font color=\"black\">" + "我同意并遵守" + "</font><font color=\"red\">" + "“美术圈”用户协议" + "</font>"));
 
         fm = getActivity().getSupportFragmentManager();
         userOperator = UserOperator.getInstance();
@@ -91,10 +100,31 @@ public class RegisterFragment extends Fragment {
                 ft.commit();
             }
         });
+
+        tvLicence.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Uri uri = Uri.parse("http://www.meishuquan.net/UserAgreement.html");
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(), R.string.act_not_found_exception, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         //注册
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!chLicense.isChecked()) {
+                    new AlertDialog.Builder(getActivity())
+                            .setTitle("友情提示")
+                            .setMessage("请同意《美术圈用户协议》")
+                            .setPositiveButton("确定", null).show();
+                    return;
+                }
 
                 String phone = etUserName.getText().toString().trim();
                 String verCode = etVerificationCode.getText().toString().trim();
@@ -212,13 +242,13 @@ public class RegisterFragment extends Fragment {
         chLicense.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (!chLicense.isChecked()) {
-                    btnSubmit.setClickable(false);
-                    btnSubmit.setBackgroundColor(Color.GRAY);
-                } else {
-                    btnSubmit.setClickable(true);
-                    btnSubmit.setBackgroundColor(Color.RED);
-                }
+//                if (!chLicense.isChecked()) {
+//                    btnSubmit.setClickable(false);
+//                    btnSubmit.setBackgroundColor(Color.GRAY);
+//                } else {
+//                    btnSubmit.setClickable(true);
+//                    btnSubmit.setBackgroundColor(Color.RED);
+//                }
             }
         });
     }

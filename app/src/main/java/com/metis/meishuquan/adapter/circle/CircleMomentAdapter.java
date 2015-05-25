@@ -215,7 +215,8 @@ public class CircleMomentAdapter extends BaseAdapter {
 
         //标识置顶状态
         if (GlobalData.momentsGroupId == -2 && moment.user.userId == MainApplication.userInfo.getUserId() && moment.relayCircle != null
-                && (moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal() || moment.relayCircle.type == SupportTypeEnum.CircleActivity.getVal())) {
+                && (moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal() || moment.relayCircle.type == SupportTypeEnum.CircleActivity.getVal())
+                && moment.userMark.isTop) {
             viewHolder.imgTop.setVisibility(View.VISIBLE);
         } else {
             viewHolder.imgTop.setVisibility(View.GONE);

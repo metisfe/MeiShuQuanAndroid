@@ -100,7 +100,8 @@ public class SharePopupWindow extends PopupWindow {
                 }
 
                 if (mMoment != null) {
-                    if (mMoment.relayCircle != null && mMoment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal()) {
+                    if (mMoment.relayCircle != null && (mMoment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal()
+                            || mMoment.relayCircle.type == SupportTypeEnum.CircleActivity.getVal())) {
                         parm.setType(SupportTypeEnum.CircleActivity.getVal());
                         parm.setRelayId(mMoment.relayCircle.id);
                     } else if (mMoment.relayCircle != null && mMoment.relayCircle.type == SupportTypeEnum.News.getVal()) {
@@ -113,7 +114,7 @@ public class SharePopupWindow extends PopupWindow {
                         List<Integer> userIds = new ArrayList<Integer>();
                         userIds.add(mMoment.user.userId);
                         parm.setUserIds(userIds);
-                    } else if (mMoment.relayCircle == null) {
+                    } else if (mMoment.relayCircle == null) {//转发圈子类型
                         parm.setType(SupportTypeEnum.Circle.getVal());
                         parm.setRelayId(mMoment.id);
                         List<Integer> userIds = new ArrayList<Integer>();
@@ -122,7 +123,9 @@ public class SharePopupWindow extends PopupWindow {
                         parm.setContent(mMoment.content);
                     }
                     it.putExtra(ReplyActivity.PARM, parm);
-                    if (mMoment.relayCircle != null && (mMoment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal() || mMoment.relayCircle.type == SupportTypeEnum.News.getVal())) {
+                    if (mMoment.relayCircle != null && (mMoment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal()
+                            || mMoment.relayCircle.type == SupportTypeEnum.CircleActivity.getVal()
+                            || mMoment.relayCircle.type == SupportTypeEnum.News.getVal())) {
                         it.putExtra(ReplyActivity.TITLE, mMoment.relayCircle.title);
                         it.putExtra(ReplyActivity.CONTENT, mMoment.relayCircle.desc);
                         it.putExtra(ReplyActivity.IMAGEURL, mMoment.relayCircle.activityImg);

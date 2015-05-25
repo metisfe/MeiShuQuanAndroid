@@ -77,7 +77,7 @@ public class ToplineCustomAdapter extends ToplineAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup viewGroup) {
-
+        News news = lstData.get(position);
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.fragment_topline_topbar_list_item, null, false);
@@ -90,9 +90,9 @@ public class ToplineCustomAdapter extends ToplineAdapter {
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
+            holder.img_thumbnail.setTag(news.getNewsId());
         }
 
-        News news = lstData.get(position);
         ImageLoaderUtils.getImageLoader(this.context).displayImage(news.getImgUrl().trim(), holder.img_thumbnail);
         holder.tv_title.setText(news.getTitle());
         String source = news.getSource().getTitle().trim();

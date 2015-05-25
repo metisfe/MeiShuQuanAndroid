@@ -67,7 +67,7 @@
         android:hint="说两句…"
         android:minHeight="150dp"
         android:paddingLeft="10dp"
-        android:paddingTop="20dp"
+        android:paddingTop="10dp"
         android:textSize="16sp" />
 
     <RelativeLayout
@@ -90,6 +90,7 @@
             android:id="@+id/id_tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@+id/id_img_pic"
