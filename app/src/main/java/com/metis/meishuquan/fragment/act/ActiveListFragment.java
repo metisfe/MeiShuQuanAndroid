@@ -339,7 +339,7 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
                             if (simpleActiveInfo != null) {
                                 mSimpleInfo = simpleActiveInfo;
                                 if (simpleActiveInfo.getUpCount() < simpleActiveInfo.totalUpCount) {
-                                    showDialog(getString(R.string.act_less_than_10, simpleActiveInfo.totalUpCount), new DialogInterface.OnClickListener() {
+                                    showDialog(getString(R.string.act_less_than_10, simpleActiveInfo.totalUpCount), getString(R.string.gender_ok), false, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -402,7 +402,7 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
                                 }
 
                             } else {
-                                showDialog(getString(R.string.act_join_unjoined), getString(R.string.act_modify_studio), new DialogInterface.OnClickListener() {
+                                showDialog(getString(R.string.act_join_unjoined), getString(R.string.act_modify_studio), true, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -453,18 +453,21 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
 
     private Dialog mDialog = null;
     private void showDialog (String msg, DialogInterface.OnClickListener positiveListener) {
-        showDialog(msg, getString(R.string.gender_ok), positiveListener);
+        showDialog(msg, getString(R.string.gender_ok), true, positiveListener);
     }
-    private void showDialog (String msg, String okMsg, DialogInterface.OnClickListener positiveListener) {
+    private void showDialog (String msg, String okMsg, boolean showCancel, DialogInterface.OnClickListener positiveListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(msg);
         builder.setPositiveButton(okMsg, positiveListener);
-        builder.setNegativeButton(R.string.alter_dialog_cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                mDialog.dismiss();
-            }
-        });
+        if (showCancel) {
+            builder.setNegativeButton(R.string.alter_dialog_cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    mDialog.dismiss();
+                }
+            });
+        }
+
         mDialog = builder.create();
         mDialog.show();
     }
