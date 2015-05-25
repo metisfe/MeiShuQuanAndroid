@@ -35,6 +35,7 @@ import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.main.CircleFragment;
 import com.metis.meishuquan.model.circle.CCircleCommentModel;
 import com.metis.meishuquan.model.circle.CCircleTabModel;
+import com.metis.meishuquan.model.circle.CUserModel;
 import com.metis.meishuquan.model.circle.CircleMomentDetail;
 import com.metis.meishuquan.model.circle.CirclePushCommentResult;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
@@ -54,6 +55,7 @@ import org.apache.http.client.methods.HttpGet;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -122,8 +124,9 @@ public class MomentCommentFragment extends Fragment {
         publishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainApplication.UIContext, "正在发送，请稍候", Toast.LENGTH_SHORT).show();
-                String encodeContent = URLEncoder.encode(editText.getText().toString());
+                progressDialog = ProgressDialog.show(getActivity(), "", "正在发送...");
+//                Toast.makeText(MainApplication.UIContext, "正在发送，请稍候", Toast.LENGTH_SHORT).show();
+                final String encodeContent = URLEncoder.encode(editText.getText().toString());
                 String url = String.format("v1.1/Circle/PushComment?id=%s&content=%s&session=%s", GlobalData.moment.id, encodeContent, MainApplication.userInfo.getCookie());
                 publishButton.setClickable(false);
                 ApiDataProvider.getmClient().invokeApi(url, null,
@@ -131,6 +134,7 @@ public class MomentCommentFragment extends Fragment {
                         new ApiOperationCallback<CirclePushCommentResult>() {
                             @Override
                             public void onCompleted(CirclePushCommentResult result, Exception exception, ServiceFilterResponse response) {
+                                progressDialog.cancel();
                                 publishButton.setClickable(true);
                                 if (result == null || !result.isSuccess()) {
                                     Toast.makeText(MainApplication.UIContext, "发送失败，请检查网络后重试", Toast.LENGTH_SHORT).show();
@@ -138,6 +142,9 @@ public class MomentCommentFragment extends Fragment {
                                 }
 
                                 Toast.makeText(MainApplication.UIContext, "发送成功！", Toast.LENGTH_SHORT).show();
+                                GlobalData.momentsCommentCount += 1;
+
+                                progressDialog.dismiss();
                                 MomentDetailFragment momentDetailFragment = new MomentDetailFragment();
                                 FragmentManager fm = getActivity().getSupportFragmentManager();
                                 FragmentTransaction ft = fm.beginTransaction();
@@ -148,7 +155,14 @@ public class MomentCommentFragment extends Fragment {
                                 }
                                 ft.commit();
                                 hideKeyBoard();
-                                onCommentSuccessListner.onSuccess();
+                                CCircleCommentModel circleCommentModel = new CCircleCommentModel();
+                                circleCommentModel.circleId = GlobalData.moment.id;
+                                circleCommentModel.content = editText.getText().toString();
+                                circleCommentModel.createTime = Utils.getCurrentTime();
+                                circleCommentModel.user = new CUserModel();
+                                circleCommentModel.user.avatar = MainApplication.userInfo.getUserAvatar();
+                                circleCommentModel.user.name = MainApplication.userInfo.getName();
+                                onCommentSuccessListner.onSuccess(circleCommentModel);
                             }
                         });
             }

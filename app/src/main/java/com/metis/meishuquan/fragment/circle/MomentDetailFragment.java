@@ -1,6 +1,7 @@
 package com.metis.meishuquan.fragment.circle;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,10 +23,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.act.ActDetailActivity;
+import com.metis.meishuquan.activity.info.ImagePreviewActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.Topline.ItemInfoFragment;
 import com.metis.meishuquan.model.BLL.CircleOperator;
@@ -115,23 +119,36 @@ public class MomentDetailFragment extends Fragment {
     private int mActionBarVisible = View.VISIBLE;
 
     public interface OnCommentSuccessListner {
-        void onSuccess();
+        void onSuccess(CCircleCommentModel circleCommentModel);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_circle_moment_detail, null, false);
-        if (GlobalData.moment != null) {
-            this.moment = GlobalData.moment;
-        }
+//        if (GlobalData.moment != null) {
+//            this.moment = GlobalData.moment;
+//        }
+        final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "正在加载...");
+        CircleOperator.getInstance().getMomentDetail(GlobalData.moment.id, new ApiOperationCallback<ReturnInfo<String>>() {
+            @Override
+            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                progressDialog.cancel();
+                if (result != null && result.isSuccess()) {
+                    Gson gson = new Gson();
+                    String json = gson.toJson(result);
+                    ReturnInfo<CCircleDetailModel> returnInfo = gson.fromJson(json, new TypeToken<ReturnInfo<CCircleDetailModel>>() {
+                    }.getType());
+                    moment = returnInfo.getData();
+                    initView(rootView);
+                    getData(0, 0); // type = 0 : get comment and like
+                    circleMomentCommentAdapter = new CircleMomentDetailCommentAdapter(list);
+                    listView.setAdapter(circleMomentCommentAdapter);
+                    initEvent();
+                    progressDialog.dismiss();
+                }
+            }
+        });
 
-        initView(rootView);
-        getData(0, 0); // type = 0 : get comment and like
-
-        circleMomentCommentAdapter = new CircleMomentDetailCommentAdapter(list);
-        listView.setAdapter(circleMomentCommentAdapter);
-
-        initEvent();
         return rootView;
     }
 
@@ -206,6 +223,7 @@ public class MomentDetailFragment extends Fragment {
         fm = getActivity().getSupportFragmentManager();
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private View initHeaderView(final CCircleDetailModel moment, MomentActionBar.OnActionButtonClickListener OnActionButtonClickListener) {
         View headerView = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_circle_moment_list_item, null);
 
@@ -232,6 +250,17 @@ public class MomentDetailFragment extends Fragment {
         if (moment.userMark.isAttention) {
             imgAttention.setImageDrawable(getResources().getDrawable(R.drawable.bg_btn_attention));
             isAttention = true;
+        } else {
+            imgAttention.setImageDrawable(getResources().getDrawable(R.drawable.bg_btn_unattention));
+            isAttention = false;
+        }
+
+        if (moment.userMark.isSupport) {
+            btnLike.setBackground(getResources().getDrawable(R.drawable.icon_support));
+            btnLike.setTag(true);
+        } else {
+            btnLike.setBackground(getResources().getDrawable(R.drawable.icon_unsupport));
+            btnLike.setTag(false);
         }
 
 //        if (moment.relayCircle == null) {
@@ -259,6 +288,9 @@ public class MomentDetailFragment extends Fragment {
                 ll_not_circle.setVisibility(View.VISIBLE);
                 ll_circle.setVisibility(View.GONE);
             } else if (moment.relayCircle.type == SupportTypeEnum.News.getVal()) {
+                ll_not_circle.setVisibility(View.VISIBLE);
+                ll_circle.setVisibility(View.GONE);
+            } else if (moment.relayCircle.type == SupportTypeEnum.CircleActivity.getVal()) {
                 ll_not_circle.setVisibility(View.VISIBLE);
                 ll_circle.setVisibility(View.GONE);
             }
@@ -298,7 +330,7 @@ public class MomentDetailFragment extends Fragment {
                 } else {
                     imgForCircle.setVisibility(View.GONE);
                 }
-            } else {
+            } else {//转发类型
                 if (moment.relayCircle.desc.equals("")) {
                     replyContent.setVisibility(View.VISIBLE);
                     replyContent.setText("@" + moment.relayCircle.user.name);
@@ -315,7 +347,7 @@ public class MomentDetailFragment extends Fragment {
             }
         } else if (ll_not_circle.getVisibility() == View.VISIBLE) {
             //活动类型或新闻类型或其他类型
-            if (moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal() || moment.relayCircle.type == SupportTypeEnum.News.getVal()) {
+            if (moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal() || moment.relayCircle.type == SupportTypeEnum.News.getVal() || moment.relayCircle.type == SupportTypeEnum.CircleActivity.getVal()) {
                 ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.relayCircle.activityImg, imgForReply);
                 tvTitle.setText(moment.relayCircle.title.trim());
                 tvInfo.setText(moment.relayCircle.desc.trim());
@@ -329,6 +361,25 @@ public class MomentDetailFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 ActivityUtils.startNameCardActivity(getActivity(), moment.user.userId);
+            }
+        });
+
+        imgForCircle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (moment.images != null && moment.images.size() > 0) {
+                    Intent intent = new Intent(getActivity(), ImagePreviewActivity.class);
+                    intent.putStringArrayListExtra(ImagePreviewActivity.KEY_IMAGE_URL_ARRAY, moment.getImagesUrl());
+                    intent.putExtra(ImagePreviewActivity.KEY_START_INDEX, 0);
+                    getActivity().startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.activity_zoomin, 0);
+                } else if (moment.relayCircle != null && moment.relayCircle.images != null && moment.relayCircle.images.size() > 0) {
+                    Intent intent = new Intent(getActivity(), ImagePreviewActivity.class);
+                    intent.putStringArrayListExtra(ImagePreviewActivity.KEY_IMAGE_URL_ARRAY, moment.relayCircle.getImagesUrl());
+                    intent.putExtra(ImagePreviewActivity.KEY_START_INDEX, 0);
+                    getActivity().startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.activity_zoomin, 0);
+                }
             }
         });
 
@@ -350,14 +401,17 @@ public class MomentDetailFragment extends Fragment {
         imgAttention.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String key = "attention" + moment.id + MainApplication.userInfo.getUserId();
-                String isAttentionStr = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey(key);
-                if (!isAttentionStr.isEmpty() && isAttentionStr.equals("已关注")) {
-                    isAttention = true;
-                } else {
-                    isAttention = false;
-                }
+//                final String key = "attention" + moment.user.userId;
+//                String isAttentionStr = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey(key);
+//                if (!isAttentionStr.isEmpty() && isAttentionStr.equals("已关注")) {
+//                    imgAttention.setImageDrawable(getResources().getDrawable(R.drawable.bg_btn_attention));
+//                    isAttention = true;
+//                } else {
+//                    imgAttention.setImageDrawable(getResources().getDrawable(R.drawable.bg_btn_unattention));
+//                    isAttention = false;
+//                }
                 if (!isAttention) {//关注
+                    imgAttention.setClickable(false);
                     isAttention = true;
                     popupAttentionWindow = new PopupAttentionWindow(getActivity(),
                             new View.OnClickListener() {
@@ -368,17 +422,25 @@ public class MomentDetailFragment extends Fragment {
                             }, new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            //切换至已关注状态
-                            imgAttention.setImageDrawable(getResources().getDrawable(R.drawable.bg_btn_attention));
 
+
+                            //本地保存关注状态
+//                            SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(key, "已关注");
+//                            Toast.makeText(getActivity(), "关注成功", Toast.LENGTH_SHORT).show();
+
+                            //后台更新数据库
                             final int groupId = popupAttentionWindow.getGroupId(i);
                             CircleOperator.getInstance().attention(moment.user.userId, groupId, new ApiOperationCallback<ReturnInfo<String>>() {
                                 @Override
                                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                     if (result != null && result.isSuccess()) {
+                                        //切换至已关注状态
+                                        imgAttention.setImageDrawable(getResources().getDrawable(R.drawable.bg_btn_attention));
+
                                         //保存关注的状态
-                                        SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(key, "已关注");
+//                                        SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(key, "已关注");
                                         Toast.makeText(getActivity(), "关注成功", Toast.LENGTH_SHORT).show();
+                                        imgAttention.setClickable(true);
                                     } else if (result != null && !result.isSuccess()) {
                                         Log.e("attention", result.getMessage());
                                     } else if (result == null) {
@@ -391,15 +453,25 @@ public class MomentDetailFragment extends Fragment {
                     ((MainActivity) getActivity()).addAttachView(popupAttentionWindow);
                 } else {
                     //取消关注
-                    isAttention = false;
-                    //切换至已关注状态
-                    imgAttention.setImageDrawable(getResources().getDrawable(R.drawable.bg_btn_unattention));
+                    imgAttention.setClickable(false);
 
+                    //本地保存关注状态
+//                    SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(key, "未关注");
+//                    Toast.makeText(getActivity(), "取消关注成功", Toast.LENGTH_SHORT).show();
+
+                    //后台更新数据
                     CircleOperator.getInstance().cancelAttention(moment.user.userId, new ApiOperationCallback<ReturnInfo<String>>() {
                         @Override
                         public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                             if (result != null && result.isSuccess()) {
+                                isAttention = false;
+                                //切换至已关注状态
+                                imgAttention.setImageDrawable(getResources().getDrawable(R.drawable.bg_btn_unattention));
+
+                                //保存关注的状态
+//                                SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(key, "未关注");
                                 Toast.makeText(getActivity(), "取消关注成功", Toast.LENGTH_SHORT).show();
+                                imgAttention.setClickable(true);
                             } else if (result != null && !result.isSuccess()) {
                                 Log.e("attention", result.getMessage());
                             } else if (result == null) {
@@ -425,9 +497,15 @@ public class MomentDetailFragment extends Fragment {
         ft.commit();
     }
 
-    public void commentCountAddOne() {
+    public void commentCountAddOne(CCircleCommentModel circleCommentModel) {
         if (GlobalData.moment != null) {
             GlobalData.moment.comentCount += 1;
+            momentActionBar.setData(replyList != null ? replyList.size() : 0, GlobalData.moment.comentCount, likeList != null ? likeList.size() : 0);
+            commentList.add(0, circleCommentModel);
+            circleMomentCommentAdapter = new CircleMomentDetailCommentAdapter(commentList);
+            listView.setAdapter(circleMomentCommentAdapter);
+            circleMomentCommentAdapter.notifyDataSetChanged();
+            listView.setSelection(1);
         }
     }
 
@@ -452,8 +530,8 @@ public class MomentDetailFragment extends Fragment {
                 MomentCommentFragment momentCommentFragment = new MomentCommentFragment();
                 momentCommentFragment.setOnCommentSuccessListner(new OnCommentSuccessListner() {
                     @Override
-                    public void onSuccess() {
-                        commentCountAddOne();
+                    public void onSuccess(CCircleCommentModel circleCommentModel) {
+                        commentCountAddOne(circleCommentModel);
                     }
                 });
                 FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -546,6 +624,11 @@ public class MomentDetailFragment extends Fragment {
                         commentList = data.commentList;
                         likeList = data.supportList;
                         replyList = data.relayList;
+                        momentActionBar.setData(replyList != null ? replyList.size() : 0, commentList != null ? commentList.size() : 0, likeList != null ? likeList.size() : 0);
+                        //用于更新圈子列表
+                        GlobalData.moment.relayCount = replyList != null ? replyList.size() : 0;
+                        GlobalData.moment.comentCount = commentList != null ? commentList.size() : 0;
+                        GlobalData.moment.supportCount = likeList != null ? likeList.size() : 0;
 
                         if (commentList != null) {
                             for (int i = commentList.size() - 1; i >= 0; i--) {
@@ -619,7 +702,7 @@ public class MomentDetailFragment extends Fragment {
             viewHolder.likeCount.setText(comment.supportCount > 0 ? "" + comment.supportCount : "");
 
             String isSupportStr = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey("circle_comment_" + comment.id + "_" + MainApplication.userInfo.getUserId());
-            if (isSupportStr.equals("已赞")) {
+            if (isSupport && isSupportStr.equals("已赞")) {
                 viewHolder.likeCount.setTextColor(getResources().getColor(R.color.red));
                 viewHolder.support.setImageDrawable(getResources().getDrawable(R.drawable.icon_support));
             } else {

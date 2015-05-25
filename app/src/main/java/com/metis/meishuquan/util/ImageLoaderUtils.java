@@ -52,7 +52,7 @@ public class ImageLoaderUtils {
     }
 
     public static DisplayImageOptions getRoundDisplayOptions(int size) {
-        return getRoundDisplayOptions(size, R.drawable.default_user_dynamic);
+        return getRoundDisplayOptions(size, R.drawable.default_portrait_fang);
     }
 
     public static DisplayImageOptions getRoundDisplayOptions(int size, int resousceId) {

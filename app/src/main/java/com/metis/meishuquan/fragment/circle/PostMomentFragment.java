@@ -1,12 +1,15 @@
 package com.metis.meishuquan.fragment.circle;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -117,11 +120,10 @@ public class PostMomentFragment extends Fragment {
         this.rl_at = (RelativeLayout) rootView.findViewById(R.id.id_rl_post_moment_at);
         this.rl_emotion = (RelativeLayout) rootView.findViewById(R.id.id_rl_post_moment_emotion);
 
-        this.mImageGrid = (GridView)rootView.findViewById(R.id.postmoment_grid_pics);
+        this.mImageGrid = (GridView) rootView.findViewById(R.id.postmoment_grid_pics);
         this.mImageGrid.setAdapter(mAdapter);
 
         this.fm = getActivity().getSupportFragmentManager();
-
 
     }
 
@@ -137,7 +139,7 @@ public class PostMomentFragment extends Fragment {
                             files.add(new File(mImagePaths.get(i)));
                         }
                         try {
-                            CommonOperator.getInstance().fileUpload(FileUploadTypeEnum.IMG, files, new ServiceFilterResponseCallback () {
+                            CommonOperator.getInstance().fileUpload(FileUploadTypeEnum.IMG, files, new ServiceFilterResponseCallback() {
 
                                 @Override
                                 public void onResponse(ServiceFilterResponse response, Exception exception) {
@@ -148,7 +150,8 @@ public class PostMomentFragment extends Fragment {
                                     }
                                     Gson gson = new Gson();
                                     Log.v(TAG, "content=" + feedbackContent);
-                                    Result<List<CircleImage>> imageListResult = gson.fromJson(feedbackContent, new TypeToken<Result<List<CircleImage>>>(){}.getType());
+                                    Result<List<CircleImage>> imageListResult = gson.fromJson(feedbackContent, new TypeToken<Result<List<CircleImage>>>() {
+                                    }.getType());
                                     String content = editText.getText().toString();
 
                                     CirclePushBlogParm parm = new CirclePushBlogParm();
@@ -187,16 +190,24 @@ public class PostMomentFragment extends Fragment {
     }
 
     private void send(CirclePushBlogParm parm) {
+        if (parm.getContent().toString().trim().length() == 0 && parm.getImages().size() == 0) {
+            Toast.makeText(MainApplication.UIContext, "请输入日志内容，或选择图片", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "发送中...");
         CircleOperator.getInstance().pushBlog(parm, new ApiOperationCallback<ReturnInfo<CCircleDetailModel>>() {
             @Override
             public void onCompleted(ReturnInfo<CCircleDetailModel> result, Exception exception, ServiceFilterResponse response) {
+                progressDialog.cancel();
                 if (result != null && result.isSuccess()) {
                     String json = new Gson().toJson(result);
                     Log.i("pushBlog", json);
 
                     Toast.makeText(MainApplication.UIContext, "发送成功", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                     finish();
                 } else if (exception != null) {
+                    progressDialog.dismiss();
                     Log.i("pushBlog", "exception:cause:" + exception.getCause() + "  message:" + exception.getMessage());
                 }
             }
@@ -264,7 +275,7 @@ public class PostMomentFragment extends Fragment {
                 view = LayoutInflater.from(getActivity()).inflate(R.layout.layout_img_item, null);
             }
             String url = mImagePaths.get(i);
-            ImageView iv = (ImageView)view.findViewById(R.id.item_img);
+            ImageView iv = (ImageView) view.findViewById(R.id.item_img);
             ImageLoaderUtils.getImageLoader(getActivity()).displayImage(
                     ImageDownloader.Scheme.FILE.wrap(url),
                     iv,

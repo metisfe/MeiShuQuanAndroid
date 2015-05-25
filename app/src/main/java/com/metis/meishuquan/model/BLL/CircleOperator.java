@@ -1,6 +1,7 @@
 package com.metis.meishuquan.model.BLL;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
@@ -23,9 +24,9 @@ public class CircleOperator {
     private static final String URL_ATTENTION = "v1.1/Circle/FocusUserForGroup?";
     private static final String URL_CANCEL_ATTENTION = "v1.1/Circle/CancelAttention?";
     private static final String URL_DELETE_CIRCLE = "v1.1/Circle/DeleteMyCircle?circleid=";
+    private static final String URL_CIRCLE_DETAIL = "v1.1/Circle/CircleDetail?";
 
     private static CircleOperator operator = null;
-    private static final String SESSION = MainApplication.userInfo.getCookie();
     private boolean flag;
 
     private CircleOperator() {
@@ -49,22 +50,26 @@ public class CircleOperator {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuffer PATH = new StringBuffer(URL_PUSHBLOG);
-                PATH.append("session=" + SESSION);
+                PATH.append("session=" + MainApplication.userInfo.getCookie());
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), param, HttpPost.METHOD_NAME, null,
                         (Class<ReturnInfo<CCircleDetailModel>>) new ReturnInfo<CCircleDetailModel>().getClass(), callback);
             }
+        } else {
+            Toast.makeText(MainApplication.UIContext, "网络不给力，请稍候再试", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void deleteCircle (int circleId, ApiOperationCallback<Result<String>> callback) {
+    public void deleteCircle(int circleId, ApiOperationCallback<Result<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuffer PATH = new StringBuffer(URL_DELETE_CIRCLE);
                 PATH.append(circleId);
-                PATH.append("&session=" + SESSION);
+                PATH.append("&session=" + MainApplication.userInfo.getCookie());
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<Result<String>>) new Result().getClass(), callback);
             }
+        } else {
+            Toast.makeText(MainApplication.UIContext, "网络不给力，请稍候再试", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -74,11 +79,13 @@ public class CircleOperator {
                 StringBuffer PATH = new StringBuffer(URL_ATTENTION);
                 PATH.append("userId=" + userId);
                 PATH.append("&groupId=" + groupId);
-                PATH.append("&session=" + SESSION);
+                PATH.append("&session=" + MainApplication.userInfo.getCookie());
                 Log.i("attention_url", PATH.toString());
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
+        } else {
+            Toast.makeText(MainApplication.UIContext, "网络不给力，请稍候再试", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -87,10 +94,26 @@ public class CircleOperator {
             if (flag) {
                 StringBuffer PATH = new StringBuffer(URL_CANCEL_ATTENTION);
                 PATH.append("userId=" + userId);
-                PATH.append("&session=" + SESSION);
+                PATH.append("&session=" + MainApplication.userInfo.getCookie());
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
+        } else {
+            Toast.makeText(MainApplication.UIContext, "网络不给力，请稍候再试", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void getMomentDetail(int id, ApiOperationCallback<ReturnInfo<String>> callback) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuffer PATH = new StringBuffer(URL_CIRCLE_DETAIL);
+                PATH.append("id=" + id);
+                PATH.append("&session=" + MainApplication.userInfo.getCookie());
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+            }
+        } else {
+            Toast.makeText(MainApplication.UIContext, "网络不给力，请稍候再试", Toast.LENGTH_SHORT).show();
         }
     }
 

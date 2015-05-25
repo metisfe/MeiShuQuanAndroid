@@ -3,7 +3,7 @@
     android:id="@+id/ll_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#cccccc"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -50,8 +50,10 @@
         android:layout_below="@id/circle_moment_comment_header"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="5dp"
+        android:background="@null"
         android:gravity="top"
-        android:hint="写评论..."/>
+        android:hint="我来说两句..." />
 
     <com.metis.meishuquan.view.circle.moment.comment.EmotionSelectView
         android:id="@+id/emotion_input"
@@ -69,7 +71,7 @@
         android:gravity="right"
         android:paddingBottom="3dp"
         android:paddingRight="8dp"
-        android:clickable="false" >
+        android:clickable="false">
 
         <ImageButton
             android:id="@+id/switch_emotion"
@@ -77,7 +79,6 @@
             android:layout_height="40dp"
             android:padding="3dp"
             android:background="@color/transparent"
-            android:scaleType="fitCenter" >
-        </ImageButton>
+            android:scaleType="fitCenter"></ImageButton>
     </LinearLayout>
 </RelativeLayout>

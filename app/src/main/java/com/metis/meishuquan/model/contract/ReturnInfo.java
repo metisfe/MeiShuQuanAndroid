@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by wudi on 3/17/2015.
  */
 public class ReturnInfo<E> {
-    @com.google.gson.annotations.SerializedName("option")
+    @SerializedName("option")
     private OptionSettings option;
 
     @SerializedName("data")

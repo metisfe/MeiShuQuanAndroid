@@ -12,6 +12,9 @@ public class GlobalData {
     public static CCircleDetailModel moment; //for data between moment list and moment detail
     public static int fromMomentsFragment = -1;
     public static int momentsGroupId = -1;
+    public static int momentsReplyCount = 0;
+    public static int momentsCommentCount = 0;
+    public static int momentsLikeCount = 0;
 
     private SelectedTabType tabTypeSelected;
     private int[] titleBarTypeSelected = new int[]{-1, -1, -1, -1, -1};

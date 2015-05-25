@@ -1,5 +1,6 @@
 package com.metis.meishuquan.fragment.circle;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -169,13 +171,12 @@ public class MomentsFragment extends CircleBaseFragment {
 
     public void getData(final int groupId, final int lastId, final int mode) {
         String url = String.format("v1.1/Circle/CircleList?groupId=%s&lastId=%s&session=%s", groupId, lastId, MainApplication.userInfo.getCookie());
-
+        Log.i("CircleList",url);
         ApiDataProvider.getmClient().invokeApi(url, null,
                 HttpGet.METHOD_NAME, null, CircleMoments.class,
                 new ApiOperationCallback<CircleMoments>() {
                     @Override
                     public void onCompleted(CircleMoments result, Exception exception, ServiceFilterResponse response) {
-
                         Log.d("CircleResult", result.toString());
                         if (!result.isSuccess()) {
                             switch (mode) {
@@ -210,7 +211,6 @@ public class MomentsFragment extends CircleBaseFragment {
                                 list.addAll(result_list);
                                 break;
                         }
-
                         listView.setResultSize(result_list.size());
                         circleMomentAdapter.notifyDataSetChanged();
                     }

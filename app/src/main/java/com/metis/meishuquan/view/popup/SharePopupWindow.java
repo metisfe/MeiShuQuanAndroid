@@ -89,40 +89,55 @@ public class SharePopupWindow extends PopupWindow {
             public void onClick(View view) {
                 Intent it = new Intent(mContext, ReplyActivity.class);
                 CirclePushBlogParm parm = new CirclePushBlogParm();
-                if (mMoment.relayCircle != null && mMoment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal()) {
-                    parm.setType(SupportTypeEnum.CircleActivity.getVal());
-                    parm.setRelayId(mMoment.relayCircle.id);
-                } else if (mMoment.relayCircle != null && mMoment.relayCircle.type == SupportTypeEnum.News.getVal()) {
-                    parm.setType(SupportTypeEnum.News.getVal());
-                    parm.setRelayId(mMoment.relayCircle.id);
-                } else if (mMoment.relayCircle != null && mMoment.relayCircle.type == SupportTypeEnum.Circle.getVal()) {
-                    parm.setType(SupportTypeEnum.Circle.getVal());
-                    parm.setRelayId(mMoment.id);
-                    parm.setContent(mMoment.relayCircle.desc);
-                } else if (mMoment.relayCircle == null) {
-                    parm.setType(SupportTypeEnum.Circle.getVal());
-                    parm.setRelayId(mMoment.id);
-                    List<Integer> userIds = new ArrayList<Integer>();
-                    userIds.add(mMoment.user.userId);
-                    parm.setUserIds(userIds);
-                    parm.setContent(mMoment.content);
+
+                if (mType == SupportTypeEnum.News.getVal()) {
+                    parm.setType(mType);
+                    parm.setRelayId(mShareId);
+                    it.putExtra(ReplyActivity.PARM, parm);
+                    it.putExtra(ReplyActivity.TITLE, mOutsideTitle);
+                    it.putExtra(ReplyActivity.CONTENT, mContent);
+                    it.putExtra(ReplyActivity.IMAGEURL, mImageUrl);
                 }
-                it.putExtra(ReplyActivity.PARM, parm);
-                if (mMoment.relayCircle != null && (mMoment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal() || mMoment.relayCircle.type == SupportTypeEnum.News.getVal())) {
-                    it.putExtra(ReplyActivity.TITLE, mMoment.relayCircle.title);
-                    it.putExtra(ReplyActivity.CONTENT, mMoment.relayCircle.desc);
-                    it.putExtra(ReplyActivity.IMAGEURL, mMoment.relayCircle.activityImg);
-                    it.putExtra(ReplyActivity.INPUT_CONTENT, "//@" + mMoment.user.name + " " + mMoment.content);
-                } else if (mMoment.relayCircle != null && mMoment.relayCircle.type == SupportTypeEnum.Circle.getVal()) {
-                    it.putExtra(ReplyActivity.TITLE, "@" + mMoment.user.name);
-                    it.putExtra(ReplyActivity.CONTENT, mMoment.relayCircle.desc);
-                    it.putExtra(ReplyActivity.IMAGEURL, mMoment.user.avatar);
-                    it.putExtra(ReplyActivity.INPUT_CONTENT, "//@" + mMoment.user.name + " " + mMoment.content);
-                } else if (mMoment.relayCircle == null) {
-                    it.putExtra(ReplyActivity.TITLE, "@" + mMoment.user.name);
-                    it.putExtra(ReplyActivity.CONTENT, mMoment.content);
-                    it.putExtra(ReplyActivity.IMAGEURL, mMoment.user.avatar);
-                    it.putExtra(ReplyActivity.INPUT_CONTENT, "//@" + mMoment.user.name + " " + mMoment.content);
+
+                if (mMoment != null) {
+                    if (mMoment.relayCircle != null && mMoment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal()) {
+                        parm.setType(SupportTypeEnum.CircleActivity.getVal());
+                        parm.setRelayId(mMoment.relayCircle.id);
+                    } else if (mMoment.relayCircle != null && mMoment.relayCircle.type == SupportTypeEnum.News.getVal()) {
+                        parm.setType(SupportTypeEnum.News.getVal());
+                        parm.setRelayId(mMoment.relayCircle.id);
+                    } else if (mMoment.relayCircle != null && mMoment.relayCircle.type == SupportTypeEnum.Circle.getVal()) {
+                        parm.setType(SupportTypeEnum.Circle.getVal());
+                        parm.setRelayId(mMoment.relayCircle.id);
+                        parm.setContent(mMoment.relayCircle.desc);
+                        List<Integer> userIds = new ArrayList<Integer>();
+                        userIds.add(mMoment.user.userId);
+                        parm.setUserIds(userIds);
+                    } else if (mMoment.relayCircle == null) {
+                        parm.setType(SupportTypeEnum.Circle.getVal());
+                        parm.setRelayId(mMoment.id);
+                        List<Integer> userIds = new ArrayList<Integer>();
+                        userIds.add(mMoment.user.userId);
+                        parm.setUserIds(userIds);
+                        parm.setContent(mMoment.content);
+                    }
+                    it.putExtra(ReplyActivity.PARM, parm);
+                    if (mMoment.relayCircle != null && (mMoment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal() || mMoment.relayCircle.type == SupportTypeEnum.News.getVal())) {
+                        it.putExtra(ReplyActivity.TITLE, mMoment.relayCircle.title);
+                        it.putExtra(ReplyActivity.CONTENT, mMoment.relayCircle.desc);
+                        it.putExtra(ReplyActivity.IMAGEURL, mMoment.relayCircle.activityImg);
+                        it.putExtra(ReplyActivity.INPUT_CONTENT, "//@" + mMoment.user.name + " " + mMoment.content);
+                    } else if (mMoment.relayCircle != null && mMoment.relayCircle.type == SupportTypeEnum.Circle.getVal()) {
+                        it.putExtra(ReplyActivity.TITLE, "@" + mMoment.user.name);
+                        it.putExtra(ReplyActivity.CONTENT, mMoment.relayCircle.desc);
+                        it.putExtra(ReplyActivity.IMAGEURL, mMoment.user.avatar);
+                        it.putExtra(ReplyActivity.INPUT_CONTENT, "//@" + mMoment.user.name + " " + mMoment.content);
+                    } else if (mMoment.relayCircle == null) {
+                        it.putExtra(ReplyActivity.TITLE, "@" + mMoment.user.name);
+                        it.putExtra(ReplyActivity.CONTENT, mMoment.content);
+                        it.putExtra(ReplyActivity.IMAGEURL, mMoment.user.avatar);
+                        it.putExtra(ReplyActivity.INPUT_CONTENT, "//@" + mMoment.user.name + " " + mMoment.content);
+                    }
                 }
 
                 mContext.startActivity(it);
@@ -287,7 +302,7 @@ public class SharePopupWindow extends PopupWindow {
             throw new IllegalArgumentException("title or targetUrl is Empty");
         }
         mInsideTitle = "@ " + moment.user.name;//分享至美术圈
-        mOutsideTitle = "@分享 " + moment.user.name + " 的微博";//分享至外面
+        mOutsideTitle = "分享 " + moment.user.name + " 的内容";//分享至外面
         mContent = content;
         mTargetUrl = targetUrl;
         mImageUrl = imageUrl;

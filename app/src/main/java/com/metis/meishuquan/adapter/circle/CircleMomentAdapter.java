@@ -31,6 +31,7 @@ import com.metis.meishuquan.fragment.circle.MomentCommentFragment;
 import com.metis.meishuquan.fragment.circle.MomentDetailFragment;
 import com.metis.meishuquan.fragment.commons.ListDialogFragment;
 import com.metis.meishuquan.model.BLL.CircleOperator;
+import com.metis.meishuquan.model.circle.CCircleCommentModel;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CirclePushBlogParm;
 import com.metis.meishuquan.model.circle.CirclePushCommentResult;
@@ -327,11 +328,13 @@ public class CircleMomentAdapter extends BaseAdapter {
                     intent.putStringArrayListExtra(ImagePreviewActivity.KEY_IMAGE_URL_ARRAY, moment.getImagesUrl());
                     intent.putExtra(ImagePreviewActivity.KEY_START_INDEX, 0);
                     mContext.startActivity(intent);
+                    ((FragmentActivity) mContext).overridePendingTransition(R.anim.activity_zoomin, 0);
                 } else if (moment.relayCircle != null && moment.relayCircle.images != null && moment.relayCircle.images.size() > 0) {
                     Intent intent = new Intent(mContext, ImagePreviewActivity.class);
                     intent.putStringArrayListExtra(ImagePreviewActivity.KEY_IMAGE_URL_ARRAY, moment.relayCircle.getImagesUrl());
                     intent.putExtra(ImagePreviewActivity.KEY_START_INDEX, 0);
                     mContext.startActivity(intent);
+                    ((FragmentActivity) mContext).overridePendingTransition(R.anim.activity_zoomin, 0);
                 }
             }
         });
@@ -487,6 +490,7 @@ public class CircleMomentAdapter extends BaseAdapter {
     }
 
     private void comment(CCircleDetailModel moment) {
+        GlobalData.momentsReplyCount = moment.comentCount;
         GlobalData.getInstance().moment = moment;
         if (!MainApplication.isLogin()) {
             mContext.startActivity(new Intent(mContext, LoginActivity.class));
@@ -495,7 +499,7 @@ public class CircleMomentAdapter extends BaseAdapter {
         MomentCommentFragment momentCommentFragment = new MomentCommentFragment();
         momentCommentFragment.setOnCommentSuccessListner(new MomentDetailFragment.OnCommentSuccessListner() {
             @Override
-            public void onSuccess() {
+            public void onSuccess(CCircleCommentModel circleCommentModel) {
                 MomentDetailFragment momentDetailFragment = new MomentDetailFragment();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
