@@ -3,10 +3,13 @@ package com.metis.meishuquan.model.BLL;
 import android.util.Log;
 import android.util.Pair;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
+import com.metis.meishuquan.model.circle.MomentsGroup;
 import com.metis.meishuquan.model.circle.UserSearch;
 import com.metis.meishuquan.model.commons.AndroidVersion;
+import com.metis.meishuquan.model.commons.Result;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.BlockTypeEnum;
 import com.metis.meishuquan.model.enums.FileUploadTypeEnum;
@@ -40,6 +43,9 @@ import java.util.List;
  * Created by wangjin on 15/4/13.
  */
 public class CommonOperator {
+
+    private static final String TAG = CommonOperator.class.getSimpleName();
+
     private static final String Log_PubLishComment_url = "Log_PubLishComment_url";
 
     private static final String URL_SUPPORTORSTEP = "v1.1/Comment/Support";
@@ -250,6 +256,36 @@ public class CommonOperator {
                                     String json = new Gson().toJson(result);
                                     Log.e(SharedPreferencesUtil.MOMENTS_GROUP_INFO, json);
                                     SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(SharedPreferencesUtil.MOMENTS_GROUP_INFO, json);
+                                }
+                            }
+                        });
+            }
+        }
+    }
+
+    public void getMomentsGroupsAsync(final UserInfoOperator.OnGetListener<List<MomentsGroup>> listener) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuffer path = new StringBuffer(MOMENTSGROUPS);
+                path.append("?userid=" + MainApplication.userInfo.getUserId());
+                path.append("&type=" + 1);
+                path.append("&session=" + SESSION);
+                Log.i("朋友圈Url", path.toString());
+                ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+                            @Override
+                            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                                Log.v(TAG, "getMomentsGroupsAsync callback=" + response.getContent());
+                                if (result != null && result.isSuccess()) {
+                                    Gson gson= new Gson();
+                                    String json = gson.toJson(result);
+                                    Result<List<MomentsGroup>> listResult = gson.fromJson(json, new TypeToken<Result<List<MomentsGroup>>>(){}.getType());
+                                    if (listener != null) {
+                                        listener.onGet(true, listResult.getData());
+                                    }
+                                    Log.v(TAG, "getMomentsGroupsAsync " + json);
+                                } else {
+                                    listener.onGet(false, null);
                                 }
                             }
                         });

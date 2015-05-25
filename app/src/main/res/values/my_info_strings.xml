@@ -144,6 +144,9 @@
     <string name="studio_weibo">微博:%1$s</string>
     <string name="studio_wechat">微信:%1$s</string>
     <string name="studio_website">网站:%1$s</string>
+    <string name="studio_focus">加关注</string>
+    <string name="studio_has_focused">已关注</string>
+    <string name="studio_focused_each">互相关注</string>
 
     <string name="my_course_comment_count">评论(%1$d)</string>
     <string name="my_course_read_count">阅读(%1$d)</string>

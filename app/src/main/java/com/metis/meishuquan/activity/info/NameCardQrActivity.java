@@ -17,11 +17,18 @@ import com.google.gson.JsonObject;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.act.ActDetailActivity;
+import com.metis.meishuquan.activity.circle.SearchUserActivity;
+import com.metis.meishuquan.activity.circle.SearchUserInfoActivity;
 import com.metis.meishuquan.fragment.commons.ListDialogFragment;
 import com.metis.meishuquan.fragment.commons.QRFragment;
+import com.metis.meishuquan.model.BLL.CommonOperator;
+import com.metis.meishuquan.model.circle.CUserModel;
+import com.metis.meishuquan.model.circle.UserSearch;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.view.shared.TitleView;
+import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -89,9 +96,40 @@ public class NameCardQrActivity extends BaseActivity {
 
     @Override
     public void onTitleRightPressed() {
+        Intent it = new Intent (this, QrScanActivity.class);
+        startActivityForResult(it, 100);
         //startActivity(new Intent (QrActivity.this, ImagePreviewActivity.class));
         //startActivity(new Intent(NameCardQrActivity.this, QrScanActivity.class));
         //startActivity(new Intent (this, ActDetailActivity.class));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //Log.v(TAG, "onActivityResult requestCode=" + requestCode + " resultCode=" + resultCode);
+        if (requestCode == 100 && resultCode == RESULT_OK) {
+            String phone = data.getStringExtra(QrScanActivity.KEY_RESULT);
+            //Log.v(TAG, "onActivityResult phone=" + phone);
+            CommonOperator.getInstance().searchUser(phone, new ApiOperationCallback<UserSearch>() {
+                @Override
+                public void onCompleted(UserSearch result, Exception exception, ServiceFilterResponse response) {
+                    if (!result.option.isSuccess()) {
+                        return;
+                    }
+                    CUserModel user = result.data;
+
+                    //显示好友信息
+                    Intent intent = new Intent(NameCardQrActivity.this, SearchUserInfoActivity.class);
+                    intent.putExtra(SearchUserInfoActivity.KEY_USER_INFO, (java.io.Serializable) user);
+                    startActivity(intent);
+                }
+            });
+        }
+    }
+
+    @Override
+    public String getTitleRight() {
+        return getString(R.string.name_card_scan);
     }
 
     private class ActionAdapter extends BaseAdapter {

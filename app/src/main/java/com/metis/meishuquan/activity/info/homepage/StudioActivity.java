@@ -13,7 +13,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -21,8 +23,11 @@ import android.widget.BaseAdapter;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +53,9 @@ import com.metis.meishuquan.fragment.commons.InputDialogFragment;
 import com.metis.meishuquan.fragment.commons.ListDialogFragment;
 import com.metis.meishuquan.fragment.commons.StudioFragment;
 import com.metis.meishuquan.manager.common.UserManager;
+import com.metis.meishuquan.model.BLL.CircleOperator;
+import com.metis.meishuquan.model.BLL.CommonOperator;
+import com.metis.meishuquan.model.circle.MomentsGroup;
 import com.metis.meishuquan.model.commons.Achievement;
 import com.metis.meishuquan.model.BLL.StudioBaseInfo;
 import com.metis.meishuquan.model.BLL.StudioOperator;
@@ -57,6 +65,7 @@ import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.commons.Profile;
 import com.metis.meishuquan.model.commons.Studio;
 import com.metis.meishuquan.model.commons.User;
+import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.course.CourseChannelItem;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.topline.News;
@@ -64,6 +73,8 @@ import com.metis.meishuquan.model.topline.NewsInfo;
 import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.PatternUtils;
+import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.tencent.connect.UserInfo;
 
@@ -113,6 +124,8 @@ public class StudioActivity extends BaseActivity implements
 
     private int mIndexForTab1, mIndexForTab2, mIndexForTab3;
 
+    private TextView mCustomRight = null;
+
     private SimplePrvsAdapter.OnPrvsItemClickListener mPrvsListener = new SimplePrvsAdapter.OnPrvsItemClickListener() {
 
         @Override
@@ -134,7 +147,7 @@ public class StudioActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studio);
 
-        mUserId = getIntent().getIntExtra(KEY_USER_ID, (int)mUserId);
+        mUserId = getIntent().getIntExtra(KEY_USER_ID, (int) mUserId);
         canEdit = mUserId == MainApplication.userInfo.getUserId();
 
         mTitleView = LayoutInflater.from(this).inflate(R.layout.layout_studio_title, null);
@@ -208,7 +221,57 @@ public class StudioActivity extends BaseActivity implements
         mStudioFragment.setStudioBaseInfo(info);
     }
 
-    private void fillUser (User user) {
+    private void fillUser (final User user) {
+        if (MainApplication.userInfo != null && user.getUserId() != MainApplication.userInfo.getUserId()) {
+            mCustomRight = new TextView(this);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            params.addRule(RelativeLayout.CENTER_VERTICAL);
+            params.setMargins(0, 0, (int)(10 * getResources().getDisplayMetrics().density), 0);
+            getTitleView().addView(mCustomRight, params);
+            switch (user.getRelationType()) {
+                case 0:
+                    mCustomRight.setText(R.string.studio_focus);
+                    mCustomRight.setTextColor(getResources().getColor(android.R.color.white));
+                    mCustomRight.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            payAttention(user);
+                        }
+                    });
+                    break;
+                case 1:
+                    mCustomRight.setText(R.string.studio_has_focused);
+                    mCustomRight.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+                    mCustomRight.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            cancelAttention(user);
+                        }
+                    });
+                    break;
+                case 2:
+                    mCustomRight.setText(R.string.studio_focus);
+                    mCustomRight.setTextColor(getResources().getColor(android.R.color.white));
+                    mCustomRight.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            payAttention(user);
+                        }
+                    });
+                    break;
+                case 3:
+                    mCustomRight.setText(R.string.studio_focused_each);
+                    mCustomRight.setTextColor(getResources().getColor(android.R.color.holo_orange_light));
+                    mCustomRight.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            cancelAttention(user);
+                        }
+                    });
+                    break;
+            }
+        }
         mStudioFragment.setSelfIntroduce(user.getSelfIntroduce());
         ImageLoaderUtils.getImageLoader(this)
                 .displayImage(user.getUserAvatar(),
@@ -241,6 +304,76 @@ public class StudioActivity extends BaseActivity implements
             }
         });
         //mSubTitleName.setText(user.get);
+    }
+
+    private void cancelAttention (final User user) {
+        mCustomRight.setEnabled(false);
+        CircleOperator.getInstance().cancelAttention(user.getUserId(), new ApiOperationCallback<ReturnInfo<String>>() {
+            @Override
+            public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                mCustomRight.setEnabled(true);
+                if (result.isSuccess()) {
+                    if (user.getRelationType() == 3) {
+                        user.setRelationType(2);
+                        mCustomRight.setText(R.string.studio_focus);
+                        mCustomRight.setTextColor(getResources().getColor(android.R.color.white));
+                    } else if (user.getRelationType() == 1) {
+                        user.setRelationType(0);
+                        mCustomRight.setText(R.string.studio_focus);
+                        mCustomRight.setTextColor(getResources().getColor(android.R.color.white));
+                    }
+                    mCustomRight.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            payAttention(user);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void payAttention (final User user) {
+        mCustomRight.setEnabled(false);
+        CommonOperator.getInstance().getMomentsGroupsAsync(new UserInfoOperator.OnGetListener<List<MomentsGroup>>() {
+            @Override
+            public void onGet(boolean succeed, List<MomentsGroup> momentsGroups) {
+                if (succeed) {
+                    PopupMenu popupMenu = new PopupMenu(StudioActivity.this, mCustomRight);
+                    popupMenu.inflate(R.menu.studio_menu);
+                    for (int i = 0; i < momentsGroups.size(); i++) {
+                        MomentsGroup group = momentsGroups.get(i);
+                        popupMenu.getMenu().add(R.id.studio_menu, group.id, i, group.name);
+                    }
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+
+                            CircleOperator.getInstance().attention(user.getUserId(), item.getItemId(), new ApiOperationCallback<ReturnInfo<String>>() {
+                                @Override
+                                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                                    mCustomRight.setEnabled(true);
+                                    if (result.isSuccess()) {
+                                        if (user.getRelationType() == 0) {
+                                            mCustomRight.setText(R.string.studio_has_focused);
+                                            mCustomRight.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+                                            user.setRelationType(1);
+                                        } else if (user.getRelationType() == 2) {
+                                            mCustomRight.setText(R.string.studio_focused_each);
+                                            mCustomRight.setTextColor(getResources().getColor(android.R.color.holo_orange_light));
+                                            user.setRelationType(3);
+                                        }
+                                        mCustomRight.setOnClickListener(null);
+                                    }
+                                }
+                            });
+                            return false;
+                        }
+                    });
+                    popupMenu.show();
+                }
+            }
+        });
     }
 
     @Override

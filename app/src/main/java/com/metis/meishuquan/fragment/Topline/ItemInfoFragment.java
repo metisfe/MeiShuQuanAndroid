@@ -58,6 +58,7 @@ import com.metis.meishuquan.model.topline.ContentInfo;
 import com.metis.meishuquan.model.topline.RelatedRead;
 import com.metis.meishuquan.model.topline.TopLineNewsInfo;
 import com.metis.meishuquan.model.topline.Urls;
+import com.metis.meishuquan.model.topline.UserMark;
 import com.metis.meishuquan.util.ActivityUtils;
 import com.metis.meishuquan.util.Helper;
 import com.metis.meishuquan.util.ImageLoaderUtils;
@@ -190,6 +191,12 @@ public class ItemInfoFragment extends Fragment {
         contentScrollView = (ScrollView) rootView.findViewById(R.id.id_scrollview_info_content);
         mProfileIv = (ImageView) rootView.findViewById(R.id.id_img_dynamic);
         mProfileIv.setVisibility(View.GONE);
+
+        rl_Input.setEnabled(false);
+        rl_writeCommont.setEnabled(false);
+        rl_private.setEnabled(false);
+        rl_share.setEnabled(false);
+        rlSend.setEnabled(false);
 
         ll_relatedReadAndSupportContainer = (LinearLayout) rootView.findViewById(R.id.id_ll_related_read_and_support_container);
         llRelatedRead = (LinearLayout) rootView.findViewById(R.id.id_ll_related_read);//相关阅读父容器
@@ -390,13 +397,14 @@ public class ItemInfoFragment extends Fragment {
         rlSupport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (newsInfo.getData().getUserMark() != null && newsInfo.getData().getUserMark().isSupport()) {
+                UserMark userMark = newsInfo.getData().getUserMark();
+                if (userMark != null && userMark.isSupport()) {
                     Toast.makeText(MainApplication.UIContext, "您已赞", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 int count = newsInfo.getData().getSupportCount();
                 Object supportCount = tvSupportCount.getTag();
-                if (tvStepCount.getTag() != null) {
+                if (tvStepCount.getTag() != null || (userMark != null && userMark.isOpposition())) {
                     Toast.makeText(MainApplication.UIContext, "您已踩", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -434,14 +442,15 @@ public class ItemInfoFragment extends Fragment {
         rlStep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (newsInfo.getData().getUserMark() != null && newsInfo.getData().getUserMark().isOpposition()) {
+                UserMark userMark = newsInfo.getData().getUserMark();
+                if (userMark != null && userMark.isOpposition()) {
                     Toast.makeText(MainApplication.UIContext, "您已踩", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 //点踩加1效果
                 int count = newsInfo.getData().getOppositionCount();
                 Object stepCount = tvSupportCount.getTag();
-                if (tvSupportCount.getTag() != null) {
+                if (tvSupportCount.getTag() != null || (userMark != null && userMark.isSupport())) {
                     Toast.makeText(MainApplication.UIContext, "您已赞", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -659,7 +668,7 @@ public class ItemInfoFragment extends Fragment {
             titleBar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (newsInfo.getData().getUser() != null) {
+                    if (newsInfo != null && newsInfo.getData().getUser() != null) {
                         ActivityUtils.startNameCardActivity(getActivity(), newsInfo.getData().getUser().getUserId());
                     }
                 }
@@ -716,11 +725,16 @@ public class ItemInfoFragment extends Fragment {
                         if (!TextUtils.isEmpty(json)) {
                             newsInfo = gson.fromJson(json, new TypeToken<TopLineNewsInfo>() {
                             }.getType());
-                            if (newsInfo.getData().getUserMark() != null) {
+                            rl_Input.setEnabled(true);
+                            rl_writeCommont.setEnabled(true);
+                            rl_private.setEnabled(true);
+                            rl_share.setEnabled(true);
+                            rlSend.setEnabled(true);
+                            /*if (newsInfo.getData().getUserMark() != null) {
                                 Log.v(TAG, "getNewsInfoById result=" + newsInfo.getData().getUserMark().isFavorite());
                             } else {
                                 Log.e(TAG, "getNewsInfoById NOT FOUND USER_MARK");
-                            }
+                            }*/
                             if (listener != null) {
                                 listener.onGet(true, newsInfo);
                             }

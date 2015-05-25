@@ -14,7 +14,7 @@
         android:text="@string/gender_famale"
         android:layout_weight="1"
         android:layout_gravity="center"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         />
     <RadioButton
         android:id="@+id/gender_male"
@@ -23,6 +23,6 @@
         android:text="@string/gender_male"
         android:layout_weight="1"
         android:layout_gravity="center"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         />
 </RadioGroup>
