@@ -810,7 +810,7 @@ public class UserInfoOperator {
     }
 
     public void getAreaList (final int id, final OnGetListener<List<City>> listener) {
-        final SharedPreferences shared = MainApplication.UIContext.getSharedPreferences(SHARE_PROVINCE_LIST, Context.MODE_PRIVATE);
+        /*final SharedPreferences shared = MainApplication.UIContext.getSharedPreferences(SHARE_PROVINCE_LIST, Context.MODE_PRIVATE);
         String json = shared.getString(id + "", null);
         if (!TextUtils.isEmpty(json)) {
             Gson gson = new Gson();
@@ -823,7 +823,7 @@ public class UserInfoOperator {
                 }
             }
             return;
-        }
+        }*/
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_GET_AREA_LIST);
             sb.append(id + "");
@@ -840,9 +840,9 @@ public class UserInfoOperator {
                         Log.v(TAG, "getAreaList result=" + json);
                         Result<List<City>> listResult = gson.fromJson(json, new TypeToken<Result<List<City>>>(){}.getType());
                         if (listResult.getOption().getStatus() == 0) {
-                            SharedPreferences.Editor editor = shared.edit();
+                            /*SharedPreferences.Editor editor = shared.edit();
                             editor.putString(id + "", json);
-                            editor.commit();
+                            editor.commit();*/
                         }
                         if (listener != null) {
                             if (listResult.getOption().getStatus() == 0) {

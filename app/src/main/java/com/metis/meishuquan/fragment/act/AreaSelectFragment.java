@@ -1,7 +1,9 @@
 package com.metis.meishuquan.fragment.act;
 
+import android.content.Context;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +26,9 @@ public class AreaSelectFragment extends MultiListViewFragment {
     private AreaAdapter mProvAdapter = null;
     private AreaAdapter mCityAdapter = null, mTownAdapter;
 
-    private List<Areable> mProvinceDataList = new ArrayList<Areable>();
-    private List<Areable> mCityDataList = new ArrayList<Areable>();
-    private List<Areable> mTownDataList = new ArrayList<Areable>();
+    private List<CityArea> mProvinceDataList = new ArrayList<CityArea>();
+    private List<CityArea> mCityDataList = new ArrayList<CityArea>();
+    private List<CityArea> mTownDataList = new ArrayList<CityArea>();
     private List<BaseAdapter> mAdapters = new ArrayList<BaseAdapter>();
 
     private int mProvinceId, mCityId, mTownId;
@@ -58,7 +60,31 @@ public class AreaSelectFragment extends MultiListViewFragment {
         }
 
         if (mProvinceDataList.isEmpty()) {
-            UserInfoOperator.getInstance().getProvinceList(new UserInfoOperator.OnGetListener<List<UserInfoOperator.SimpleProvince>>() {
+            UserInfoOperator.getInstance().getAreaList(0, new UserInfoOperator.OnGetListener<List<City>>() {
+                @Override
+                public void onGet(boolean succeed, List<City> cities) {
+                    if (succeed) {
+                        mProvinceDataList.clear();
+                        List<CityArea> provienceAreas = new ArrayList<CityArea>();
+                        int countAll = 0;
+                        for (City city : cities) {
+                            countAll += city.getStudioCount();
+                            provienceAreas.add(new CityArea(city));
+                        }
+
+                        mProvinceDataList.addAll(provienceAreas);
+                        if (mProvinceDataList.size() > 0) {
+                            City city = new City();
+                            city.setCityName(getString(R.string.all));
+                            CityArea all = new CityArea(city);
+                            all.getmCity().setStudioCount(countAll);
+                            mProvinceDataList.add(0, all);
+                        }
+                        mProvAdapter.notifyDataSetInvalidated();
+                    }
+                }
+            });
+            /*UserInfoOperator.getInstance().getProvinceList(new UserInfoOperator.OnGetListener<List<UserInfoOperator.SimpleProvince>>() {
                 @Override
                 public void onGet(boolean succeed, List<UserInfoOperator.SimpleProvince> simpleProvinces) {
                     if (succeed) {
@@ -72,13 +98,13 @@ public class AreaSelectFragment extends MultiListViewFragment {
                         mProvAdapter.notifyDataSetChanged();
                     }
                 }
-            });
+            });*/
         }
 
         setAdapterList(mAdapters);
         mProvAdapter.setOnAreaChooseListener(new OnAreaChooseListener() {
             @Override
-            public void onChoose(Areable area) {
+            public void onChoose(CityArea area) {
                 mCityDataList.clear();
                 mCityAdapter.notifyDataSetChanged();
                 mTownDataList.clear();
@@ -95,11 +121,18 @@ public class AreaSelectFragment extends MultiListViewFragment {
                     public void onGet(boolean succeed, List<City> cities) {
                         if (succeed) {
                             mCityDataList.clear();
-                            List<Areable> cityAreas = new ArrayList<Areable>();
+                            List<CityArea> cityAreas = new ArrayList<CityArea>();
+                            int countAll = 0;
                             for (City c : cities) {
+                                countAll += c.getStudioCount();
                                 cityAreas.add(new CityArea(c));
                             }
-                            cityAreas.add(0, mProvAdapter.getSelectedAreable().cloneUnselectedOne());
+                            if (cityAreas.size() > 0) {
+                                CityArea all = mProvAdapter.getSelectedAreable().cloneUnselectedOne(getActivity());
+                                //all.getmCity().setStudioCount(countAll);
+                                cityAreas.add(0, all);
+                            }
+
                             mCityDataList.addAll(cityAreas);
                             mCityAdapter.notifyDataSetChanged();
                         }
@@ -109,7 +142,7 @@ public class AreaSelectFragment extends MultiListViewFragment {
         });
         mCityAdapter.setOnAreaChooseListener(new OnAreaChooseListener() {
             @Override
-            public void onChoose(Areable area) {
+            public void onChoose(CityArea area) {
                 mCityId = area.getId();
                 mTownId = 0;
                 if (mProvAdapter.getSelectedAreable() != null && area.getId() == mProvAdapter.getSelectedAreable().getId()) {
@@ -125,11 +158,20 @@ public class AreaSelectFragment extends MultiListViewFragment {
                     public void onGet(boolean succeed, List<City> cities) {
                         if (succeed) {
                             mTownDataList.clear();
-                            List<Areable> townAreas = new ArrayList<Areable>();
+                            List<CityArea> townAreas = new ArrayList<CityArea>();
+                            int countAll = 0;
                             for (City c : cities) {
-                                townAreas.add(new CityArea(c));
+                                countAll += c.getStudioCount();
+                                CityArea a = new CityArea(c);
+                                a.canExtend = false;
+                                townAreas.add(a);
                             }
-                            townAreas.add(0, mCityAdapter.getSelectedAreable().cloneUnselectedOne());
+                            if (townAreas.size() > 0) {
+                                CityArea all = mCityAdapter.getSelectedAreable().cloneUnselectedOne(getActivity());
+                                //all.getmCity().setStudioCount(countAll);
+                                townAreas.add(0, all);
+                            }
+
                             mTownDataList.addAll(townAreas);
                             mTownAdapter.notifyDataSetChanged();
                         }
@@ -140,7 +182,7 @@ public class AreaSelectFragment extends MultiListViewFragment {
 
         mTownAdapter.setOnAreaChooseListener(new OnAreaChooseListener() {
             @Override
-            public void onChoose(Areable area) {
+            public void onChoose(CityArea area) {
                 mTownId = area.getId();
                 onAreaSelected(area);
             }
@@ -153,10 +195,10 @@ public class AreaSelectFragment extends MultiListViewFragment {
     }
 
     public static interface OnPlaceChooseListener{
-        public void onChoose (Areable areable, int provinceId, int cityId, int townId);
+        public void onChoose (CityArea areable, int provinceId, int cityId, int townId);
     }
 
-    public void onAreaSelected (Areable areable) {
+    public void onAreaSelected (CityArea areable) {
         if (mFragmentAreaListener != null) {
             mFragmentAreaListener.onChoose(areable, mProvinceId, mCityId, mTownId);
         }
@@ -170,12 +212,12 @@ public class AreaSelectFragment extends MultiListViewFragment {
 
     private class AreaAdapter extends BaseAdapter {
 
-        private List<Areable> mDataList = null;
+        private List<CityArea> mDataList = null;
         private OnAreaChooseListener mAreaListener = null;
 
-        private Areable mSelectedAreable = null;
+        private CityArea mSelectedAreable = null;
 
-        public AreaAdapter (List<Areable> list) {
+        public AreaAdapter (List<CityArea> list) {
             mDataList = list;
         }
 
@@ -185,7 +227,7 @@ public class AreaSelectFragment extends MultiListViewFragment {
         }
 
         @Override
-        public Areable getItem(int i) {
+        public CityArea getItem(int i) {
             return mDataList.get(i);
         }
 
@@ -196,9 +238,32 @@ public class AreaSelectFragment extends MultiListViewFragment {
 
         @Override
         public View getView(final int i, View view, ViewGroup viewGroup) {
-            view = LayoutInflater.from(getActivity()).inflate(R.layout.layout_list_dialog_item, null);
-            TextView tv = (TextView)view.findViewById(R.id.list_dialog_item);
-            tv.setText(getItem(i).getTitle());
+            view = LayoutInflater.from(getActivity()).inflate(R.layout.layout_area_item, null);
+            TextView tv = (TextView)view.findViewById(R.id.area_item_name);
+            TextView countTv = (TextView)view.findViewById(R.id.area_item_count);
+
+            CityArea areable = getItem(i);
+            if (!TextUtils.isEmpty(areable.getShowName())) {
+                tv.setText(areable.getShowName());
+            } else {
+                tv.setText(areable.getTitle());
+            }
+
+            City city = areable.mCity;
+            final int count = city.getStudioCount();
+            if (count > 0) {
+                countTv.setText("(" + city.getStudioCount() + ")");
+
+                if (areable.canExtend) {
+                    countTv.setBackgroundResource(R.drawable.number_bg_arrow);
+                } else {
+                    countTv.setBackgroundResource(R.drawable.number_bg);
+                }
+            } else {
+                countTv.setText("");
+                countTv.setBackgroundDrawable(null);
+            }
+
             view.setBackgroundColor(getResources().getColor(getItem(i).isSelected() ? R.color.ltgray : android.R.color.white));
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -217,7 +282,7 @@ public class AreaSelectFragment extends MultiListViewFragment {
             return view;
         }
 
-        public Areable getSelectedAreable () {
+        public CityArea getSelectedAreable () {
             return mSelectedAreable;
         }
 
@@ -228,10 +293,10 @@ public class AreaSelectFragment extends MultiListViewFragment {
     }
 
     public static interface OnAreaChooseListener {
-        public void onChoose (Areable areable);
+        public void onChoose (CityArea areable);
     }
 
-    private class ProvinceArea implements Areable {
+    /*private class ProvinceArea implements Areable {
 
         private UserInfoOperator.SimpleProvince mProvince = null;
 
@@ -264,13 +329,17 @@ public class AreaSelectFragment extends MultiListViewFragment {
         public ProvinceArea cloneUnselectedOne () {
             return new ProvinceArea(mProvince);
         }
-    }
+    }*/
 
-    private class CityArea implements Areable {
+    public class CityArea implements Areable {
 
         private City mCity = null;
 
         private boolean isSelected = false;
+
+        private String showName = null;
+
+        private boolean canExtend = true;
 
         public CityArea (City city) {
             mCity = city;
@@ -296,8 +365,44 @@ public class AreaSelectFragment extends MultiListViewFragment {
             isSelected = selected;
         }
 
-        public CityArea cloneUnselectedOne () {
-            return new CityArea(mCity);
+        public CityArea cloneUnselectedOne (Context context) {
+            CityArea area = new CityArea(mCity);
+            area.setShowName(context.getString(R.string.all));
+            area.canExtend = false;
+            return area;
+        }
+
+        /*public CityArea makeParentOne (Context context) {
+            City city = new City();
+            city.setCodeid(mCity.getParentid());
+            city.setCityName(context.getString(R.string.all));
+            CityArea area = new CityArea(city);
+            area.setShowName(mCity.getCityName());
+            return area;
+        }*/
+
+        public City getCity () {
+            return mCity;
+        }
+
+        public City getmCity() {
+            return mCity;
+        }
+
+        public void setmCity(City mCity) {
+            this.mCity = mCity;
+        }
+
+        public void setIsSelected(boolean isSelected) {
+            this.isSelected = isSelected;
+        }
+
+        public String getShowName() {
+            return showName;
+        }
+
+        public void setShowName(String showName) {
+            this.showName = showName;
         }
     }
 
@@ -306,6 +411,6 @@ public class AreaSelectFragment extends MultiListViewFragment {
         public int getId ();
         public boolean isSelected ();
         public void setSelected (boolean selected);
-        public Areable cloneUnselectedOne ();
+        public Areable cloneUnselectedOne (Context context);
     }
 }

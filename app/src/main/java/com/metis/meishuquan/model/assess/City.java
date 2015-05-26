@@ -14,6 +14,8 @@ public class City {
 
     private boolean hotCity;
 
+    private int studioCount;
+
     private String groupName;
 
     public int getCodeid() {
@@ -54,5 +56,13 @@ public class City {
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
+    }
+
+    public int getStudioCount() {
+        return studioCount;
+    }
+
+    public void setStudioCount(int studioCount) {
+        this.studioCount = studioCount;
     }
 }

@@ -141,6 +141,7 @@ public class StudioListFragment extends ActiveListFragment {
 
     private void loadDataList (int filter1, int filter2, int filter3, int index, UserInfoOperator.OnGetListener<List<TopListItem>> listener) {
         if (mActiveInfo != null) {
+            progressDialog.show();
             ActiveOperator.getInstance().getStudioList(mProvinceId, mCityId, mTownId, mActiveInfo.getpId(), filter3, filter2, 0, index, mKey, listener);
         }
 
@@ -173,11 +174,12 @@ public class StudioListFragment extends ActiveListFragment {
             case R.id.act_list_filter_1:
                 showAreaChooseFragment(new AreaSelectFragment.OnPlaceChooseListener() {
                     @Override
-                    public void onChoose(AreaSelectFragment.Areable areable, int provinceId, int cityId, int townId) {
+                    public void onChoose(AreaSelectFragment.CityArea areable, int provinceId, int cityId, int townId) {
                         mProvinceId = provinceId;
                         mCityId = cityId;
                         mTownId = townId;
                         getFilterSpinner1().setText(areable.getTitle());
+
                         needReloadData(0, mFilter2, mFilter3);
                     }
                 });
