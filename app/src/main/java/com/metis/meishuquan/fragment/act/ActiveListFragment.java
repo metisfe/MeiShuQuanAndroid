@@ -79,8 +79,8 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
 
                 switch (i) {
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-                        if (mActListView.getLastVisiblePosition() >= absListView.getChildCount() - 1) {
-                            needLoadMore();
+                        if (mActListView.getLastVisiblePosition() >= absListView.getChildCount() - 1 && !loadingMore) {
+                            //needLoadMore();
                         }
                         break;
                     case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
@@ -232,12 +232,21 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
     }
 
     public abstract void needReloadData (int selectedIndex1, int selectedIndex2, int selectedIndex3);
-    public abstract void needLoadMore ();
+    private boolean loadingMore = false;
+    public void needLoadMore () {
+        loadingMore = true;
+    }
 
     public void onReloadFinished (List<TopListDelegate> data) {
         mDataList.clear();
         mDataList.addAll(data);
         mAdapter.notifyDataSetChanged();
+    }
+
+    public void onLoadMoreFinished (List<TopListDelegate> data) {
+        mDataList.addAll(data);
+        mAdapter.notifyDataSetChanged();
+        loadingMore = false;
     }
 
     public class TopListAdapter extends BaseAdapter {

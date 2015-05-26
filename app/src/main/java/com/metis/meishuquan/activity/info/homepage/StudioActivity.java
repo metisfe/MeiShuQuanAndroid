@@ -3,6 +3,7 @@ package com.metis.meishuquan.activity.info.homepage;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -188,6 +189,9 @@ public class StudioActivity extends BaseActivity implements
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         //TODO
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getString(R.string.more));
+        progressDialog.show();
         loadUser(mUserId, new UserInfoOperator.OnGetListener<User>() {
             @Override
             public void onGet(boolean succeed, User user) {
@@ -198,6 +202,7 @@ public class StudioActivity extends BaseActivity implements
 //                    mUser.setUserId(100090);
                     loadFirstTab();
                     fillUser(user);
+                    progressDialog.dismiss();
                     if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
                         loadStudioInfo(mUser.getUserId(), new UserInfoOperator.OnGetListener<StudioBaseInfo>() {
                             @Override
@@ -593,9 +598,13 @@ public class StudioActivity extends BaseActivity implements
                 //辉煌成绩
                 if (mAchievementList == null || mAchievementList.isEmpty()) {
                     mAdapter = StudioFragment.EmptyAdapter.getInstance(this);
+                    final ProgressDialog progressDialog = new ProgressDialog(this);
+                    progressDialog.setMessage(getString(R.string.more));
+                    progressDialog.show();
                     StudioOperator.getInstance().getAchievementList(mUser.getUserId(), 0, new UserInfoOperator.OnGetListener<List<Achievement>>() {
                         @Override
                         public void onGet(boolean succeed, List<Achievement> achievements) {
+                            progressDialog.dismiss();
                             if (succeed) {
                                 List<AchievementAdapter.AchievementDelegate> delegates = new ArrayList<AchievementAdapter.AchievementDelegate>();
                                 for (Achievement a : achievements) {

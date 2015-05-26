@@ -155,7 +155,7 @@ public class TopListFragment extends ActiveListFragment {
 
     @Override
     public void needLoadMore() {
-
+        loadDataListNextPage(mFilter1, mFilter2, mFilter3);
     }
 
     private void reLoadDataList (int filter1, int filter2, int filter3) {
@@ -163,6 +163,9 @@ public class TopListFragment extends ActiveListFragment {
         loadDataList(filter1, filter2, filter3, mIndex, new UserInfoOperator.OnGetListener<List<TopListItem>>() {
             @Override
             public void onGet(boolean succeed, List<TopListItem> topListItems) {
+                if (isDetached()) {
+                    return;
+                }
                 if (succeed) {
                     List<TopListDelegate> delegates = new ArrayList<TopListDelegate>();
                     for (TopListItem item : topListItems) {
@@ -177,17 +180,20 @@ public class TopListFragment extends ActiveListFragment {
         });
     }
 
-    private void loadDataListNextPage () {
-        /*loadDataList(mIndex + 1, new UserInfoOperator.OnGetListener<List<TopListItem>>() {
+    private void loadDataListNextPage (int filter1, int filter2, int filter3) {
+        loadDataList(filter1, filter2, filter3, mIndex + 1, new UserInfoOperator.OnGetListener<List<TopListItem>>() {
             @Override
             public void onGet(boolean succeed, List<TopListItem> topListItems) {
                 if (succeed) {
                     mIndex++;
-                    mDataList.addAll(topListItems);
-                    mAdapter.notifyDataSetChanged();
+                    List<TopListDelegate> delegates = new ArrayList<TopListDelegate>();
+                    for (TopListItem item : topListItems) {
+                        delegates.add(new TopListDelegate(item));
+                    }
+                    onLoadMoreFinished(delegates);
                 }
             }
-        });*/
+        });
     }
 
     private void loadDataList(int filter1, int filter2, int filter3, int index, UserInfoOperator.OnGetListener<List<TopListItem>> listener) {

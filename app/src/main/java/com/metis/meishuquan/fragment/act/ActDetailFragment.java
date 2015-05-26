@@ -1,5 +1,6 @@
 package com.metis.meishuquan.fragment.act;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -131,15 +132,25 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
         super.onActivityCreated(savedInstanceState);
         Log.v(TAG, TAG + " onActivityCreated");
         if (MainApplication.userInfo != null && MainApplication.isLogin()) {
+            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setMessage(getString(R.string.more));
+            progressDialog.show();
             UserInfoOperator.getInstance().getUserInfo(MainApplication.userInfo.getUserId(), true, new UserInfoOperator.OnGetListener<User>() {
                 @Override
                 public void onGet(boolean succeed, User user) {
+                    if (isDetached()) {
+                        return;
+                    }
                     if (succeed) {
                         mUser = user;
                         if (mInfo == null) {
                             ActiveOperator.getInstance().getActiveDetail(new UserInfoOperator.OnGetListener<ActiveInfo>() {
                                 @Override
                                 public void onGet(boolean succeed, ActiveInfo activeInfo) {
+                                    if (isDetached()) {
+                                        return;
+                                    }
+                                    progressDialog.dismiss();
                                     if (succeed) {
                                         mInfo = activeInfo;
                                         fillInfo(mInfo);
@@ -147,6 +158,9 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
                                         ActiveOperator.getInstance().getMyActiveInfo(mInfo.getpId(), new UserInfoOperator.OnGetListener<ActiveOperator.SimpleActiveInfo>() {
                                             @Override
                                             public void onGet(boolean succeed, ActiveOperator.SimpleActiveInfo simpleActiveInfo) {
+                                                if (isDetached()) {
+                                                    return;
+                                                }
                                                 if (succeed) {
                                                     //mJoinBtn.setVisibility(View.VISIBLE);
                                                     mSimpleActiveInfo = simpleActiveInfo;

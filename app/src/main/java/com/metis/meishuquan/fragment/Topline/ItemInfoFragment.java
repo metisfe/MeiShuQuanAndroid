@@ -712,7 +712,9 @@ public class ItemInfoFragment extends Fragment {
     private static final String TAG = ItemInfoFragment.class.getSimpleName();
 
     public void getInfoData(final int newsId, final UserInfoOperator.OnGetListener<TopLineNewsInfo> listener) {
-        final Dialog progressDialog = new ProgressDialog(getActivity());
+        //final Dialog progressDialog = new ProgressDialog(getActivity());
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage(getString(R.string.more));
         progressDialog.show();
         TopLineOperator.getInstance().getNewsInfoById(newsId, new ApiOperationCallback<ReturnInfo<String>>() {
             @Override
@@ -726,7 +728,6 @@ public class ItemInfoFragment extends Fragment {
                     if (result.getInfo().equals(String.valueOf(0))) {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
-
                         if (!TextUtils.isEmpty(json)) {
                             newsInfo = gson.fromJson(json, new TypeToken<TopLineNewsInfo>() {
                             }.getType());
@@ -735,11 +736,11 @@ public class ItemInfoFragment extends Fragment {
                             rl_private.setEnabled(true);
                             rl_share.setEnabled(true);
                             rlSend.setEnabled(true);
-                            /*if (newsInfo.getData().getUserMark() != null) {
-                                Log.v(TAG, "getNewsInfoById result=" + newsInfo.getData().getUserMark().isFavorite());
+                            if (newsInfo.getData().getUserMark() != null) {
+                                Log.v(TAG, "getNewsInfoById result=" + newsInfo.getData().getUserMark().isOpposition() + " " + newsInfo.getData().getUserMark().isSupport());
                             } else {
                                 Log.e(TAG, "getNewsInfoById NOT FOUND USER_MARK");
-                            }*/
+                            }
                             if (listener != null) {
                                 listener.onGet(true, newsInfo);
                             }

@@ -145,7 +145,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         float floatSize = size * 100;
         int left = (int)floatSize / 100;
         int right = (int)floatSize % 100;
-        return left + "." + right + "m";
+        return left + "." + right + "M";
     }
 
 }

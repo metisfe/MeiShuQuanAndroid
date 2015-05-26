@@ -1,5 +1,6 @@
 package com.metis.meishuquan.fragment.act;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -42,6 +43,7 @@ public class StudioListFragment extends ActiveListFragment {
     private int mFilter2, mFilter3 = 1;
     private String mKey = "";
     private ActiveInfo mActiveInfo = null;
+    private ProgressDialog progressDialog = null;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -54,12 +56,17 @@ public class StudioListFragment extends ActiveListFragment {
         ActiveOperator.getInstance().getActiveDetail(new UserInfoOperator.OnGetListener<ActiveInfo>() {
             @Override
             public void onGet(boolean succeed, ActiveInfo activeInfo) {
+                if (isDetached()) {
+                    return;
+                }
                 if (succeed) {
                     mActiveInfo = activeInfo;
                     reloadDataList(0, mFilter2, mFilter3);
                 }
             }
         });
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage(getString(R.string.more));
     }
 
     private void reloadDataList (int filter1, int filter2, int filter3) {
@@ -67,6 +74,10 @@ public class StudioListFragment extends ActiveListFragment {
         loadDataList(filter1, filter2, filter3, mIndex, new UserInfoOperator.OnGetListener<List<TopListItem>>() {
             @Override
             public void onGet(boolean succeed, List<TopListItem> topListItems) {
+                if (isDetached()) {
+                    return;
+                }
+                progressDialog.dismiss();
                 if (succeed) {
                     final int length = topListItems.size();
                     List<TopListDelegate> delegates = new ArrayList<TopListDelegate>();
@@ -110,6 +121,10 @@ public class StudioListFragment extends ActiveListFragment {
         loadDataList(0, mFilter2, mFilter3, mIndex + 1, new UserInfoOperator.OnGetListener<List<TopListItem>>() {
             @Override
             public void onGet(boolean succeed, List<TopListItem> topListItems) {
+                if (isDetached()) {
+                    return;
+                }
+                progressDialog.dismiss();
                 if (succeed) {
                     mIndex++;
                     final int length = topListItems.size();
@@ -118,6 +133,7 @@ public class StudioListFragment extends ActiveListFragment {
                         TopListDelegate delegate = new TopListDelegate(topListItems.get(i));
                         delegates.add(delegate);
                     }
+                    onLoadMoreFinished(delegates);
                 }
             }
         });

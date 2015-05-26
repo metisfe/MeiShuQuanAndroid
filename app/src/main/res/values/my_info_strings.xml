@@ -13,7 +13,7 @@
     <string name="my_info_comments">我的点评</string>
     
     <string name="my_info_classes">我的课程</string>
-    <string name="my_info_name_card">我的名片(二维码图标)</string>
+    <string name="my_info_name_card">我的名片(二维码)</string>
     <string name="my_info_advaces">意见反馈</string>
     <string name="my_info_settings">设置</string>
 
@@ -190,7 +190,7 @@
     </string-array>
     <string-array name="act_filter_2">
         <item>推荐画室</item>
-        <item>最新入住</item>
+        <item>最新入驻</item>
         <item>最热画室</item>
     </string-array>
     <string-array name="act_filter_3">

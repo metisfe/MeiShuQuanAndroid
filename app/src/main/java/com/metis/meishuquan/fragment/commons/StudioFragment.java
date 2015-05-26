@@ -157,7 +157,9 @@ public class StudioFragment extends Fragment{
             return;
         }*/
         //TODO
-
+        if (MainApplication.userInfo != null && MainApplication.userInfo.getUserId() != user.getUserId()) {
+            mHeaderMsgBtn.setVisibility(View.VISIBLE);
+        }
         if (user.getUserRoleEnum() == IdTypeEnum.STUDIO) {
             mMenuLayout.setVisibility(View.VISIBLE);
             mIntroduceTv.setVisibility(View.GONE);

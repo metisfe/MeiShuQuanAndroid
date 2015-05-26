@@ -171,6 +171,7 @@ public class TopLineOperator {
                 StringBuffer PATH = new StringBuffer(NEWS_INFO_URL);
                 PATH.append("newsId=" + newsId);
                 PATH.append("&session=" + MainApplication.getSession());
+                Log.v(TAG, "getNewsInfoById " + PATH);
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
