@@ -1,5 +1,8 @@
 package com.metis.meishuquan.activity.info;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -26,37 +29,46 @@ import com.metis.meishuquan.view.shared.TitleView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DepartmentActivity extends BaseActivity implements View.OnClickListener{
+public class DepartmentActivity extends BaseActivity {
 
-    public static final String KEY_REQUEST_CODE = "request_code";
+    public static final String
+            KEY_REQUEST_CODE = "request_code",
+            KEY_CONTENT = "content";
 
-    private EditText mSearchInput = null;
-    private ImageView mSearchBtn = null;
     private ListView mDepartmentLv = null;
 
     /*private List<DepartmentDelegate> mDepartments = new ArrayList<DepartmentDelegate>();*/
-    private DepartmentAdapter mAdapter = null;
-    private List<DepartmentDelegate> mDataList = new ArrayList<DepartmentDelegate>();
+    private StringAdapter mAdapter = null;
+    //private List<DepartmentDelegate> mDataList = new ArrayList<DepartmentDelegate>();
 
     private int mRequestCode = StudioActivity.REQUEST_CODE_DEPARTMENT;
+
+    private List<String> mDataList = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_department);
 
-        mSearchInput = (EditText)findViewById(R.id.department_search_input);
-        mSearchBtn = (ImageView)findViewById(R.id.department_search_btn);
         mDepartmentLv = (ListView)findViewById(R.id.department_list);
 
-        mSearchBtn.setOnClickListener(this);
-
-        mAdapter = new DepartmentAdapter(mDataList);
+        String content = getIntent().getStringExtra(KEY_CONTENT);
+        if (content == null) {
+            content = "";
+        }
+        String[] array = content.split(" ");
+        for (String str : array) {
+            if (TextUtils.isEmpty(str.trim())) {
+                continue;
+            }
+            mDataList.add(str);
+        }
+        mAdapter = new StringAdapter(mDataList);
         mDepartmentLv.setAdapter(mAdapter);
 
         mRequestCode = getIntent().getIntExtra(KEY_REQUEST_CODE, mRequestCode);
         if (mRequestCode == StudioActivity.REQUEST_CODE_DEPARTMENT) {
-            setTitleCenter(getString(R.string.info_department));
+            setTitleCenter(getString(R.string.info_studio));
         } else if (mRequestCode == StudioActivity.REQUEST_CODE_SCHOOL) {
             setTitleCenter(getString(R.string.info_school));
         }
@@ -69,142 +81,74 @@ public class DepartmentActivity extends BaseActivity implements View.OnClickList
     }
 
     @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.department_search_btn:
-                String key = mSearchInput.getText().toString();
-                if (TextUtils.isEmpty(key)) {
-                    Toast.makeText(this, R.string.input_not_empty, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (mRequestCode == StudioActivity.REQUEST_CODE_DEPARTMENT) {
-                    UserInfoOperator.getInstance().searchDepartment(key, new UserInfoOperator.OnGetListener<List<User>>() {
-                        @Override
-                        public void onGet(boolean succeed, List<User> users) {
-                            if (succeed) {
-                                mDataList.clear();
-                                List<DepartmentDelegate> delegates = new ArrayList<DepartmentDelegate>();
-                                for (User u : users) {
-                                    delegates.add(new DepartmentDelegate(u));
-                                }
-                                mDataList.addAll(delegates);
-                                mAdapter.notifyDataSetChanged();
-                            }
-
-                        }
-                    });
-                } else if (mRequestCode == StudioActivity.REQUEST_CODE_SCHOOL) {
-                    UserInfoOperator.getInstance().searchSchool(key, new UserInfoOperator.OnGetListener<List<School>>() {
-                        @Override
-                        public void onGet(boolean succeed, List<School> users) {
-                            mDataList.clear();
-                            List<DepartmentDelegate> delegates = new ArrayList<DepartmentDelegate>();
-                            for (School s : users) {
-                                delegates.add(new DepartmentDelegate(s));
-                            }
-                            mDataList.addAll(delegates);
-                            mAdapter.notifyDataSetChanged();
-                        }
-                    });
-                }
-
-                break;
-        }
-    }
-
-    private class DepartmentAdapter extends BaseAdapter {
-
-        private List<DepartmentDelegate> mUserList = null;
-
-        public DepartmentAdapter (List<DepartmentDelegate> users) {
-            mUserList = users;
-        }
-
-        @Override
-        public int getCount() {
-            return mUserList.size();
-        }
-
-        @Override
-        public DepartmentDelegate getItem(int i) {
-            return mUserList.get(i);
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return i;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            ViewHolder holder = null;
-            if (view == null) {
-                view = LayoutInflater.from(DepartmentActivity.this).inflate(R.layout.layout_department_item, null);
-                holder = new ViewHolder();
-                holder.titleTv = (TextView)view.findViewById(R.id.department_item_title);
-                view.setTag(holder);
-            } else {
-                holder = (ViewHolder)view.getTag();
-            }
-            final DepartmentDelegate user = mUserList.get(i);
-            holder.titleTv.setText(user.title);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent it = new Intent ();
-                    it.putExtra(User.KEY_USER_ID, user.id);
-                    it.putExtra(User.KEY_NICK_NAME, user.title);
-                    it.putExtra(User.KEY_LOCATIONADDRESS, user.address);
-                    setResult(RESULT_OK, it);
-                    finish();
-                }
-            });
-            return view;
-        }
-    }
-
-    private class ViewHolder {
-        public TextView titleTv;
-    }
-
-    /*@Override
     public String getTitleRight() {
         return getString(R.string.department_add);
     }
 
     @Override
+    public void onBackPressed() {
+        Intent it = new Intent();
+        it.putExtra(User.KEY_NICK_NAME, getNames());
+        setResult(RESULT_OK, it);
+        super.onBackPressed();
+    }
+
+    @Override
     public void onTitleRightPressed() {
         Intent it = new Intent (DepartmentActivity.this, DepartmentEditActivity.class);
-        startActivityForResult(it, REQUEST_CODE_);
+        it.putExtra(KEY_REQUEST_CODE, mRequestCode);
+        startActivityForResult(it, mRequestCode);
+    }
+
+    public String getNames () {
+        StringBuilder sb = new StringBuilder();
+        for (String str : mDataList) {
+            sb.append(str + " ");
+        }
+        return sb.toString();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case REQUEST_CODE_:
+            case StudioActivity.REQUEST_CODE_DEPARTMENT:
                 if (resultCode == RESULT_OK) {
                     String name = data.getStringExtra(DepartmentEditActivity.KEY_NAME);
-                    String start = data.getStringExtra(DepartmentEditActivity.KEY_DURATION_START);
-                    String end = data.getStringExtra(DepartmentEditActivity.KEY_DURATION_END);
-                    DepartmentDelegate delegate = new DepartmentDelegate(name, start, end);
-                    mDepartments.add(delegate);
-                    mAdapter.notifyDataSetChanged();
+                    if (!mDataList.contains(name)) {
+                        mDataList.add(name);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+                break;
+            case StudioActivity.REQUEST_CODE_SCHOOL:
+                if (resultCode == RESULT_OK) {
+                    String name = data.getStringExtra(DepartmentEditActivity.KEY_NAME);
+                    if (!mDataList.contains(name)) {
+                        mDataList.add(name);
+                        mAdapter.notifyDataSetChanged();
+                    }
                 }
                 break;
         }
     }
 
-    private class DepartmentAdapter extends BaseAdapter {
+    private class StringAdapter extends BaseAdapter {
 
-        @Override
-        public int getCount() {
-            return mDepartments.size();
+        private List<String> mDataList = null;
+
+        public StringAdapter (List<String> strings) {
+            mDataList = strings;
         }
 
         @Override
-        public Object getItem(int position) {
-            return mDepartments.get(position);
+        public int getCount() {
+            return mDataList.size();
+        }
+
+        @Override
+        public String getItem(int position) {
+            return mDataList.get(position);
         }
 
         @Override
@@ -213,41 +157,34 @@ public class DepartmentActivity extends BaseActivity implements View.OnClickList
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder = null;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(DepartmentActivity.this).inflate(R.layout.layout_department_item, null);
-                holder = new ViewHolder();
-                holder.detailsTv = (TextView)convertView.findViewById(R.id.department_item_details);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder)convertView.getTag();
-            }
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            convertView = LayoutInflater.from(DepartmentActivity.this).inflate(R.layout.layout_list_dialog_item, null);
+            TextView tv = (TextView)convertView.findViewById(R.id.list_dialog_item);
+            tv.setText(getItem(position));
+            convertView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(DepartmentActivity.this);
+                    builder.setMessage(R.string.info_delete_this_item);
+                    builder.setPositiveButton(R.string.gender_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mDataList.remove(getItem(position));
+                            notifyDataSetChanged();
+                        }
+                    });
+                    builder.setNegativeButton(R.string.alter_dialog_cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-            DepartmentDelegate delegate = mDepartments.get(position);
-            holder.detailsTv.setText(delegate.name + "\n" + delegate.durationStart + "-" + delegate.durationEnd);
+                        }
+                    });
+                    builder.create().show();
+                    return false;
+                }
+            });
             return convertView;
         }
     }
 
-    private class ViewHolder {
-        public TextView detailsTv;
-    }*/
-
-    private class DepartmentDelegate {
-        public int id;
-        public String title;
-        public String address;
-
-        public DepartmentDelegate (User user) {
-            id = user.getUserId();
-            title = user.getName();
-        }
-
-        public DepartmentDelegate (School school) {
-            id = school.getSchoolId();
-            title = school.getSchoolName();
-            address = school.getSchoolLoction();
-        }
-    }
 }

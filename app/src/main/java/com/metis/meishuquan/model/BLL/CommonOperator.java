@@ -90,6 +90,7 @@ public class CommonOperator {
                 path.append("&type=" + type.getVal());
                 path.append("&result=" + result);
                 path.append("&session=" + MainApplication.getSession());
+                Log.v(TAG, "supportOrStep request=" + path);
                 ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }

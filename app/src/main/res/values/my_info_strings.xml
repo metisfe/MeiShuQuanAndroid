@@ -40,7 +40,7 @@
     <string name="info_constellation">星座</string>
     <string name="info_level">身份</string>
     <string name="info_provience">省份</string>
-    <string name="info_workspace">所在画室</string>
+    <string name="info_studio">所在画室</string>
     <string name="info_school">所在学校</string>
     <string name="info_department">所在机构</string>
     <string name="info_school_address">学校地址</string>
@@ -55,6 +55,7 @@
     <string name="info_illegal_birthday">出生日期不合法</string>
     <string name="info_profile_gallery">相册</string>
     <string name="info_profile_camera">相机</string>
+    <string name="info_delete_this_item">删除本条数据</string>
     
     <string name="about_to_score">我要评分</string>
     <string name="about_current_version">当前版本</string>

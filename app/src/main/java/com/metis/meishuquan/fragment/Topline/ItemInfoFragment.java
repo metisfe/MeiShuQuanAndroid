@@ -429,6 +429,7 @@ public class ItemInfoFragment extends Fragment {
                     CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), newsId, SupportTypeEnum.News, 1, new ApiOperationCallback<ReturnInfo<String>>() {
                         @Override
                         public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                            Log.v(TAG, "supportOrStep zan callback=" + response.getContent());
                             if (result != null && result.getInfo().equals(String.valueOf(0))) {
                                 Log.i("supportOrStep", "赞成功");
                             } else if (result != null && !result.isSuccess()) {
@@ -471,6 +472,7 @@ public class ItemInfoFragment extends Fragment {
                     CommonOperator.getInstance().supportOrStep(MainApplication.userInfo.getUserId(), newsId, SupportTypeEnum.News, 2, new ApiOperationCallback<ReturnInfo<String>>() {
                         @Override
                         public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                            Log.v(TAG, "supportOrStep cai callback=" + response.getContent());
                             if (result != null && result.getInfo().equals(String.valueOf(0))) {
                                 Log.i("supportOrStep", "踩成功");
                             }
@@ -533,6 +535,7 @@ public class ItemInfoFragment extends Fragment {
                         CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), newsId, SupportTypeEnum.News, PrivateResultEnum.PRIVATE, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                                Log.v(TAG, "favorite callback=" + response.getContent());
                                 if (result != null && result.isSuccess()) {
                                     Log.i("private_state", "收藏成功");
                                 }
@@ -542,15 +545,16 @@ public class ItemInfoFragment extends Fragment {
                             }
                         });
                     } else {
-                        //Toast.makeText(MainApplication.UIContext, "取消收藏", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainApplication.UIContext, "取消收藏", Toast.LENGTH_SHORT).show();
                         SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(SharedPreferencesUtil.KEY_PRIVATE_NEWS, "未收藏");
 //                        Toast.makeText(MainApplication.UIContext, "已收藏", Toast.LENGTH_SHORT).show();
                         //取消收藏
                         CommonOperator.getInstance().favorite(MainApplication.userInfo.getUserId(), newsId, SupportTypeEnum.News, PrivateResultEnum.CANCEL, new ApiOperationCallback<ReturnInfo<String>>() {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                                Log.v(TAG, "favorite callback=" + response.getContent());
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                                    Toast.makeText(MainApplication.UIContext, "取消收藏", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(MainApplication.UIContext, "取消收藏", Toast.LENGTH_SHORT).show();
                                     isPrivate = false;
                                     imgPrivate.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_topline_unprivate));
                                 }

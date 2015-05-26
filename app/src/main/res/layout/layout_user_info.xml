@@ -211,7 +211,7 @@
         android:id="@+id/info_studio"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        bs:text="@string/info_workspace"
+        bs:text="@string/info_studio"
         bs:imageVisible="false"
         >
         <include

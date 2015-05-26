@@ -10,6 +10,9 @@ public class Studio implements Serializable {
     private String name;
     private String address;
 
+    private int userId;
+    private int identity;
+
     public int getRole() {
         return role;
     }
@@ -32,5 +35,21 @@ public class Studio implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public int getIdentity() {
+        return identity;
+    }
+
+    public void setIdentity(int identity) {
+        this.identity = identity;
     }
 }

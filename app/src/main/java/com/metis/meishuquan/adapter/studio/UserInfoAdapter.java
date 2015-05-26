@@ -1,8 +1,6 @@
 package com.metis.meishuquan.adapter.studio;
 
 import android.content.Context;
-import android.content.Intent;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,10 +14,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.activity.InputActivity;
-import com.metis.meishuquan.activity.course.ChooseCourseActivity;
-import com.metis.meishuquan.activity.info.ConstellationActivity;
-import com.metis.meishuquan.activity.info.DepartmentActivity;
 import com.metis.meishuquan.manager.common.UserManager;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.Result;
@@ -31,7 +25,6 @@ import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.shared.MyInfoBtn;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +40,8 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
     private boolean canEdit = false;
 
     private View.OnClickListener mOnClickListener = null;
+
+    private String locationSchool = null;
 
     public UserInfoAdapter (Context context, User user) {
         this (context, user, false);
@@ -132,9 +127,9 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
 
         mSchoolView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
         mSchoolView.setVisibility(mUser.getUserRoleEnum() == IdTypeEnum.STUDENT ? View.VISIBLE : View.GONE);
-        mSchoolView.setSecondaryText(mUser.getLocationSchool());
+        mSchoolView.setSecondaryText(locationSchool != null ? locationSchool : mUser.getLocationSchool());
 
-        mStudiolView.setText(mUser.getUserRoleEnum() == IdTypeEnum.STUDENT ? R.string.info_workspace : R.string.info_department);
+        mStudiolView.setText(mUser.getUserRoleEnum() == IdTypeEnum.STUDENT ? R.string.info_studio : R.string.info_department);
         mStudiolView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
         if (mStudioName != null) {
             mStudiolView.setSecondaryText(mStudioName);
@@ -245,6 +240,10 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
             }
         }
         return null;
+    }
+
+    public void setLocationSchool (String schoolNames) {
+        locationSchool = schoolNames;
     }
 
     @Override

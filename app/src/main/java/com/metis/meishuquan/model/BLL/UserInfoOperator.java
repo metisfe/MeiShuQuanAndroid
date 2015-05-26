@@ -26,6 +26,7 @@ import com.metis.meishuquan.model.commons.Option;
 import com.metis.meishuquan.model.commons.Profile;
 import com.metis.meishuquan.model.commons.Result;
 import com.metis.meishuquan.model.commons.School;
+import com.metis.meishuquan.model.commons.Studio;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.FileUploadTypeEnum;
@@ -74,6 +75,7 @@ public class UserInfoOperator {
                             URL_SEARCH_STUDIO = "v1.1/UserCenter/StudioList?query=",
                             URL_PROVINCE = "v1.1/UserCenter/Province",
                             URL_SCHOOL = "v1.1/UserCenter/SchoolList?query=",
+                            URL_STUDIO = "v1.1/UserCenter/StudioList?query=",
                             URL_COLLEGE = "v1.1/UserCenter/CollegeList?query=",
                             URL_GET_AREA_LIST = "v1.1/UserCenter/ProvinceLink?id=",
                             URL_GET_MY_FRIENDS = "v1.1/Message/MyFriendList?type=",
@@ -693,6 +695,41 @@ public class UserInfoOperator {
                         String json = gson.toJson(result);
                         Log.v(TAG, "searchSchool result=" + json);
                         Result<List<School>> listResult = gson.fromJson(json, new TypeToken<Result<List<School>>>(){}.getType());
+                        if (listener != null) {
+                            if (listResult.getOption().getStatus() == 0) {
+                                listener.onGet(true, listResult.getData());
+                            } else {
+                                listener.onGet(false, null);
+                            }
+                        }
+
+                    } else {
+                        if (listener != null) {
+                            listener.onGet(false, null);
+                        }
+                    }
+
+                }
+            });
+        }
+    }
+
+    public void searchStudio (String key, final OnGetListener<List<Studio>> listener) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            StringBuilder sb = new StringBuilder(URL_STUDIO);
+            sb.append(URLEncoder.encode(key));
+            sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+            Log.v(TAG, "searchStudio request=" + sb.toString());
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    Log.v(TAG, "searchStudio callback=" + response.getContent());
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String json = gson.toJson(result);
+                        Log.v(TAG, "searchStudio result=" + json);
+                        Result<List<Studio>> listResult = gson.fromJson(json, new TypeToken<Result<List<Studio>>>(){}.getType());
                         if (listener != null) {
                             if (listResult.getOption().getStatus() == 0) {
                                 listener.onGet(true, listResult.getData());

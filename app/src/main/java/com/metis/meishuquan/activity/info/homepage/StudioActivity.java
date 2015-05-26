@@ -38,6 +38,7 @@ import com.metis.meishuquan.activity.WebActivity;
 import com.metis.meishuquan.activity.course.ChooseCourseActivity;
 import com.metis.meishuquan.activity.info.BaseActivity;
 import com.metis.meishuquan.activity.info.DepartmentActivity;
+import com.metis.meishuquan.activity.info.DepartmentEditActivity;
 import com.metis.meishuquan.activity.info.InfoActivity;
 import com.metis.meishuquan.adapter.circle.CircleMomentAdapter;
 import com.metis.meishuquan.adapter.commons.ConstellationAdapter;
@@ -848,8 +849,8 @@ public class StudioActivity extends BaseActivity implements
                 if (resultCode == RESULT_OK) {
                     long id = data.getIntExtra(User.KEY_USER_ID, 0);
                     String name = data.getStringExtra(User.KEY_NICK_NAME);
-                    String address = data.getStringExtra(User.KEY_LOCATIONADDRESS);
-                    mUser.setLocationAddress(address);
+                    //String address = data.getStringExtra(User.KEY_LOCATIONADDRESS);
+                    //mUser.setLocationAddress(address);
                     if (mAdapter instanceof UserInfoAdapter) {
                         ((UserInfoAdapter)mAdapter).setStudioName(name);
                         mAdapter.notifyDataSetChanged();
@@ -859,15 +860,15 @@ public class StudioActivity extends BaseActivity implements
                 break;
             case REQUEST_CODE_SCHOOL:
                 if (resultCode == RESULT_OK) {
-                    long id = data.getIntExtra(User.KEY_USER_ID, 0);
+                    //long id = data.getIntExtra(User.KEY_USER_ID, 0);
                     String name = data.getStringExtra(User.KEY_NICK_NAME);
-                    String address = data.getStringExtra(User.KEY_LOCATIONADDRESS);
+                    //String address = data.getStringExtra(User.KEY_LOCATIONADDRESS);
                     mUser.setLocationSchool(name);
-                    mUser.setLocationAddress(address);
-                    /*if (mAdapter instanceof UserInfoAdapter) {
-                        ((UserInfoAdapter)mAdapter).setUserDepartment((int)id, name, address);
+                    //mUser.setLocationAddress(address);
+                    if (mAdapter instanceof UserInfoAdapter) {
+                        ((UserInfoAdapter)mAdapter).setLocationSchool(name);
                         mAdapter.notifyDataSetChanged();
-                    }*/
+                    }
                     UserManager.updateMyInfo(User.KEY_LOCATION_SCHOOL, name);
                 }
                 break;
@@ -1231,11 +1232,13 @@ public class StudioActivity extends BaseActivity implements
                     break;
                 case R.id.info_school:
                     Intent schoolIt = new Intent(StudioActivity.this, DepartmentActivity.class);
+                    schoolIt.putExtra(DepartmentActivity.KEY_CONTENT, mUser.getLocationSchool());
                     schoolIt.putExtra(DepartmentActivity.KEY_REQUEST_CODE, REQUEST_CODE_SCHOOL);
                     startActivityForResult(schoolIt, REQUEST_CODE_SCHOOL);
                     break;
                 case R.id.info_studio:
-                    Intent studioIt = new Intent (StudioActivity.this, DepartmentActivity.class);
+                    Intent studioIt = new Intent (StudioActivity.this, DepartmentEditActivity.class);
+                    //TODO studioIt.putExtra(DepartmentActivity.KEY_CONTENT, mUser.getStu)
                     studioIt.putExtra(DepartmentActivity.KEY_REQUEST_CODE, REQUEST_CODE_DEPARTMENT);
                     startActivityForResult(studioIt, REQUEST_CODE_DEPARTMENT);
                     break;

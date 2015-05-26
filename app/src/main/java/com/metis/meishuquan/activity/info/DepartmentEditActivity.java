@@ -1,6 +1,7 @@
 package com.metis.meishuquan.activity.info;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -9,19 +10,34 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.info.homepage.StudioActivity;
+import com.metis.meishuquan.model.BLL.ActiveOperator;
+import com.metis.meishuquan.model.BLL.StudioOperator;
+import com.metis.meishuquan.model.BLL.TopListItem;
+import com.metis.meishuquan.model.BLL.UserInfoOperator;
+import com.metis.meishuquan.model.commons.College;
+import com.metis.meishuquan.model.commons.School;
+import com.metis.meishuquan.model.commons.Studio;
+import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.view.shared.TitleView;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class DepartmentEditActivity extends BaseActivity implements View.OnClickListener {
@@ -31,14 +47,15 @@ public class DepartmentEditActivity extends BaseActivity implements View.OnClick
                                 KEY_DURATION_END = "duration_end";
 
     private EditText mInputEt = null;
-    private TextView mDurationStartTv, mDurationEndTv;
-    private String mName = null;
-    private int mStartYear = Calendar.getInstance().get(Calendar.YEAR);
-    private int mStartMonth = Calendar.getInstance().get(Calendar.MONTH);
-
-    private int mEndYear = Calendar.getInstance().get(Calendar.YEAR);
-    private int mEndMonth = Calendar.getInstance().get(Calendar.MONTH);
+    private ListView mListView = null;
     //private String mDurationStartStr = null, mDurationEndStr = null;
+
+    private int mRequestCode = 0;
+
+    private List<NameShowable> mDataList = new ArrayList<NameShowable>();
+    private NameAdapter mAdapter = null;
+
+    private boolean loadingData = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,16 +63,117 @@ public class DepartmentEditActivity extends BaseActivity implements View.OnClick
         setContentView(R.layout.activity_department_edit);
 
         mInputEt = (EditText)findViewById(R.id.department_edit_name);
+        mListView = (ListView)findViewById(R.id.department_edit_search_content_list);
+        mAdapter = new NameAdapter(this, mDataList);
+        mListView.setAdapter(mAdapter);
 
-        mDurationStartTv = (TextView)findViewById(R.id.department_edit_duration_start);
-        mDurationEndTv = (TextView)findViewById(R.id.department_edit_duration_end);
+        mRequestCode = getIntent().getIntExtra(DepartmentActivity.KEY_REQUEST_CODE, StudioActivity.REQUEST_CODE_SCHOOL);
+        if (mRequestCode != StudioActivity.REQUEST_CODE_SCHOOL) {
+            getTitleView().setTitleRight("");
+        }
+        mInputEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        mDurationStartTv.setText(makeTimeStr(mStartYear, mStartMonth));
-        mDurationEndTv.setText(makeTimeStr(mEndYear, mEndMonth));
+            }
 
-        mDurationStartTv.setOnClickListener(this);
-        mDurationEndTv.setOnClickListener(this);
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!loadingData) {
+                    searchResult(s.toString());
+                }
+            }
+        });
+
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        String title = getString(R.string.info_department);
+        switch (mRequestCode) {
+            case StudioActivity.REQUEST_CODE_SCHOOL:
+                title = getString(R.string.info_school);
+                break;
+            case StudioActivity.REQUEST_CODE_DEPARTMENT:
+                title = getString(R.string.info_studio);
+                break;
+        }
+        setTitleCenter(title);
+        searchResult("");
+    }
+
+    private void searchResult (String str) {
+        loadingData = true;
+        switch (mRequestCode) {
+            case StudioActivity.REQUEST_CODE_SCHOOL:
+                /*UserInfoOperator.getInstance().getCollegeList(str, new UserInfoOperator.OnGetListener<List<College>>() {
+                    @Override
+                    public void onGet(boolean succeed, List<College> colleges) {
+                        loadingData = false;
+                        if (succeed) {
+                            List<CollegeDelegate> delegates = new ArrayList<CollegeDelegate>();
+                            for (College item : colleges) {
+                                delegates.add(new CollegeDelegate(item));
+                            }
+                            mDataList.clear();
+                            mDataList.addAll(delegates);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });*/
+                UserInfoOperator.getInstance().searchSchool(str, new UserInfoOperator.OnGetListener<List<School>>() {
+                    @Override
+                    public void onGet(boolean succeed, List<School> schools) {
+                        loadingData = false;
+                        if (succeed) {
+                            List<SchoolDelegate> delegates = new ArrayList<SchoolDelegate>();
+                            for (School school : schools) {
+                                delegates.add(new SchoolDelegate(school));
+                            }
+                            mDataList.clear();
+                            mDataList.addAll(delegates);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });
+                break;
+            case StudioActivity.REQUEST_CODE_DEPARTMENT:
+                UserInfoOperator.getInstance().searchStudio(str, new UserInfoOperator.OnGetListener<List<Studio>>() {
+                    @Override
+                    public void onGet(boolean succeed, List<Studio> studios) {
+                        loadingData = false;
+                        List<StudioDelegate> delegates = new ArrayList<StudioDelegate>();
+                        for (Studio studio : studios) {
+                            delegates.add(new StudioDelegate(studio));
+                        }
+                        mDataList.clear();
+                        mDataList.addAll(delegates);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });
+                /*ActiveOperator.getInstance().getStudioList(0, 0, 0, 0, 0, 0, 0, 0, str, new UserInfoOperator.OnGetListener<List<TopListItem>>() {
+                    @Override
+                    public void onGet(boolean succeed, List<TopListItem> topListItems) {
+                        loadingData = false;
+                        if (succeed) {
+                            List<TopListDelegate> delegates = new ArrayList<TopListDelegate>();
+                            for (TopListItem item : topListItems) {
+                                delegates.add(new TopListDelegate(item));
+                            }
+                            mDataList.clear();
+                            mDataList.addAll(delegates);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });*/
+                break;
+        }
     }
 
     @Override
@@ -68,9 +186,32 @@ public class DepartmentEditActivity extends BaseActivity implements View.OnClick
         return getString(R.string.department_complete);
     }
 
+    public void selectName (String name) {
+        Intent it = new Intent();
+        it.putExtra(KEY_NAME, name);
+        setResult(RESULT_OK, it);
+        finish();
+    }
+
+    public void selectId (int id, String name) {
+        Intent it = new Intent();
+        it.putExtra(User.KEY_USER_ID, id);
+        it.putExtra(User.KEY_NICK_NAME, name);
+        setResult(RESULT_OK, it);
+        finish();
+    }
+
     @Override
     public void onTitleRightPressed() {
-        final int error = canInfoAccess();
+        String content = mInputEt.getText().toString();
+        if (TextUtils.isEmpty(content)) {
+            finish();
+            return;
+        }
+        if (mRequestCode == StudioActivity.REQUEST_CODE_SCHOOL) {
+            selectName(content);
+        }
+        /*final int error = canInfoAccess();
         if (error != 0) {
             Toast.makeText(DepartmentEditActivity.this, "error happened " + error, Toast.LENGTH_SHORT).show();
             return;
@@ -79,88 +220,91 @@ public class DepartmentEditActivity extends BaseActivity implements View.OnClick
         Intent it = new Intent();
         it.putExtra(KEY_NAME, str);
         it.putExtra(KEY_DURATION_START, makeTimeStr(mStartYear, mStartMonth));
-        it.putExtra(KEY_DURATION_END, makeTimeStr(mEndYear,mEndMonth));
+        it.putExtra(KEY_DURATION_END, makeTimeStr(mEndYear, mEndMonth));
         setResult(RESULT_OK, it);
-        finish();
+        finish();*/
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.department_edit_duration_start:
-                createDialogWithoutDateField(new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        mStartYear = year;
-                        mStartMonth = monthOfYear;
-                        mDurationStartTv.setText(makeTimeStr(year, monthOfYear));
-                    }
-                }, mStartYear, mStartMonth).show();
-                break;
-            case R.id.department_edit_duration_end:
-                createDialogWithoutDateField(new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        mEndYear = year;
-                        mEndMonth = monthOfYear;
-                        mDurationEndTv.setText(makeTimeStr(year, monthOfYear));
-                    }
-                }, mEndYear, mEndMonth).show();
-                break;
-        }
+
     }
 
-    private DatePickerDialog createDialogWithoutDateField(DatePickerDialog.OnDateSetListener listener, int year, int month){
+    public class NameAdapter extends BaseAdapter {
 
-        DatePickerDialog dlg = new DatePickerDialog(this, listener,
-                year,
-                month,
-                Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
-        {
-            @Override
-            protected void onCreate(Bundle savedInstanceState)
-            {
-                super.onCreate(savedInstanceState);
-                int dayId = getContext().getResources()
-                        .getIdentifier("android:id/day", null, null);
-                if(dayId != 0){
-                    View yearPicker = findViewById(dayId);
-                    if(yearPicker != null){
-                        yearPicker.setVisibility(View.GONE);
+        private Context mContext = null;
+        private List<? extends NameShowable> mDataList = null;
+
+        public NameAdapter (Context context, List<? extends NameShowable> list) {
+            mContext = context;
+            mDataList = list;
+        }
+
+        @Override
+        public int getCount() {
+            return mDataList.size();
+        }
+
+        @Override
+        public NameShowable getItem(int position) {
+            return mDataList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_list_dialog_item, null);
+            TextView tv = (TextView)convertView.findViewById(R.id.list_dialog_item);
+            final NameShowable nameShowable = getItem(position);
+            tv.setText(nameShowable.getName());
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (nameShowable instanceof StudioDelegate) {
+                        selectId(((StudioDelegate) nameShowable).mItem.getUserId(), nameShowable.getName());
+                    } else {
+                        selectName(getItem(position).getName());
                     }
                 }
-            }
-        };
-        return dlg;
+            });
+            return convertView;
+        }
     }
 
-    public int canInfoAccess () {
-        mName = mInputEt.getText().toString();
-
-        String startDurationStr = makeTimeStr(mStartYear, mStartMonth);
-        String endDurationStr = makeTimeStr(mEndYear, mEndMonth);
-
-        if (TextUtils.isEmpty(mName)) {
-            return -1;
-        }
-
-        if (TextUtils.isEmpty(startDurationStr)) {
-            return -2;
-        }
-
-        if (TextUtils.isEmpty(endDurationStr)) {
-            return -3;
-        }
-
-        if (startDurationStr.compareTo(endDurationStr) > 0) {
-            return -4;
-        }
-
-        return 0;
+    public static interface NameShowable {
+        public String getName ();
     }
 
-    private DecimalFormat mDecimalFormat = new DecimalFormat("00");
-    private String makeTimeStr (int year, int monthInYear) {
-        return year + "-" + mDecimalFormat.format(1 + monthInYear);
+    private class StudioDelegate implements NameShowable {
+
+        public Studio mItem = null;
+
+        public StudioDelegate(Studio TopListItem) {
+            mItem = TopListItem;
+        }
+
+        @Override
+        public String getName() {
+            return mItem.getName();
+        }
     }
+
+    private class SchoolDelegate implements NameShowable {
+
+        private School mCollege = null;
+
+        public SchoolDelegate(School college) {
+            mCollege = college;
+        }
+
+        @Override
+        public String getName() {
+            return mCollege.getSchoolName();
+        }
+    }
+
 }
