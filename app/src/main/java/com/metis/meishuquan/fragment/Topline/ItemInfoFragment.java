@@ -542,7 +542,7 @@ public class ItemInfoFragment extends Fragment {
                             }
                         });
                     } else {
-                        Toast.makeText(MainApplication.UIContext, "取消收藏", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainApplication.UIContext, "取消收藏", Toast.LENGTH_SHORT).show();
                         SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(SharedPreferencesUtil.KEY_PRIVATE_NEWS, "未收藏");
 //                        Toast.makeText(MainApplication.UIContext, "已收藏", Toast.LENGTH_SHORT).show();
                         //取消收藏
@@ -550,7 +550,7 @@ public class ItemInfoFragment extends Fragment {
                             @Override
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 if (result != null && result.getInfo().equals(String.valueOf(0))) {
-                                    //Toast.makeText(MainApplication.UIContext, "取消收藏", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainApplication.UIContext, "取消收藏", Toast.LENGTH_SHORT).show();
                                     isPrivate = false;
                                     imgPrivate.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_topline_unprivate));
                                 }

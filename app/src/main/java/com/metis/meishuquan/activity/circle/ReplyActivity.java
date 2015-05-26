@@ -1,5 +1,6 @@
 package com.metis.meishuquan.activity.circle;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
@@ -125,7 +126,7 @@ public class ReplyActivity extends FragmentActivity {
         this.rl_reply = (RelativeLayout) this.findViewById(R.id.id_rl_reply);
         this.rl_circle = (RelativeLayout) this.findViewById(R.id.id_rl_circle);
 
-        if (this.parm.getType() == SupportTypeEnum.Activity.getVal()) {
+        if (this.parm.getType() == SupportTypeEnum.ActivityStudent.getVal()) {
             this.etInput.setText("我正在参加#超级美术生#海选，一定要帮我到美术圈APP集齐10个赞哦！这样我就有机会免费进全国最好画室中最贵的VIP班学习啦！");
         }
     }
@@ -170,21 +171,25 @@ public class ReplyActivity extends FragmentActivity {
             startActivity(new Intent(ReplyActivity.this, LoginActivity.class));
         }
         parm.setContent(etInput.getText().toString());
+        final ProgressDialog progressDialog = ProgressDialog.show(this, "", "正在发送...");
         CircleOperator.getInstance().pushBlog(parm, new ApiOperationCallback<ReturnInfo<CCircleDetailModel>>() {
             @Override
             public void onCompleted(ReturnInfo<CCircleDetailModel> result, Exception exception, ServiceFilterResponse response) {
                 if (result != null && result.isSuccess()) {
+                    progressDialog.cancel();
                     if (parm.getType() == SupportTypeEnum.Activity.getVal()) {
                         ActiveOperator.getInstance().joinActivity(parm.getRelayId(), new UserInfoOperator.OnGetListener() {
                             @Override
                             public void onGet(boolean succeed, Object o) {
                                 if (succeed) {
                                     Intent it = new Intent("join_succeed");
+                                    progressDialog.dismiss();
                                     LocalBroadcastManager.getInstance(ReplyActivity.this).sendBroadcast(it);
                                 }
                             }
                         });
                     }
+                    progressDialog.dismiss();
                     String json = new Gson().toJson(result);
                     Log.i("pushBlog", json);
 
