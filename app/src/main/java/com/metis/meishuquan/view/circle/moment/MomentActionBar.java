@@ -21,6 +21,8 @@ public class MomentActionBar extends LinearLayout {
     public ImageView imgSupport;
     public OnActionButtonClickListener onActionButtonClickListener;
 
+    private ImageView imgTab1, imgTab2, imgTab3;
+
     public interface OnActionButtonClickListener {
         public void onReply();
 
@@ -59,6 +61,26 @@ public class MomentActionBar extends LinearLayout {
         this.tvLikeCount.setTextColor(getResources().getColor(R.color.common_color_7e7e7e));
     }
 
+    public void showTab(int index) {
+        switch (index) {
+            case 0:
+                this.imgTab1.setVisibility(View.VISIBLE);
+                this.imgTab2.setVisibility(View.GONE);
+                this.imgTab3.setVisibility(View.GONE);
+                break;
+            case 1:
+                this.imgTab1.setVisibility(View.GONE);
+                this.imgTab2.setVisibility(View.VISIBLE);
+                this.imgTab3.setVisibility(View.GONE);
+                break;
+            case 2:
+                this.imgTab1.setVisibility(View.GONE);
+                this.imgTab2.setVisibility(View.GONE);
+                this.imgTab3.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+
     public void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.fragment_circle_moment_action_bar, this);
         repostActionLayout = (LinearLayout) this.findViewById(R.id.action_repost);
@@ -71,6 +93,10 @@ public class MomentActionBar extends LinearLayout {
         tvAddOne = (TextView) this.findViewById(R.id.id_tv_add_one);
 
         imgSupport = (ImageView) this.findViewById(R.id.id_img_support);
+
+        imgTab1 = (ImageView) this.findViewById(R.id.id_tab_icon_1);
+        imgTab2 = (ImageView) this.findViewById(R.id.id_tab_icon_2);
+        imgTab3 = (ImageView) this.findViewById(R.id.id_tab_icon_3);
 
         commentActionLayout.setOnClickListener(new OnClickListener() {
             @Override

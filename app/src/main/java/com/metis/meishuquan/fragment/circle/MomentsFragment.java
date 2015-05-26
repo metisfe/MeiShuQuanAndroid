@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -17,25 +15,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
-
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.adapter.circle.CircleMomentAdapter;
 import com.metis.meishuquan.model.BLL.StudioOperator;
-import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CircleMoments;
-import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
-import com.metis.meishuquan.model.topline.News;
-import com.metis.meishuquan.model.topline.ToplineNewsList;
 import com.metis.meishuquan.util.GlobalData;
-import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.shared.DragListView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
@@ -70,14 +59,13 @@ public class MomentsFragment extends CircleBaseFragment {
     private CircleMomentAdapter circleMomentAdapter;
     private FragmentManager fm = null;
 
+    private ProgressDialog progressDialog;
+
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (GlobalData.momentsGroupId != -2) {
-                getData(GlobalData.momentsGroupId, 0, DragListView.REFRESH);
-            } else {
-                getMyMoments();
-            }
+            progressDialog = ProgressDialog.show(getActivity(), "", "正在加载...");
+            getData(GlobalData.momentsGroupId, 0, DragListView.REFRESH);
         }
     };
 
@@ -89,11 +77,7 @@ public class MomentsFragment extends CircleBaseFragment {
         circleMomentAdapter = new CircleMomentAdapter(getActivity(), list, contextView);
         this.listView.setAdapter(circleMomentAdapter);
 
-        if (GlobalData.momentsGroupId != -2) {
-            getData(GlobalData.momentsGroupId, 0, DragListView.REFRESH);
-        } else {
-            getMyMoments();
-        }
+        getData(GlobalData.momentsGroupId, 0, DragListView.REFRESH);
 
         this.listView.setOnRefreshListener(new DragListView.OnRefreshListener() {
             @Override
@@ -171,7 +155,7 @@ public class MomentsFragment extends CircleBaseFragment {
 
     public void getData(final int groupId, final int lastId, final int mode) {
         String url = String.format("v1.1/Circle/CircleList?groupId=%s&lastId=%s&session=%s", groupId, lastId, MainApplication.userInfo.getCookie());
-        Log.i("CircleList",url);
+        Log.i("CircleList", url);
         ApiDataProvider.getmClient().invokeApi(url, null,
                 HttpGet.METHOD_NAME, null, CircleMoments.class,
                 new ApiOperationCallback<CircleMoments>() {
@@ -187,12 +171,15 @@ public class MomentsFragment extends CircleBaseFragment {
                                     listView.onLoadComplete();
                                     break;
                             }
-
                             listView.setResultSize(list.size());
                             circleMomentAdapter.notifyDataSetChanged();
                             return;
                         }
 
+                        if (progressDialog != null) {
+                            progressDialog.cancel();
+                        }
+                        
                         List<CCircleDetailModel> result_list = result.data;
                         for (int i = result_list.size() - 1; i >= 0; i--) {
                             if (!result_list.get(i).isValid()) {

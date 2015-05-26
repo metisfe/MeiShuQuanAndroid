@@ -11,9 +11,13 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.model.BLL.CircleOperator;
+import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.circle.MomentsGroup;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
+import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,44 +30,49 @@ import java.util.List;
 public class CircleAttentionAdapter extends BaseAdapter {
     private Context context;
     private List<MomentsGroup> lstMomentsGroup;
+    private String json = "";
 
     public CircleAttentionAdapter(Context context, int type) {
         this.context = context;
-        this.lstMomentsGroup = getMomentsGroupInfo(type);
+        getMomentsGroupInfo(type);
     }
 
-    private List<MomentsGroup> getMomentsGroupInfo(int type) {
+    private void getMomentsGroupInfo(final int type) {
+        json = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey(SharedPreferencesUtil.MOMENTS_GROUP_INFO);
+        if (json.isEmpty()) {
+            CommonOperator.getInstance().getMomentsGroups(new ApiOperationCallback<ReturnInfo<String>>() {
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    if (result != null && result.isSuccess()) {
+                        json = new Gson().toJson(result);
+                        lstMomentsGroup = getLstMomentsGroupByJson(type, json);
+                    }
+                }
+            });
+        } else {
+            lstMomentsGroup = getLstMomentsGroupByJson(type, json);
+        }
+    }
+
+    private List<MomentsGroup> getLstMomentsGroupByJson(int type, String json) {
         ReturnInfo<List<MomentsGroup>> returnInfo = null;
-        String json = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey(SharedPreferencesUtil.MOMENTS_GROUP_INFO);
         if (type == 0) {
             ReturnInfo<List<MomentsGroup>> result = new Gson().fromJson(json, new TypeToken<ReturnInfo<List<MomentsGroup>>>() {
             }.getType());
             result.getData().remove(0);
+            result.getData().remove(1);
+            result.getData().remove(2);
+
             returnInfo = result;
         } else if (type == 1) {
             returnInfo = new ReturnInfo<List<MomentsGroup>>();
             ReturnInfo<List<MomentsGroup>> result = new Gson().fromJson(json, new TypeToken<ReturnInfo<List<MomentsGroup>>>() {
             }.getType());
-            List<MomentsGroup> list = new ArrayList<MomentsGroup>();
-
-            MomentsGroup group1 = new MomentsGroup();
-            group1.id = -1;
-            group1.name = "全部";
-            MomentsGroup group2 = new MomentsGroup();
-            group2.id = -2;
-            group2.name = "我的微博";
-            list.add(group1);
-            list.add(group2);
-
-            for (int i = 0; i < result.getData().size(); i++) {
-                list.add(result.getData().get(i));
-            }
-            MomentsGroup temp = list.remove(2);
-            list.add(1, temp);
-            returnInfo.setData(list);
+            returnInfo.setData(result.getData());
         }
         return returnInfo.getData();
     }
+
 
     @Override
     public int getCount() {

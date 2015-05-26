@@ -3,11 +3,11 @@ package com.metis.meishuquan.fragment.circle;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -75,6 +75,7 @@ public class MomentDetailFragment extends Fragment {
     private Button btnBack;
     private ImageView btnShare, btnLike;
     private ViewGroup rootView;
+    private View footerView;
 
     private TextView tv_nickname;
     private RelativeLayout rl_writeCommont;
@@ -115,6 +116,8 @@ public class MomentDetailFragment extends Fragment {
     List<CCircleCommentModel> commentList = new ArrayList<CCircleCommentModel>();
     List<CUserModel> likeList = new ArrayList<CUserModel>();
     private boolean isCommentShown = true;
+    private boolean isLikeShow = false;
+    private boolean isShareShow = false;
     private PopupAttentionWindow popupAttentionWindow;
 
     private int mActionBarVisible = View.VISIBLE;
@@ -172,41 +175,76 @@ public class MomentDetailFragment extends Fragment {
         MomentActionBar.OnActionButtonClickListener OnActionButtonClickListener = new MomentActionBar.OnActionButtonClickListener() {
             @Override
             public void onReply() {
-                if (isCommentShown) {
+                momentActionBar.showTab(0);
+                actionBar.showTab(0);
+                if (moment.relayCount > 0) {
+                    footerView.setVisibility(View.GONE);
+                } else {
+                    footerView.setVisibility(View.VISIBLE);
+                }
+                if (!isShareShow) {
                     circleMomentDetailReplyAdpater = new CircleMomentDetailReplyAdpater(replyList);
                     listView.setAdapter(circleMomentDetailReplyAdpater);
                     circleMomentDetailReplyAdpater.notifyDataSetChanged();
                     listView.setSelection(1);
+                    isShareShow = true;
                     isCommentShown = false;
+                    isLikeShow = false;
                 }
             }
 
             @Override
             public void onComment() {
+                momentActionBar.showTab(1);
+                actionBar.showTab(1);
+                if (moment.comentCount > 0) {
+                    footerView.setVisibility(View.GONE);
+                } else {
+                    footerView.setVisibility(View.VISIBLE);
+                }
                 if (!isCommentShown) {
                     circleMomentCommentAdapter = new CircleMomentDetailCommentAdapter(commentList);
                     listView.setAdapter(circleMomentCommentAdapter);
                     circleMomentCommentAdapter.notifyDataSetChanged();
-
                     isCommentShown = true;
+                    isShareShow = false;
+                    isLikeShow = false;
+
                 }
             }
 
             @Override
             public void onLike() {
-                if (isCommentShown) {
+                momentActionBar.showTab(2);
+                actionBar.showTab(2);
+                if (moment.supportCount > 0) {
+                    footerView.setVisibility(View.GONE);
+                } else {
+                    footerView.setVisibility(View.VISIBLE);
+                }
+                if (!isLikeShow) {
                     circleMomentLikeAdapter = new CircleMomentDetailLikeAdapter(likeList);
                     listView.setAdapter(circleMomentLikeAdapter);
                     circleMomentLikeAdapter.notifyDataSetChanged();
                     listView.setSelection(1);
                     isCommentShown = false;
+                    isShareShow = false;
+                    isLikeShow = true;
                 }
             }
         };
 
         View headerView = initHeaderView(moment, OnActionButtonClickListener);
+        footerView = initFooterView(moment);
         actionBar = (MomentActionBar) rootView.findViewById(R.id.moment_action_bar);
         listView.addHeaderView(headerView);
+        listView.addFooterView(footerView);
+        if (moment.comentCount == 0) {
+            footerView.setVisibility(View.VISIBLE);
+        } else {
+            footerView.setVisibility(View.GONE);
+        }
+
         actionBar.setData(moment.relayCount, moment.comentCount, moment.supportCount);
         actionBar.setOnActionButtonClickListener(OnActionButtonClickListener);
 
@@ -301,6 +339,11 @@ public class MomentDetailFragment extends Fragment {
         bindHeaderViewData(moment);
         initHeaderViewEvent(moment);
         return headerView;
+    }
+
+    private View initFooterView(final CCircleDetailModel moment) {
+        View footerView = LayoutInflater.from(getActivity()).inflate(R.layout.circle_moent_detail_footer, null, false);
+        return footerView;
     }
 
     public void setTitleViewVisible(int visible) {
@@ -411,19 +454,17 @@ public class MomentDetailFragment extends Fragment {
 //                    isAttention = false;
 //                }
                 if (!isAttention) {//关注
-                    imgAttention.setClickable(false);
                     isAttention = true;
                     popupAttentionWindow = new PopupAttentionWindow(getActivity(),
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     ((MainActivity) getActivity()).removeAllAttachedView();
+                                    isAttention = false;
                                 }
                             }, new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-
                             //本地保存关注状态
 //                            SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(key, "已关注");
 //                            Toast.makeText(getActivity(), "关注成功", Toast.LENGTH_SHORT).show();
@@ -440,10 +481,12 @@ public class MomentDetailFragment extends Fragment {
                                         //保存关注的状态
 //                                        SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(key, "已关注");
                                         Toast.makeText(getActivity(), "关注成功", Toast.LENGTH_SHORT).show();
-                                        imgAttention.setClickable(true);
+                                        isAttention = true;
                                     } else if (result != null && !result.isSuccess()) {
                                         Log.e("attention", result.getMessage());
+                                        isAttention = true;
                                     } else if (result == null) {
+                                        isAttention = true;
                                         Log.e("attention", exception.toString());
                                     }
                                 }
@@ -451,10 +494,8 @@ public class MomentDetailFragment extends Fragment {
                         }
                     });
                     ((MainActivity) getActivity()).addAttachView(popupAttentionWindow);
-                } else {
-                    //取消关注
-                    imgAttention.setClickable(false);
-
+                } else {//取消关注
+                    isAttention = false;
                     //本地保存关注状态
 //                    SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(key, "未关注");
 //                    Toast.makeText(getActivity(), "取消关注成功", Toast.LENGTH_SHORT).show();
@@ -473,8 +514,10 @@ public class MomentDetailFragment extends Fragment {
                                 Toast.makeText(getActivity(), "取消关注成功", Toast.LENGTH_SHORT).show();
                                 imgAttention.setClickable(true);
                             } else if (result != null && !result.isSuccess()) {
+                                //isAttention = false;
                                 Log.e("attention", result.getMessage());
                             } else if (result == null) {
+                                //isAttention = false;
                                 Log.e("attention", exception.toString());
                             }
                         }
@@ -517,9 +560,7 @@ public class MomentDetailFragment extends Fragment {
         this.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//返回
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.remove(MomentDetailFragment.this);
-                ft.commit();
+                fm.popBackStack();
             }
         });
 
@@ -575,7 +616,7 @@ public class MomentDetailFragment extends Fragment {
 
 //                                btnLike.setClickable(false);
                                 btnLike.setTag(true);
-                                btnLike.setBackground(getResources().getDrawable(R.drawable.icon_support));
+                                btnLike.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.icon_support));
                                 Toast.makeText(MainApplication.UIContext, "点赞成功！", Toast.LENGTH_LONG).show();
                             }
                         });
@@ -633,6 +674,7 @@ public class MomentDetailFragment extends Fragment {
                         commentList = data.commentList;
                         likeList = data.supportList;
                         replyList = data.relayList;
+                        momentActionBar.showTab(1);
                         momentActionBar.setData(replyList != null ? replyList.size() : 0, commentList != null ? commentList.size() : 0, likeList != null ? likeList.size() : 0);
                         //用于更新圈子列表
                         GlobalData.moment.relayCount = replyList != null ? replyList.size() : 0;

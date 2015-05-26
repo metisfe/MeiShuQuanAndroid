@@ -3,6 +3,9 @@ package com.metis.meishuquan.util;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.ui.SelectedTabType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by wudi on 3/15/2015.
  */
@@ -15,6 +18,8 @@ public class GlobalData {
     public static int momentsReplyCount = 0;
     public static int momentsCommentCount = 0;
     public static int momentsLikeCount = 0;
+
+    public static List<Integer> tabs = new ArrayList<Integer>();
 
     private SelectedTabType tabTypeSelected;
     private int[] titleBarTypeSelected = new int[]{-1, -1, -1, -1, -1};

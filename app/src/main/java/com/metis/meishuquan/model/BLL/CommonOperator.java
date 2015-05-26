@@ -241,7 +241,7 @@ public class CommonOperator {
         }
     }
 
-    public void getMomentsGroups() {
+    public void getMomentsGroupsToCache() {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuffer path = new StringBuffer(MOMENTSGROUPS);
@@ -264,6 +264,20 @@ public class CommonOperator {
         }
     }
 
+    public void getMomentsGroups(ApiOperationCallback<ReturnInfo<String>> callback) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuffer path = new StringBuffer(MOMENTSGROUPS);
+                path.append("?userid=" + MainApplication.userInfo.getUserId());
+                path.append("&type=" + 1);
+                path.append("&session=" + SESSION);
+                Log.i("朋友圈Url", path.toString());
+                ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+            }
+        }
+    }
+
     public void getMomentsGroupsAsync(final UserInfoOperator.OnGetListener<List<MomentsGroup>> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
@@ -278,9 +292,10 @@ public class CommonOperator {
                             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                                 Log.v(TAG, "getMomentsGroupsAsync callback=" + response.getContent());
                                 if (result != null && result.isSuccess()) {
-                                    Gson gson= new Gson();
+                                    Gson gson = new Gson();
                                     String json = gson.toJson(result);
-                                    Result<List<MomentsGroup>> listResult = gson.fromJson(json, new TypeToken<Result<List<MomentsGroup>>>(){}.getType());
+                                    Result<List<MomentsGroup>> listResult = gson.fromJson(json, new TypeToken<Result<List<MomentsGroup>>>() {
+                                    }.getType());
                                     if (listener != null) {
                                         listener.onGet(true, listResult.getData());
                                     }

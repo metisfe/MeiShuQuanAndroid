@@ -382,9 +382,14 @@ public class ItemInfoFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 int newsId = commonAdapter.getLstRelatedRead().get(i).getNewsId();
+                if (newsId == 0) {
+                    Toast.makeText(getActivity(), "相关新闻已被删除", Toast.LENGTH_SHORT);
+                    return;
+                }
                 ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
                 Bundle bundle = new Bundle();
                 bundle.putInt(KEY_NEWSID, newsId);
+                bundle.putString(KEY_SHARE_IMG_URL, "xxxx");
                 itemInfoFragment.setArguments(bundle);
 
                 FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -726,9 +731,8 @@ public class ItemInfoFragment extends Fragment {
                 if (isDetached()) {
                     return;
                 }
-                progressDialog.dismiss();
+                progressDialog.cancel();
                 if (result != null) {
-
                     if (result.getInfo().equals(String.valueOf(0))) {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
@@ -740,6 +744,11 @@ public class ItemInfoFragment extends Fragment {
                             rl_private.setEnabled(true);
                             rl_share.setEnabled(true);
                             rlSend.setEnabled(true);
+                            if (newsInfo.getData() == null) {
+                                Toast.makeText(getActivity(), "相关新闻不存在!", Toast.LENGTH_SHORT).show();
+                                fm.popBackStack();
+                                return;
+                            }
                             if (newsInfo.getData().getUserMark() != null) {
                                 Log.v(TAG, "getNewsInfoById result=" + newsInfo.getData().getUserMark().isOpposition() + " " + newsInfo.getData().getUserMark().isSupport());
                             } else {

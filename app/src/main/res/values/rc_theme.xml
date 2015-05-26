@@ -22,7 +22,7 @@
     </style>
 
     <style name="RcTheme.ActionBar">
-        <item name="android:background">@color/rc_title_bg</item>
+        <item name="android:background">@color/bg_topline_topbar</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">48dp</item>
     </style>

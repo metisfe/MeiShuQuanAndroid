@@ -157,8 +157,6 @@ public class FriendMatchFragment extends Fragment {
                         PATH.append("?type=2&session=");//type:0全部，1好友列表，2历史好友列表
                         PATH.append(MainApplication.getSession());
 
-                        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-
                         Map<String, String> map = ChatManager.getPhoneNumberNameMap();
                         if (map.size() > 0) {
                             Set<String> set = map.keySet();

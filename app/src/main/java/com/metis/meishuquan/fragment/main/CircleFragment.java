@@ -60,6 +60,12 @@ public class CircleFragment extends CircleBaseFragment {
 
         this.tabBar = (TabBar) rootView.findViewById(R.id.fragment_shared_circlefragment_tab_bar);
         this.tabBar.setTabSelectedListener(MainApplication.MainActivity);
+        if (GlobalData.tabs.size() > 0) {
+            for (int i = 0; i < GlobalData.tabs.size(); i++) {
+                TabBar.showOrHide(GlobalData.tabs.get(i), true);
+            }
+        }
+
         this.titleBar = (CircleTitleBar) rootView.findViewById(R.id.fragment_shared_circlefragment_title_bar);
 
         this.viewPager = (ViewPager) rootView.findViewById(R.id.fragment_shared_circlefragment_viewpager);

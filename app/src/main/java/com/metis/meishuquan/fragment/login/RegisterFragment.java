@@ -30,6 +30,7 @@ import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.BLL.UserOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.enums.LoginStateEnum;
 import com.metis.meishuquan.model.enums.RequestCodeTypeEnum;
 import com.metis.meishuquan.model.login.LoginUserData;
@@ -37,6 +38,7 @@ import com.metis.meishuquan.model.login.RegisterCode;
 import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.Utils;
+import com.metis.meishuquan.view.shared.TabBar;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
@@ -195,6 +197,15 @@ public class RegisterFragment extends Fragment {
 
                                 //update field of UserInfo to main application
                                 MainApplication.userInfo = user.getData();
+
+                                //根据用户角色控制显示模块
+                                if (user.getData().getUserRole() == IdTypeEnum.TEACHER.getVal() || user.getData().getUserRole() == IdTypeEnum.STUDIO.getVal()) {
+                                    TabBar.showOrHide(1, true);
+                                    TabBar.showOrHide(3, true);
+                                } else {
+                                    TabBar.showOrHide(1, false);
+                                    TabBar.showOrHide(3, false);
+                                }
 
                                 //hide input method
                                 Utils.hideInputMethod(getActivity(), etPwd);

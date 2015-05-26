@@ -20,6 +20,7 @@ import com.metis.meishuquan.fragment.Topline.ItemFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.topline.ChannelItem;
 import com.metis.meishuquan.model.topline.News;
+import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.shared.TabBar;
 import com.metis.meishuquan.view.topline.ChannelManageView;
@@ -108,6 +109,12 @@ public class ToplineFragment extends Fragment {
     //初始化视图及成员
     private void initView(final ViewGroup rootView) {
         this.tabBar = (TabBar) rootView.findViewById(R.id.fragment_shared_toplinefragment_tab_bar);
+        if (GlobalData.tabs.size() > 0) {
+            for (int i = 0; i < GlobalData.tabs.size(); i++) {
+                TabBar.showOrHide(GlobalData.tabs.get(i), true);
+            }
+        }
+
         this.viewPager = (ViewPager) rootView.findViewById(R.id.fragment_shared_toplinefragment_viewpager);
         this.indicator = (TabPageIndicator) rootView.findViewById(R.id.topbar_indicator);
 

@@ -33,7 +33,7 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
     private TextView followeesTitle;
 
     //点评
-    private View topStoryTab;
+    private static View topStoryTab;
     private ImageView topStoryIcon;
     private TextView topStoryTitle;
 
@@ -43,7 +43,7 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
 //    private TextView circleTitle;
 
     //课程
-    private View discoverTab;
+    private static View discoverTab;
     private ImageView discoverIcon;
     private TextView discoverTitle;
 
@@ -149,6 +149,22 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
             default:
                 selectedCircleTab(true);
                 break;
+        }
+    }
+
+    public static void showOrHide(int index, boolean isShow) {
+        if (index == 3) {
+            if (isShow) {
+                discoverTab.setVisibility(View.VISIBLE);
+            } else {
+                discoverTab.setVisibility(View.GONE);
+            }
+        } else if (index == 1) {
+            if (isShow) {
+                topStoryTab.setVisibility(View.VISIBLE);
+            } else {
+                topStoryTab.setVisibility(View.GONE);
+            }
         }
     }
 

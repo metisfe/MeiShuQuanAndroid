@@ -238,9 +238,9 @@ public class ContactListFragment extends CircleBaseFragment {
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_topline_comment_list_item_tag, null);
             }
 
-            convertView.setBackgroundColor(Color.rgb(230, 232, 237));
+            convertView.setBackgroundColor(getResources().getColor(R.color.common_color_e2e2e2));
             TextView mTag = (TextView) convertView.findViewById(R.id.id_tv_listview_tag);
-            mTag.setTextColor(Color.rgb(255, 83, 99));
+            mTag.setTextColor(getResources().getColor(R.color.common_color_7e7e7e));
             mTag.setText(name.toUpperCase());
             return convertView;
         }

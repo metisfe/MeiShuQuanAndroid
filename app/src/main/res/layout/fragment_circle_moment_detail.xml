@@ -105,9 +105,11 @@
             android:id="@+id/moment_detail_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:divider="@color/transparent"
+            android:dividerHeight="0dp"
             android:layout_below="@id/circle_moment_detail_header"
             android:layout_above="@id/circle_moment_detail_footer"
-            android:background="#fff">
+            android:background="#f1f2f4">
 
         </com.metis.meishuquan.view.circle.moment.MomentPageListView>
 

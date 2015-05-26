@@ -20,6 +20,7 @@ import com.metis.meishuquan.activity.course.ChooseCourseActivity;
 import com.metis.meishuquan.fragment.course.CourseListFragment;
 import com.metis.meishuquan.fragment.course.CoursePicListFragment;
 import com.metis.meishuquan.model.course.CourseChannelItem;
+import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.shared.TabBar;
 
@@ -143,6 +144,11 @@ public class ClassFragment extends Fragment {
         this.tvCourseChannelBar.setText(courseChannelBarText);
 
         this.tabBar = (TabBar) rootView.findViewById(R.id.fragment_shared_classfragment_tab_bar);
+        if (GlobalData.tabs.size() > 0) {
+            for (int i = 0; i < GlobalData.tabs.size(); i++) {
+                TabBar.showOrHide(GlobalData.tabs.get(i), true);
+            }
+        }
         this.tabBar.setTabSelectedListener(MainApplication.MainActivity);
 
         fm = getActivity().getSupportFragmentManager();

@@ -42,6 +42,7 @@
             android:layout_width="@dimen/px_to_dip_82"
             android:layout_height="@dimen/px_to_dip_82"
             android:layout_gravity="left"
+            android:scaleType="centerCrop"
             android:layout_marginLeft="@dimen/px_to_dip_16"
             android:layout_marginRight="@dimen/px_to_dip_16"
             app:shape="square" />
@@ -198,6 +199,7 @@
             android:layout_width="@dimen/px_to_dip_82"
             android:layout_height="@dimen/px_to_dip_82"
             android:layout_gravity="right"
+            android:scaleType="centerCrop"
             android:layout_marginLeft="@dimen/px_to_dip_16"
             android:layout_marginRight="@dimen/px_to_dip_16"
             app:shape="square" />

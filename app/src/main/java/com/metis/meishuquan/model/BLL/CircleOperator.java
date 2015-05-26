@@ -103,6 +103,7 @@ public class CircleOperator {
         }
     }
 
+    //获取朋友圈详情
     public void getMomentDetail(int id, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
@@ -116,5 +117,7 @@ public class CircleOperator {
             Toast.makeText(MainApplication.UIContext, "网络不给力，请稍候再试", Toast.LENGTH_SHORT).show();
         }
     }
+
+
 
 }

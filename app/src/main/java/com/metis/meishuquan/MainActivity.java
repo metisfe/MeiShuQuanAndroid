@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.DisplayMetrics;
@@ -22,14 +21,15 @@ import android.widget.Toast;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.activity.login.LoginActivity;
+import com.metis.meishuquan.fragment.commons.FragmentWaitingForAssess;
+import com.metis.meishuquan.fragment.commons.FragmentWaitingForClass;
+import com.metis.meishuquan.fragment.main.AssessFragment;
 import com.metis.meishuquan.fragment.main.CircleFragment;
 import com.metis.meishuquan.fragment.main.ClassFragment;
-import com.metis.meishuquan.fragment.main.AssessFragment;
 import com.metis.meishuquan.fragment.main.MyInfoFragment;
 import com.metis.meishuquan.fragment.main.ToplineFragment;
 import com.metis.meishuquan.framework.util.TextureRender;
 import com.metis.meishuquan.model.BLL.CommonOperator;
-import com.metis.meishuquan.model.assess.Bimp;
 import com.metis.meishuquan.model.commons.AndroidVersion;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.contract.ReturnInfo;
@@ -106,7 +106,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
         onNewIntent(this.getIntent());
         checkLoginState();
         updateApp();
-        CommonOperator.getInstance().getMomentsGroups();//获取朋友圈分组信息
+        CommonOperator.getInstance().getMomentsGroupsToCache();//获取朋友圈分组信息
 
         IntentFilter intentFilter = new IntentFilter("join_succeed");
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
@@ -176,10 +176,12 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
                 navigateTo(ToplineFragment.class);
                 break;
             case Comment:
-                navigateTo(AssessFragment.class);
+                navigateTo(FragmentWaitingForAssess.class);
+//                navigateTo(AssessFragment.class);
                 break;
             case Class:
-                navigateTo(ClassFragment.class);
+                navigateTo(FragmentWaitingForClass.class);
+//                navigateTo(ClassFragment.class);
                 break;
             case MyInfo:
                 navigateTo(MyInfoFragment.class);
@@ -255,7 +257,9 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
                 || name.equals(MyInfoFragment.class.getSimpleName())
                 || name.equals(AssessFragment.class.getSimpleName())
                 || name.equals(CircleFragment.class.getSimpleName())
-                || name.equals(ClassFragment.class.getSimpleName());
+                || name.equals(ClassFragment.class.getSimpleName())
+                || name.equals(FragmentWaitingForClass.class.getSimpleName())
+                || name.equals(FragmentWaitingForAssess.class.getSimpleName());
     }
 
     public void removeAllAttachedView() {

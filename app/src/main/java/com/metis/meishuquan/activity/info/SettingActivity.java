@@ -14,9 +14,11 @@ import com.metis.meishuquan.activity.info.homepage.StudioActivity;
 import com.metis.meishuquan.adapter.studio.UserInfoAdapter;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.User;
+import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.shared.MyInfoBtn;
+import com.metis.meishuquan.view.shared.TabBar;
 import com.nostra13.universalimageloader.cache.disc.DiscCacheAware;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
@@ -112,6 +114,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 //clear sharedpreferences
                 SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(this);
                 spu.delete(SharedPreferencesUtil.USER_LOGIN_INFO);
+
+                GlobalData.tabs.clear();
+                TabBar.showOrHide(1, false);
+                TabBar.showOrHide(3, false);
 
                 //tip
                 //Toast.makeText(this, "���˳�", Toast.LENGTH_SHORT).show();

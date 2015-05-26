@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="70dp">
+    android:layout_height="60dp">
 
     <View
         android:id="@+id/view_circle_contactlistitemview_check"
@@ -12,9 +12,10 @@
 
     <ImageView
         android:id="@+id/view_circle_contactlistitemview_image"
-        android:layout_height="40dp"
-        android:layout_width="60dp"
-        android:layout_marginLeft="10dp"
+        android:layout_height="50dp"
+        android:layout_width="50dp"
+        android:scaleType="centerCrop"
+        android:layout_marginLeft="20dp"
         android:layout_toRightOf="@id/view_circle_contactlistitemview_check"
         android:layout_centerVertical="true" />
 
@@ -34,7 +35,8 @@
             android:layout_marginTop="1dp"
             android:layout_marginBottom="1dp"
             android:text="张三"
-            android:textSize="20sp" />
+            android:textColor="@color/common_color_424242"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/view_circle_contactlistitemview_reason"

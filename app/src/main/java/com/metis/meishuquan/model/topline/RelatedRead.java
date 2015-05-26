@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 public class RelatedRead implements Serializable {
     @SerializedName("newsId")
-    private int newsId;
+    private int newsId=0;
 
     @SerializedName("title")
     private String title = "";

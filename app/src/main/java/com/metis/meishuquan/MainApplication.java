@@ -19,11 +19,13 @@ import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.commons.AndroidVersion;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.enums.LoginStateEnum;
 import com.metis.meishuquan.model.login.LoginUserData;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.model.provider.DataProvider;
 import com.metis.meishuquan.util.ChatManager;
+import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.Utils;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -68,6 +70,12 @@ public class MainApplication extends Application {
         UIContext = this.getApplicationContext();
         Handler = new Handler();
         userInfo = getUserInfoFromSharedPreferences();
+        if (userInfo.getUserRole() == IdTypeEnum.TEACHER.getVal() || userInfo.getUserRole() == IdTypeEnum.STUDIO.getVal()) {
+            GlobalData.tabs.add(1);
+            GlobalData.tabs.add(3);
+        } else {
+            GlobalData.tabs.clear();
+        }
 
         DataProvider.setDefaultUIThreadHandler(Handler);
         ApiDataProvider.initProvider();
@@ -161,6 +169,7 @@ public class MainApplication extends Application {
                 if (result != null && result.isSuccess()) {
                     isNormal = true;
                 } else {
+                    SharedPreferencesUtil.getInstanse(UIContext).delete(SharedPreferencesUtil.USER_LOGIN_INFO);
                     MainApplication.userInfo = new User();
                     Toast.makeText(MainApplication.UIContext, "账号异常！请重新登录！", Toast.LENGTH_LONG).show();
 //                    startActivity(new Intent(UIContext, LoginActivity.class));

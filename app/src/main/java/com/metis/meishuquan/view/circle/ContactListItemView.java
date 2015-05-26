@@ -53,7 +53,7 @@ public class ContactListItemView extends LinearLayout {
                 this.checkView.setBackgroundResource(R.drawable.bg_btn_single_check);
                 break;
             case -1:
-                this.checkView.setBackgroundResource(R.drawable.view_circle_checkcircle_disable);
+                this.checkView.setBackgroundResource(R.drawable.bg_btn_single_check);
                 break;
         }
 
