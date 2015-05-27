@@ -1147,7 +1147,7 @@ public class StudioActivity extends BaseActivity implements
                 case R.id.info_meishuquan_id:
 
                     if (TextUtils.isEmpty(mUser.getAccout())) {
-                        showDialogAndUpdate(getString(R.string.info_meishuquan_id), "", getString(R.string.info_meishuquan_id), new InputDialogFragment.OnOkListener() {
+                        showDialogAndUpdate(getString(R.string.info_meishuquan_id), "", getString(R.string.info_meishuquan_tip), new InputDialogFragment.OnOkListener() {
                             @Override
                             public void onOkClick(View view, CharSequence cs) {
                                 if (PatternUtils.PATTERN_MEISHUQUAN_ID.matcher(cs).matches()) {

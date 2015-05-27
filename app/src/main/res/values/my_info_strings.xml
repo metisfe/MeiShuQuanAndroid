@@ -34,6 +34,7 @@
     <string name="info_profile">头像</string>
     <string name="info_nick">昵称</string>
     <string name="info_meishuquan_id">美术圈号</string>
+    <string name="info_meishuquan_tip">以字母开头,只接受字母和数字</string>
     <string name="info_recents">个性签名</string>
     <string name="info_gender">性别</string>
     <string name="info_ages">年龄</string>
@@ -105,7 +106,7 @@
     <string name="name_card_send_to">分享到:</string>
 
     <string name="change_pwd_old">原密码</string>
-    <string name="change_pwd_new">新密码</string>
+    <string name="change_pwd_new">新密码:6-12位字母和数字</string>
     <string name="change_pwd_confirm">确认密码</string>
     <string name="change_pwd_positive">确定</string>
     <string name="change_pwd_not_new">新密码与原密码一致</string>
@@ -145,6 +146,7 @@
     <string name="studio_weibo">微博:%1$s</string>
     <string name="studio_wechat">微信:%1$s</string>
     <string name="studio_website">网站:%1$s</string>
+    <string name="studio_mailbox">邮箱:%1$s</string>
     <string name="studio_focus">加关注</string>
     <string name="studio_has_focused">已关注</string>
     <string name="studio_focused_each">互相关注</string>

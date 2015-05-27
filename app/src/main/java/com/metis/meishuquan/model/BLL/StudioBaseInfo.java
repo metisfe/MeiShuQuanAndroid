@@ -27,6 +27,7 @@ public class StudioBaseInfo implements Serializable {
     private String weChat;
     private String webSite;
     private String addressPhoto;
+    private String mailbox;
 
     public int getStudioId() {
         return studioId;
@@ -134,6 +135,14 @@ public class StudioBaseInfo implements Serializable {
 
     public String getAddressPhoto() {
         return addressPhoto;
+    }
+
+    public String getMailbox() {
+        return mailbox;
+    }
+
+    public void setMailbox(String mailbox) {
+        this.mailbox = mailbox;
     }
 
     public void setAddressPhoto(String addressPhoto) {

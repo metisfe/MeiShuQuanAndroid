@@ -69,6 +69,10 @@ public class ContactUsActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(website)) {
                     sb.append(getString(R.string.studio_website, website) + "\n");
                 }
+                String mailbox = studioBaseInfo.getMailbox();
+                if (!TextUtils.isEmpty(mailbox)) {
+                    sb.append(getString(R.string.studio_mailbox, mailbox) + "\n");
+                }
                 mDetailsTv.setText(sb.toString());
                 Log.v(TAG, "onPostCreate=" + studioBaseInfo.getAddressPhoto());
                 if (!TextUtils.isEmpty(studioBaseInfo.getAddressPhoto())) {
