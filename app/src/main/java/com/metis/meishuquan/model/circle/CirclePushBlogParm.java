@@ -14,8 +14,9 @@ public class CirclePushBlogParm implements Serializable {
     private List<Integer> UserIds = null;//@谁集合
     private List<CircleImage> Images = null;
     private String Device = "";
-    private int RelayId = 0;
+    private int RelayId = 0;//非转发圈子类型 如：活动，新闻等
     private int Type = 0;
+    private int lastCircleId = 0;//转发圈子类型  为日志的Id
 
     public String getRegion() {
         return Region;
@@ -77,5 +78,13 @@ public class CirclePushBlogParm implements Serializable {
 
     public void setType(int type) {
         Type = type;
+    }
+
+    public int getLastCircleId() {
+        return lastCircleId;
+    }
+
+    public void setLastCircleId(int lastCircleId) {
+        this.lastCircleId = lastCircleId;
     }
 }

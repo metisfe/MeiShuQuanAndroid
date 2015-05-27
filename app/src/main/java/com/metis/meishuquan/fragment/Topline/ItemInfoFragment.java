@@ -138,7 +138,7 @@ public class ItemInfoFragment extends Fragment {
         Bundle args = this.getArguments();
         if (args != null) {
             newsId = args.getInt(KEY_NEWSID);
-            shareImageUrl = args.getString(KEY_SHARE_IMG_URL);
+//            shareImageUrl = args.getString(KEY_SHARE_IMG_URL);
             //根据新闻Id获取新闻内容
             getInfoData(newsId);
         }
@@ -739,16 +739,18 @@ public class ItemInfoFragment extends Fragment {
                         if (!TextUtils.isEmpty(json)) {
                             newsInfo = gson.fromJson(json, new TypeToken<TopLineNewsInfo>() {
                             }.getType());
-                            rl_Input.setEnabled(true);
-                            rl_writeCommont.setEnabled(true);
-                            rl_private.setEnabled(true);
-                            rl_share.setEnabled(true);
-                            rlSend.setEnabled(true);
                             if (newsInfo.getData() == null) {
                                 Toast.makeText(getActivity(), "相关新闻不存在!", Toast.LENGTH_SHORT).show();
                                 fm.popBackStack();
                                 return;
                             }
+                            shareImageUrl = newsInfo.getData().getThumbnail();
+                            rl_Input.setEnabled(true);
+                            rl_writeCommont.setEnabled(true);
+                            rl_private.setEnabled(true);
+                            rl_share.setEnabled(true);
+                            rlSend.setEnabled(true);
+
                             if (newsInfo.getData().getUserMark() != null) {
                                 Log.v(TAG, "getNewsInfoById result=" + newsInfo.getData().getUserMark().isOpposition() + " " + newsInfo.getData().getUserMark().isSupport());
                             } else {
@@ -757,10 +759,10 @@ public class ItemInfoFragment extends Fragment {
                             if (listener != null) {
                                 listener.onGet(true, newsInfo);
                             }
+                            bindData();
+                            addViewByContent();
                         }
                     }
-                    bindData();
-                    addViewByContent();
                 }
             }
         });

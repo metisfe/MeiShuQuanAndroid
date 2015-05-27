@@ -54,7 +54,7 @@ public class CommonOperator {
     private final String PRIVATE = "v1.1/Comment/Favorite";
     private final String FileUpload = "v1.1/File/Upload";//文件上传
     private final String ANDROIDVERSION = "v1.1/Default/AndroidVersion";//获取最新版本
-    private final String CHECKLOGINSTATE = "v1.1/Default/Start?session=" + MainApplication.getSession();//校验账号状态
+    private final String CHECKLOGINSTATE = "v1.1/Default/Start?session=";//校验账号状态
     private final String MOMENTSGROUPS = "v1.1/Circle/MyDiscussions";//朋友圈分组信息
     private final String SEARCHUSER = "v1.1/UserCenter/SearchUser";//查找好友
 
@@ -232,10 +232,12 @@ public class CommonOperator {
         }
     }
 
-    public void checkLoginState(ApiOperationCallback<ReturnInfo<String>> callback) {
+    public void checkLoginState(String session, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
-                ApiDataProvider.getmClient().invokeApi(CHECKLOGINSTATE, null, HttpGet.METHOD_NAME, null,
+                StringBuilder PATH = new StringBuilder(CHECKLOGINSTATE);
+                PATH.append(session);
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
         }

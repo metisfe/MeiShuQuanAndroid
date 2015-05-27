@@ -104,7 +104,6 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
 
         Utils.showConfigureNetwork(this);
         onNewIntent(this.getIntent());
-        checkLoginState();
         updateApp();
         CommonOperator.getInstance().getMomentsGroupsToCache();//获取朋友圈分组信息
 
@@ -340,11 +339,11 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
         });
     }
 
-    private static void checkLoginState() {
+    private static void checkLoginState(String session) {
         if (!MainApplication.isLogin()) {
             return;
         }
-        CommonOperator.getInstance().checkLoginState(new ApiOperationCallback<ReturnInfo<String>>() {
+        CommonOperator.getInstance().checkLoginState(session, new ApiOperationCallback<ReturnInfo<String>>() {
             @Override
             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                 if (result != null && result.isSuccess()) {

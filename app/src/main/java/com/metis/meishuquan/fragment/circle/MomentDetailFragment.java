@@ -148,7 +148,6 @@ public class MomentDetailFragment extends Fragment {
                     circleMomentCommentAdapter = new CircleMomentDetailCommentAdapter(list);
                     listView.setAdapter(circleMomentCommentAdapter);
                     initEvent();
-                    progressDialog.dismiss();
                 }
             }
         });

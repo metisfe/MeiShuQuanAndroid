@@ -516,6 +516,7 @@ public class CircleMomentAdapter extends BaseAdapter {
         ft.commit();
     }
 
+    //转发
     private void reply(CCircleDetailModel moment, View convertView) {
         SharePopupWindow sharePopupWindow = new SharePopupWindow((FragmentActivity) mContext, convertView);
         String title = "xxx";
@@ -528,7 +529,7 @@ public class CircleMomentAdapter extends BaseAdapter {
 
         String shareUrl = moment.getShareUrl() + moment.id;
         String imgUrl = moment.relayImgUrl;
-
+        Log.i("reply_args", "title:" + title + "content:" + content + "shareUrl:" + shareUrl + "imgUrl:" + imgUrl + "");
         sharePopupWindow.setShareInfo(title, content, shareUrl, imgUrl, moment);
 
 //        Intent it = new Intent(mContext, ReplyActivity.class);

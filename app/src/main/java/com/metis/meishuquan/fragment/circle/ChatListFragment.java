@@ -183,9 +183,10 @@ public class ChatListFragment extends CircleBaseFragment {
                 }
             }).start();
 
-        } else {
-            startActivity(new Intent(getActivity(), LoginActivity.class));
         }
+//        else {
+//            startActivity(new Intent(getActivity(), LoginActivity.class));
+//        }
 
         listView.setAdapter(adapter);
         return rootView;

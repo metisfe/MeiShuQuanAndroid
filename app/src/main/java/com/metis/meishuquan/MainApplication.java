@@ -70,12 +70,8 @@ public class MainApplication extends Application {
         UIContext = this.getApplicationContext();
         Handler = new Handler();
         userInfo = getUserInfoFromSharedPreferences();
-        if (userInfo.getUserRole() == IdTypeEnum.TEACHER.getVal() || userInfo.getUserRole() == IdTypeEnum.STUDIO.getVal()) {
-            GlobalData.tabs.add(1);
-            GlobalData.tabs.add(3);
-        } else {
-            GlobalData.tabs.clear();
-        }
+        checkLoginState(userInfo.getCookie());
+
 
         DataProvider.setDefaultUIThreadHandler(Handler);
         ApiDataProvider.initProvider();
@@ -88,7 +84,9 @@ public class MainApplication extends Application {
      * 连接融云服务器
      */
     public static void rongConnect(String token) {
-        if (TextUtils.isEmpty(token) || token.length() < 50) return;
+        if (TextUtils.isEmpty(token) || token.length() < 50) {
+            return;
+        }
         try {
             rongIM = RongIM.connect(token, new RongIMClient.ConnectCallback() {
                 @Override
@@ -149,9 +147,6 @@ public class MainApplication extends Application {
         if (userInfo.getAppLoginState() == LoginStateEnum.NO) {
             return false;
         }
-//        else if (userInfo.getAppLoginState() == LoginStateEnum.YES) {
-//            return checkLoginState();
-//        }
         return true;
     }
 
@@ -159,24 +154,22 @@ public class MainApplication extends Application {
         return userInfo.getCookie();
     }
 
-
-    private static boolean isNormal;//账号是否正常
-
-    private static boolean checkLoginState() {
-        CommonOperator.getInstance().checkLoginState(new ApiOperationCallback<ReturnInfo<String>>() {
+    private void checkLoginState(String session) {
+        CommonOperator.getInstance().checkLoginState(session, new ApiOperationCallback<ReturnInfo<String>>() {
             @Override
             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                 if (result != null && result.isSuccess()) {
-                    isNormal = true;
+                    if (userInfo.getUserRole() == IdTypeEnum.TEACHER.getVal() || userInfo.getUserRole() == IdTypeEnum.STUDIO.getVal()) {
+                        GlobalData.tabs.add(1);
+                        GlobalData.tabs.add(3);
+                    } else {
+                        GlobalData.tabs.clear();
+                    }
                 } else {
                     SharedPreferencesUtil.getInstanse(UIContext).delete(SharedPreferencesUtil.USER_LOGIN_INFO);
                     MainApplication.userInfo = new User();
-                    Toast.makeText(MainApplication.UIContext, "账号异常！请重新登录！", Toast.LENGTH_LONG).show();
-//                    startActivity(new Intent(UIContext, LoginActivity.class));
-                    isNormal = false;
                 }
             }
         });
-        return isNormal;
     }
 }

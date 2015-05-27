@@ -104,12 +104,15 @@ public class SharePopupWindow extends PopupWindow {
                             || mMoment.relayCircle.type == SupportTypeEnum.CircleActivity.getVal())) {
                         parm.setType(SupportTypeEnum.CircleActivity.getVal());
                         parm.setRelayId(mMoment.relayCircle.id);
+                        parm.setLastCircleId(mMoment.id);
                     } else if (mMoment.relayCircle != null && mMoment.relayCircle.type == SupportTypeEnum.News.getVal()) {
                         parm.setType(SupportTypeEnum.News.getVal());
                         parm.setRelayId(mMoment.relayCircle.id);
+                        parm.setLastCircleId(mMoment.id);
                     } else if (mMoment.relayCircle != null && mMoment.relayCircle.type == SupportTypeEnum.Circle.getVal()) {
                         parm.setType(SupportTypeEnum.Circle.getVal());
                         parm.setRelayId(mMoment.relayCircle.id);
+                        parm.setLastCircleId(mMoment.id);
                         parm.setContent(mMoment.relayCircle.desc);
                         List<Integer> userIds = new ArrayList<Integer>();
                         userIds.add(mMoment.user.userId);
@@ -117,6 +120,7 @@ public class SharePopupWindow extends PopupWindow {
                     } else if (mMoment.relayCircle == null) {//转发圈子类型
                         parm.setType(SupportTypeEnum.Circle.getVal());
                         parm.setRelayId(mMoment.id);
+                        parm.setLastCircleId(mMoment.id);
                         List<Integer> userIds = new ArrayList<Integer>();
                         userIds.add(mMoment.user.userId);
                         parm.setUserIds(userIds);
@@ -128,17 +132,17 @@ public class SharePopupWindow extends PopupWindow {
                             || mMoment.relayCircle.type == SupportTypeEnum.News.getVal())) {
                         it.putExtra(ReplyActivity.TITLE, mMoment.relayCircle.title);
                         it.putExtra(ReplyActivity.CONTENT, mMoment.relayCircle.desc);
-                        it.putExtra(ReplyActivity.IMAGEURL, mMoment.relayCircle.activityImg);
+                        it.putExtra(ReplyActivity.IMAGEURL, mMoment.relayImgUrl);
                         it.putExtra(ReplyActivity.INPUT_CONTENT, "//@" + mMoment.user.name + " " + mMoment.content);
                     } else if (mMoment.relayCircle != null && mMoment.relayCircle.type == SupportTypeEnum.Circle.getVal()) {
                         it.putExtra(ReplyActivity.TITLE, "@" + mMoment.user.name);
                         it.putExtra(ReplyActivity.CONTENT, mMoment.relayCircle.desc);
-                        it.putExtra(ReplyActivity.IMAGEURL, mMoment.user.avatar);
+                        it.putExtra(ReplyActivity.IMAGEURL, mMoment.relayImgUrl);
                         it.putExtra(ReplyActivity.INPUT_CONTENT, "//@" + mMoment.user.name + " " + mMoment.content);
                     } else if (mMoment.relayCircle == null) {
                         it.putExtra(ReplyActivity.TITLE, "@" + mMoment.user.name);
                         it.putExtra(ReplyActivity.CONTENT, mMoment.content);
-                        it.putExtra(ReplyActivity.IMAGEURL, mMoment.user.avatar);
+                        it.putExtra(ReplyActivity.IMAGEURL, mMoment.relayImgUrl);
                         it.putExtra(ReplyActivity.INPUT_CONTENT, "//@" + mMoment.user.name + " " + mMoment.content);
                     }
                 }

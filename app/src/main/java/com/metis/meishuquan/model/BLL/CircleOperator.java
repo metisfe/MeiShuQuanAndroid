@@ -110,6 +110,7 @@ public class CircleOperator {
                 StringBuffer PATH = new StringBuffer(URL_CIRCLE_DETAIL);
                 PATH.append("id=" + id);
                 PATH.append("&session=" + MainApplication.userInfo.getCookie());
+                Log.i("moment_detail", PATH.toString());
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
@@ -117,7 +118,6 @@ public class CircleOperator {
             Toast.makeText(MainApplication.UIContext, "网络不给力，请稍候再试", Toast.LENGTH_SHORT).show();
         }
     }
-
 
 
 }

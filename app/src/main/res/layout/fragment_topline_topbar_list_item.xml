@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@android:color/white"
-    android:padding="7.5dp">
+    android:layout_height="81dp"
+    android:background="@color/white"
+    android:paddingLeft="7.5dp"
+    android:paddingRight="7.5dp">
     <!--android:background="@color/bg_listview"-->
 
     <ImageView
         android:id="@+id/img_thumbnail"
         android:layout_width="100dp"
         android:layout_height="65dp"
-        android:layout_centerVertical="true"
+        android:layout_marginTop="7.5dp"
         android:background="#cccccc"
         android:scaleType="centerCrop" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="7dp"
+        android:layout_below="@+id/img_thumbnail"
+        android:background="#ccc" />
 
     <RelativeLayout
         android:id="@+id/rl_title"
