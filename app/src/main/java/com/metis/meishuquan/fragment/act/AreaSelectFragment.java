@@ -191,7 +191,7 @@ public class AreaSelectFragment extends MultiListViewFragment {
             public void onChoose(CityArea area) {
                 mCityId = area.getId();
                 mTownId = 0;
-                if (mProvAdapter.getSelectedAreable() != null && area.getId() == mProvAdapter.getSelectedAreable().getId()) {
+                if ((mProvAdapter.getSelectedAreable() != null && area.getId() == mProvAdapter.getSelectedAreable().getId()) || area.getId() == 0) {
                     mTownDataList.clear();
                     mTownAdapter.notifyDataSetChanged();
                     onAreaSelected(area);
@@ -413,7 +413,11 @@ public class AreaSelectFragment extends MultiListViewFragment {
         }
 
         public CityArea cloneUnselectedOne (Context context) {
-            CityArea area = new CityArea(mCity);
+            City city = new City();
+            city.setStudioCount(mCity.getStudioCount());
+            city.setCodeid(0);
+            city.setCityName(mCity.getCityName());
+            CityArea area = new CityArea(city);
             area.setShowName(context.getString(R.string.all));
             area.canExtend = false;
             return area;
