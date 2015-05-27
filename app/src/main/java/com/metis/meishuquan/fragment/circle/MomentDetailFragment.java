@@ -148,6 +148,10 @@ public class MomentDetailFragment extends Fragment {
                     circleMomentCommentAdapter = new CircleMomentDetailCommentAdapter(list);
                     listView.setAdapter(circleMomentCommentAdapter);
                     initEvent();
+                } else if (result != null && !result.isSuccess()) {
+                    if (!result.getMessage().isEmpty()) {
+                        Toast.makeText(getActivity(), result.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });

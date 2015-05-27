@@ -284,18 +284,18 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
 
     private void updateApp() {
         //TODO:比较上次检测时间是否超过24小时
-        String json = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey(SharedPreferencesUtil.LAST_APP_VERSION);
-        if (!json.isEmpty()) {
-            ReturnInfo info = new Gson().fromJson(json, new TypeToken<ReturnInfo<AndroidVersion>>() {
-            }.getType());
-            Date lastCheckTime = ((AndroidVersion) info.getData()).getLastCheckTime();
-            Date now = new Date();
-            long i = now.getTime() - lastCheckTime.getTime();
-            long day = i / (24 * 60 * 60 * 1000);
-            if (day < 1) {
-                return;
-            }
-        }
+//        String json = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey(SharedPreferencesUtil.LAST_APP_VERSION);
+//        if (!json.isEmpty()) {
+//            ReturnInfo info = new Gson().fromJson(json, new TypeToken<ReturnInfo<AndroidVersion>>() {
+//            }.getType());
+//            Date lastCheckTime = ((AndroidVersion) info.getData()).getLastCheckTime();
+//            Date now = new Date();
+//            long i = now.getTime() - lastCheckTime.getTime();
+//            long day = i / (24 * 60 * 60 * 1000);
+//            if (day < 1) {
+//                return;
+//            }
+//        }
 
         CommonOperator.getInstance().getVersion(new ApiOperationCallback<ReturnInfo<AndroidVersion>>() {
             @Override

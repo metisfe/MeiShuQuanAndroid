@@ -20,8 +20,8 @@ import java.util.List;
 public class DataHelper {
     private String jsonStr = "";
 
-    private static final String[] USER_CHANNEL = new String[]{"头条", "画室", "视频", "试卷",
-            "联考", "校考", "专业", "志愿", "录取"};
+    private static final String[] USER_CHANNEL = new String[]{"推荐", "超级美术生", "校考", "联考",
+            "素描", "色彩", "速写", "设计", "书籍", "选专业", "查成绩", "选画室", "招聘"};
     private static final String[] OTHER_CHANNEL = new String[]{"入学", "动态", "访谈", "网站",
             "播报"};
 
@@ -42,9 +42,10 @@ public class DataHelper {
     public List<ChannelItem> getUserChannels() {
         List<ChannelItem> lstUserItems = new ArrayList<ChannelItem>();
         try {
-            Gson gson= new Gson();
-            AllChannel allChannel=gson.fromJson(jsonStr,new TypeToken<AllChannel>(){}.getType());
-            lstUserItems=allChannel.getSelectedChannels();
+            Gson gson = new Gson();
+            AllChannel allChannel = gson.fromJson(jsonStr, new TypeToken<AllChannel>() {
+            }.getType());
+            lstUserItems = allChannel.getSelectedChannels();
             Log.i("lstUserItems", String.valueOf(lstUserItems.size()));
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,9 +61,10 @@ public class DataHelper {
     public List<ChannelItem> getOtherChannels() {
         List<ChannelItem> lstOtherItems = new ArrayList<ChannelItem>();
         try {
-            Gson gson= new Gson();
-            AllChannel allChannel=gson.fromJson(jsonStr,new TypeToken<AllChannel>(){}.getType());
-            lstOtherItems=allChannel.getUnSelectedChannels();
+            Gson gson = new Gson();
+            AllChannel allChannel = gson.fromJson(jsonStr, new TypeToken<AllChannel>() {
+            }.getType());
+            lstOtherItems = allChannel.getUnSelectedChannels();
             Log.i("lstOtherItems", String.valueOf(lstOtherItems.size()));
         } catch (Exception e) {
             e.printStackTrace();

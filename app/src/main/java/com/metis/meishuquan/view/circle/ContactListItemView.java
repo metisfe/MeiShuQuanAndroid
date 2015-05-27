@@ -58,7 +58,7 @@ public class ContactListItemView extends LinearLayout {
         }
 
         this.nameView.setText(title);
-        ImageLoaderUtils.getImageLoader(getContext()).displayImage(url, imageView);
+        ImageLoaderUtils.getImageLoader(getContext()).displayImage(url, imageView, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height), R.drawable.default_portrait_fang));
 
         this.buttonView.setVisibility(GONE);
         this.addedView.setVisibility(GONE);
@@ -116,7 +116,7 @@ public class ContactListItemView extends LinearLayout {
         this.nextView.setVisibility(GONE);
     }
 
-    public void setProfileVisibility (int visibility) {
+    public void setProfileVisibility(int visibility) {
         this.imageView.setVisibility(visibility);
     }
 

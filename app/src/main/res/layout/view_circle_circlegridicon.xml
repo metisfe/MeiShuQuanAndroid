@@ -6,6 +6,7 @@
     <ImageView
         android:id="@+id/view_circle_circlegridicon_image"
         android:layout_width="50dp"
+        android:scaleType="centerCrop"
         android:layout_height="50dp" />
 
     <View

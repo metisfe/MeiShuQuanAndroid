@@ -425,11 +425,18 @@ public class ChatManager {
     }
 
     private static String normalizePhoneNumber(String s) {
-        if (s == null || s.length() < 11) return null;
+        if (s == null || s.length() < 11)
+            return s;
         s = s.replace(" ", "");
         s = s.replace("-", "");
-        s = s.substring(s.length() - 11);
-        if (s.charAt(0) != '1') return null;
+        try {
+            s = s.substring(s.length() - 11);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return s;
+        }
+        if (s.charAt(0) != '1')
+            return s;
         return s;
     }
 
