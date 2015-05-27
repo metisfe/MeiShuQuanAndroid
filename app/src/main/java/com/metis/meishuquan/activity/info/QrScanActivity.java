@@ -1,5 +1,6 @@
 package com.metis.meishuquan.activity.info;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -11,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -81,6 +83,10 @@ public class QrScanActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_scan);
 
+        ActionBar bar = getActionBar();
+        bar.setDisplayShowHomeEnabled(true);
+        bar.setDisplayHomeAsUpEnabled(true);
+
         hideTitleBar();
 
         mCoverView = (ClipView)this.findViewById(R.id.qr_scan_cover);
@@ -114,6 +120,16 @@ public class QrScanActivity extends BaseActivity implements
         mSurfaceView = (SurfaceView)findViewById(R.id.qr_scan_surface);
         mHolder = mSurfaceView.getHolder();
         mHolder.addCallback(this);
+    }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return super.onMenuItemSelected(featureId, item);
     }
 
     private boolean hasCamera (Context context) {
