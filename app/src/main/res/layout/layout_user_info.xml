@@ -257,6 +257,7 @@
         android:id="@+id/info_good_at"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         bs:text="@string/info_good_at"
         bs:imageVisible="false"
         >

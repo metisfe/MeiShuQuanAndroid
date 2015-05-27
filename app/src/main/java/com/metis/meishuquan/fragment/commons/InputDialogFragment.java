@@ -70,7 +70,7 @@ public class InputDialogFragment extends DialogFragment {
 
     public void setText (String text) {
         mText = text;
-        if (mInputEt != null) {
+        if (mInputEt != null && mText != null) {
             mInputEt.append(mText);
             mInputEt.selectAll();
         }
@@ -78,7 +78,7 @@ public class InputDialogFragment extends DialogFragment {
 
     public void setHint (String hint) {
         mHint = hint;
-        if (mInputEt != null) {
+        if (mInputEt != null && mHint != null) {
             mInputEt.setHint(mHint);
         }
     }

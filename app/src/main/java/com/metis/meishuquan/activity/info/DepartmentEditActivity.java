@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.homepage.StudioActivity;
 import com.metis.meishuquan.model.BLL.ActiveOperator;
@@ -32,6 +33,7 @@ import com.metis.meishuquan.model.commons.College;
 import com.metis.meishuquan.model.commons.School;
 import com.metis.meishuquan.model.commons.Studio;
 import com.metis.meishuquan.model.commons.User;
+import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.view.shared.TitleView;
 
 import java.text.DecimalFormat;
@@ -101,7 +103,11 @@ public class DepartmentEditActivity extends BaseActivity implements View.OnClick
                 title = getString(R.string.info_school);
                 break;
             case StudioActivity.REQUEST_CODE_DEPARTMENT:
-                title = getString(R.string.info_studio);
+                if (MainApplication.userInfo != null && MainApplication.userInfo.getUserRoleEnum() == IdTypeEnum.TEACHER) {
+                    title = getString(R.string.info_department);
+                } else {
+                    title = getString(R.string.info_studio);
+                }
                 break;
         }
         setTitleCenter(title);

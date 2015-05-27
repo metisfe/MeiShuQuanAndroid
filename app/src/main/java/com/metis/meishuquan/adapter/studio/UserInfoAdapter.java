@@ -149,7 +149,7 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
 
         mDepartmentAddrView.setArrowVisible(View.INVISIBLE);
 
-        mGoodAtView.setVisibility(mUser.getUserRoleEnum() == IdTypeEnum.TEACHER ? View.VISIBLE : View.GONE);
+        //mGoodAtView.setVisibility(mUser.getUserRoleEnum() == IdTypeEnum.TEACHER ? View.VISIBLE : View.GONE);
         if (mGoodAtSubjects != null) {
             mGoodAtView.setSecondaryText(mGoodAtSubjects);
         }
