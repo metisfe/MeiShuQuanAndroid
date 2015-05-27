@@ -313,7 +313,7 @@ public class StudioActivity extends BaseActivity implements
     }
 
     private void cancelAttention (final User user) {
-        mCustomRight.setEnabled(false);
+        //mCustomRight.setEnabled(false);
         CircleOperator.getInstance().cancelAttention(user.getUserId(), new ApiOperationCallback<ReturnInfo<String>>() {
             @Override
             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
@@ -340,7 +340,7 @@ public class StudioActivity extends BaseActivity implements
     }
 
     private void payAttention (final User user) {
-        mCustomRight.setEnabled(false);
+        //mCustomRight.setEnabled(false);
         CommonOperator.getInstance().getMomentsGroupsAsync(new UserInfoOperator.OnGetListener<List<MomentsGroup>>() {
             @Override
             public void onGet(boolean succeed, List<MomentsGroup> momentsGroups) {
