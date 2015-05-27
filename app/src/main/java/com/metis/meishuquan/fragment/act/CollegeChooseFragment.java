@@ -46,6 +46,9 @@ public class CollegeChooseFragment extends MultiListViewFragment {
             UserInfoOperator.getInstance().getCollegeList("", new UserInfoOperator.OnGetListener<List<College>>() {
                 @Override
                 public void onGet(boolean succeed, List<College> colleges) {
+                    if (isDetached()) {
+                        return;
+                    }
                     if (succeed) {
                         mCollegeList.clear();
                         mCollegeList.add(College.getDefaultOne(getActivity()));

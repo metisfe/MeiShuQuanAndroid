@@ -164,6 +164,7 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
                                                 if (isDetached()) {
                                                     return;
                                                 }
+                                                progressDialog.dismiss();
                                                 if (succeed) {
                                                     //mJoinBtn.setVisibility(View.VISIBLE);
                                                     mSimpleActiveInfo = simpleActiveInfo;

@@ -47,6 +47,24 @@ public class AreaSelectFragment extends MultiListViewFragment {
     }
 
     @Override
+    public void reset() {
+        mProvinceDataList.clear();
+        mCityDataList.clear();
+        mTownDataList.clear();
+        mAdapters.clear();
+        if (mProvAdapter != null) {
+            mProvAdapter.notifyDataSetInvalidated();
+        }
+        if (mCityAdapter != null) {
+            mCityAdapter.notifyDataSetChanged();
+        }
+        if (mTownAdapter != null) {
+            mTownAdapter.notifyDataSetChanged();
+        }
+        super.reset();
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -63,6 +81,9 @@ public class AreaSelectFragment extends MultiListViewFragment {
             UserInfoOperator.getInstance().getProvinceStudio(0, new UserInfoOperator.OnGetListener<List<City>>() {
                 @Override
                 public void onGet(boolean succeed, List<City> cities) {
+                    if (isDetached()) {
+                        return;
+                    }
                     if (succeed) {
                         mProvinceDataList.clear();
                         List<CityArea> provienceAreas = new ArrayList<CityArea>();
@@ -143,6 +164,9 @@ public class AreaSelectFragment extends MultiListViewFragment {
                 UserInfoOperator.getInstance().getProvinceStudio(area.getId(), new UserInfoOperator.OnGetListener<List<City>>() {
                     @Override
                     public void onGet(boolean succeed, List<City> cities) {
+                        if (isDetached()) {
+                            return;
+                        }
                         if (succeed) {
                             mCityDataList.clear();
                             List<CityArea> cityAreas = new ArrayList<CityArea>();
@@ -180,6 +204,9 @@ public class AreaSelectFragment extends MultiListViewFragment {
                 UserInfoOperator.getInstance().getProvinceStudio(area.getId(), new UserInfoOperator.OnGetListener<List<City>>() {
                     @Override
                     public void onGet(boolean succeed, List<City> cities) {
+                        if (isDetached()) {
+                            return;
+                        }
                         if (succeed) {
                             mTownDataList.clear();
                             List<CityArea> townAreas = new ArrayList<CityArea>();

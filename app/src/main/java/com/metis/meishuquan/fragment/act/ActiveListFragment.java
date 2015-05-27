@@ -227,6 +227,14 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        AreaSelectFragment.getInstance().reset();
+        CollegeChooseFragment.getInstance().reset();
+        PKSwitchFragment.getInstance().reset();
+    }
+
     public TopListItem getSelectedStudioItem () {
         return mAdapter.getSelectedItem();
     }
@@ -359,7 +367,7 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
                                 final int remainCount = 3 - simpleActiveInfo.getUpdateCount();
                                 final boolean canChooseStudio = remainCount > 0;
                                 if (!canChooseStudio) {
-                                    showDialog(MainApplication.UIContext.getString(R.string.act_no_chance), new DialogInterface.OnClickListener() {
+                                    showDialog(MainApplication.UIContext.getString(R.string.act_no_chance), getString(R.string.gender_ok), false, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -388,7 +396,7 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
                                             }
                                         });
                                     } else {
-                                        showDialog(canChooseStudio ? getString(R.string.act_join_count, 3, remainCount) : getString(R.string.act_join_count_cost, 3), new DialogInterface.OnClickListener() {
+                                        showDialog(canChooseStudio ? getString(R.string.act_join_count, 3, remainCount) : getString(R.string.act_join_count_cost, 3), getString(R.string.gender_ok), false, new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
                                                 ActiveOperator.getInstance().changeStudio(item.getUserId(), mActiveInfo.getpId(), new UserInfoOperator.OnGetListener<Result>() {

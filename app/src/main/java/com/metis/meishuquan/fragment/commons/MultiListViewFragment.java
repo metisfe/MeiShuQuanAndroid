@@ -81,4 +81,11 @@ public class MultiListViewFragment extends Fragment {
             mAdapterCollection.get(index).notifyDataSetChanged();
         }
     }
+
+    public void reset () {
+        if (mAdapterCollection != null) {
+            mAdapterCollection.clear();
+        }
+        mAdapterCollection = null;
+    }
 }
