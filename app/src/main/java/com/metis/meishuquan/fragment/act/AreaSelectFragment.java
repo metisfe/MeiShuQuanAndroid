@@ -60,7 +60,7 @@ public class AreaSelectFragment extends MultiListViewFragment {
         }
 
         if (mProvinceDataList.isEmpty()) {
-            UserInfoOperator.getInstance().getAreaList(0, new UserInfoOperator.OnGetListener<List<City>>() {
+            UserInfoOperator.getInstance().getProvinceStudio(0, new UserInfoOperator.OnGetListener<List<City>>() {
                 @Override
                 public void onGet(boolean succeed, List<City> cities) {
                     if (succeed) {
@@ -84,6 +84,30 @@ public class AreaSelectFragment extends MultiListViewFragment {
                     }
                 }
             });
+            /*UserInfoOperator.getInstance().getAreaList(0, new UserInfoOperator.OnGetListener<List<City>>() {
+                @Override
+                public void onGet(boolean succeed, List<City> cities) {
+                    if (succeed) {
+                        mProvinceDataList.clear();
+                        List<CityArea> provienceAreas = new ArrayList<CityArea>();
+                        int countAll = 0;
+                        for (City city : cities) {
+                            countAll += city.getStudioCount();
+                            provienceAreas.add(new CityArea(city));
+                        }
+
+                        mProvinceDataList.addAll(provienceAreas);
+                        if (mProvinceDataList.size() > 0) {
+                            City city = new City();
+                            city.setCityName(getString(R.string.all));
+                            CityArea all = new CityArea(city);
+                            all.getmCity().setStudioCount(countAll);
+                            mProvinceDataList.add(0, all);
+                        }
+                        mProvAdapter.notifyDataSetInvalidated();
+                    }
+                }
+            });*/
             /*UserInfoOperator.getInstance().getProvinceList(new UserInfoOperator.OnGetListener<List<UserInfoOperator.SimpleProvince>>() {
                 @Override
                 public void onGet(boolean succeed, List<UserInfoOperator.SimpleProvince> simpleProvinces) {
@@ -116,7 +140,7 @@ public class AreaSelectFragment extends MultiListViewFragment {
                     onAreaSelected(area);
                     return;
                 }
-                UserInfoOperator.getInstance().getAreaList(area.getId(), new UserInfoOperator.OnGetListener<List<City>>() {
+                UserInfoOperator.getInstance().getProvinceStudio(area.getId(), new UserInfoOperator.OnGetListener<List<City>>() {
                     @Override
                     public void onGet(boolean succeed, List<City> cities) {
                         if (succeed) {
@@ -153,7 +177,7 @@ public class AreaSelectFragment extends MultiListViewFragment {
                 }
                 mTownDataList.clear();
                 mTownAdapter.notifyDataSetChanged();
-                UserInfoOperator.getInstance().getAreaList(area.getId(), new UserInfoOperator.OnGetListener<List<City>>() {
+                UserInfoOperator.getInstance().getProvinceStudio(area.getId(), new UserInfoOperator.OnGetListener<List<City>>() {
                     @Override
                     public void onGet(boolean succeed, List<City> cities) {
                         if (succeed) {
@@ -252,7 +276,7 @@ public class AreaSelectFragment extends MultiListViewFragment {
             City city = areable.mCity;
             final int count = city.getStudioCount();
             if (count > 0) {
-                countTv.setText("(" + city.getStudioCount() + ")");
+                countTv.setText(city.getStudioCount() + "");
 
                 if (areable.canExtend) {
                     countTv.setBackgroundResource(R.drawable.number_bg_arrow);

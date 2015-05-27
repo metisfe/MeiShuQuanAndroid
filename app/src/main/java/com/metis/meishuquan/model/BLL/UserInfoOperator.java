@@ -79,7 +79,8 @@ public class UserInfoOperator {
                             URL_COLLEGE = "v1.1/UserCenter/CollegeList?query=",
                             URL_GET_AREA_LIST = "v1.1/UserCenter/ProvinceLink?id=",
                             URL_GET_MY_FRIENDS = "v1.1/Message/MyFriendList?type=",
-                            URL_GET_MY_PHOTOS = "v1.1/UserCenter/MyPhotos?userid=";
+                            URL_GET_MY_PHOTOS = "v1.1/UserCenter/MyPhotos?userid=",
+                            URL_GET_PROVINCE_STUDIO = "v1.1/UserCenter/GetProvincStudioCount?id=";
 
     private static String KEY_USER_ID = "userId",
                         KEY_INDEX = "index",
@@ -838,6 +839,47 @@ public class UserInfoOperator {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
                         Log.v(TAG, "getAreaList result=" + json);
+                        Result<List<City>> listResult = gson.fromJson(json, new TypeToken<Result<List<City>>>(){}.getType());
+                        if (listResult.getOption().getStatus() == 0) {
+                            /*SharedPreferences.Editor editor = shared.edit();
+                            editor.putString(id + "", json);
+                            editor.commit();*/
+                        }
+                        if (listener != null) {
+                            if (listResult.getOption().getStatus() == 0) {
+                                listener.onGet(true, listResult.getData());
+                            } else {
+                                listener.onGet(false, null);
+                            }
+                        }
+
+                    } else {
+                        if (listener != null) {
+                            listener.onGet(false, null);
+                        }
+                    }
+
+                }
+            });
+        }
+    }
+
+    public void getProvinceStudio (final int id, final OnGetListener<List<City>> listener) {
+
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            StringBuilder sb = new StringBuilder(URL_GET_PROVINCE_STUDIO);
+            sb.append(id + "");
+            sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+            Log.v(TAG, "getProvinceStudio request=" + sb.toString());
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    Log.v(TAG, "getProvinceStudio callback=" + response.getContent());
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String json = gson.toJson(result);
+                        Log.v(TAG, "getProvinceStudio result=" + json);
                         Result<List<City>> listResult = gson.fromJson(json, new TypeToken<Result<List<City>>>(){}.getType());
                         if (listResult.getOption().getStatus() == 0) {
                             /*SharedPreferences.Editor editor = shared.edit();

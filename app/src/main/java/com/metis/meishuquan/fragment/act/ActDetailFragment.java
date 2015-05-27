@@ -141,9 +141,11 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
                     if (isDetached()) {
                         return;
                     }
+                    progressDialog.dismiss();
                     if (succeed) {
                         mUser = user;
                         if (mInfo == null) {
+                            progressDialog.show();
                             ActiveOperator.getInstance().getActiveDetail(new UserInfoOperator.OnGetListener<ActiveInfo>() {
                                 @Override
                                 public void onGet(boolean succeed, ActiveInfo activeInfo) {
@@ -155,6 +157,7 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
                                         mInfo = activeInfo;
                                         fillInfo(mInfo);
                                         //mJoinBtn.setVisibility(View.GONE);
+                                        progressDialog.show();
                                         ActiveOperator.getInstance().getMyActiveInfo(mInfo.getpId(), new UserInfoOperator.OnGetListener<ActiveOperator.SimpleActiveInfo>() {
                                             @Override
                                             public void onGet(boolean succeed, ActiveOperator.SimpleActiveInfo simpleActiveInfo) {

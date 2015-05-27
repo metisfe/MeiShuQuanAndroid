@@ -58,7 +58,7 @@ public class CommonOperator {
     private final String MOMENTSGROUPS = "v1.1/Circle/MyDiscussions";//朋友圈分组信息
     private final String SEARCHUSER = "v1.1/UserCenter/SearchUser";//查找好友
 
-    private final String SESSION = MainApplication.userInfo.getCookie();
+    //private final String SESSION = MainApplication.userInfo.getCookie();
     private boolean flag;
 
     private CommonOperator() {
@@ -141,7 +141,7 @@ public class CommonOperator {
                 path.append("&id=" + id);
                 path.append("&type=" + type.getVal());
                 path.append("&result=" + result.getVal());
-                path.append("&session=" + SESSION);
+                path.append("&session=" + MainApplication.userInfo.getCookie());
                 Log.i("收藏Url", path.toString());
                 ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
@@ -211,7 +211,7 @@ public class CommonOperator {
                 StringBuilder FILEUPLOAD = new StringBuilder(FileUpload);
                 FILEUPLOAD.append("?type=" + type.getVal());
                 FILEUPLOAD.append("&define=" + define);
-                FILEUPLOAD.append("&session=" + SESSION);
+                FILEUPLOAD.append("&session=" + MainApplication.userInfo.getCookie());
 
                 List<Pair<String, String>> pram = new ArrayList<>();
                 Pair<String, String> pair1 = new Pair<String, String>("type", String.valueOf(type));
@@ -247,7 +247,7 @@ public class CommonOperator {
                 StringBuffer path = new StringBuffer(MOMENTSGROUPS);
                 path.append("?userid=" + MainApplication.userInfo.getUserId());
                 path.append("&type=" + 1);
-                path.append("&session=" + SESSION);
+                path.append("&session=" + MainApplication.userInfo.getCookie());
                 Log.i("朋友圈Url", path.toString());
                 ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
@@ -270,7 +270,7 @@ public class CommonOperator {
                 StringBuffer path = new StringBuffer(MOMENTSGROUPS);
                 path.append("?userid=" + MainApplication.userInfo.getUserId());
                 path.append("&type=" + 1);
-                path.append("&session=" + SESSION);
+                path.append("&session=" + MainApplication.userInfo.getCookie());
                 Log.i("朋友圈Url", path.toString());
                 ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
@@ -284,7 +284,7 @@ public class CommonOperator {
                 StringBuffer path = new StringBuffer(MOMENTSGROUPS);
                 path.append("?userid=" + MainApplication.userInfo.getUserId());
                 path.append("&type=" + 1);
-                path.append("&session=" + SESSION);
+                path.append("&session=" + MainApplication.userInfo.getCookie());
                 Log.i("朋友圈Url", path.toString());
                 ApiDataProvider.getmClient().invokeApi(path.toString(), null, HttpGet.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
