@@ -148,14 +148,23 @@ public class FriendMatchFragment extends Fragment {
                         Result<List<SimpleFriend>> listResult = gson.fromJson(json, new TypeToken<Result<List<SimpleFriend>>>() {
                         }.getType());
                         final List<SimpleFriend> friendList = listResult.getData();
-                        if (!friendList.isEmpty()) {
-                            Group group = new Group(getString(R.string.friends_wait_to_add, friendList.size()), friendList);
+                        final List<SimpleFriend> notFriendList = new ArrayList<SimpleFriend>();
+                        final List<SimpleFriend> isFriendList = new ArrayList<SimpleFriend>();
+                        for (SimpleFriend friend : friendList) {
+                            if (friend.isFriend()) {
+                                isFriendList.add(friend);
+                            } else {
+                                notFriendList.add(friend);
+                            }
+                        }
+                        if (!notFriendList.isEmpty()) {
+                            Group group = new Group(getString(R.string.friends_wait_to_add, notFriendList.size()), notFriendList);
                             adapter.friendList.add(group);
                         }
 
-                        StringBuilder PATH = new StringBuilder("v1.1/Message/MyFriendList");
+                        /*StringBuilder PATH = new StringBuilder("v1.1/Message/MyFriendList");
                         PATH.append("?type=2&session=");//type:0全部，1好友列表，2历史好友列表
-                        PATH.append(MainApplication.getSession());
+                        PATH.append(MainApplication.getSession());*/
 
                         Map<String, String> map = ChatManager.getPhoneNumberNameMap();
                         if (map.size() > 0) {
@@ -181,9 +190,12 @@ public class FriendMatchFragment extends Fragment {
                                 adapter.friendList.add(group);
                             }
                         }
+                        if (!isFriendList.isEmpty()) {
+                            Group group = new Group(getString(R.string.friends_had_add, isFriendList.size()), isFriendList);
+                            adapter.friendList.add(group);
+                        }
                         adapter.notifyDataSetChanged();
-
-                        ApiDataProvider.getmClient().invokeApi(PATH.toString(), null,
+                        /*ApiDataProvider.getmClient().invokeApi(PATH.toString(), null,
                                 HttpGet.METHOD_NAME, null, MyFriendList.class,
                                 new ApiOperationCallback<MyFriendList>() {
                                     @Override
@@ -207,7 +219,7 @@ public class FriendMatchFragment extends Fragment {
                                             adapter.notifyDataSetChanged();
                                         }
                                     }
-                                });
+                                });*/
                         /*List<UserAdvanceInfo> userInfos = */
                         listView.setAdapter(adapter);
                         expandAll();
@@ -252,7 +264,14 @@ public class FriendMatchFragment extends Fragment {
         }
     }
     class CircleFriendListAdapter extends BaseExpandableListAdapter {
+        private List<Group> oriList = null;
         public List<Group> friendList = new ArrayList<Group>();//匹配的好友
+
+        public void searchByName (String key) {
+            if (oriList == null) {
+                oriList = friendList;
+            }
+        }
 
         //public List<UserAdvanceInfo> queryResult = new ArrayList<>();
 
@@ -332,6 +351,7 @@ public class FriendMatchFragment extends Fragment {
                 subNameTv.setText(info.subName);
                 ImageLoaderUtils.getImageLoader(getActivity())
                         .displayImage(((SimpleFriend) userInfo).getUserAvatar(), profileIv, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.default_portrait_fang));
+                btn.setVisibility(info.isFriend() ? View.GONE : View.VISIBLE);
                 btn.setText("添加");
                 btn.setBackgroundResource(R.drawable.bg_contact_shape);
                 btn.setOnClickListener(new View.OnClickListener() {
@@ -475,6 +495,8 @@ public class FriendMatchFragment extends Fragment {
         public String userNickName;
         public String userAvatar;
 
+        public int isFriend = 0;
+
         public String subName;
 
         public long getUserid() {
@@ -522,6 +544,18 @@ public class FriendMatchFragment extends Fragment {
         @Override
         public String getUserTelephone() {
             return getPhoneNumber();
+        }
+
+        public boolean isFriend () {
+            return isFriend == 1;
+        }
+
+        public int getIsFriend() {
+            return isFriend;
+        }
+
+        public void setIsFriend(int isFriend) {
+            this.isFriend = isFriend;
         }
 
         @Override
