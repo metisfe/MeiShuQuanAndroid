@@ -124,7 +124,9 @@ public class StudioListFragment extends ActiveListFragment {
                 if (isDetached()) {
                     return;
                 }
-                progressDialog.dismiss();
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
                 if (succeed) {
                     mIndex++;
                     final int length = topListItems.size();
@@ -140,13 +142,18 @@ public class StudioListFragment extends ActiveListFragment {
     }
 
     private void loadDataList (int filter1, int filter2, int filter3, int index, UserInfoOperator.OnGetListener<List<TopListItem>> listener) {
-        if (mActiveInfo != null) {
+        if (mActiveInfo != null && isAdded()) {
             progressDialog.show();
             ActiveOperator.getInstance().getStudioList(mProvinceId, mCityId, mTownId, mActiveInfo.getpId(), filter3, filter2, 0, index, mKey, listener);
         }
 
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        progressDialog = null;
+    }
 
     @Override
     public String getFilterTitle1() {

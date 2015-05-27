@@ -68,7 +68,6 @@ public class StudioOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    Log.v(TAG, "getStudioBaseInfo callback=" + response.getContent());
                     if (result != null) {
                         Gson gson = new Gson();
                         String resultJson = gson.toJson(result);
@@ -282,7 +281,6 @@ public class StudioOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    Log.v(TAG, "getMyNewsList callback=" + response.getContent());
                     if (result != null) {
                         Gson gson = new Gson();
                         String resultJson = gson.toJson(result);
@@ -314,7 +312,6 @@ public class StudioOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    Log.v(TAG, "getMyCircleList callback=" + response.getContent());
                     if (result != null) {
                         Gson gson = new Gson();
                         String resultJson = gson.toJson(result);
@@ -346,7 +343,6 @@ public class StudioOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    Log.v(TAG, "getCourseArrangeList callback=" + response.getContent());
                     if (result != null) {
                         Gson gson = new Gson();
                         String resultJson = gson.toJson(result);

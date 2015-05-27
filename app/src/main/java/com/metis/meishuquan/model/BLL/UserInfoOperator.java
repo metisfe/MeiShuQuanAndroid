@@ -166,7 +166,6 @@ public class UserInfoOperator {
                         listener.onGet(true, profileResult.getData());
                     }*/
                 }
-                Log.v(TAG, "onResponse " + response.getContent());
             }
         });
     }
@@ -210,7 +209,6 @@ public class UserInfoOperator {
                         listener.onGet(true, profileResult.getData());
                     }*/
                 }
-                Log.v(TAG, "onResponse " + response.getContent());
             }
         });
     }
@@ -393,7 +391,6 @@ public class UserInfoOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    Log.v(TAG, "getMyPhoto callback=" + response.getContent());
                     if (result != null) {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
@@ -655,7 +652,6 @@ public class UserInfoOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    Log.v(TAG, "searchDepartment callback=" + response.getContent());
                     if (result != null) {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
@@ -690,7 +686,6 @@ public class UserInfoOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    Log.v(TAG, "searchSchool callback=" + response.getContent());
                     if (result != null) {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
@@ -725,7 +720,6 @@ public class UserInfoOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    Log.v(TAG, "searchStudio callback=" + response.getContent());
                     if (result != null) {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
@@ -760,7 +754,6 @@ public class UserInfoOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    Log.v(TAG, "getCollegeList callback=" + response.getContent());
                     if (result != null) {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
@@ -834,7 +827,6 @@ public class UserInfoOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    Log.v(TAG, "getAreaList callback=" + response.getContent());
                     if (result != null) {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
@@ -875,7 +867,6 @@ public class UserInfoOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    Log.v(TAG, "getProvinceStudio callback=" + response.getContent());
                     if (result != null) {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
@@ -932,7 +923,6 @@ public class UserInfoOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                Log.v(TAG, "getProvinceList callback=" + response.getContent());
                 if (result != null) {
                     Gson gson = new Gson();
                     String json = gson.toJson(result);

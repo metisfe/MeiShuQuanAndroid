@@ -68,7 +68,6 @@ public class ActiveOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    //Log.v(TAG, "getActiveDetail callback " + result + " " + exception + " " + response.getContent());
                     if (result != null) {
                         Gson gson = new Gson();
                         String resultJson = gson.toJson(result);
@@ -94,7 +93,6 @@ public class ActiveOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    Log.v(TAG, "getMyActiveInfo callback " + result + " " + exception + " " + response.getContent());
                     if (result != null) {
                         Gson gson = new Gson();
                         String resultJson = gson.toJson(result);
@@ -123,14 +121,13 @@ public class ActiveOperator {
             sb.append("&" + KEY_MAJORS_ID + "=" + majorsid);
             sb.append("&" + KEY_TYPE + "=" + type);
             sb.append("&" + KEY_COLLEGE_ID + "=" + collegeId);
-            sb.append("&" + KEY_INDEX + "=" + index);
+            sb.append("&" + KEY_INDEX + "=" + index); //index not working, all data feedback if 0
             sb.append("&" + KEY_QUERY + "=" + URLEncoder.encode(query));
             Log.v(TAG, "getStudioList request=" + sb.toString());
             ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    Log.v(TAG, "getStudioList callback=" + response.getContent());
                     if (result != null) {
                         Gson gson = new Gson();
                         String resultJson = gson.toJson(result);
@@ -156,7 +153,6 @@ public class ActiveOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    Log.v(TAG, "selectStudio callback=" + response.getContent());
                     if (result != null) {
                         Gson gson = new Gson();
                         String resultJson = gson.toJson(result);
@@ -186,7 +182,6 @@ public class ActiveOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    Log.v(TAG, "topListByStudent callback " + result + " " + exception + " " + response.getContent());
                     if (result != null) {
                         Gson gson = new Gson();
                         String resultJson = gson.toJson(result);
@@ -216,7 +211,6 @@ public class ActiveOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                    Log.v(TAG, "topListByStudio callback " + result + " " + exception + " " + response.getContent());
                     if (result != null) {
                         Gson gson = new Gson();
                         String resultJson = gson.toJson(result);

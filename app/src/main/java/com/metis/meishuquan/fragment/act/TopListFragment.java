@@ -184,6 +184,9 @@ public class TopListFragment extends ActiveListFragment {
         loadDataList(filter1, filter2, filter3, mIndex + 1, new UserInfoOperator.OnGetListener<List<TopListItem>>() {
             @Override
             public void onGet(boolean succeed, List<TopListItem> topListItems) {
+                if (isDetached()) {
+                    return;
+                }
                 if (succeed) {
                     mIndex++;
                     List<TopListDelegate> delegates = new ArrayList<TopListDelegate>();

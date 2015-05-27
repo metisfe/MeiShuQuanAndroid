@@ -184,6 +184,9 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
                             ActiveOperator.getInstance().getMyActiveInfo(mInfo.getpId(), new UserInfoOperator.OnGetListener<ActiveOperator.SimpleActiveInfo>() {
                                 @Override
                                 public void onGet(boolean succeed, ActiveOperator.SimpleActiveInfo simpleActiveInfo) {
+                                    if (isDetached()) {
+                                        return;
+                                    }
                                     if (succeed) {
                                         mSimpleActiveInfo = simpleActiveInfo;
                                         fillBtn();

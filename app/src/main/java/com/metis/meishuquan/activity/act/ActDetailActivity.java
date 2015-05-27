@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -93,7 +96,8 @@ public class ActDetailActivity extends BaseActivity implements RadioGroup.OnChec
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        addFragment(mDetailFragment, false);
+        showFragment(mDetailFragment);
+        //addFragment(mDetailFragment, false);
         mDetailBtn.setChecked(true);
         getTitleView().setTitleRightVisible(View.GONE);
         getTitleView().setImageRightVisible(View.GONE);
@@ -139,6 +143,26 @@ public class ActDetailActivity extends BaseActivity implements RadioGroup.OnChec
         }
     }
 
+    private void showFragment (Fragment fragment) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        if (!fragment.isAdded()) {
+            addFragment(fragment, false);
+        } else {
+            ft.show(fragment);
+        }
+        ft.commit();
+    }
+
+    private void hideFragment (Fragment fragment) {
+        if (!fragment.isAdded()) {
+            return;
+        }
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.hide(fragment).commit();
+    }
+
     @Override
     public void onBackPressed() {
         if (isSearchShowing) {
@@ -150,15 +174,19 @@ public class ActDetailActivity extends BaseActivity implements RadioGroup.OnChec
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        removeLastFragment(false);
+        //removeLastFragment(false);
         switch (checkedId) {
             case R.id.act_title_details:
                 getTitleView().setImageRightVisible(View.GONE);
-                addFragment(mDetailFragment, false);
+                hideFragment(mListFragment);
+                showFragment(mDetailFragment);
+                /*addFragment(mDetailFragment, false);*/
                 break;
             case R.id.act_title_list:
                 getTitleView().setImageRightVisible(View.VISIBLE);
-                addFragment(mListFragment, false);
+                hideFragment(mDetailFragment);
+                showFragment(mListFragment);
+                //addFragment(mListFragment, false);
                 break;
         }
     }
