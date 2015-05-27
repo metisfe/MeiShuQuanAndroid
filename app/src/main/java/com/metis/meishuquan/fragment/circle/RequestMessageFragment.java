@@ -66,6 +66,9 @@ public class RequestMessageFragment extends Fragment {
                         new ApiOperationCallback<ReturnOnlyInfo>() {
                             @Override
                             public void onCompleted(ReturnOnlyInfo result, Exception exception, ServiceFilterResponse response) {
+                                if (!isResumed()) {
+                                    return;
+                                }
                                 progressDialog.cancel();
                                 if (result != null && result.option != null && result.option.isSuccess()) {
                                     Toast.makeText(getActivity(), "请求成功", Toast.LENGTH_LONG).show();

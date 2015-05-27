@@ -151,6 +151,9 @@ public class FriendMatchFragment extends Fragment {
                         final List<SimpleFriend> notFriendList = new ArrayList<SimpleFriend>();
                         final List<SimpleFriend> isFriendList = new ArrayList<SimpleFriend>();
                         for (SimpleFriend friend : friendList) {
+                            if (MainApplication.userInfo != null && friend.getPhoneNumber().equals(MainApplication.userInfo.getPhoneNum())) {
+                                continue;
+                            }
                             if (friend.isFriend()) {
                                 isFriendList.add(friend);
                             } else {
