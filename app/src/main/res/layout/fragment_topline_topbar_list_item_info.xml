@@ -38,7 +38,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:visibility="gone">
+        android:clickable="true"
+        android:visibility="visible">
 
         <LinearLayout
             android:id="@+id/rl_writecomment"
@@ -57,7 +58,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_weight="2.9"
+                android:layout_weight="5"
                 android:background="@drawable/bg_edittext_input"
                 android:hint="我来说两句..."
                 android:paddingLeft="10dp"
@@ -76,6 +77,7 @@
                     android:id="@+id/id_rl_fomment"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:visibility="gone"
                     android:layout_weight="1">
 
                     <Button

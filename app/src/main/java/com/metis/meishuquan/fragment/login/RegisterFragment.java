@@ -230,7 +230,8 @@ public class RegisterFragment extends Fragment {
                     Toast.makeText(getActivity(), "请输入手机号", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
+                Pattern p = Pattern.compile("^1\\d{10}");
+//                Pattern p = Pattern.compile("^((1[0-9][0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
                 if (!p.matcher(phone).matches()) {
                     Toast.makeText(getActivity(), "您输入的手机格式有误", Toast.LENGTH_SHORT).show();
                     return;

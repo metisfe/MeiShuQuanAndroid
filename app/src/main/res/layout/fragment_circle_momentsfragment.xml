@@ -12,6 +12,7 @@
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
         android:divider="@color/transparent"
+        android:alwaysDrawnWithCache="false"
         android:dividerHeight="5dp"
         android:layout_height="match_parent"></com.metis.meishuquan.view.shared.DragListView>
 

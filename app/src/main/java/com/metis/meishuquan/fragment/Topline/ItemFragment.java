@@ -75,7 +75,7 @@ public class ItemFragment extends Fragment {
         //初始化
         initView(contextView);
 
-        if (channelId == 17) {
+        if (channelId == 17 || channelId == 6) {
             headerView = inflater.inflate(R.layout.view_act_topline, null, false);
             getActiveInfo(headerView);//获取活动详情
         }
@@ -143,7 +143,7 @@ public class ItemFragment extends Fragment {
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if ((i) < (list.size()+1)) {
+                if ((i) < (list.size() + 1)) {
                     int newsId = 0;
                     if (headerView == null) {
                         newsId = list.get(i - 1).getNewsId();//获取新闻Id

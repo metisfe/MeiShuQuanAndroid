@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -309,7 +311,13 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
                     SharedPreferencesUtil.getInstanse(self).update(SharedPreferencesUtil.LAST_APP_VERSION, gson.toJson(info));
 
                     final AndroidVersion androidVersion = (AndroidVersion) info.getData();
-                    String curentVersion = Utils.getVersion(MainActivity.this);
+                    String curentVersion = "";
+                    try {
+                        PackageInfo pinfo = getPackageManager().getPackageInfo(MainActivity.this.getPackageName(), PackageManager.GET_CONFIGURATIONS);
+                        curentVersion = pinfo.versionName;
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
                     Log.i("curentVersion", curentVersion);
                     if (androidVersion != null && !androidVersion.getVersionNumber().equals(curentVersion)) {
                         String msg = "现有可用更新,版本号为 V" + androidVersion.getVersionNumber() + "，是否下载更新？";
