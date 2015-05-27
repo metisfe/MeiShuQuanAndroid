@@ -31,7 +31,7 @@ public class CUserModel implements Serializable, FriendMatchFragment.UserInfoImp
     @SerializedName("identity")
     public int identity;
 
-    @SerializedName("")
+    @SerializedName("relation")
     public int relation;
 
     @SerializedName("account")

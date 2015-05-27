@@ -64,7 +64,7 @@ public class MomentsFragment extends CircleBaseFragment {
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            progressDialog = ProgressDialog.show(getActivity(), "", "正在加载...");
+            progressDialog = ProgressDialog.show(getActivity(), "", "正在加载...", true, true);
             getData(GlobalData.momentsGroupId, 0, DragListView.REFRESH);
         }
     };
@@ -137,21 +137,21 @@ public class MomentsFragment extends CircleBaseFragment {
         super.onDestroy();
     }
 
-    public void getMyMoments() {
-        StudioOperator.getInstance().getMyCircleList(MainApplication.userInfo.getUserId(), 0, new UserInfoOperator.OnGetListener<List<CCircleDetailModel>>() {
-            @Override
-            public void onGet(boolean succeed, List<CCircleDetailModel> cCircleDetailModels) {
-                if (succeed) {
-                    circleMomentAdapter = new CircleMomentAdapter(getActivity(), cCircleDetailModels, null);
-                    listView.onRefreshComplete();
-                    list.clear();
-                    list.addAll(cCircleDetailModels);
-                    listView.setResultSize(cCircleDetailModels.size());
-                    listView.setAdapter(circleMomentAdapter);
-                }
-            }
-        });
-    }
+//    public void getMyMoments() {
+//        StudioOperator.getInstance().getMyCircleList(MainApplication.userInfo.getUserId(), 0, new UserInfoOperator.OnGetListener<List<CCircleDetailModel>>() {
+//            @Override
+//            public void onGet(boolean succeed, List<CCircleDetailModel> cCircleDetailModels) {
+//                if (succeed) {
+//                    circleMomentAdapter = new CircleMomentAdapter(getActivity(), cCircleDetailModels, null);
+//                    listView.onRefreshComplete();
+//                    list.clear();
+//                    list.addAll(cCircleDetailModels);
+//                    listView.setResultSize(cCircleDetailModels.size());
+//                    listView.setAdapter(circleMomentAdapter);
+//                }
+//            }
+//        });
+//    }
 
     public void getData(final int groupId, final int lastId, final int mode) {
         String url = String.format("v1.1/Circle/CircleList?groupId=%s&lastId=%s&session=%s", groupId, lastId, MainApplication.userInfo.getCookie());
@@ -161,7 +161,11 @@ public class MomentsFragment extends CircleBaseFragment {
                 new ApiOperationCallback<CircleMoments>() {
                     @Override
                     public void onCompleted(CircleMoments result, Exception exception, ServiceFilterResponse response) {
-                        Log.d("CircleResult", result.toString());
+                        //Log.d("CircleResult", result.toString());
+                        if (progressDialog != null) {
+                            progressDialog.cancel();
+                            progressDialog = null;
+                        }
                         if (!result.isSuccess()) {
                             switch (mode) {
                                 case DragListView.REFRESH:
@@ -176,10 +180,6 @@ public class MomentsFragment extends CircleBaseFragment {
                             return;
                         }
 
-                        if (progressDialog != null) {
-                            progressDialog.cancel();
-                        }
-                        
                         List<CCircleDetailModel> result_list = result.data;
                         for (int i = result_list.size() - 1; i >= 0; i--) {
                             if (!result_list.get(i).isValid()) {
@@ -197,6 +197,10 @@ public class MomentsFragment extends CircleBaseFragment {
                                 listView.onLoadComplete();
                                 list.addAll(result_list);
                                 break;
+                        }
+                        if (progressDialog != null) {
+                            progressDialog.dismiss();
+                            progressDialog = null;
                         }
                         listView.setResultSize(result_list.size());
                         circleMomentAdapter.notifyDataSetChanged();

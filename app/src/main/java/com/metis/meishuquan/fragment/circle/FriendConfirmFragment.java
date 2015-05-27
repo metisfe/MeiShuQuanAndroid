@@ -84,7 +84,7 @@ public class FriendConfirmFragment extends Fragment {
 
         StringBuilder PATH = new StringBuilder("v1.1/Message/MyFriendList");
         PATH.append("?type=2&session=");//type:0全部，1好友列表，2历史好友列表
-        PATH.append(MainApplication.getSession());
+        PATH.append(MainApplication.userInfo.getCookie());
 
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.show();

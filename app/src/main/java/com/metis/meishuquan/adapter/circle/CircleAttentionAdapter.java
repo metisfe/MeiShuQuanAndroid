@@ -55,17 +55,23 @@ public class CircleAttentionAdapter extends BaseAdapter {
     }
 
     private List<MomentsGroup> getLstMomentsGroupByJson(int type, String json) {
-        ReturnInfo<List<MomentsGroup>> returnInfo = null;
+        ReturnInfo<List<MomentsGroup>> returnInfo = new ReturnInfo<List<MomentsGroup>>();
+        List<MomentsGroup> groups = new ArrayList<MomentsGroup>();
         if (type == 0) {
             ReturnInfo<List<MomentsGroup>> result = new Gson().fromJson(json, new TypeToken<ReturnInfo<List<MomentsGroup>>>() {
             }.getType());
-            result.getData().remove(0);
-            result.getData().remove(1);
-            result.getData().remove(2);
-
-            returnInfo = result;
+            groups.addAll(result.getData());
+            for (MomentsGroup group : result.getData()) {
+                if (group.name.equals("全部")) {
+                    groups.remove(group);
+                } else if (group.name.equals("朋友圈")) {
+                    groups.remove(group);
+                } else if (group.name.equals("我的微博")) {
+                    groups.remove(group);
+                }
+            }
+            returnInfo.setData(groups);
         } else if (type == 1) {
-            returnInfo = new ReturnInfo<List<MomentsGroup>>();
             ReturnInfo<List<MomentsGroup>> result = new Gson().fromJson(json, new TypeToken<ReturnInfo<List<MomentsGroup>>>() {
             }.getType());
             returnInfo.setData(result.getData());
