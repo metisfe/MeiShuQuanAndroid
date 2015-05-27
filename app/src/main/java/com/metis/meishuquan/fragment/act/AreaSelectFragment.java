@@ -175,11 +175,9 @@ public class AreaSelectFragment extends MultiListViewFragment {
                                 countAll += c.getStudioCount();
                                 cityAreas.add(new CityArea(c));
                             }
-                            if (cityAreas.size() > 0) {
-                                CityArea all = mProvAdapter.getSelectedAreable().cloneUnselectedOne(getActivity());
-                                //all.getmCity().setStudioCount(countAll);
-                                cityAreas.add(0, all);
-                            }
+                            CityArea all = mProvAdapter.getSelectedAreable().cloneUnselectedOne(getActivity());
+                            //all.getmCity().setStudioCount(countAll);
+                            cityAreas.add(0, all);
 
                             mCityDataList.addAll(cityAreas);
                             mCityAdapter.notifyDataSetChanged();
@@ -217,11 +215,9 @@ public class AreaSelectFragment extends MultiListViewFragment {
                                 a.canExtend = false;
                                 townAreas.add(a);
                             }
-                            if (townAreas.size() > 0) {
-                                CityArea all = mCityAdapter.getSelectedAreable().cloneUnselectedOne(getActivity());
-                                //all.getmCity().setStudioCount(countAll);
-                                townAreas.add(0, all);
-                            }
+                            CityArea all = mCityAdapter.getSelectedAreable().cloneUnselectedOne(getActivity());
+                            //all.getmCity().setStudioCount(countAll);
+                            townAreas.add(0, all);
 
                             mTownDataList.addAll(townAreas);
                             mTownAdapter.notifyDataSetChanged();
