@@ -14,6 +14,7 @@
         android:divider="@color/transparent"
         android:alwaysDrawnWithCache="false"
         android:dividerHeight="5dp"
+        android:listSelector="@color/transparent"
         android:layout_height="match_parent"></com.metis.meishuquan.view.shared.DragListView>
 
 </LinearLayout>

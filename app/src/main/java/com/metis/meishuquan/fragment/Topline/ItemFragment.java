@@ -97,7 +97,11 @@ public class ItemFragment extends Fragment {
                     activeInfo = info;
                     initHeaderView(headerView);
                     listView.addHeaderView(headerView);
-                    ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(activeInfo.getImage(), imgAct);
+                    if (channelId==17) {
+                        ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(activeInfo.getImage(), imgAct);
+                    }else if (channelId==6){
+                        
+                    }
                 }
             }
         });
@@ -143,7 +147,10 @@ public class ItemFragment extends Fragment {
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if ((i) < (list.size() + 1)) {
+                if (list.size()==0){
+                    return;
+                }
+                if ((i) <= (list.size() + 1)) {
                     int newsId = 0;
                     if (headerView == null) {
                         newsId = list.get(i - 1).getNewsId();//获取新闻Id

@@ -103,6 +103,12 @@ public class MomentsFragment extends CircleBaseFragment {
 //                itemInfoFragment.setArguments(args);
 
                 // refresh load more listview has header
+                if (list.size()==0){
+                    return;
+                }
+                if (position == list.size() + 1 || position == 0) {
+                    return;
+                }
                 GlobalData.moment = list.get(position - 1);
 
                 FragmentManager fm = getActivity().getSupportFragmentManager();
