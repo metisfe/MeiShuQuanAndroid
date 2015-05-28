@@ -100,7 +100,7 @@ public class ItemFragment extends Fragment {
                     if (channelId==17) {
                         ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(activeInfo.getImage(), imgAct);
                     }else if (channelId==6){
-                        
+                        ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(activeInfo.getTopImage(), imgAct);
                     }
                 }
             }

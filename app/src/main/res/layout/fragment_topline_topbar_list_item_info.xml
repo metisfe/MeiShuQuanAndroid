@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:clickable="true"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/rl_writecomment"
