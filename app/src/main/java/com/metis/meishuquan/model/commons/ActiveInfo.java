@@ -42,6 +42,8 @@ public class ActiveInfo implements Serializable {
     @SerializedName("content")
     private String content;
 
+    private String topImage;
+
     public int getpId() {
         return pId;
     }
@@ -128,5 +130,13 @@ public class ActiveInfo implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getTopImage() {
+        return topImage;
+    }
+
+    public void setTopImage(String topImage) {
+        this.topImage = topImage;
     }
 }

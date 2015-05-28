@@ -43,6 +43,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_alignWithParentIfMissing="true"
+                android:visibility="gone"
                 />
             <TextView
                 android:id="@+id/act_detail_award"
@@ -54,6 +55,7 @@
                 android:layout_marginTop="25dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
+                android:visibility="gone"
                 />
             <TextView
                 android:id="@+id/act_detail_text"

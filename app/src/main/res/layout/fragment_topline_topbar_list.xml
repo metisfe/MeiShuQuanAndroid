@@ -13,7 +13,8 @@
         android:divider="@color/transparent"
         android:dividerHeight="0dp"
         android:listSelector="@color/transparent"
-        android:alwaysDrawnWithCache="false"
+        android:cacheColorHint="@color/transparent"
+        android:scrollingCache="false"
         />
 
 </LinearLayout>
