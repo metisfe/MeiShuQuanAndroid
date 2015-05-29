@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.google.gson.JsonObject;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.act.SelectStudioActivity;
+import com.metis.meishuquan.activity.act.StudentListActivity;
 import com.metis.meishuquan.activity.info.AdvanceActivity;
 import com.metis.meishuquan.activity.info.ImagePreviewActivity;
 import com.metis.meishuquan.activity.info.InfoActivity;
@@ -32,6 +34,7 @@ import com.metis.meishuquan.fragment.login.LoginFragment;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
+import com.metis.meishuquan.model.enums.LoginStateEnum;
 import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.view.shared.TabBar;
@@ -49,7 +52,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     private TabBar tabBar;
     private View mInfoContainer = null, mLoginView = null, mInfoDetailsContainer = null;
     private TextView mInfoName = null, mAttentionCountTv = null, mFollowersCountTv = null;
-    private View mCollectionView, mCommentView, mMyAskView, mClassesView, mNameCardView, mAdvanceView, mSettingView;
+    private View mCollectionView, mSuperDogView, mCommentView, mMyAskView, mClassesView, mNameCardView, mAdvanceView, mSettingView;
     private ImageView mProfileIv = null;
 
     private MainApplication mMainApplication = null;
@@ -94,6 +97,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
 
         mCollectionView = view.findViewById(R.id.my_info_collections);
         mCommentView = view.findViewById(R.id.my_info_comments);
+        mSuperDogView = view.findViewById(R.id.my_info_super_dog);
         mMyAskView = view.findViewById(R.id.my_info_asks);
         mClassesView = view.findViewById(R.id.my_info_classes);
         mNameCardView = view.findViewById(R.id.my_info_name_card);
@@ -105,6 +109,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
 
         mCollectionView.setOnClickListener(this);
         mCommentView.setOnClickListener(this);
+        mSuperDogView.setOnClickListener(this);
         mMyAskView.setOnClickListener(this);
         mClassesView.setOnClickListener(this);
         mNameCardView.setOnClickListener(this);
@@ -133,6 +138,8 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
             public void onGet(boolean succeed, User user) {
                 if (succeed) {
                     mUser = user;
+                    mUser.setAppLoginState(LoginStateEnum.YES);
+                    MainApplication.userInfo = mUser;
                     mLoginView.setVisibility(View.GONE);
                     mInfoDetailsContainer.setVisibility(View.VISIBLE);
                     fillUserInfo(user);
@@ -215,7 +222,21 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                     startActivity(new Intent(getActivity(), LoginActivity.class));
                     Toast.makeText(getActivity(), R.string.my_info_toast_not_login, Toast.LENGTH_SHORT).show();
                 }
-
+                break;
+            case R.id.my_info_super_dog:
+                if (MainApplication.isLogin()) {
+                    User user = mUser != null ? mUser : MainApplication.userInfo;
+                    //if (user.getUserRoleEnum() == IdTypeEnum.STUDIO) {
+                        startActivity(new Intent(getActivity(), StudentListActivity.class));
+                    /*} else if (user.getUserRoleEnum() == IdTypeEnum.STUDENT) {
+                        startActivity(new Intent(getActivity(), SelectStudioActivity.class));
+                    } else {
+                        Toast.makeText(getActivity(), "Nothing " + user.getUserRole() + " " + user.getUserRoleEnum().name(), Toast.LENGTH_SHORT).show();
+                    }*/
+                } else {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    Toast.makeText(getActivity(), R.string.my_info_toast_not_login, Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.my_info_asks:
                 if (MainApplication.isLogin()) {

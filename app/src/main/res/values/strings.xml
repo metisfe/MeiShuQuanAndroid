@@ -80,4 +80,5 @@
     <string name="title_activity_friends_choose">FriendChooseActivity</string>
     <string name="title_activity_guide">GuideActivity</string>
     <string name="title_activity_hello">@string/app_name</string>
+    <string name="title_activity_student_list">StudentListActivity</string>
 </resources>

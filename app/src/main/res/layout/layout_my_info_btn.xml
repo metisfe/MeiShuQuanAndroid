@@ -7,13 +7,30 @@
     >
     <ImageView
         android:id="@+id/my_info_btn_img"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
+        android:padding="4dp"
+        />
+    <TextView
+        android:id="@+id/my_info_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/my_info_btn_img"
+        android:layout_alignTop="@+id/my_info_btn_img"
+        android:background="@drawable/red_round_conner_bg"
+        android:text="5"
+        android:textSize="10sp"
+        android:minWidth="10dp"
+        android:minHeight="10dp"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp"
+        android:gravity="center"
+        android:textColor="@android:color/white"
         />
     <TextView
         android:id="@+id/my_info_btn_text"

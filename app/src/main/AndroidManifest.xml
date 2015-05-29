@@ -466,6 +466,10 @@
         <activity
             android:name=".activity.FriendsChooseActivity"
             android:label="@string/title_activity_friends_choose" />
+        <activity
+            android:name=".activity.act.StudentListActivity"
+            android:label="@string/title_activity_student_list" >
+        </activity>
     </application>
 
 </manifest>
