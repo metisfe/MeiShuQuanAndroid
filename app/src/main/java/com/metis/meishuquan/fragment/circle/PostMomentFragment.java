@@ -48,6 +48,8 @@ import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -153,9 +155,15 @@ public class PostMomentFragment extends Fragment {
                                     Result<List<CircleImage>> imageListResult = gson.fromJson(feedbackContent, new TypeToken<Result<List<CircleImage>>>() {
                                     }.getType());
                                     String content = editText.getText().toString();
+                                    String encodeContent = "";
+                                    try {
+                                        encodeContent = URLEncoder.encode(content, "utf-8");
+                                    } catch (UnsupportedEncodingException e) {
+                                        e.printStackTrace();
+                                    }
 
                                     CirclePushBlogParm parm = new CirclePushBlogParm();
-                                    parm.setContent(content);
+                                    parm.setContent(encodeContent);
                                     parm.setDevice("美术圈");
                                     parm.setType(SupportTypeEnum.Circle.getVal());
                                     parm.setImages(imageListResult.getData());

@@ -63,6 +63,8 @@ public class RegisterFragment extends Fragment {
     private String requestCode = "";
     private int selectedId;//身份
 
+    private Pattern pattern = Pattern.compile("^1\\d{10}");
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //接收身份信息
@@ -135,8 +137,7 @@ public class RegisterFragment extends Fragment {
                     Toast.makeText(getActivity(), "请输入手机号", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
-                if (!p.matcher(phone).matches()) {
+                if (!pattern.matcher(phone).matches()) {
                     Toast.makeText(getActivity(), "请输入正确的手机号", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -230,9 +231,7 @@ public class RegisterFragment extends Fragment {
                     Toast.makeText(getActivity(), "请输入手机号", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Pattern p = Pattern.compile("^1\\d{10}");
-//                Pattern p = Pattern.compile("^((1[0-9][0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
-                if (!p.matcher(phone).matches()) {
+                if (!pattern.matcher(phone).matches()) {
                     Toast.makeText(getActivity(), "您输入的手机格式有误", Toast.LENGTH_SHORT).show();
                     return;
                 }

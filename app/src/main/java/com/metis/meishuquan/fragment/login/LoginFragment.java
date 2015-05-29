@@ -51,6 +51,8 @@ public class LoginFragment extends Fragment {
     private boolean isPressLogin = false;
     private ProgressDialog progressDialog;
 
+    private Pattern pattern = Pattern.compile("^1\\d{10}");
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //缓存注册所需的身份数据
@@ -198,8 +200,9 @@ public class LoginFragment extends Fragment {
             Toast.makeText(MainApplication.UIContext, "请输入登录账号", Toast.LENGTH_SHORT).show();
             return false;
         }
-        Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
-        if (!p.matcher(accout).matches()) {
+//        Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
+
+        if (!pattern.matcher(accout).matches()) {
             Toast.makeText(getActivity(), "请输入正确的手机号", Toast.LENGTH_SHORT).show();
             return false;
         }

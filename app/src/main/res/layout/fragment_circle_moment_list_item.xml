@@ -144,7 +144,6 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:textSize="15sp"
-        android:maxLines="10"
         android:text="本人热情、开朗、有责任感、有进取心、团队合作能力强、学习能力强"
         android:textColor="#7e7e7e" />
 

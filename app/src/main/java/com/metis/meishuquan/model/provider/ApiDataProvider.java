@@ -39,6 +39,10 @@ public class ApiDataProvider extends DataProvider {
     private static final String DebugTag = "Model.Provider.ApiDataProvider";
     private static final String Default_Api_Version = "2";
     private static final String Api_Version_V3 = "3";
+    private static final String FORMAL = "https://metisapi.azure-mobile.cn";
+    private static final String FORMAL_KEY = "JhSUSARkPDywIlrCKJKQzOJIttIYWU24";
+    private static final String TEST = "https://metisapipre.azure-mobile.cn";
+    private static final String TEST_KEY = "UnGLUQBCdpfYOzgupfoYTFQVcgKovC64";
 
     public static String API_ROOT;
     private static String trackingCode;
@@ -60,9 +64,13 @@ public class ApiDataProvider extends DataProvider {
 
     public static boolean initProvider() {
         try {
+//            mClient = new MobileServiceClient(
+//                    FORMAL,
+//                    FORMAL_KEY,
+//                    MainApplication.UIContext);
             mClient = new MobileServiceClient(
-                    "https://metisapi.azure-mobile.cn",
-                    "JhSUSARkPDywIlrCKJKQzOJIttIYWU24",
+                    TEST,
+                    TEST_KEY,
                     MainApplication.UIContext);
             return true;
         } catch (MalformedURLException e) {

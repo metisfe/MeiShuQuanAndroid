@@ -53,6 +53,7 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import org.apache.http.client.methods.HttpGet;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
@@ -126,7 +127,12 @@ public class MomentCommentFragment extends Fragment {
             public void onClick(View v) {
                 progressDialog = ProgressDialog.show(getActivity(), "", "正在发送...");
 //                Toast.makeText(MainApplication.UIContext, "正在发送，请稍候", Toast.LENGTH_SHORT).show();
-                final String encodeContent = URLEncoder.encode(editText.getText().toString());
+                String encodeContent = "";
+                try {
+                    encodeContent = URLEncoder.encode(editText.getText().toString(), "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
                 String url = String.format("v1.1/Circle/PushComment?id=%s&content=%s&session=%s", GlobalData.moment.id, encodeContent, MainApplication.userInfo.getCookie());
                 publishButton.setClickable(false);
                 ApiDataProvider.getmClient().invokeApi(url, null,
