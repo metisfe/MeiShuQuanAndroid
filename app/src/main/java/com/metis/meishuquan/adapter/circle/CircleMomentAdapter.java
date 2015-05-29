@@ -225,6 +225,7 @@ public class CircleMomentAdapter extends BaseAdapter {
         if (moment.relayCircle == null) {//朋友圈类型
             viewHolder.chooseHuashi.setVisibility(View.GONE);//隐藏选画室
             viewHolder.ll_not_circle.setVisibility(View.GONE);
+            viewHolder.ll_circle.setVisibility(View.VISIBLE);
             if (moment.images == null || moment.images.size() == 0) {//纯文字
                 viewHolder.chooseHuashi.setVisibility(View.GONE);//隐藏选画室
                 viewHolder.content.setVisibility(View.VISIBLE);
