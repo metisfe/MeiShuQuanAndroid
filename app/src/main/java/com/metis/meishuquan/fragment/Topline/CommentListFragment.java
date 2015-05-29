@@ -292,8 +292,8 @@ public class CommentListFragment extends Fragment {
                     } else {
                         Toast.makeText(getActivity(), "请输入评论内容", Toast.LENGTH_SHORT).show();
                     }
-
                 }
+
             }
         });
     }
