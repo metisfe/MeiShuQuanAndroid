@@ -30,6 +30,7 @@ import com.google.zxing.client.android.camera.CameraConfigurationUtils;
 import com.google.zxing.common.HybridBinarizer;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.view.shared.ClipView;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.IOException;
 import java.util.EnumMap;
@@ -97,10 +98,17 @@ public class QrScanActivity extends BaseActivity implements
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     @Override

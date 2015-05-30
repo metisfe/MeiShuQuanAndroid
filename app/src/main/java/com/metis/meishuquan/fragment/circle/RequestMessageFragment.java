@@ -22,6 +22,7 @@ import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.umeng.analytics.MobclickAgent;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -32,9 +33,23 @@ import java.util.ArrayList;
  * Created by wudi on 4/18/2015.
  */
 public class RequestMessageFragment extends Fragment {
+    public static final String CLASS_NAME=RequestMessageFragment.class.getSimpleName();
+
     private CircleTitleBar titleBar;
     private ViewGroup rootView;
     private EditText editText;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(CLASS_NAME);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(CLASS_NAME);
+    }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_circle_requestmessage, container, false);

@@ -27,11 +27,15 @@ import com.metis.meishuquan.view.circle.CircleTitleBar;
 import com.metis.meishuquan.view.circle.ContactListItemView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by wudi on 4/12/2015.
  */
 public class AddFriendFragment extends Fragment {
+
+    public static final String CLASS_NAME=AddFriendFragment.class.getSimpleName();
+
     public static final int QR_REQUEST_CODE = 101;
 
     private ViewGroup rootView;
@@ -110,6 +114,15 @@ public class AddFriendFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(CLASS_NAME); //统计页面
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(CLASS_NAME);
     }
 
     private void finish() {

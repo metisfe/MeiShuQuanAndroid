@@ -36,6 +36,7 @@ import com.metis.meishuquan.view.circle.CircleTitleBar;
 import com.metis.meishuquan.view.shared.SwitchButton;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.umeng.analytics.MobclickAgent;
 
 import org.apache.http.client.methods.HttpGet;
 
@@ -96,6 +97,14 @@ public class ChatConfigActivity extends FragmentActivity {
 
         setData();
         refreshDataFromRong();
+        MobclickAgent.onResume(this);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     private void refreshDataFromRong() {

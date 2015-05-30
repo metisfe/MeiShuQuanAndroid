@@ -27,6 +27,7 @@ import com.metis.meishuquan.activity.circle.ChatActivity;
 import com.metis.meishuquan.model.circle.UserAdvanceInfo;
 import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.view.circle.ContactListItemView;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,7 @@ import io.rong.imlib.RongIMClient;
  * Created by wudi on 4/2/2015.
  */
 public class ContactListFragment extends CircleBaseFragment {
+    public static final String CLASS_NAME = ContactListFragment.class.getSimpleName();
     private ViewGroup rootView;
     private ExpandableListView listView;
     private CircleFriendListAdapter adapter;
@@ -56,6 +58,15 @@ public class ContactListFragment extends CircleBaseFragment {
             });
         }
     };
+
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(CLASS_NAME); //统计页面
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(CLASS_NAME);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

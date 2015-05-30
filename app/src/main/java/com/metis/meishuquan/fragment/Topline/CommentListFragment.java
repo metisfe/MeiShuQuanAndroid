@@ -48,6 +48,7 @@ import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.metis.meishuquan.view.shared.DragListView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +59,8 @@ import java.util.List;
  * Created by wj on 15/3/27.
  */
 public class CommentListFragment extends Fragment {
+
+    private static final String CLASS_NAME=CommentListFragment.class.getSimpleName();
 
     private ViewGroup rootView;
     private DragListView listView;
@@ -124,6 +127,18 @@ public class CommentListFragment extends Fragment {
         initView(rootView);
         initEvent();
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(CLASS_NAME); //统计页面
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(CLASS_NAME);
     }
 
     //初始化视图

@@ -17,6 +17,7 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.circle.CUserModel;
 import com.metis.meishuquan.model.circle.UserAdvanceInfo;
 import com.metis.meishuquan.util.ImageLoaderUtils;
+import com.umeng.analytics.MobclickAgent;
 
 public class SearchUserInfoActivity extends FragmentActivity {
     public static final String KEY_USER_INFO = "user_info";
@@ -42,6 +43,18 @@ public class SearchUserInfoActivity extends FragmentActivity {
         initView();
         bindData(userInfo);
         initEvent();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     private void initView() {

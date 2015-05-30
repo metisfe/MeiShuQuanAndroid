@@ -39,6 +39,7 @@ import com.metis.meishuquan.view.circle.CircleTitleBar;
 import com.metis.meishuquan.view.circle.ContactListItemView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.umeng.analytics.MobclickAgent;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
 
@@ -57,8 +58,7 @@ import java.util.Set;
  * Created by wudi on 4/17/2015.
  */
 public class FriendMatchFragment extends Fragment {
-
-    private static final String TAG = FriendMatchFragment.class.getSimpleName();
+    private static final String CLASS_NAME = FriendMatchFragment.class.getSimpleName();
 
     private CircleTitleBar titleBar;
     private ViewGroup rootView;
@@ -72,6 +72,15 @@ public class FriendMatchFragment extends Fragment {
         initView();
 
         return rootView;
+    }
+
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(CLASS_NAME); //统计页面
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(CLASS_NAME);
     }
 
     List<SimpleUser> userList = null;
@@ -203,7 +212,7 @@ public class FriendMatchFragment extends Fragment {
                                 new ApiOperationCallback<MyFriendList>() {
                                     @Override
                                     public void onCompleted(MyFriendList result, Exception exception, ServiceFilterResponse response) {
-                                        Log.v(TAG, "response.content=" + response.getContent());
+                                        Log.v(CLASS_NAME, "response.content=" + response.getContent());
                                         if (result.option.isSuccess()) {
                                             List<CUserModel> userModelList = result.data.myFirends;
 

@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.assess.Bimp;
+import com.umeng.analytics.MobclickAgent;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -80,6 +81,18 @@ public class ImageGridActivity extends Activity {
             }
 
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     @Override

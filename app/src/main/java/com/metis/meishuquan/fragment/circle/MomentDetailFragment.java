@@ -57,6 +57,7 @@ import com.metis.meishuquan.view.course.FlowLayout;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.umeng.analytics.MobclickAgent;
 
 import org.apache.http.client.methods.HttpGet;
 
@@ -69,6 +70,8 @@ import java.util.List;
  * Created by jx on 15/4/11.
  */
 public class MomentDetailFragment extends Fragment {
+    public static final String CLASS_NAME=MomentDetailFragment.class.getSimpleName();
+
     private int newsId = 0;
 
     private MomentPageListView listView;
@@ -124,6 +127,15 @@ public class MomentDetailFragment extends Fragment {
 
     public interface OnCommentSuccessListner {
         void onSuccess(CCircleCommentModel circleCommentModel);
+    }
+
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(CLASS_NAME); //统计页面
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(CLASS_NAME);
     }
 
     @Override

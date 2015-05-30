@@ -70,6 +70,7 @@ import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.metis.meishuquan.view.topline.MeasureableListView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +82,8 @@ import java.util.StringTokenizer;
  * Created by wj on 15/3/23.
  */
 public class ItemInfoFragment extends Fragment {
+
+    private static final String CLASS_NAME=ItemInfoFragment.class.getSimpleName();
 
     public static final String KEY_IMAGE_URL_ARRAY = "image_url_array",
             KEY_THUMB_URL_ARRAY = "thumb_url_array";
@@ -143,6 +146,18 @@ public class ItemInfoFragment extends Fragment {
             getInfoData(newsId);
         }
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(CLASS_NAME); //统计页面
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(CLASS_NAME);
     }
 
     @Override

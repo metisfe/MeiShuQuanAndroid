@@ -32,6 +32,7 @@ import com.metis.meishuquan.view.circle.CircleTitleBar;
 import com.metis.meishuquan.view.circle.ContactListItemView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.umeng.analytics.MobclickAgent;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -43,11 +44,22 @@ import java.util.List;
  * Created by wudi on 4/12/2015.
  */
 public class FriendConfirmFragment extends Fragment {
+    public static final String CLASS_NAME=FriendConfirmFragment.class.getSimpleName();
+
     private ViewGroup rootView;
     private CircleTitleBar titleBar;
     private ListView listView;
     private View searchView;
     private CircleFriendListAdapter adapter;
+
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(CLASS_NAME); //统计页面
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(CLASS_NAME);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

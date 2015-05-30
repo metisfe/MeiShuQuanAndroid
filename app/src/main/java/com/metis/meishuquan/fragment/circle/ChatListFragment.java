@@ -29,6 +29,7 @@ import com.metis.meishuquan.view.circle.CircleChatListItemView;
 import com.metis.meishuquan.view.circle.PopupAddWindow;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,7 @@ import io.rong.imlib.RongIMClient;
  * Created by wudi on 4/4/2015.
  */
 public class ChatListFragment extends CircleBaseFragment {
+    public static final String CLASS_NAME = ChatListFragment.class.getSimpleName();
     public static int REQUEST_QC = 11;
 
     private ViewGroup rootView;
@@ -138,6 +140,13 @@ public class ChatListFragment extends CircleBaseFragment {
     public void onResume() {
         super.onResume();
         refreshList();
+        MobclickAgent.onPageStart(CLASS_NAME);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(CLASS_NAME);
     }
 
     private void refreshList() {

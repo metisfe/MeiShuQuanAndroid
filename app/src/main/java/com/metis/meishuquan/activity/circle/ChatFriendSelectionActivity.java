@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.fragment.circle.StartFriendPickFragment;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 
@@ -41,6 +42,18 @@ public class ChatFriendSelectionActivity extends FragmentActivity {
         ft.add(R.id.activity_circle_chatfriendselectionactivity_container, startFriendPickFragment);
         ft.addToBackStack(null);
         ft.commit();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     @Override

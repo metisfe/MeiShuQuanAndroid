@@ -25,6 +25,7 @@ import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.umeng.analytics.MobclickAgent;
 
 import org.apache.http.client.methods.HttpGet;
 
@@ -32,9 +33,20 @@ import org.apache.http.client.methods.HttpGet;
  * Created by wudi on 4/12/2015.
  */
 public class OnlineFriendSearchFragment extends Fragment {
+    public static final String CLASS_NAME=MomentsFragment.class.getSimpleName();
+
     private ViewGroup rootView;
     private SearchView searchView;
     private CUserModel user;
+
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(CLASS_NAME); //统计页面
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(CLASS_NAME);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

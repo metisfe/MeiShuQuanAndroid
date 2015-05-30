@@ -20,6 +20,8 @@ import com.metis.meishuquan.activity.circle.ReplyActivity;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CirclePushBlogParm;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.analytics.social.UMPlatformData;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeEntity;
 import com.umeng.socialize.controller.UMServiceFactory;
@@ -57,9 +59,10 @@ public class SharePopupWindow extends PopupWindow {
     private int mType = 0;
     private int mShareId = 0;
     private CCircleDetailModel mMoment;
+    private Context mContext;
 
     public SharePopupWindow(final Activity mContext, View parent) {
-
+        this.mContext = mContext;
         initYM(mContext);
 
         View view = View.inflate(mContext, R.layout.popup_share, null);
@@ -185,7 +188,8 @@ public class SharePopupWindow extends PopupWindow {
 
                     @Override
                     public void onComplete(SHARE_MEDIA share_media, int i, SocializeEntity socializeEntity) {
-                        Toast.makeText(mContext, "share success", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "分享成功", Toast.LENGTH_SHORT).show();
+                        sendShareInfoToUMeng("weixin_friend");
                     }
                 });
             }
@@ -205,7 +209,8 @@ public class SharePopupWindow extends PopupWindow {
 
                     @Override
                     public void onComplete(SHARE_MEDIA share_media, int i, SocializeEntity socializeEntity) {
-                        Toast.makeText(mContext, "share success", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "分享成功", Toast.LENGTH_SHORT).show();
+                        sendShareInfoToUMeng("weixin_moments");
                     }
                 });
             }
@@ -225,7 +230,8 @@ public class SharePopupWindow extends PopupWindow {
 
                     @Override
                     public void onComplete(SHARE_MEDIA share_media, int i, SocializeEntity socializeEntity) {
-                        Toast.makeText(mContext, "share success", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "分享成功", Toast.LENGTH_SHORT).show();
+                        sendShareInfoToUMeng("Qzone");
                     }
                 });
             }
@@ -322,5 +328,12 @@ public class SharePopupWindow extends PopupWindow {
         content.setTargetUrl(mTargetUrl);
         content.setShareImage(new UMImage(activity, mImageUrl));
         mController.setShareMedia(content);
+    }
+
+    private void sendShareInfoToUMeng(String name) {
+        UMPlatformData platform = new UMPlatformData(UMPlatformData.UMedia.SINA_WEIBO, String.valueOf(MainApplication.userInfo.getUserId()));
+        platform.setGender(UMPlatformData.GENDER.MALE); //optional
+        platform.setWeiboId(name);  //optional
+        MobclickAgent.onSocialEvent(mContext, platform);
     }
 }

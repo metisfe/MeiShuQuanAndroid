@@ -17,6 +17,7 @@ import com.metis.meishuquan.model.circle.CUserModel;
 import com.metis.meishuquan.model.circle.UserSearch;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.umeng.analytics.MobclickAgent;
 
 public class SearchUserActivity extends FragmentActivity {
 
@@ -76,7 +77,14 @@ public class SearchUserActivity extends FragmentActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

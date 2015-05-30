@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by wudi on 4/7/2015.
@@ -47,6 +48,18 @@ public class ChatActivity extends FragmentActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     @Override

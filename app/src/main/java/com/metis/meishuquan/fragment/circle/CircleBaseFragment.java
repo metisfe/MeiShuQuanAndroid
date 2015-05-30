@@ -20,4 +20,6 @@ public abstract class CircleBaseFragment extends Fragment {
     }
 
     public abstract void timeToSetTitleBar();
+
+
 }

@@ -28,6 +28,7 @@ import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.view.shared.DragListView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.umeng.analytics.MobclickAgent;
 
 import org.apache.http.client.methods.HttpGet;
 
@@ -38,6 +39,8 @@ import java.util.List;
  * Created by jx on 4/7/2015.
  */
 public class MomentsFragment extends CircleBaseFragment {
+    public static final String CLASS_NAME=MomentsFragment.class.getSimpleName();
+
     @Override
     public void timeToSetTitleBar() {
 
@@ -68,6 +71,15 @@ public class MomentsFragment extends CircleBaseFragment {
             getData(GlobalData.momentsGroupId, 0, DragListView.REFRESH);
         }
     };
+
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(CLASS_NAME); //统计页面
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(CLASS_NAME);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

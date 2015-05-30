@@ -30,6 +30,7 @@ import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.Utils;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * 转发：包含头条，课程，活动
@@ -85,6 +86,18 @@ public class ReplyActivity extends FragmentActivity {
         bindData();
         initEvent();
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     public void bindData() {

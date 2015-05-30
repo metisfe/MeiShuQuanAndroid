@@ -50,6 +50,7 @@ import com.metis.meishuquan.view.circle.moment.comment.EmotionSelectView;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.umeng.analytics.MobclickAgent;
 
 import org.apache.http.client.methods.HttpGet;
 
@@ -65,6 +66,8 @@ import java.util.List;
  * Created by jx on 15/4/11.
  */
 public class MomentCommentFragment extends Fragment {
+    public static final String CLASS_NAME=MomentCommentFragment.class.getSimpleName();
+
     private static final int KEYBOARD_DRAWABLE_RESOURCE_ID = R.drawable.circle_moment_emotion_icon_keyboard;
     private static final int EMOTION_DRAWABLE_RESOURCE_ID = R.drawable.circle_moment_icon_emotion;
     private static final int ScreenHeight = MainApplication.getDisplayMetrics().heightPixels;
@@ -92,6 +95,11 @@ public class MomentCommentFragment extends Fragment {
 
     public void setOnCommentSuccessListner(MomentDetailFragment.OnCommentSuccessListner onCommentSuccessListner) {
         this.onCommentSuccessListner = onCommentSuccessListner;
+    }
+
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(CLASS_NAME);
     }
 
     @Override
@@ -283,6 +291,7 @@ public class MomentCommentFragment extends Fragment {
                 }
             }
         });
+        MobclickAgent.onPageStart(CLASS_NAME); //统计页面
     }
 
     private int getStatusBarHeight() {

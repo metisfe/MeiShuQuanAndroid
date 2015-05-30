@@ -16,6 +16,7 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.BaseActivity;
 import com.metis.meishuquan.model.BLL.StudioBaseInfo;
 import com.metis.meishuquan.util.ImageLoaderUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -59,9 +60,9 @@ public class StudioDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studio_detail);
 
-        mViewPager = (ViewPager)this.findViewById(R.id.studio_detail_album);
+        mViewPager = (ViewPager) this.findViewById(R.id.studio_detail_album);
 
-        mInfo = (StudioBaseInfo)getIntent().getSerializableExtra(KEY_STUDIO_INFO);
+        mInfo = (StudioBaseInfo) getIntent().getSerializableExtra(KEY_STUDIO_INFO);
         //mInfo = new StudioBaseInfo ();
         if (mInfo == null) {
             finish();
@@ -119,22 +120,24 @@ public class StudioDetailActivity extends BaseActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         start();
+        MobclickAgent.onResume(this);
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         stop();
+        MobclickAgent.onPause(this);
     }
 
-    private void start () {
+    private void start() {
         mHandler.postDelayed(mRunnable, 3000);
     }
 
-    private void stop () {
+    private void stop() {
         mHandler.removeCallbacks(mRunnable);
     }
 
@@ -143,7 +146,7 @@ public class StudioDetailActivity extends BaseActivity {
         //private List<String> mImageList = null;
         private List<ImageView> mViewList = null;
 
-        public ImageAdapter (/*List<String> images, */List<ImageView> viewList) {
+        public ImageAdapter(/*List<String> images, */List<ImageView> viewList) {
             /*mImageList = images;*/
             mViewList = viewList;
         }

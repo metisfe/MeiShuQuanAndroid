@@ -45,6 +45,7 @@ import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
 import java.io.IOException;
@@ -100,6 +101,13 @@ public class PostMomentFragment extends Fragment {
             mAdapter.notifyDataSetChanged();
         }
         super.onResume();
+        MobclickAgent.onPageStart(TAG);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(TAG);
     }
 
     private void initView(ViewGroup rootView) {

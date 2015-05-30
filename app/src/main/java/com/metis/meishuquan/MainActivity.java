@@ -47,6 +47,8 @@ import com.metis.meishuquan.view.DialogManager;
 import com.metis.meishuquan.view.shared.TabBar;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.umeng.analytics.AnalyticsConfig;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.Date;
 import java.util.Properties;
@@ -111,6 +113,16 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
 
         IntentFilter intentFilter = new IntentFilter("join_succeed");
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
+
+        /*
+        发送策略定义了用户由统计分析SDK产生的数据发送回友盟服务器的频率。
+
+        启动时发送：APP启动时发送当次启动数据和上次的使用时长等缓存数据，当次使用过程中产生的自定义事件数据缓存在客户端，下次启动时发送
+         */
+        MobclickAgent.updateOnlineConfig(this);
+
+        //SDK会对日志进行加密。加密模式可以有效防止网络攻击，提高数据安全性。
+        AnalyticsConfig.enableEncrypt(true);
     }
 
 //    @Override
@@ -125,10 +137,11 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
     public void onResume() {
         super.onResume();
         DialogManager.getInstance().resetDialog();
+        MobclickAgent.onResume(this);
 
         if (SystemUtil.isWiFiConnected(MainApplication.MainActivity)) {
             // auto check update
-            //new SettingCheckUpdate().start(false);
+//            new SettingCheckUpdate().start(false);
 
             // auto Unified Configuration Override
             //new UnifiedConfigurationOverride().start();
@@ -147,6 +160,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
     @Override
     public void onPause() {
         super.onPause();
+        MobclickAgent.onPause(this);
         //CountManager.getInstance().save();
         //MobclickAgent.onPause(this);
         //AppStatus.keepSelectedTabType();

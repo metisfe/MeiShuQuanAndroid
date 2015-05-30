@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.InputActivity;
 import com.metis.meishuquan.view.shared.TitleView;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,9 +50,21 @@ public class BaseActivity extends FragmentActivity {
         mTitleView.setRightListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onTitleRightPressed ();
+                onTitleRightPressed();
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     public String getTitleCenter () {

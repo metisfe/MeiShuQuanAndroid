@@ -62,6 +62,7 @@ import com.metis.meishuquan.view.course.FlowLayout;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -131,6 +132,7 @@ public class AssessInfoActivity extends FragmentActivity {
             sendPhotoComment(Bimp.getInstance().drr);
         }
         super.onResume();
+        MobclickAgent.onResume(this);
     }
 
     private void sendPhotoComment(List<String> drr) {
@@ -206,6 +208,7 @@ public class AssessInfoActivity extends FragmentActivity {
     protected void onPause() {
         super.onPause();
         MediaManager.pause();
+        MobclickAgent.onPause(this);
     }
 
     @Override

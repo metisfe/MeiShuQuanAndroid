@@ -32,6 +32,7 @@ import com.metis.meishuquan.view.circle.CircleGroupListItemView;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.umeng.analytics.MobclickAgent;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -45,11 +46,21 @@ import io.rong.imlib.RongIMClient;
  * Created by wudi on 4/12/2015.
  */
 public class GroupListFragment extends Fragment {
+    public static final String CLASS_NAME=GroupListFragment.class.getSimpleName();
     private ViewGroup rootView;
     private CircleTitleBar titleBar;
     private TextView footerView;
     private ListView list;
     private CircleFriendListAdapter adapter;
+
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(CLASS_NAME); //统计页面
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(CLASS_NAME);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

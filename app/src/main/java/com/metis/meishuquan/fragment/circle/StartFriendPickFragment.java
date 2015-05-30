@@ -24,6 +24,7 @@ import com.metis.meishuquan.model.circle.UserAdvanceInfo;
 import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
 import com.metis.meishuquan.view.circle.ContactListItemView;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -35,6 +36,8 @@ import io.rong.imlib.RongIMClient;
  * Created by wudi on 4/12/2015.
  */
 public class StartFriendPickFragment extends Fragment {
+    public static final String CLASS_NAME=StartFriendPickFragment.class.getSimpleName();
+
     private CircleTitleBar titleBar;
     private ViewGroup rootView;
     private View.OnClickListener onClickListener;
@@ -50,6 +53,18 @@ public class StartFriendPickFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(CLASS_NAME);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(CLASS_NAME);
     }
 
     @Override

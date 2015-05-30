@@ -30,6 +30,7 @@ import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.Utils;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
 
@@ -78,6 +79,9 @@ public class MainApplication extends Application {
         RongIM.init(this);
         ChatManager.userRongId = userInfo.getRongCloudId();
         rongConnect(userInfo.getToken());
+
+        //友盟SDK通过Thread.UncaughtExceptionHandler捕获程序崩溃日志，并在程序下次启动时发送到服务器。
+        MobclickAgent.setCatchUncaughtExceptions(true);
     }
 
     /**

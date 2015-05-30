@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.GridView;
 
 import com.metis.meishuquan.R;
+import com.umeng.analytics.MobclickAgent;
 
 public class TestPicActivity extends Activity {
     // ArrayList<Entity> dataList;//用来装载数据源的列表
@@ -37,6 +38,18 @@ public class TestPicActivity extends Activity {
 
         initData();
         initView();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     /**
