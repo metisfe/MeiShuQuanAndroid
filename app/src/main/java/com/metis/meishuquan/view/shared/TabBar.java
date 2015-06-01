@@ -50,6 +50,7 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
     //我
     private View activityTab;
     private ImageView activityIcon;
+    private TextView activityTip;
     private TextView activityTitle;
 
     private TabSelectedListener tabSelectedListener;
@@ -122,6 +123,7 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
         this.activityTab = this.findViewById(R.id.view_shared_tabbar_activity);
         this.activityIcon = (ImageView) this.findViewById(R.id.view_shared_tabbar_activity_icon);
         this.activityTitle = (TextView) this.findViewById(R.id.view_shared_tabbar_activity_title);
+        this.activityTip = (TextView) this.findViewById(R.id.view_shared_tabbar_activity_tip);
         this.circleTab = this.findViewById(R.id.view_shared_tabbar_circle);
         this.circleIcon = (ImageView) this.findViewById(R.id.view_shared_tabbar_circle_icon);
 //        this.circleTitle = (TextView) this.findViewById(R.id.view_shared_tabbar_circle_title);
@@ -166,6 +168,14 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
                 topStoryTab.setVisibility(View.GONE);
             }
         }
+    }
+
+    public void setActivityTipVisible (int visible) {
+        activityTip.setVisibility(visible);
+    }
+
+    public void setActivityTipText (CharSequence charSequence) {
+        activityTip.setText(charSequence);
     }
 
     //清除选中状态

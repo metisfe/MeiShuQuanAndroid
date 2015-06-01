@@ -64,12 +64,18 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     private UnReadManager.Observable mObservable = new UnReadManager.Observable() {
         @Override
         public void onChanged(String tag, int count, int delta) {
-            Log.v(TAG, "onChanged=" + tag + " count=" + count);
-            MyInfoBtn btn = ((MyInfoBtn) mSuperDogView);
-            btn.setTipTvVisible(count > 0 ? View.VISIBLE : View.GONE);
-            btn.setTipText(count + "");
+            manageTip(tag, count, delta);
         }
     };
+
+    private void manageTip (String tag, int count, int delta) {
+        Log.v(TAG, "onChanged=" + tag + " count=" + count);
+        MyInfoBtn btn = ((MyInfoBtn) mSuperDogView);
+        btn.setTipTvVisible(count > 0 ? View.VISIBLE : View.GONE);
+        btn.setTipText(count + "");
+        tabBar.setActivityTipVisible(count > 0 ? View.VISIBLE : View.GONE);
+        tabBar.setActivityTipText(count + "");
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -173,16 +179,9 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        int count = UnReadManager.getInstance(getActivity()).getCountByTag(UnReadManager.TAG_NEW_STUDENT);
-        MyInfoBtn btn = ((MyInfoBtn) mSuperDogView);
-        btn.setTipTvVisible(count > 0 ? View.VISIBLE : View.GONE);
-        btn.setTipText(count + "");
-        /*UserInfoOperator.getInstance().getFavoriteList("100001", new UserInfoOperator.OnGetListener<List<Item>>() {
-            @Override
-            public void onGet(boolean succeed, List<Item> items) {
-
-            }
-        });*/
+        String tag = UnReadManager.TAG_NEW_STUDENT;
+        int count = UnReadManager.getInstance(getActivity()).getCountByTag(tag);
+        manageTip(tag, count, 0);
     }
 
     private void fillUserInfo(User user) {

@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,10 @@ import com.metis.meishuquan.fragment.Topline.ItemFragment;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
 import com.metis.meishuquan.model.topline.ChannelItem;
 import com.metis.meishuquan.model.topline.News;
+import com.metis.meishuquan.push.UnReadManager;
 import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
+import com.metis.meishuquan.view.shared.MyInfoBtn;
 import com.metis.meishuquan.view.shared.TabBar;
 import com.metis.meishuquan.view.topline.ChannelManageView;
 import com.viewpagerindicator.TabPageIndicator;
@@ -50,6 +53,38 @@ public class ToplineFragment extends Fragment {
     private int lastNewsId = 0;
     private int userId = MainApplication.userInfo.getUserId();
 
+    private UnReadManager.Observable mObservable = new UnReadManager.Observable() {
+        @Override
+        public void onChanged(String tag, int count, int delta) {
+            manageTip(tag, count, delta);
+        }
+    };
+
+    private void manageTip (String tag, int count, int delta) {
+        tabBar.setActivityTipVisible(count > 0 ? View.VISIBLE : View.GONE);
+        tabBar.setActivityTipText(count + "");
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        UnReadManager.getInstance(getActivity()).registerObservable(UnReadManager.TAG_NEW_STUDENT, mObservable);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        UnReadManager.getInstance(getActivity()).unregisterObservable(UnReadManager.TAG_NEW_STUDENT, mObservable);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        String tag = UnReadManager.TAG_NEW_STUDENT;
+        int count = UnReadManager.getInstance(getActivity()).getCountByTag(tag);
+        manageTip(tag, count, 0);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -67,11 +102,6 @@ public class ToplineFragment extends Fragment {
         initEvent();
 
         return rootView;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
     /**
