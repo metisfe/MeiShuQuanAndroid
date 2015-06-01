@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,11 +34,14 @@ import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.main.CircleFragment;
+import com.metis.meishuquan.model.BLL.CircleOperator;
 import com.metis.meishuquan.model.circle.CCircleCommentModel;
 import com.metis.meishuquan.model.circle.CCircleTabModel;
+import com.metis.meishuquan.model.circle.CParamCircleComment;
 import com.metis.meishuquan.model.circle.CUserModel;
 import com.metis.meishuquan.model.circle.CircleMomentDetail;
 import com.metis.meishuquan.model.circle.CirclePushCommentResult;
+import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
@@ -66,7 +70,7 @@ import java.util.List;
  * Created by jx on 15/4/11.
  */
 public class MomentCommentFragment extends Fragment {
-    public static final String CLASS_NAME=MomentCommentFragment.class.getSimpleName();
+    public static final String CLASS_NAME = MomentCommentFragment.class.getSimpleName();
 
     private static final int KEYBOARD_DRAWABLE_RESOURCE_ID = R.drawable.circle_moment_emotion_icon_keyboard;
     private static final int EMOTION_DRAWABLE_RESOURCE_ID = R.drawable.circle_moment_icon_emotion;
@@ -135,50 +139,93 @@ public class MomentCommentFragment extends Fragment {
             public void onClick(View v) {
                 progressDialog = ProgressDialog.show(getActivity(), "", "正在发送...");
 //                Toast.makeText(MainApplication.UIContext, "正在发送，请稍候", Toast.LENGTH_SHORT).show();
-                String encodeContent = "";
-                try {
-                    encodeContent = URLEncoder.encode(editText.getText().toString(), "utf-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                String url = String.format("v1.1/Circle/PushComment?id=%s&content=%s&session=%s", GlobalData.moment.id, encodeContent, MainApplication.userInfo.getCookie());
-                publishButton.setClickable(false);
-                ApiDataProvider.getmClient().invokeApi(url, null,
-                        HttpGet.METHOD_NAME, null, CirclePushCommentResult.class,
-                        new ApiOperationCallback<CirclePushCommentResult>() {
-                            @Override
-                            public void onCompleted(CirclePushCommentResult result, Exception exception, ServiceFilterResponse response) {
-                                progressDialog.cancel();
-                                publishButton.setClickable(true);
-                                if (result == null || !result.isSuccess()) {
-                                    Toast.makeText(MainApplication.UIContext, "发送失败，请检查网络后重试", Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
+//                String encodeContent = "";
+//                try {
+//                    encodeContent = URLEncoder.encode(editText.getText().toString(), "utf-8");
+//                } catch (UnsupportedEncodingException e) {
+//                    e.printStackTrace();
+//                }
 
-                                Toast.makeText(MainApplication.UIContext, "发送成功！", Toast.LENGTH_SHORT).show();
-                                GlobalData.momentsCommentCount += 1;
-
-                                progressDialog.dismiss();
-                                MomentDetailFragment momentDetailFragment = new MomentDetailFragment();
-                                FragmentManager fm = getActivity().getSupportFragmentManager();
-                                FragmentTransaction ft = fm.beginTransaction();
-                                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
-                                ft.remove(MomentCommentFragment.this);
-                                if (GlobalData.fromMomentsFragment == 1) {
-                                    ft.add(R.id.content_container, momentDetailFragment);
-                                }
-                                ft.commit();
-                                hideKeyBoard();
-                                CCircleCommentModel circleCommentModel = new CCircleCommentModel();
-                                circleCommentModel.circleId = GlobalData.moment.id;
-                                circleCommentModel.content = editText.getText().toString();
-                                circleCommentModel.createTime = Utils.getCurrentTime();
-                                circleCommentModel.user = new CUserModel();
-                                circleCommentModel.user.avatar = MainApplication.userInfo.getUserAvatar();
-                                circleCommentModel.user.name = MainApplication.userInfo.getName();
-                                onCommentSuccessListner.onSuccess(circleCommentModel);
+                CParamCircleComment param = new CParamCircleComment();
+                param.setId(GlobalData.moment.id);
+                param.setContent(editText.getText().toString());
+                CircleOperator.getInstance().pushCommentByPost(param, new ApiOperationCallback<ReturnInfo<String>>() {
+                    @Override
+                    public void onCompleted(ReturnInfo<String> result, Exception e, ServiceFilterResponse serviceFilterResponse) {
+                        progressDialog.cancel();
+                        if (result != null && result.isSuccess()) {
+                            if (result == null || !result.isSuccess()) {
+                                Toast.makeText(MainApplication.UIContext, "发送失败，请检查网络后重试", Toast.LENGTH_SHORT).show();
+                                return;
                             }
-                        });
+
+                            Toast.makeText(MainApplication.UIContext, "发送成功！", Toast.LENGTH_SHORT).show();
+                            GlobalData.momentsCommentCount += 1;
+
+                            progressDialog.dismiss();
+                            MomentDetailFragment momentDetailFragment = new MomentDetailFragment();
+                            FragmentManager fm = getActivity().getSupportFragmentManager();
+                            FragmentTransaction ft = fm.beginTransaction();
+                            ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                            ft.remove(MomentCommentFragment.this);
+                            if (GlobalData.fromMomentsFragment == 1) {
+                                ft.add(R.id.content_container, momentDetailFragment);
+                            }
+                            ft.commit();
+                            hideKeyBoard();
+                            CCircleCommentModel circleCommentModel = new CCircleCommentModel();
+                            circleCommentModel.circleId = GlobalData.moment.id;
+                            circleCommentModel.content = editText.getText().toString();
+                            circleCommentModel.createTime = Utils.getCurrentTime();
+                            circleCommentModel.user = new CUserModel();
+                            circleCommentModel.user.avatar = MainApplication.userInfo.getUserAvatar();
+                            circleCommentModel.user.name = MainApplication.userInfo.getName();
+                            onCommentSuccessListner.onSuccess(circleCommentModel);
+                        } else if (result != null && !result.isSuccess()) {
+                            Log.i("pushCommentByPost", "errorcode:" + result.getErrorCode() + "message:" + result.getMessage());
+                        }
+                    }
+                });
+
+
+//                String url = String.format("v1.1/Circle/PushComment?id=%s&content=%s&session=%s", GlobalData.moment.id, encodeContent, MainApplication.userInfo.getCookie());
+//                publishButton.setClickable(false);
+//                ApiDataProvider.getmClient().invokeApi(url, null,
+//                        HttpGet.METHOD_NAME, null, CirclePushCommentResult.class,
+//                        new ApiOperationCallback<CirclePushCommentResult>() {
+//                            @Override
+//                            public void onCompleted(CirclePushCommentResult result, Exception exception, ServiceFilterResponse response) {
+//                                progressDialog.cancel();
+//                                publishButton.setClickable(true);
+//                                if (result == null || !result.isSuccess()) {
+//                                    Toast.makeText(MainApplication.UIContext, "发送失败，请检查网络后重试", Toast.LENGTH_SHORT).show();
+//                                    return;
+//                                }
+//
+//                                Toast.makeText(MainApplication.UIContext, "发送成功！", Toast.LENGTH_SHORT).show();
+//                                GlobalData.momentsCommentCount += 1;
+//
+//                                progressDialog.dismiss();
+//                                MomentDetailFragment momentDetailFragment = new MomentDetailFragment();
+//                                FragmentManager fm = getActivity().getSupportFragmentManager();
+//                                FragmentTransaction ft = fm.beginTransaction();
+//                                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+//                                ft.remove(MomentCommentFragment.this);
+//                                if (GlobalData.fromMomentsFragment == 1) {
+//                                    ft.add(R.id.content_container, momentDetailFragment);
+//                                }
+//                                ft.commit();
+//                                hideKeyBoard();
+//                                CCircleCommentModel circleCommentModel = new CCircleCommentModel();
+//                                circleCommentModel.circleId = GlobalData.moment.id;
+//                                circleCommentModel.content = editText.getText().toString();
+//                                circleCommentModel.createTime = Utils.getCurrentTime();
+//                                circleCommentModel.user = new CUserModel();
+//                                circleCommentModel.user.avatar = MainApplication.userInfo.getUserAvatar();
+//                                circleCommentModel.user.name = MainApplication.userInfo.getName();
+//                                onCommentSuccessListner.onSuccess(circleCommentModel);
+//                            }
+//                        });
             }
         });
 

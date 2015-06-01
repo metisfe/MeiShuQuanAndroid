@@ -39,7 +39,7 @@ import java.util.List;
  * Created by jx on 4/7/2015.
  */
 public class MomentsFragment extends CircleBaseFragment {
-    public static final String CLASS_NAME=MomentsFragment.class.getSimpleName();
+    public static final String CLASS_NAME = MomentsFragment.class.getSimpleName();
 
     @Override
     public void timeToSetTitleBar() {
@@ -76,6 +76,7 @@ public class MomentsFragment extends CircleBaseFragment {
         super.onResume();
         MobclickAgent.onPageStart(CLASS_NAME); //统计页面
     }
+
     public void onPause() {
         super.onPause();
         MobclickAgent.onPageEnd(CLASS_NAME);
@@ -115,7 +116,7 @@ public class MomentsFragment extends CircleBaseFragment {
 //                itemInfoFragment.setArguments(args);
 
                 // refresh load more listview has header
-                if (list.size()==0){
+                if (list.size() == 0) {
                     return;
                 }
                 if (position == list.size() + 1 || position == 0) {
@@ -184,7 +185,7 @@ public class MomentsFragment extends CircleBaseFragment {
                             progressDialog.cancel();
                             progressDialog = null;
                         }
-                        if (!result.isSuccess()) {
+                        if (result != null && !result.isSuccess()) {
                             switch (mode) {
                                 case DragListView.REFRESH:
                                     listView.onRefreshComplete();

@@ -105,6 +105,7 @@
             android:id="@+id/moment_detail_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:alwaysDrawnWithCache="false"
             android:divider="@color/transparent"
             android:dividerHeight="0dp"
             android:layout_below="@id/circle_moment_detail_header"

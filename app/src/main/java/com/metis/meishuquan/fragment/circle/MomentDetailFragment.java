@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +71,7 @@ import java.util.List;
  * Created by jx on 15/4/11.
  */
 public class MomentDetailFragment extends Fragment {
-    public static final String CLASS_NAME=MomentDetailFragment.class.getSimpleName();
+    public static final String CLASS_NAME = MomentDetailFragment.class.getSimpleName();
 
     private int newsId = 0;
 
@@ -133,6 +134,7 @@ public class MomentDetailFragment extends Fragment {
         super.onResume();
         MobclickAgent.onPageStart(CLASS_NAME); //统计页面
     }
+
     public void onPause() {
         super.onPause();
         MobclickAgent.onPageEnd(CLASS_NAME);
@@ -187,12 +189,13 @@ public class MomentDetailFragment extends Fragment {
 
         listView = (MomentPageListView) rootView.findViewById(R.id.moment_detail_listview);
 
+        //tab切换事件
         MomentActionBar.OnActionButtonClickListener OnActionButtonClickListener = new MomentActionBar.OnActionButtonClickListener() {
             @Override
             public void onReply() {
                 momentActionBar.showTab(0);
                 actionBar.showTab(0);
-                if (moment.relayCount > 0) {
+                if (GlobalData.moment.relayCount > 0) {
                     footerView.setVisibility(View.GONE);
                 } else {
                     footerView.setVisibility(View.VISIBLE);
@@ -212,7 +215,7 @@ public class MomentDetailFragment extends Fragment {
             public void onComment() {
                 momentActionBar.showTab(1);
                 actionBar.showTab(1);
-                if (moment.comentCount > 0) {
+                if (GlobalData.moment.comentCount > 0) {
                     footerView.setVisibility(View.GONE);
                 } else {
                     footerView.setVisibility(View.VISIBLE);
@@ -232,7 +235,7 @@ public class MomentDetailFragment extends Fragment {
             public void onLike() {
                 momentActionBar.showTab(2);
                 actionBar.showTab(2);
-                if (moment.supportCount > 0) {
+                if (GlobalData.moment.supportCount > 0) {
                     footerView.setVisibility(View.GONE);
                 } else {
                     footerView.setVisibility(View.VISIBLE);
@@ -818,7 +821,7 @@ public class MomentDetailFragment extends Fragment {
     class CircleMomentDetailLikeAdapter extends BaseAdapter {
         private List<CUserModel> likeList = new ArrayList<CUserModel>();
         private ViewHolder holder;
-        private int columnCount = 4;
+        private int columnCount = 5;
 
         public CircleMomentDetailLikeAdapter(List<CUserModel> momentList) {
             this.likeList = momentList;
@@ -856,19 +859,43 @@ public class MomentDetailFragment extends Fragment {
 
             viewHolder.container.removeAllViews();
             for (int j = columnCount * i; j < columnCount * (i + 1) && j < likeList.size(); j++) {
-                CUserModel user = likeList.get(j);
+                final CUserModel user = likeList.get(j);
+                LinearLayout childContainer = new LinearLayout(MainApplication.UIContext, null);
+                childContainer.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                childContainer.setOrientation(LinearLayout.VERTICAL);
+
                 ImageView image = new ImageView(MainApplication.UIContext);
                 float density = MainApplication.Resources.getDisplayMetrics().density;
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) (density * 40), (int) (density * 40));
+                LinearLayout.LayoutParams imgParams = new LinearLayout.LayoutParams((int) (density * 40), (int) (density * 40));
                 int padding = (int) ((MainApplication.Resources.getDisplayMetrics().widthPixels - density * 40 * columnCount) / (columnCount * 2));
                 padding = Math.min(padding, 20);
-                params.setMargins(padding, 0, padding, 0);
-
-                image.setLayoutParams(params);
+                imgParams.setMargins(padding, 0, padding, 0);
+                image.setLayoutParams(imgParams);
                 image.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(user.avatar, image, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height)));
 
-                viewHolder.container.addView(image);
+
+                LinearLayout.LayoutParams tvParam = new LinearLayout.LayoutParams((int) (density * 40), LinearLayout.LayoutParams.WRAP_CONTENT);
+                tvParam.setMargins(padding, 0, padding, 0);
+                TextView textView = new TextView(MainApplication.UIContext);
+                textView.setText(user.name);
+                textView.setTextSize(10);
+                textView.setSingleLine();
+                textView.setGravity(Gravity.CENTER_HORIZONTAL);
+                textView.setTextColor(getResources().getColor(R.color.common_color_424242));
+                textView.setLayoutParams(tvParam);
+
+                childContainer.addView(image);
+                childContainer.addView(textView);
+
+                viewHolder.container.addView(childContainer);
+
+                childContainer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ActivityUtils.startNameCardActivity(getActivity(), (int) (user.userId));
+                    }
+                });
             }
 
             return convertView;
@@ -876,6 +903,7 @@ public class MomentDetailFragment extends Fragment {
 
         private class ViewHolder {
             LinearLayout container;
+            TextView tvUserName;
         }
     }
 

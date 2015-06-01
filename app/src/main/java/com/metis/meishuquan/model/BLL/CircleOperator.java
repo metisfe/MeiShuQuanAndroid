@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
+import com.metis.meishuquan.model.circle.CParamCircleComment;
 import com.metis.meishuquan.model.circle.CirclePushBlogParm;
 import com.metis.meishuquan.model.commons.Result;
 import com.metis.meishuquan.model.contract.ReturnInfo;
@@ -25,6 +26,7 @@ public class CircleOperator {
     private static final String URL_CANCEL_ATTENTION = "v1.1/Circle/CancelAttention?";
     private static final String URL_DELETE_CIRCLE = "v1.1/Circle/DeleteMyCircle?circleid=";
     private static final String URL_CIRCLE_DETAIL = "v1.1/Circle/CircleDetail?";
+    private static final String URL_CIRCLE_PUSH_COMMENT = "v1.1/Circle/PushCommentByPost?";
 
     private static CircleOperator operator = null;
     private boolean flag;
@@ -53,6 +55,26 @@ public class CircleOperator {
                 PATH.append("session=" + MainApplication.userInfo.getCookie());
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), param, HttpPost.METHOD_NAME, null,
                         (Class<ReturnInfo<CCircleDetailModel>>) new ReturnInfo<CCircleDetailModel>().getClass(), callback);
+            }
+        } else {
+            Toast.makeText(MainApplication.UIContext, "网络不给力，请稍候再试", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * 圈子评论
+     *
+     * @param param    内容
+     * @param callback 回调
+     */
+    public void pushCommentByPost(CParamCircleComment param, ApiOperationCallback<ReturnInfo<String>> callback) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuffer PATH = new StringBuffer(URL_CIRCLE_PUSH_COMMENT);
+                PATH.append("session=" + MainApplication.userInfo.getCookie());
+                Log.i("URL_CIRCLE_PUSH_COMMENT", PATH.toString());
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), param, HttpPost.METHOD_NAME, null,
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
         } else {
             Toast.makeText(MainApplication.UIContext, "网络不给力，请稍候再试", Toast.LENGTH_SHORT).show();

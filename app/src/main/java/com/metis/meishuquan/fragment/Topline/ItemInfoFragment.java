@@ -20,6 +20,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -66,6 +67,7 @@ import com.metis.meishuquan.util.Helper;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.ImageUtil;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
+import com.metis.meishuquan.view.Common.MatchParentImageView;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.metis.meishuquan.view.topline.MeasureableListView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -83,7 +85,7 @@ import java.util.StringTokenizer;
  */
 public class ItemInfoFragment extends Fragment {
 
-    private static final String CLASS_NAME=ItemInfoFragment.class.getSimpleName();
+    private static final String CLASS_NAME = ItemInfoFragment.class.getSimpleName();
 
     public static final String KEY_IMAGE_URL_ARRAY = "image_url_array",
             KEY_THUMB_URL_ARRAY = "thumb_url_array";
@@ -285,18 +287,20 @@ public class ItemInfoFragment extends Fragment {
         if (ll_content == null) {
             ll_content = (LinearLayout) rootView.findViewById(R.id.id_ll_news_content);//内容父布局
         }
-        ImageView imageView = new ImageView(getActivity());
+        ImageView imageView = new ImageView(getActivity(), null);
 
         imageView.setAdjustViewBounds(true);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(url.trim(), imageView);
 
-        ImageUtil.setImageViewMathParent(getActivity(), ll_content, imageView, width, height);
-//        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-//        lp.topMargin = 10;
-//        lp.gravity = Gravity.CENTER_HORIZONTAL;
-//        imageView.setLayoutParams(lp);
-//        ll_content.addView(imageView);
+//        ImageUtil.setImageViewMathParent(getActivity(), ll_content, imageView, width, height);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lp.topMargin = 10;
+        lp.width = MainApplication.Resources.getDisplayMetrics().widthPixels;
+        lp.height = (MainApplication.Resources.getDisplayMetrics().widthPixels * height) / width;
+        lp.gravity = Gravity.CENTER_HORIZONTAL;
+        imageView.setLayoutParams(lp);
+        ll_content.addView(imageView);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -315,7 +315,7 @@ public class Utils {
     }
 
     public static String getCurrentTime() {
-        return getCurrentTime("yyyy-MM-dd  HH:mm:ss");
+        return getCurrentTime("yyyy-MM-dd HH:mm:ss");
     }
 
     public static void showInputMethod(Context context, View view) {
