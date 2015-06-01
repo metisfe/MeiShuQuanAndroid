@@ -6,10 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.course.CourseInfoActivity;
@@ -99,7 +99,7 @@ public class MyCourseActivity extends DataListActivity {
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = LayoutInflater.from(MyCourseActivity.this).inflate(R.layout.fragment_class_course_list_item, null);
-                holder.imgSmall = (SmartImageView) convertView.findViewById(R.id.id_img_class);
+                holder.imgSmall = (ImageView) convertView.findViewById(R.id.id_img_class);
                 holder.tvTitle = (TextView) convertView.findViewById(R.id.id_tv_title);
                 holder.tvSourse = (TextView) convertView.findViewById(R.id.id_tv_source);
                 holder.tvReadCount = (TextView) convertView.findViewById(R.id.id_tv_read_count);
@@ -127,7 +127,7 @@ public class MyCourseActivity extends DataListActivity {
     }
 
     private static class ViewHolder {
-        SmartImageView imgSmall;
+        ImageView imgSmall;
         TextView tvTitle, tvSourse, tvReadCount, tvCommentCount;
     }
 }

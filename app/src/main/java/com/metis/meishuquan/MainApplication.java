@@ -82,6 +82,9 @@ public class MainApplication extends Application {
 
         //友盟SDK通过Thread.UncaughtExceptionHandler捕获程序崩溃日志，并在程序下次启动时发送到服务器。
         MobclickAgent.setCatchUncaughtExceptions(true);
+
+//TODO:发布版本时请注释掉
+//        MobclickAgent.setDebugMode(true);
     }
 
     /**

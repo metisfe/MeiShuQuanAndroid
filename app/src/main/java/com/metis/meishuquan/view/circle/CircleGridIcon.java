@@ -2,27 +2,14 @@ package com.metis.meishuquan.view.circle;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.loopj.android.image.SmartImageView;
-import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.model.circle.CUserModel;
-import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.util.ImageLoaderUtils;
-import com.metis.meishuquan.util.ViewUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import io.rong.imlib.RongIMClient;
 
 /**
  * Created by wudi on 4/7/2015.

@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.assess.AssessComment;
 import com.metis.meishuquan.util.ImageLoaderUtils;
@@ -93,7 +92,7 @@ public class CommentTypePicView extends RelativeLayout {
 
             int imgCount = assessComment.getImgOrVoiceUrl().size();
             for (int i = 0; i < imgCount; i++) {
-                ImageView imageView = new SmartImageView(context);
+                ImageView imageView = new ImageView(context);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
 

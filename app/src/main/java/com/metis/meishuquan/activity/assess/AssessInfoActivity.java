@@ -31,7 +31,6 @@ import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.ImagePreviewActivity;
@@ -231,8 +230,8 @@ public class AssessInfoActivity extends FragmentActivity {
         this.tvContent = (TextView) headerView.findViewById(R.id.id_tv_content);
         this.tvSupportCount = (TextView) headerView.findViewById(R.id.id_tv_support_count);
         this.tvCommentCount = (TextView) headerView.findViewById(R.id.id_tv_comment_count);
-        this.imgPortrait = (SmartImageView) headerView.findViewById(R.id.id_img_portrait);
-        this.imgContent = (SmartImageView) headerView.findViewById(R.id.id_img_content);
+        this.imgPortrait = (ImageView) headerView.findViewById(R.id.id_img_portrait);
+        this.imgContent = (ImageView) headerView.findViewById(R.id.id_img_content);
         this.imgTriangle = (ImageView) headerView.findViewById(R.id.id_img_triangle);
         this.tvAddOne = (TextView) headerView.findViewById(R.id.id_tv_add_one);
 

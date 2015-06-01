@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,6 +67,7 @@ public class ItemFragment extends Fragment {
         Bundle mBundle = this.getArguments();
         if (mBundle != null) {
             channelId = mBundle.getInt("channelId");
+            Log.i("current_channelId", String.valueOf(channelId));
         }
 
         //初始化列表数据
@@ -76,6 +78,7 @@ public class ItemFragment extends Fragment {
         //初始化
         initView(contextView);
 
+        //6 为推荐 17 为超级美术生
         if (channelId == 17 || channelId == 6) {
             headerView = inflater.inflate(R.layout.view_act_topline, null, false);
             getActiveInfo(headerView);//获取活动详情
@@ -110,9 +113,9 @@ public class ItemFragment extends Fragment {
                     activeInfo = info;
                     initHeaderView(headerView);
                     listView.addHeaderView(headerView);
-                    if (channelId==17) {
+                    if (channelId == 17) {
                         ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(activeInfo.getImage(), imgAct);
-                    }else if (channelId==6){
+                    } else if (channelId == 6) {
                         ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(activeInfo.getTopImage(), imgAct);
                     }
                 }
@@ -160,7 +163,7 @@ public class ItemFragment extends Fragment {
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (list.size()==0){
+                if (list.size() == 0) {
                     return;
                 }
                 if ((i) <= (list.size() + 1)) {

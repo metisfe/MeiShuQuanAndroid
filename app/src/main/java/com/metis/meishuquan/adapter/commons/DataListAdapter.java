@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.loopj.android.image.SmartImageView;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.model.commons.Item;
 import com.metis.meishuquan.util.ImageLoaderUtils;
