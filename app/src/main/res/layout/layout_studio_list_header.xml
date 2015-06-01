@@ -106,16 +106,19 @@
             android:id="@+id/studio_list_header_tab1"
             style="@style/studio_radio_btn_style"
             android:text="1"
+            android:background="@android:color/holo_green_light"
             />
         <RadioButton
             android:id="@+id/studio_list_header_tab2"
             style="@style/studio_radio_btn_style"
             android:text="1"
+            android:background="@android:color/holo_orange_light"
             />
         <RadioButton
             android:id="@+id/studio_list_header_tab3"
             style="@style/studio_radio_btn_style"
             android:text="1"
+            android:background="@android:color/holo_blue_bright"
             />
     </RadioGroup>
 </RelativeLayout>

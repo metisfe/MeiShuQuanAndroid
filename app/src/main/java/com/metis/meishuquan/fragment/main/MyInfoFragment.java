@@ -35,8 +35,10 @@ import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.enums.LoginStateEnum;
+import com.metis.meishuquan.push.UnReadManager;
 import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.ImageLoaderUtils;
+import com.metis.meishuquan.view.shared.MyInfoBtn;
 import com.metis.meishuquan.view.shared.TabBar;
 
 import java.util.ArrayList;
@@ -59,6 +61,16 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
 
     private User mUser = MainApplication.userInfo;
 
+    private UnReadManager.Observable mObservable = new UnReadManager.Observable() {
+        @Override
+        public void onChanged(String tag, int count, int delta) {
+            Log.v(TAG, "onChanged=" + tag + " count=" + count);
+            MyInfoBtn btn = ((MyInfoBtn) mSuperDogView);
+            btn.setTipTvVisible(count > 0 ? View.VISIBLE : View.GONE);
+            btn.setTipText(count + "");
+        }
+    };
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -68,6 +80,13 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        UnReadManager.getInstance(getActivity()).registerObservable(UnReadManager.TAG_NEW_STUDENT, mObservable);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        UnReadManager.getInstance(getActivity()).unregisterObservable(UnReadManager.TAG_NEW_STUDENT, mObservable);
     }
 
     @Override
@@ -154,7 +173,10 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        int count = UnReadManager.getInstance(getActivity()).getCountByTag(UnReadManager.TAG_NEW_STUDENT);
+        MyInfoBtn btn = ((MyInfoBtn) mSuperDogView);
+        btn.setTipTvVisible(count > 0 ? View.VISIBLE : View.GONE);
+        btn.setTipText(count + "");
         /*UserInfoOperator.getInstance().getFavoriteList("100001", new UserInfoOperator.OnGetListener<List<Item>>() {
             @Override
             public void onGet(boolean succeed, List<Item> items) {

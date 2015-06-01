@@ -16,6 +16,7 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.InputActivity;
 import com.metis.meishuquan.view.shared.TitleView;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class BaseActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PushAgent.getInstance(this).onAppStart();
         mRootView = (ViewGroup)LayoutInflater.from(this).inflate(R.layout.activity_base, null);
         mTitleView = (TitleView)mRootView.findViewById(R.id.base_title);
         mViewContainer = (FrameLayout)mRootView.findViewById(R.id.base_view_container);

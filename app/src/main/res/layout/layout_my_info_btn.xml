@@ -31,6 +31,7 @@
         android:paddingRight="1dp"
         android:gravity="center"
         android:textColor="@android:color/white"
+        android:visibility="gone"
         />
     <TextView
         android:id="@+id/my_info_btn_text"

@@ -15,4 +15,6 @@
     <dimen name="friend_list_friend_profile_size">50dp</dimen>
 
     <dimen name="comment_profile_size">40dp</dimen>
+
+    <dimen name="student_list_item_profile_item">70dp</dimen>
 </resources>

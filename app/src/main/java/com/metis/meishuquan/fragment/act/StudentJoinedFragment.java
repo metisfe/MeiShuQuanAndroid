@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.act.StudentListActivity;
+import com.metis.meishuquan.view.Common.delegate.AbsViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ public class StudentJoinedFragment extends Fragment {
     private LinearLayoutManager mLinearLayoutManager = null;
 
     private StudentListActivity.StudentAdapter mAdapter = null;
-    private List<StudentListActivity.AbsViewHolder> mDataList = new ArrayList<StudentListActivity.AbsViewHolder>();
+    private List<AbsViewHolder> mDataList = new ArrayList<AbsViewHolder>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

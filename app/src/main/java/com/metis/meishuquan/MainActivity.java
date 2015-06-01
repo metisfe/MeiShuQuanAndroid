@@ -35,6 +35,7 @@ import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.commons.AndroidVersion;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.push.MainPushService;
 import com.metis.meishuquan.ui.SelectedTabType;
 import com.metis.meishuquan.util.Environments;
 import com.metis.meishuquan.util.GlobalData;
@@ -49,11 +50,16 @@ import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
+import com.umeng.message.UmengRegistrar;
 
 import java.util.Date;
 import java.util.Properties;
 
 public class MainActivity extends FragmentActivity implements TabBar.TabSelectedListener {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     private static final String PressBackAgainToQuiteApplicationMessage = "再按一次退出";
     private ViewGroup popupRoot;
     private boolean doWantToQuite;
@@ -72,6 +78,15 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PushAgent pushAgent = PushAgent.getInstance(this);
+        pushAgent.setPushIntentServiceClass(MainPushService.class);
+        pushAgent.enable();
+        UmengRegistrar.setDebug(this, true, true);
+        String device_token = UmengRegistrar.getRegistrationId(this);
+
+        PushAgent.getInstance(this).onAppStart();
+
+        Log.v(TAG, "onCreate device_token=" + device_token);
         self = this;
 
         doWantToQuite = false;

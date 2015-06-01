@@ -14,13 +14,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.BaseActivity;
 import com.metis.meishuquan.fragment.act.StudentCanceledFragment;
 import com.metis.meishuquan.fragment.act.StudentJoinedFragment;
+import com.metis.meishuquan.push.UnReadManager;
+import com.metis.meishuquan.view.Common.delegate.AbsDelegate;
+import com.metis.meishuquan.view.Common.delegate.AbsViewHolder;
+import com.metis.meishuquan.view.Common.delegate.DelegateAdapter;
+import com.metis.meishuquan.view.Common.delegate.DelegateImpl;
+import com.metis.meishuquan.view.Common.delegate.DelegateType;
 
 import java.util.List;
+
+import static com.metis.meishuquan.view.Common.delegate.DelegateType.DIVIDER_TITLE;
 
 public class StudentListActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener{
 
@@ -60,6 +69,12 @@ public class StudentListActivity extends BaseActivity implements RadioGroup.OnCh
         showFragment(mJoinedFragment);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UnReadManager.getInstance(this).notifyByTag(UnReadManager.TAG_NEW_STUDENT, 0);
+    }
+
     private Fragment mLastFragment = null;
     private void showFragment (Fragment fragment) {
         FragmentManager fm = getSupportFragmentManager();
@@ -95,53 +110,50 @@ public class StudentListActivity extends BaseActivity implements RadioGroup.OnCh
         }
     }
 
-    public static class StudentAdapter extends RecyclerView.Adapter<AbsViewHolder> {
+    public static class StudentAdapter extends DelegateAdapter {
 
-        private Context mContext = null;
-        private List<? extends DelegateImpl> mDataList = null;
-
-        public StudentAdapter (Context context, List<? extends DelegateImpl> dataList) {
-            mContext = context;
-            mDataList = dataList;
+        public StudentAdapter(Context context, List<? extends DelegateImpl> dataList) {
+            super(context, dataList);
         }
 
         @Override
-        public AbsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public AbsViewHolder onCreateAbsViewHolder(ViewGroup parent, int viewType, View itemView) {
+            DelegateType type = DelegateType.getDelegateTypeByType(viewType);
+            switch (type) {
+                case DIVIDER_TITLE:
+                    return new StudentViewHolder(itemView);
+            }
             return null;
         }
-
-        @Override
-        public void onBindViewHolder(AbsViewHolder holder, int position) {
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return mDataList.size();
-        }
     }
 
-    public abstract class AbsViewHolder <T> extends RecyclerView.ViewHolder{
-        public AbsViewHolder(View itemView) {
+    public static class StudentViewHolder extends AbsViewHolder<HeaderDelegate> {
+
+        public TextView headerTv = null;
+
+        public StudentViewHolder(View itemView) {
             super(itemView);
+            headerTv = (TextView)itemView.findViewById(R.id.student_item_header);
         }
 
-        public abstract void bindData (Context context, T t);
-    }
-
-    public static interface DelegateImpl<T> {
-        public T getSource ();
-    }
-
-    public static enum DelegateType {
-
-        DIVIDER_TITLE (0, 0);
-
-        private int mType, mLayoutId;
-
-        DelegateType (int type, int layoutId) {
-            mType = type;
-            mLayoutId = layoutId;
+        @Override
+        public void bindData(Context context, List<? extends DelegateImpl> dataList, HeaderDelegate headerDelegate) {
+            headerTv.setText(headerDelegate.getSource());
         }
     }
+
+    public static class HeaderDelegate extends AbsDelegate<String> {
+
+        public HeaderDelegate(String s) {
+            super(s);
+        }
+
+        @Override
+        public DelegateType getDelegateType() {
+            return DelegateType.DIVIDER_TITLE;
+        }
+    }
+
+    //public static class StudentDelegate extends AbsDelegate
+
 }

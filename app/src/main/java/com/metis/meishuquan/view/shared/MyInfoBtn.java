@@ -21,6 +21,7 @@ public class MyInfoBtn extends RelativeLayout {
     private TextView mTv = null;
     private TextView mSecondaryTv = null;
     private ImageView mArrowIv = null;
+    private TextView mTipTv = null;
 
     private Drawable mSrcDrawable = null;
     private String mText = null;
@@ -65,6 +66,7 @@ public class MyInfoBtn extends RelativeLayout {
         mTv = (TextView)this.findViewById(R.id.my_info_btn_text);
         mSecondaryTv = (TextView)this.findViewById(R.id.my_info_btn_secondary_text);
         mArrowIv = (ImageView)this.findViewById(R.id.my_info_btn_arrow);
+        mTipTv = (TextView)this.findViewById(R.id.my_info_tip);
 
         mIv.setImageDrawable(mSrcDrawable);
         mTv.setText(mText);
@@ -104,6 +106,14 @@ public class MyInfoBtn extends RelativeLayout {
     public void setSecondaryText (CharSequence txt) {
         mSecondaryText = txt;
         mSecondaryTv.setText(txt);
+    }
+
+    public void setTipTvVisible (int visible) {
+        mTipTv.setVisibility(visible);
+    }
+
+    public void setTipText (CharSequence cs) {
+        mTipTv.setText(cs);
     }
 
     public CharSequence getSecondaryText () {

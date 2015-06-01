@@ -201,7 +201,7 @@
                 android:id="@+id/my_info_super_dog"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                bs:src="@drawable/my_info_name_card"
+                bs:src="@drawable/ic_super_dog"
                 bs:text="@string/my_info_super_dog"
                 bs:secondaryTextVisible="false"
                 android:layout_marginTop="@dimen/px_to_dip_10">
