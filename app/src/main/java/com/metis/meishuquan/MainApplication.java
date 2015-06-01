@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -40,7 +42,7 @@ import io.rong.imlib.RongIMClient;
 /**
  * Created by wudi on 3/15/2015.
  */
-public class MainApplication extends Application {
+public class MainApplication extends MultiDexApplication {
 
     private static DisplayMetrics displayMetrics;
     public static android.content.res.Resources Resources;
@@ -58,7 +60,6 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
         //Thread.setDefaultUncaughtExceptionHandler(CrashHandler.getInstance(this));
 
         //set UMeng debugable false
@@ -85,6 +86,12 @@ public class MainApplication extends Application {
 
 //TODO:发布版本时请注释掉
 //        MobclickAgent.setDebugMode(true);
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     /**
