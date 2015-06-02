@@ -38,7 +38,7 @@ public class ImageGridActivity extends Activity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    Toast.makeText(ImageGridActivity.this, "最多选择1张图片", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ImageGridActivity.this, "最多选择9张图片", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
@@ -72,7 +72,7 @@ public class ImageGridActivity extends Activity {
 
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
-                        if (Bimp.getInstance().drr.size() < 1) {
+                        if (Bimp.getInstance().drr.size() < 9) {
                             Bimp.getInstance().drr.add(list.get(i));
                         }
                     }

@@ -4,12 +4,8 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
@@ -21,15 +17,13 @@ import com.metis.meishuquan.activity.info.BaseActivity;
 import com.metis.meishuquan.fragment.act.StudentCanceledFragment;
 import com.metis.meishuquan.fragment.act.StudentJoinedFragment;
 import com.metis.meishuquan.push.UnReadManager;
-import com.metis.meishuquan.view.Common.delegate.AbsDelegate;
-import com.metis.meishuquan.view.Common.delegate.AbsViewHolder;
-import com.metis.meishuquan.view.Common.delegate.DelegateAdapter;
-import com.metis.meishuquan.view.Common.delegate.DelegateImpl;
-import com.metis.meishuquan.view.Common.delegate.DelegateType;
+import com.metis.meishuquan.view.common.delegate.AbsDelegate;
+import com.metis.meishuquan.view.common.delegate.AbsViewHolder;
+import com.metis.meishuquan.view.common.delegate.DelegateAdapter;
+import com.metis.meishuquan.view.common.delegate.DelegateImpl;
+import com.metis.meishuquan.view.common.delegate.DelegateType;
 
 import java.util.List;
-
-import static com.metis.meishuquan.view.Common.delegate.DelegateType.DIVIDER_TITLE;
 
 public class StudentListActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener{
 

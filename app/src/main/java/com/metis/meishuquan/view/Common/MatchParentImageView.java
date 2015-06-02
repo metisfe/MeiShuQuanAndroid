@@ -1,4 +1,4 @@
-package com.metis.meishuquan.view.Common;
+package com.metis.meishuquan.view.common;
 
 import android.annotation.TargetApi;
 import android.content.Context;

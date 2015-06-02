@@ -235,15 +235,13 @@
             android:text="微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖"
             android:background="@color/transparent" />
 
-        <ImageView
+        <com.metis.meishuquan.view.common.NinePictruesView
             android:id="@+id/id_img_for_circle"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@color/common_color_e2e2e2"
-            android:scaleType="centerCrop" />
+            android:layout_marginBottom="10dp" />
     </LinearLayout>
 
     <View

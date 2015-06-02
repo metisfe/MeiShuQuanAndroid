@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.act.StudentListActivity;
-import com.metis.meishuquan.view.Common.delegate.AbsViewHolder;
+import com.metis.meishuquan.view.common.delegate.AbsViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;

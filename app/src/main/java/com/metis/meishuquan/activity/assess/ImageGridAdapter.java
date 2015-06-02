@@ -122,7 +122,7 @@ public class ImageGridAdapter extends BaseAdapter {
             public void onClick(View v) {
                 String path = dataList.get(position).imagePath;
 
-                if ((Bimp.getInstance().drr.size() + selectTotal) < 1) {
+                if ((Bimp.getInstance().drr.size() + selectTotal) < 9) {
                     item.isSelected = !item.isSelected;
                     if (item.isSelected) {
                         holder.selected
@@ -141,7 +141,7 @@ public class ImageGridAdapter extends BaseAdapter {
                             textcallback.onListen(selectTotal);
                         map.remove(path);
                     }
-                } else if ((Bimp.getInstance().drr.size() + selectTotal) >= 1) {
+                } else if ((Bimp.getInstance().drr.size() + selectTotal) >= 9) {
                     if (item.isSelected == true) {
                         item.isSelected = !item.isSelected;
                         holder.selected.setImageResource(-1);

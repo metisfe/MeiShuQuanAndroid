@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class NinePictruesView extends LinearLayout {
 
-    private static final float density = MainApplication.Resources.getDisplayMetrics().density;
+    private float density = MainApplication.Resources.getDisplayMetrics().density;
     private List<CircleImage> lstCircleImage;
     private ArrayList<String> lstImgUrls;
     private int width = (int) density * 75;
