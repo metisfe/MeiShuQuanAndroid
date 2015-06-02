@@ -17,7 +17,7 @@ import java.util.List;
  * Created by WJ on 2015/5/18.
  */
 public class ActivityUtils {
-    public static void startNameCardActivity (Context context, int userId) {
+    public static void startNameCardActivity (Context context, long userId) {
         Intent it = new Intent (context, StudioActivity.class);
         it.putExtra(StudioActivity.KEY_USER_ID, userId);
         context.startActivity(it);

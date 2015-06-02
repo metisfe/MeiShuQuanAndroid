@@ -13,13 +13,32 @@ public enum PushType {
     @我的
     ReferMeNotification = 4,
     评论我的
-    CommentMeNotification=5,*/
+    CommentMeNotification=5,
+    FriendNotification = 6,
+         /// <summary>
+         /// 申请好友推送
+         /// </summary>
+
+         ApplyFriendNotification=7,
+         /// <summary>
+         /// 新闻推送
+         /// </summary>
+         NewsNotification=8,
+         /// <summary>
+         ///  课程推送
+         /// </summary>
+         CourseNotifcation=9,
+    */
     DEFAULT (0, "Default"),
     ACTIVITY (1, "ActivityNotification"),
     DIRECT_MESSAGE (2, "DirectMessageNotification"),
     PAY_ATTENTION (3, "PayAttentionNotification"),
     REFER_ME (4, "ReferMeNotification"),
-    COMMENT_ME (5, "CommentMeNotification");
+    COMMENT_ME (5, "CommentMeNotification"),
+    FRIEND (6, "FriendNotification"),
+    APPLY_FRIEND (7, "ApplyFriendNotification"),
+    NEWS (8, "NewsNotification"),
+    COURSE (9, "CourseNotification");
 
     private int type;
     private String tag;
