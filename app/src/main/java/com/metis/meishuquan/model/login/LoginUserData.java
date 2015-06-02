@@ -16,4 +16,6 @@ public class LoginUserData {
     public void setData(User data) {
         this.data = data;
     }
+
+
 }

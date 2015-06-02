@@ -1,24 +1,17 @@
 package com.metis.meishuquan;
 
-import android.app.AlertDialog;
-import android.app.Application;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Handler;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.metis.meishuquan.activity.login.LoginActivity;
+import com.metis.meishuquan.app.MetisSettings;
 import com.metis.meishuquan.model.BLL.CommonOperator;
-import com.metis.meishuquan.model.commons.AndroidVersion;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
@@ -29,7 +22,6 @@ import com.metis.meishuquan.model.provider.DataProvider;
 import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
-import com.metis.meishuquan.util.Utils;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.umeng.analytics.MobclickAgent;
@@ -56,6 +48,7 @@ public class MainApplication extends MultiDexApplication {
     public static RongIMClient rongClient;
     public static RongIM rongIM;
     public static User userInfo;//登录或注册成功后会更新此对象，默认对象中有登录状态及默认的UserId
+    public static MetisSettings mMetisSettings;
 
     @Override
     public void onCreate() {
@@ -83,7 +76,7 @@ public class MainApplication extends MultiDexApplication {
 
         //友盟SDK通过Thread.UncaughtExceptionHandler捕获程序崩溃日志，并在程序下次启动时发送到服务器。
         MobclickAgent.setCatchUncaughtExceptions(true);
-
+        mMetisSettings = new MetisSettings(this);
 //TODO:发布版本时请注释掉
 //        MobclickAgent.setDebugMode(true);
     }

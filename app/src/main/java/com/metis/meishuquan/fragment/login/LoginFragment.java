@@ -2,15 +2,9 @@ package com.metis.meishuquan.fragment.login;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,6 +13,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.fragment.base.BaseFragment;
 import com.metis.meishuquan.model.BLL.UserOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
@@ -34,18 +29,14 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import java.util.regex.Pattern;
 
-import io.rong.imkit.RongIM;
-import io.rong.imlib.RongIMClient;
-
 /**
  * Fragment:登录
  * Created by wj on 15/4/5.
  */
-public class LoginFragment extends Fragment {
+public class LoginFragment extends BaseFragment {
     private Button btnRegister, btnLogin, btnBack, btnResetPwd;
     private EditText etUserName, etPwd;
 
-    private FragmentManager fragmentManager;
     private UserOperator userOperator;
 
     private boolean isPressLogin = false;
@@ -53,19 +44,23 @@ public class LoginFragment extends Fragment {
 
     private Pattern pattern = Pattern.compile("^1\\d{10}");
 
+
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    protected int onLayoutIdGenerated() {
+        return R.layout.fragment_user_login;
+    }
+
+    @Override
+    protected void onViewCreated(View parentView) {
         //缓存注册所需的身份数据
         userOperator = UserOperator.getInstance();
         userOperator.addUserRoleToCache();
 
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_user_login, null, false);
-        initView(rootView);
+        initView(parentView);
         initEvent();
-        return rootView;
     }
 
-    private void initView(ViewGroup rootView) {
+    private void initView(View rootView) {
         btnBack = (Button) rootView.findViewById(R.id.id_btn_user_login_back);
         btnLogin = (Button) rootView.findViewById(R.id.id_btn_user_login);
         btnRegister = (Button) rootView.findViewById(R.id.id_btn_user_register);
@@ -73,7 +68,6 @@ public class LoginFragment extends Fragment {
         etUserName = (EditText) rootView.findViewById(R.id.id_et_login_username);
         etPwd = (EditText) rootView.findViewById(R.id.id_et_login_pwd);
 
-        fragmentManager = getActivity().getSupportFragmentManager();
     }
 
     private void initEvent() {
@@ -124,6 +118,9 @@ public class LoginFragment extends Fragment {
                             SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(MainApplication.UIContext);
                             spu.update(SharedPreferencesUtil.USER_LOGIN_INFO, finalUserInfoJson);
 
+                            //persistent user data
+                            getMetisSettings().persistentUser(user.getData());
+
                             //update field of UserInfo to main application
                             MainApplication.userInfo = user.getData();
                             //根据用户角色控制显示模块
@@ -169,7 +166,7 @@ public class LoginFragment extends Fragment {
 
                 //turn to selectIdFragment
                 SelectIdFragment selectIdFragment = new SelectIdFragment();
-                FragmentTransaction ft = fragmentManager.beginTransaction();
+                FragmentTransaction ft = getFragmentTransaction();
                 ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
                 ft.add(R.id.id_rl_login_main, selectIdFragment);
                 ft.addToBackStack(null);
@@ -185,7 +182,7 @@ public class LoginFragment extends Fragment {
                 Utils.hideInputMethod(getActivity(), etUserName);
 
                 ResetPwdFragment resetPwdFragment = new ResetPwdFragment();
-                FragmentTransaction ft = fragmentManager.beginTransaction();
+                FragmentTransaction ft =getFragmentTransaction();
                 ft.add(R.id.id_rl_login_main, resetPwdFragment);
                 ft.addToBackStack(null);
                 ft.commit();

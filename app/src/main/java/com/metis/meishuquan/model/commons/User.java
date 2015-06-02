@@ -416,4 +416,12 @@ public class User implements Serializable {
     public void getGoodAt (Context context) {
 
     }
+
+    public LoginStateEnum getRongLoginState() {
+        return rongLoginState;
+    }
+
+    public void setRongLoginState(LoginStateEnum rongLoginState) {
+        this.rongLoginState = rongLoginState;
+    }
 }
