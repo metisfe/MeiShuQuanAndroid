@@ -22,6 +22,8 @@ public class ContactListItemView extends LinearLayout {
     private TextView nameView, reasonView, addedView, buttonView;
     private ImageView nextView;
 
+    private ImageView redDot = null;
+
     public ContactListItemView(Context context) {
         super(context);
         init();
@@ -41,6 +43,7 @@ public class ContactListItemView extends LinearLayout {
         this.addedView = (TextView) this.findViewById(R.id.view_circle_contactlistitemview_added);
         this.buttonView = (TextView) this.findViewById(R.id.view_circle_contactlistitemview_confirm);
         this.nextView = (ImageView) this.findViewById(R.id.view_circle_contactlistitemview_next);
+        this.redDot = (ImageView)this.findViewById(R.id.view_cicle_red_dot);
     }
 
     public void setCheckMode(String title, String url, int checkStatus) {
@@ -64,6 +67,10 @@ public class ContactListItemView extends LinearLayout {
         this.addedView.setVisibility(GONE);
         this.reasonView.setVisibility(GONE);
         this.nextView.setVisibility(GONE);
+    }
+
+    public void setRedDotVisiblity(int visible) {
+        redDot.setVisibility(visible);
     }
 
     public void setNormalMode(final String uid, String title, String subtitle, String url, int resourceId, boolean next) {
