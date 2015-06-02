@@ -2,14 +2,13 @@ package com.metis.meishuquan.fragment.circle;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,10 +46,7 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.umeng.analytics.MobclickAgent;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,11 +140,10 @@ public class PostMomentFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (!isSend) {
+                    progressDialog = ProgressDialog.show(getActivity(), "", "发送中...");
                     if (!mImagePaths.isEmpty()) {
-                        progressDialog = ProgressDialog.show(getActivity(), "", "发送中...");
                         try {
                             CommonOperator.getInstance().fileUpload(FileUploadTypeEnum.IMG, mImagePaths, new ServiceFilterResponseCallback() {
-
                                 @Override
                                 public void onResponse(ServiceFilterResponse response, Exception exception) {
                                     progressDialog.cancel();
@@ -171,7 +166,7 @@ public class PostMomentFragment extends Fragment {
 
                                     CirclePushBlogParm parm = new CirclePushBlogParm();
                                     parm.setContent(content);
-                                    parm.setDevice("Android");
+                                    parm.setDevice(Build.MODEL);
                                     parm.setType(SupportTypeEnum.Circle.getVal());
                                     parm.setImages(imageListResult.getData());
 
@@ -186,7 +181,7 @@ public class PostMomentFragment extends Fragment {
 
                         CirclePushBlogParm parm = new CirclePushBlogParm();
                         parm.setContent(content);
-                        parm.setDevice(android.os.Build.MODEL);
+                        parm.setDevice(Build.MODEL);
                         parm.setType(SupportTypeEnum.Circle.getVal());
 
                         send(parm);
