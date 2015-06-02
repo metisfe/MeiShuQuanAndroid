@@ -149,7 +149,7 @@ public class StudioActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studio);
 
-        mUserId = getIntent().getIntExtra(KEY_USER_ID, (int) mUserId);
+        mUserId = getIntent().getLongExtra(KEY_USER_ID, mUserId);
         canEdit = mUserId == MainApplication.userInfo.getUserId();
 
         mTitleView = LayoutInflater.from(this).inflate(R.layout.layout_studio_title, null);

@@ -26,6 +26,7 @@ import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.push.PushType;
 import com.metis.meishuquan.push.UnReadManager;
+import com.metis.meishuquan.util.ActivityUtils;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.common.delegate.AbsDelegate;
@@ -194,6 +195,12 @@ public class StudentListActivity extends BaseActivity implements RadioGroup.OnCh
                     }
                 });
             }
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ActivityUtils.startNameCardActivity(context, student.userId);
+                }
+            });
         }
     }
 
