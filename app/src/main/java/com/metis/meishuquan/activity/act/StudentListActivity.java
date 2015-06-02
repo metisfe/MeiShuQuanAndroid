@@ -201,6 +201,12 @@ public class StudentListActivity extends BaseActivity implements RadioGroup.OnCh
                     ActivityUtils.startNameCardActivity(context, student.userId);
                 }
             });
+            phoneTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ActivityUtils.callSomeOne(context, student.getPhoneNum());
+                }
+            });
         }
     }
 

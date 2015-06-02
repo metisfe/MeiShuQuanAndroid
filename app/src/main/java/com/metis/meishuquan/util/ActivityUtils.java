@@ -50,4 +50,14 @@ public class ActivityUtils {
             Toast.makeText(context, R.string.act_not_found_exception, Toast.LENGTH_SHORT).show();
         }
     }
+
+    public static void callSomeOne (Context context, String phoneNumber) {
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try {
+            context.startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(context, R.string.act_not_found_exception, Toast.LENGTH_SHORT).show();
+        }
+    }
 }

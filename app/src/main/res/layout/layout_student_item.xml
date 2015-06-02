@@ -47,6 +47,7 @@
             android:id="@+id/student_item_phone"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/holo_blue_dark"
             android:singleLine="true"/>
     </LinearLayout>
 
