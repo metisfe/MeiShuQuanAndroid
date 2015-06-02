@@ -36,12 +36,6 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-//<<<<<<< HEAD
-//        mScoreBtn = (MyInfoBtn) this.findViewById(R.id.about_score);
-//        mVersionBtn = (MyInfoBtn) findViewById(R.id.about_version);
-//        mAboutMeishuquanBtn = (MyInfoBtn) findViewById(R.id.about_meishuquan);
-//        mStatementBtn = (MyInfoBtn) findViewById(R.id.about_statement);
-//=======
         mScoreBtn = (MyInfoBtn)this.findViewById(R.id.about_score);
 
         mAboutMeishuquanBtn = (MyInfoBtn)findViewById(R.id.about_meishuquan);
@@ -72,20 +66,17 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                     Toast.makeText(this, "no activity found to handle this intent", Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case R.id.about_version:
-                Toast.makeText(this, R.string.about_checking, Toast.LENGTH_SHORT).show();
-                MainApplication.MainActivity.updateApp(AboutActivity.this);
-                break;
+
             case R.id.about_meishuquan:
                 String content = readStringFromAssets("about");
-                it = new Intent(this, TextActivity.class);
+                it = new Intent (this, TextActivity.class);
                 it.putExtra(TextActivity.KEY_CONTENT, content);
                 it.putExtra(TextActivity.KEY_TITLE, mAboutMeishuquanBtn.getText());
                 startActivity(it);
                 break;
             case R.id.about_statement:
 
-                it = new Intent(this, TextActivity.class);
+                it = new Intent (this, TextActivity.class);
                 it.putExtra(TextActivity.KEY_CONTENT, readStringFromAssets("statement"));
                 it.putExtra(TextActivity.KEY_TITLE, mStatementBtn.getText());
                 startActivity(it);
@@ -93,7 +84,7 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         }
     }
 
-    private String readStringFromAssets(String path) {
+    private String readStringFromAssets (String path) {
         try {
             InputStream is = getAssets().open(path);
             InputStreamReader reader = new InputStreamReader(is);
