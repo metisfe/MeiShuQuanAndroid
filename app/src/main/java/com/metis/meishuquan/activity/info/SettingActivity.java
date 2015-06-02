@@ -1,6 +1,8 @@
 package com.metis.meishuquan.activity.info;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +27,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     private static final String TAG = SettingActivity.class.getSimpleName();
 
-    private MyInfoBtn mModifyPwdView, mClearCacheView, mAboutUsView;
+    private MyInfoBtn mModifyPwdView, mClearCacheView,  mVersionBtn = null, mAboutUsView;
 
     private Button mLogoutBtn = null;
 
@@ -40,11 +42,20 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         mAboutUsView.setOnClickListener(this);
         mClearCacheView = (MyInfoBtn)this.findViewById(R.id.setting_clear_cache);
         mClearCacheView.setOnClickListener(this);
+        mVersionBtn = (MyInfoBtn)findViewById(R.id.about_version);
+        mVersionBtn.setOnClickListener(this);
 
         mLogoutBtn = (Button) findViewById(R.id.setting_logout);
         mLogoutBtn.setOnClickListener(this);
 
         mClearCacheView.setSecondaryText(formatSize(b2m(getCacheSize())));
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
+            mVersionBtn.setSecondaryText(getString(R.string.about_current_version, info.versionName));
+            //Toast.makeText(this, getString(R.string.about_current_version) + ":" + info.versionName, Toast.LENGTH_SHORT).show();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -99,6 +110,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.setting_about_us:
                 startActivity(new Intent(this, AboutActivity.class));
+                break;
+            case R.id.about_version:
+                Toast.makeText(this, R.string.about_checking, Toast.LENGTH_SHORT).show();
+                MainApplication.MainActivity.updateApp();
                 break;
             case R.id.setting_logout:
                 //disconnect rong

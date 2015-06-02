@@ -14,6 +14,7 @@ public class UserAdvanceInfo extends RongIMClient.UserInfo {
     private String pinYin;
     private int resourceId;
     public boolean mode;
+    public boolean showRed = false;
 
     public UserAdvanceInfo(Parcel in) {
         super(in);

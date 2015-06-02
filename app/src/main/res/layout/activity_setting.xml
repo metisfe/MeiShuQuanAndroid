@@ -26,6 +26,15 @@
         android:layout_marginTop="@dimen/px_to_dip_10"
         />
     <com.metis.meishuquan.view.shared.MyInfoBtn
+        android:id="@+id/about_version"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        bs:imageVisible="false"
+        bs:secondaryTextVisible="true"
+        bs:text="@string/about_check_update"
+        android:layout_marginTop="10dp"
+        ></com.metis.meishuquan.view.shared.MyInfoBtn>
+    <com.metis.meishuquan.view.shared.MyInfoBtn
         android:id="@+id/setting_about_us"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
