@@ -21,6 +21,9 @@ public class MetisSettings {
         this.mGlobalPreferences = mContext.getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE);
     }
 
+    /**
+     * BEGIN INCLUDED{ 用户信息 }
+     */
     public final StringPreference USER_ID = new StringPreference("USER_id", null);
     public final StringPreference NAME = new StringPreference("NAME", null);
     public final StringPreference MAILBOX = new StringPreference("MAILBOX", null);
@@ -54,11 +57,10 @@ public class MetisSettings {
 
 
 
-
     public void persistentUser(User user) {
-        if (user==null)
+        if (user == null)
             return;
-      USER_ID.setValue(String.valueOf(user.getUserId()));
+        USER_ID.setValue(String.valueOf(user.getUserId()));
         NAME.setValue(user.getName());
         MAILBOX.setValue(user.getMailbox());
         GENDER.setValue(user.getGender());
@@ -69,12 +71,12 @@ public class MetisSettings {
         USERAVATAR.setValue(user.getUserAvatar());
         AVATAR.setValue(user.getAvatar());
         USERROLE.setValue(String.valueOf(user.getUserRole()));
-        BIRTHDAY.setValue(user.getBirthday() );
+        BIRTHDAY.setValue(user.getBirthday());
         ACCOUT.setValue(user.getAccout());
         RELATIONTYPE.setValue(String.valueOf(user.getRelationType()));
         REGISTRATIONDATE.setValue(user.getRegistrationDate());
-        COOKIE.setValue(user.getCookie() );
-        RONGCLOUDID.setValue(user.getRongCloudId() );
+        COOKIE.setValue(user.getCookie());
+        RONGCLOUDID.setValue(user.getRongCloudId());
         TOKEN.setValue(user.getToken());
         GOODSUBJECTS.setValue(user.getGoodSubjects());
         SELFSIGNATURE.setValue(user.getSelfSignature());
