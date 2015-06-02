@@ -4,7 +4,10 @@ import android.util.Log;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.metis.meishuquan.MainApplication;
+import com.metis.meishuquan.activity.act.StudentListActivity;
+import com.metis.meishuquan.fragment.act.StudentCanceledFragment;
 import com.metis.meishuquan.model.commons.ActiveInfo;
 import com.metis.meishuquan.model.commons.Result;
 import com.metis.meishuquan.model.contract.ReturnInfo;
@@ -36,7 +39,9 @@ public class ActiveOperator {
             URL_ACTIVE_CHANGE_STUDIO = "v1.1/Activity/ChangeStudio",
             URL_ACTIVE_JOIN_ACTIVITY = "v1.1/Activity/JoinActivity",
             URL_ACTIVE_SELECT_STUDIO = "v1.1/Activity/SelectStudio",
-            URL_ACTIVE_MY_ACTIVE_INFO = "v1.1/Activity/GetMyActivityInfo?activityId=";
+            URL_ACTIVE_MY_ACTIVE_INFO = "v1.1/Activity/GetMyActivityInfo?activityId=",
+            URL_ACTIVE_GET_STUDIO_STUDENT = "v1.1/Activity/GetStudioStudent",
+            URL_ACTIVE_GET_CANCEL_STUDIO_STUDENT = "v1.1/Activity/GetCancelStudioStudent?activityId=";
 
     private static final String
             KEY_SESSION = "session",
@@ -51,7 +56,8 @@ public class ActiveOperator {
             KEY_REGION = "region",
             KEY_QUERY_CONTENT = "queryContent",
             KEY_ACTIVITY_ID = "activityId",
-            KEY_QUERY = "query";
+            KEY_QUERY = "query",
+            KEY_LAST_USER_ID = "LastUserid";
 
     private static ActiveOperator sOperator = new ActiveOperator();
 
@@ -268,6 +274,56 @@ public class ActiveOperator {
                             listener.onGet(resultInfo.getOption().getStatus() == 0, null);
                         }
                         Log.v(TAG, "joinActivity resultJson=" + resultJson);
+                    }
+                }
+            });
+        }
+    }
+
+    public void getStudioStudent (final int activeId, long lastUserId, final UserInfoOperator.OnGetListener<List<StudentListActivity.Student>> listener) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            StringBuilder sb = new StringBuilder(URL_ACTIVE_GET_STUDIO_STUDENT);
+            sb.append("?" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+            sb.append("&" + KEY_ACTIVITY_ID + "=" + activeId);
+            sb.append("&" + KEY_LAST_USER_ID + "=" + lastUserId);
+            Log.v(TAG, "getStudioStudent request=" + sb.toString());
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String resultJson = gson.toJson(result);
+                        Result<List<StudentListActivity.Student>> resultInfo = gson.fromJson(resultJson, new TypeToken<Result<List<StudentListActivity.Student>>>(){}.getType());
+                        if (listener != null) {
+                            listener.onGet(resultInfo.getOption().getStatus() == 0, resultInfo.getData());
+                        }
+                        Log.v(TAG, "getStudioStudent resultJson=" + resultJson);
+                    }
+                }
+            });
+        }
+    }
+
+    public void getCancelStudioStudent (final int activeId, final UserInfoOperator.OnGetListener<List<StudentCanceledFragment.CanceledStudent>> listener) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            StringBuilder sb = new StringBuilder(URL_ACTIVE_GET_CANCEL_STUDIO_STUDENT);
+            sb.append(activeId);
+            sb.append("&" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+
+            Log.v(TAG, "getCancelStudioStudent request=" + sb.toString());
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String resultJson = gson.toJson(result);
+                        Result<List<StudentCanceledFragment.CanceledStudent>> resultInfo = gson.fromJson(resultJson, new TypeToken<Result<List<StudentCanceledFragment.CanceledStudent>>>(){}.getType());
+                        if (listener != null) {
+                            listener.onGet(resultInfo.getOption().getStatus() == 0, resultInfo.getData());
+                        }
+                        Log.v(TAG, "getCancelStudioStudent resultJson=" + resultJson);
                     }
                 }
             });

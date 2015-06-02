@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#f0f0f0"
+    >
     <ImageView
         android:id="@+id/student_item_profile"
         android:layout_width="@dimen/student_list_item_profile_item"
         android:layout_height="@dimen/student_list_item_profile_item"
         android:layout_margin="10dp"
+        android:scaleType="centerCrop"
+        />
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#cccccc"
+        android:layout_below="@+id/student_item_profile"
         />
     <Button
         android:id="@+id/student_item_btn"
@@ -16,6 +25,9 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
+        android:textSize="12sp"
+        android:background="@drawable/bg_top_list_join_in"
+        android:textColor="@color/top_list_item_join"
         />
     <LinearLayout
         android:layout_width="fill_parent"

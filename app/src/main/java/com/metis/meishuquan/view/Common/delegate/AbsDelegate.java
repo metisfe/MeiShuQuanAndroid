@@ -1,4 +1,4 @@
-package com.metis.meishuquan.view.Common.delegate;
+package com.metis.meishuquan.view.common.delegate;
 
 /**
  * Created by WJ on 2015/6/1.

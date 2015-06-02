@@ -81,12 +81,9 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
         PushAgent pushAgent = PushAgent.getInstance(this);
         pushAgent.setPushIntentServiceClass(MainPushService.class);
         pushAgent.enable();
-        UmengRegistrar.setDebug(this, true, true);
-        String device_token = UmengRegistrar.getRegistrationId(this);
 
         PushAgent.getInstance(this).onAppStart();
 
-        Log.v(TAG, "onCreate device_token=" + device_token);
         self = this;
 
         doWantToQuite = false;

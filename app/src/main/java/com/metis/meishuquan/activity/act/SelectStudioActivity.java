@@ -1,22 +1,16 @@
 package com.metis.meishuquan.activity.act;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.BaseActivity;
 import com.metis.meishuquan.fragment.act.StudioListFragment;
-import com.metis.meishuquan.model.BLL.ActiveOperator;
-import com.metis.meishuquan.model.BLL.TopListItem;
-import com.metis.meishuquan.model.BLL.UserInfoOperator;
-import com.metis.meishuquan.model.commons.ActiveInfo;
+import com.metis.meishuquan.push.PushType;
+import com.metis.meishuquan.push.UnReadManager;
 
 public class SelectStudioActivity extends BaseActivity {
 
@@ -75,6 +69,12 @@ public class SelectStudioActivity extends BaseActivity {
             isSearchShowing = false;
             getTitleView().setImageRightResource(R.drawable.rc_ic_atfriend_search);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UnReadManager.getInstance(this).notifyByTag(PushType.ACTIVITY.getTag(), 0);
     }
 
     @Override

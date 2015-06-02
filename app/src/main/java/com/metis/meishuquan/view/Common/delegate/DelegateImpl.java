@@ -1,4 +1,4 @@
-package com.metis.meishuquan.view.Common.delegate;
+package com.metis.meishuquan.view.common.delegate;
 
 public interface DelegateImpl<T> {
     public T getSource ();
