@@ -95,7 +95,10 @@ public class MainPushService extends UmengBaseIntentService {
                 PushNotifyManager.getInstance(context).showNotify(msg, it);
                 break;
             case NEWS:
+                Gson gson = new Gson();
+                MessageCustomNews news = gson.fromJson(msg.custom, MessageCustomNews.class);
                 it = new Intent(context, MainActivity.class);
+                //it.putExtra()
                 it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 PushNotifyManager.getInstance(context).showNotify(msg, it);
                 break;
@@ -103,6 +106,45 @@ public class MainPushService extends UmengBaseIntentService {
                 it = new Intent(context, MainActivity.class);
                 PushNotifyManager.getInstance(context).showNotify(msg, it);
                 break;
+        }
+    }
+
+    public static class MessageCustomNews extends MessageCustom {
+        public int NewsID;
+        public String Title;
+        public String Author;
+        public String Thumbnail;
+
+        public int getNewsID() {
+            return NewsID;
+        }
+
+        public void setNewsID(int newsID) {
+            NewsID = newsID;
+        }
+
+        public String getTitle() {
+            return Title;
+        }
+
+        public void setTitle(String title) {
+            Title = title;
+        }
+
+        public String getAuthor() {
+            return Author;
+        }
+
+        public void setAuthor(String author) {
+            Author = author;
+        }
+
+        public String getThumbnail() {
+            return Thumbnail;
+        }
+
+        public void setThumbnail(String thumbnail) {
+            Thumbnail = thumbnail;
         }
     }
 
