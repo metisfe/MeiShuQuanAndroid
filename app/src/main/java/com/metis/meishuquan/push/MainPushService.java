@@ -56,9 +56,13 @@ public class MainPushService extends UmengBaseIntentService {
                 if (custom == null) {
                     custom = MessageCustom.createDefaultOne();
                 }
-                if (MainApplication.userInfo != null || custom.getSendToUserid() != MainApplication.userInfo.getUserId()) {
-                    return;
+                if (custom.getSendToUserid() != 0) {
+                    if (MainApplication.userInfo == null || custom.getSendToUserid() != MainApplication.userInfo.getUserId()) {
+                        Log.v(TAG, "onMessage msg not for you");
+                        return;
+                    }
                 }
+
                 PushType type = PushType.getPushType(custom.NotificationType);
                 dispatchPushMsg(context, msg, custom, type);
             }
@@ -78,6 +82,11 @@ public class MainPushService extends UmengBaseIntentService {
                 }
                 it = new Intent(context, clz);
                 it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                PushNotifyManager.getInstance(context).showNotify(msg, it);
+                break;
+            case NEWS:
+                it = new Intent(context, MainActivity.class);
+                it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 PushNotifyManager.getInstance(context).showNotify(msg, it);
                 break;
             case DEFAULT:

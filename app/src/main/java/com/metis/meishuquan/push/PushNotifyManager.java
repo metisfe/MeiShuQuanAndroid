@@ -35,6 +35,8 @@ public class PushNotifyManager extends AbsManager {
 
     private NotificationManagerCompat mNotifyManager = null;
 
+    private int mNotifyId = 1;
+
     private PushNotifyManager(Context context) {
         super(context);
         mNotifyManager = NotificationManagerCompat.from(context);
@@ -61,6 +63,6 @@ public class PushNotifyManager extends AbsManager {
             builder.setContentIntent(PendingIntent.getActivity(getContext(), 100, contentIt, PendingIntent.FLAG_CANCEL_CURRENT));
         }
         builder.setDefaults(NotificationCompat.DEFAULT_ALL);
-        mNotifyManager.notify(100, builder.build());
+        mNotifyManager.notify(mNotifyId++, builder.build());
     }
 }
