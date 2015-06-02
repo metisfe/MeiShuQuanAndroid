@@ -47,7 +47,7 @@ public class MainPushService extends UmengBaseIntentService {
         }
     }
 
-    private void runOnUiThread (final Context context, final UMessage msg) {
+    private void runOnUiThread(final Context context, final UMessage msg) {
         Log.v(TAG, "onMessage msg=" + msg.custom);
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
@@ -70,7 +70,7 @@ public class MainPushService extends UmengBaseIntentService {
         });
     }
 
-    private void dispatchPushMsg (Context context, UMessage msg, MessageCustom custom, PushType type) {
+    private void dispatchPushMsg(Context context, UMessage msg, MessageCustom custom, PushType type) {
         Intent it = null;
         switch (type) {
             case ACTIVITY:
@@ -96,8 +96,11 @@ public class MainPushService extends UmengBaseIntentService {
                 PushNotifyManager.getInstance(context).showNotify(msg, it);
                 break;
             case NEWS:
+                Gson gson = new Gson();
+                MessageCustomNews news = gson.fromJson(msg.custom, MessageCustomNews.class);
+
                 it = new Intent(context, NewDetailActivity.class);
-                it.putExtra(NewDetailActivity.KEY_NEWS_ID,0);
+                it.putExtra(NewDetailActivity.KEY_NEWS_ID, news.getNewsID());
                 it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 PushNotifyManager.getInstance(context).showNotify(msg, it);
                 break;
@@ -105,6 +108,45 @@ public class MainPushService extends UmengBaseIntentService {
                 it = new Intent(context, MainActivity.class);
                 PushNotifyManager.getInstance(context).showNotify(msg, it);
                 break;
+        }
+    }
+
+    public static class MessageCustomNews extends MessageCustom {
+        public int NewsID;
+        public String Title;
+        public String Author;
+        public String Thumbnail;
+
+        public int getNewsID() {
+            return NewsID;
+        }
+
+        public void setNewsID(int newsID) {
+            NewsID = newsID;
+        }
+
+        public String getTitle() {
+            return Title;
+        }
+
+        public void setTitle(String title) {
+            Title = title;
+        }
+
+        public String getAuthor() {
+            return Author;
+        }
+
+        public void setAuthor(String author) {
+            Author = author;
+        }
+
+        public String getThumbnail() {
+            return Thumbnail;
+        }
+
+        public void setThumbnail(String thumbnail) {
+            Thumbnail = thumbnail;
         }
     }
 
@@ -173,12 +215,12 @@ public class MainPushService extends UmengBaseIntentService {
             NotificationTime = notificationTime;
         }
 
-        public static MessageCustom createDefaultOne () {
+        public static MessageCustom createDefaultOne() {
             return new MessageCustom();
         }
     }
 
-    public static String getDeviceToken (Context context) {
+    public static String getDeviceToken(Context context) {
         UmengRegistrar.setDebug(context, true, true);
         String device_token = UmengRegistrar.getRegistrationId(context);
         UmengRegistrar.setDebug(context, false, false);
