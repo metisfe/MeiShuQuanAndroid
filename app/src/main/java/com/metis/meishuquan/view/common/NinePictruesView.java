@@ -50,17 +50,6 @@ public class NinePictruesView extends LinearLayout {
         init();
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        this.removeAllViews();
-    }
-
     private void init() {
         this.setOrientation(VERTICAL);
 

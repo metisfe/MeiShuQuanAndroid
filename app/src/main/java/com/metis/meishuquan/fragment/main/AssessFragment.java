@@ -47,6 +47,7 @@ import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.AssessStateEnum;
 import com.metis.meishuquan.model.enums.QueryTypeEnum;
 import com.metis.meishuquan.model.topline.ChannelItem;
+import com.metis.meishuquan.push.PushType;
 import com.metis.meishuquan.push.UnReadManager;
 import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.ImageLoaderUtils;
@@ -107,19 +108,19 @@ public class AssessFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        UnReadManager.getInstance(getActivity()).registerObservable(UnReadManager.TAG_NEW_STUDENT, mObservable);
+        UnReadManager.getInstance(getActivity()).registerObservable(PushType.ACTIVITY.getTag(), mObservable);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        UnReadManager.getInstance(getActivity()).unregisterObservable(UnReadManager.TAG_NEW_STUDENT, mObservable);
+        UnReadManager.getInstance(getActivity()).unregisterObservable(PushType.ACTIVITY.getTag(), mObservable);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        String tag = UnReadManager.TAG_NEW_STUDENT;
+        String tag = PushType.ACTIVITY.getTag();
         int count = UnReadManager.getInstance(getActivity()).getCountByTag(tag);
         manageTip(tag, count, 0);
     }

@@ -19,6 +19,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.BLL.UserOperator;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
@@ -31,7 +32,10 @@ import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.view.shared.TabBar;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.umeng.message.UmengRegistrar;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import io.rong.imkit.RongIM;
@@ -42,6 +46,9 @@ import io.rong.imlib.RongIMClient;
  * Created by wj on 15/4/5.
  */
 public class LoginFragment extends Fragment {
+
+    private static final String TAG = LoginFragment.class.getSimpleName();
+
     private Button btnRegister, btnLogin, btnBack, btnResetPwd;
     private EditText etUserName, etPwd;
 
@@ -126,6 +133,14 @@ public class LoginFragment extends Fragment {
 
                             //update field of UserInfo to main application
                             MainApplication.userInfo = user.getData();
+                            UmengRegistrar.setDebug(getActivity(), true, true);
+                            String device_token = UmengRegistrar.getRegistrationId(getActivity());
+                            Log.v(TAG, "onCreate device_token=" + device_token);
+                            Map<String, String> map = new HashMap<String, String>();
+
+                            map.put("DeviceToken", device_token);
+                            map.put("DeviceType", 1 + "");
+                            UserInfoOperator.getInstance().updateUserInfo(user.getData().getUserId(), map);
                             //根据用户角色控制显示模块
                             if (user.getData().getUserRole() == IdTypeEnum.TEACHER.getVal() || user.getData().getUserRole() == IdTypeEnum.STUDIO.getVal()) {
                                 GlobalData.tabs.add(1);

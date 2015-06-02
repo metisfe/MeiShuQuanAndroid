@@ -35,6 +35,7 @@ import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.enums.LoginStateEnum;
+import com.metis.meishuquan.push.PushType;
 import com.metis.meishuquan.push.UnReadManager;
 import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.ImageLoaderUtils;
@@ -59,7 +60,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
 
     private MainApplication mMainApplication = null;
 
-    private User mUser = MainApplication.userInfo;
+    private User mUser = null;
 
     private UnReadManager.Observable mObservable = new UnReadManager.Observable() {
         @Override
@@ -86,13 +87,13 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        UnReadManager.getInstance(getActivity()).registerObservable(UnReadManager.TAG_NEW_STUDENT, mObservable);
+        UnReadManager.getInstance(getActivity()).registerObservable(PushType.ACTIVITY.getTag(), mObservable);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        UnReadManager.getInstance(getActivity()).unregisterObservable(UnReadManager.TAG_NEW_STUDENT, mObservable);
+        UnReadManager.getInstance(getActivity()).unregisterObservable(PushType.ACTIVITY.getTag(), mObservable);
     }
 
     @Override
@@ -164,6 +165,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 if (succeed) {
                     mUser = user;
                     mUser.setAppLoginState(LoginStateEnum.YES);
+                    mUser.setCookie(MainApplication.userInfo.getCookie());
                     MainApplication.userInfo = mUser;
                     mLoginView.setVisibility(View.GONE);
                     mInfoDetailsContainer.setVisibility(View.VISIBLE);
@@ -179,7 +181,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        String tag = UnReadManager.TAG_NEW_STUDENT;
+        String tag = PushType.ACTIVITY.getTag();
         int count = UnReadManager.getInstance(getActivity()).getCountByTag(tag);
         manageTip(tag, count, 0);
     }
@@ -188,8 +190,6 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         if (user == null) {
             return;
         }
-        //TODO
-        user.setUserRole(2);
         final int profilePix = mMainApplication.getResources().getDimensionPixelSize(R.dimen.my_info_profile_size);
         mInfoName.setText(user.getName());
         mAttentionCountTv.setText(MainApplication.UIContext.getString(R.string.my_info_count, user.getFocusNum()));
@@ -200,11 +200,6 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                     ImageLoaderUtils.getRoundDisplayOptions(profilePix));
         } else {
             mProfileIv.setImageResource(R.drawable.ic_launcher);
-        }
-
-        if (user.getUserRoleEnum() == IdTypeEnum.TEACHER) {
-            //TODO
-            //mMyAskView.setVisibility(View.VISIBLE);
         }
 
     }
@@ -246,14 +241,17 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.my_info_super_dog:
                 if (MainApplication.isLogin()) {
-                    User user = mUser != null ? mUser : MainApplication.userInfo;
-                    //if (user.getUserRoleEnum() == IdTypeEnum.STUDIO) {
+                    //User user = mUser != null ? mUser : MainApplication.userInfo;
+                    if (mUser == null) {
+                        return;
+                    }
+                    if (mUser.getUserRoleEnum() == IdTypeEnum.STUDIO) {
                         startActivity(new Intent(getActivity(), StudentListActivity.class));
-                    /*} else if (user.getUserRoleEnum() == IdTypeEnum.STUDENT) {
+                    } else if (mUser.getUserRoleEnum() == IdTypeEnum.STUDENT) {
                         startActivity(new Intent(getActivity(), SelectStudioActivity.class));
                     } else {
-                        Toast.makeText(getActivity(), "Nothing " + user.getUserRole() + " " + user.getUserRoleEnum().name(), Toast.LENGTH_SHORT).show();
-                    }*/
+                        Toast.makeText(getActivity(), "Nothing " + mUser.getUserRole() + " " + mUser.getUserRoleEnum().name(), Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     startActivity(new Intent(getActivity(), LoginActivity.class));
                     Toast.makeText(getActivity(), R.string.my_info_toast_not_login, Toast.LENGTH_SHORT).show();

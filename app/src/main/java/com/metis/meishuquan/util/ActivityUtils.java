@@ -49,6 +49,5 @@ public class ActivityUtils {
         } catch (Exception e) {
             Toast.makeText(context, R.string.act_not_found_exception, Toast.LENGTH_SHORT).show();
         }
-
     }
 }

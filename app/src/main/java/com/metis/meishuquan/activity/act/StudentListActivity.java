@@ -1,6 +1,7 @@
 package com.metis.meishuquan.activity.act;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -8,15 +9,25 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.lidroid.xutils.db.annotation.Id;
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.circle.RequestMessageActivity;
 import com.metis.meishuquan.activity.info.BaseActivity;
 import com.metis.meishuquan.fragment.act.StudentCanceledFragment;
 import com.metis.meishuquan.fragment.act.StudentJoinedFragment;
+import com.metis.meishuquan.model.BLL.UserInfoOperator;
+import com.metis.meishuquan.model.commons.User;
+import com.metis.meishuquan.push.PushType;
 import com.metis.meishuquan.push.UnReadManager;
+import com.metis.meishuquan.util.ImageLoaderUtils;
+import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.common.delegate.AbsDelegate;
 import com.metis.meishuquan.view.common.delegate.AbsViewHolder;
 import com.metis.meishuquan.view.common.delegate.DelegateAdapter;
@@ -66,7 +77,7 @@ public class StudentListActivity extends BaseActivity implements RadioGroup.OnCh
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        UnReadManager.getInstance(this).notifyByTag(UnReadManager.TAG_NEW_STUDENT, 0);
+        UnReadManager.getInstance(this).notifyByTag(PushType.ACTIVITY.getTag(), 0);
     }
 
     private Fragment mLastFragment = null;
@@ -115,17 +126,19 @@ public class StudentListActivity extends BaseActivity implements RadioGroup.OnCh
             DelegateType type = DelegateType.getDelegateTypeByType(viewType);
             switch (type) {
                 case DIVIDER_TITLE:
+                    return new StudentHeaderViewHolder(itemView);
+                case STUDENT:
                     return new StudentViewHolder(itemView);
             }
             return null;
         }
     }
 
-    public static class StudentViewHolder extends AbsViewHolder<HeaderDelegate> {
+    public static class StudentHeaderViewHolder extends AbsViewHolder<HeaderDelegate> {
 
         public TextView headerTv = null;
 
-        public StudentViewHolder(View itemView) {
+        public StudentHeaderViewHolder(View itemView) {
             super(itemView);
             headerTv = (TextView)itemView.findViewById(R.id.student_item_header);
         }
@@ -133,6 +146,54 @@ public class StudentListActivity extends BaseActivity implements RadioGroup.OnCh
         @Override
         public void bindData(Context context, List<? extends DelegateImpl> dataList, HeaderDelegate headerDelegate) {
             headerTv.setText(headerDelegate.getSource());
+        }
+    }
+
+    public static class StudentViewHolder extends AbsViewHolder<StudentDelegate> {
+
+        public ImageView profileIv = null;
+        public TextView nameTv = null;
+        public TextView phoneTv = null;
+        public Button btn = null;
+
+        public StudentViewHolder(View itemView) {
+            super(itemView);
+            profileIv = (ImageView)itemView.findViewById(R.id.student_item_profile);
+            nameTv = (TextView)itemView.findViewById(R.id.student_item_name);
+            phoneTv = (TextView)itemView.findViewById(R.id.student_item_phone);
+            btn = (Button)itemView.findViewById(R.id.student_item_btn);
+        }
+
+        @Override
+        public void bindData(final Context context, List<? extends DelegateImpl> dataList, StudentDelegate studentDelegate) {
+            final Student student = studentDelegate.getSource();
+            ImageLoaderUtils.getImageLoader(context)
+                    .displayImage(student.getUserAvatar(), profileIv,
+                            ImageLoaderUtils.getNormalDisplayOptions(R.drawable.default_portrait_fang));
+            nameTv.setText(student.getUserNickName());
+            phoneTv.setText(context.getString(R.string.act_contact, student.getPhoneNum()));
+            if (studentDelegate.isFriend) {
+                btn.setClickable(false);
+                btn.setText(R.string.act_friend_has_joined);
+            } else {
+                btn.setClickable(true);
+                btn.setText(R.string.act_friend_add);
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        UserInfoOperator.getInstance().getUserInfo(student.getUserId(), new UserInfoOperator.OnGetListener<User>() {
+                            @Override
+                            public void onGet(boolean succeed, User user) {
+                                if (succeed) {
+                                    Intent it = new Intent(context, RequestMessageActivity.class);
+                                    it.putExtra(RequestMessageActivity.KEY_TATGETID, student.getUserId());
+                                    context.startActivity(it);
+                                }
+                            }
+                        });
+                    }
+                });
+            }
         }
     }
 
@@ -148,6 +209,94 @@ public class StudentListActivity extends BaseActivity implements RadioGroup.OnCh
         }
     }
 
-    //public static class StudentDelegate extends AbsDelegate
+    public static class StudentDelegate extends AbsDelegate<Student> {
+
+        public boolean isNewOne = false;
+        public boolean isFriend = false;
+
+        public StudentDelegate(Student student) {
+            super(student);
+        }
+
+        @Override
+        public DelegateType getDelegateType() {
+            return DelegateType.STUDENT;
+        }
+    }
+
+    public static class Student {
+        @Id
+        public long userId;
+        public String userNickName;
+        public String userAvatar;
+        public int upCount;
+        public String createDatetime;
+        public String phoneNum;
+
+        public long getUserId() {
+            return userId;
+        }
+
+        public void setUserId(long userId) {
+            this.userId = userId;
+        }
+
+        public String getUserNickName() {
+            return userNickName;
+        }
+
+        public void setUserNickName(String userNickName) {
+            this.userNickName = userNickName;
+        }
+
+        public String getUserAvatar() {
+            return userAvatar;
+        }
+
+        public void setUserAvatar(String userAvatar) {
+            this.userAvatar = userAvatar;
+        }
+
+        public int getUpCount() {
+            return upCount;
+        }
+
+        public void setUpCount(int upCount) {
+            this.upCount = upCount;
+        }
+
+        public String getCreateDatetime() {
+            return createDatetime;
+        }
+
+        public void setCreateDatetime(String createDatetime) {
+            this.createDatetime = createDatetime;
+        }
+
+        public String getPhoneNum() {
+            return phoneNum;
+        }
+
+        public void setPhoneNum(String phoneNum) {
+            this.phoneNum = phoneNum;
+        }
+    }
+
+    public static boolean hasHeader (List<? extends AbsDelegate> delegates) {
+        for (AbsDelegate delegate : delegates) {
+            if (delegate.getDelegateType() == DelegateType.DIVIDER_TITLE) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isFriend (Context context, long userId) {
+        String content = SharedPreferencesUtil.getInstanse(context).getStringByKey(SharedPreferencesUtil.CONTACTS + MainApplication.userInfo.getUserId());
+        if (content != null) {
+            return content.indexOf(userId + "") >= 0;
+        }
+        return false;
+    }
 
 }

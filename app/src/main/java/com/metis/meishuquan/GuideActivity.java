@@ -8,11 +8,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -24,13 +24,23 @@ public class GuideActivity extends ActionBarActivity {
     private ViewPager mPager = null;
 
     private List<Fragment> mFragments = new ArrayList<Fragment>();
+    private LinearLayout mAbsLayout = null;
+    private FrameLayout mCircleLayout = null;
+    private ImageView mCirleIv = null;
+
+    private float mDensity = 1;
+    private int marginInDp = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide);
 
+        mDensity = getResources().getDisplayMetrics().density;
+
         mPager = (ViewPager)findViewById(R.id.guide_pager);
+        mAbsLayout = (LinearLayout)findViewById(R.id.guide_dircle_container);
+        mCircleLayout = (FrameLayout)findViewById(R.id.guide_dot_container);
 
         CommonFragment fragment1 = new CommonFragment();
         fragment1.setImage(R.drawable.guide_1);
@@ -56,7 +66,43 @@ public class GuideActivity extends ActionBarActivity {
         mFragments.add(fragment3);
         mFragments.add(lastFragment);
 
+        for (int i = 0; i < mFragments.size(); i++) {
+            ImageView iv = new ImageView(this);
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)iv.getLayoutParams();
+            if (params == null) {
+                params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            }
+            params.setMargins((int)(marginInDp * mDensity), 0, (int)(marginInDp * mDensity), 0);
+            iv.setImageResource(R.drawable.guide_circle);
+            iv.setLayoutParams(params);
+            mAbsLayout.addView(iv);
+        }
+        mCirleIv = new ImageView(this);
+        mCirleIv.setImageResource(R.drawable.guide_dot);
+        final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins((int)(marginInDp + 1 * mDensity), (int)(1 * mDensity), (int)(marginInDp + 1 * mDensity), (int)(1 * mDensity));
+        mCirleIv.setLayoutParams(params);
+        mCircleLayout.addView(mCirleIv);
         mPager.setAdapter(new GuideAdapter(getSupportFragmentManager()));
+        mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                float offset = (marginInDp + 1) * mDensity + (marginInDp + 15) * mDensity * position + (marginInDp + 15) * mDensity * positionOffset;
+                FrameLayout.LayoutParams params1 = (FrameLayout.LayoutParams)mCirleIv.getLayoutParams();
+                params1.setMargins((int)offset, (int)(1 * mDensity), 0, (int)(1 * mDensity));
+                mCirleIv.setLayoutParams(params1);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     private class GuideAdapter extends FragmentStatePagerAdapter {

@@ -188,6 +188,13 @@
     <string name="act_no_chance">亲，您已使用过三次修改画室的机会</string>
     <string name="act_has_joined_title">已报名</string>
     <string name="act_canceled_joined_title">取消报名</string>
+    <string name="act_lastest_joined">最新报名(%1$d)</string>
+    <string name="act_has_joined_before">已报名(%1$d)</string>
+    <string name="act_lastest_canceled">刚取消(%1$d)</string>
+    <string name="act_has_canceled_before">已取消(%1$d)</string>
+    <string name="act_friend_has_joined">已添加</string>
+    <string name="act_friend_add">加好友</string>
+    <string name="act_contact">联系电话:%1$s</string>
     <string name="delete_failed">删除失败</string>
 
     <string-array name="act_filter_1">

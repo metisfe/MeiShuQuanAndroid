@@ -20,6 +20,7 @@ import com.metis.meishuquan.activity.course.ChooseCourseActivity;
 import com.metis.meishuquan.fragment.course.CourseListFragment;
 import com.metis.meishuquan.fragment.course.CoursePicListFragment;
 import com.metis.meishuquan.model.course.CourseChannelItem;
+import com.metis.meishuquan.push.PushType;
 import com.metis.meishuquan.push.UnReadManager;
 import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
@@ -59,19 +60,19 @@ public class ClassFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        UnReadManager.getInstance(getActivity()).registerObservable(UnReadManager.TAG_NEW_STUDENT, mObservable);
+        UnReadManager.getInstance(getActivity()).registerObservable(PushType.ACTIVITY.getTag(), mObservable);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        UnReadManager.getInstance(getActivity()).unregisterObservable(UnReadManager.TAG_NEW_STUDENT, mObservable);
+        UnReadManager.getInstance(getActivity()).unregisterObservable(PushType.ACTIVITY.getTag(), mObservable);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        String tag = UnReadManager.TAG_NEW_STUDENT;
+        String tag = PushType.ACTIVITY.getTag();
         int count = UnReadManager.getInstance(getActivity()).getCountByTag(tag);
         manageTip(tag, count, 0);
     }
