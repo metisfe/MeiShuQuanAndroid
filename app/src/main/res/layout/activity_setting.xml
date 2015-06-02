@@ -32,7 +32,7 @@
         bs:imageVisible="false"
         bs:secondaryTextVisible="true"
         bs:text="@string/about_check_update"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/px_to_dip_10"
         ></com.metis.meishuquan.view.shared.MyInfoBtn>
     <com.metis.meishuquan.view.shared.MyInfoBtn
         android:id="@+id/setting_about_us"
