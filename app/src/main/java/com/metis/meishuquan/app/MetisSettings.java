@@ -56,7 +56,6 @@ public class MetisSettings {
     public final StringPreference RONGLOGINSTATE = new StringPreference("RONGLOGINSTATE", null);
 
 
-
     public void persistentUser(User user) {
         if (user == null)
             return;
@@ -91,6 +90,37 @@ public class MetisSettings {
         RONGLOGINSTATE.setValue(String.valueOf(user.getRongLoginState().ordinal()));
     }
 
+    public void clearUserCache() {
+        USER_ID.resetToDefault();
+        NAME.resetToDefault();
+        MAILBOX.resetToDefault();
+        GENDER.resetToDefault();
+        PHONE.resetToDefault();
+        SELFINTRODUCE.resetToDefault();
+        GRADE.resetToDefault();
+        REGION.resetToDefault();
+        USERAVATAR.resetToDefault();
+        AVATAR.resetToDefault();
+        USERROLE.resetToDefault();
+        BIRTHDAY.resetToDefault();
+        ACCOUT.resetToDefault();
+        RELATIONTYPE.resetToDefault();
+        REGISTRATIONDATE.resetToDefault();
+        COOKIE.resetToDefault();
+        RONGCLOUDID.resetToDefault();
+        TOKEN.resetToDefault();
+        GOODSUBJECTS.resetToDefault();
+        SELFSIGNATURE.resetToDefault();
+        LOCATIONSTUDIO.resetToDefault();
+        LOCATIONSCHOOL.resetToDefault();
+        BACKGROUNDIMG.resetToDefault();
+        USERRESUME.resetToDefault();
+        STUDIO.resetToDefault();
+        FANSNUM.resetToDefault();
+        FOCUSNUM.resetToDefault();
+        APPLOGINSTATE.resetToDefault();
+        RONGLOGINSTATE.resetToDefault();
+    }
 
     /**
      * String²ÎÊý±£´æ
