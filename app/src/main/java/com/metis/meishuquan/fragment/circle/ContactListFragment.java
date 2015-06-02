@@ -1,14 +1,11 @@
 package com.metis.meishuquan.fragment.circle;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
@@ -19,20 +16,19 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.circle.ChatActivity;
 import com.metis.meishuquan.model.circle.UserAdvanceInfo;
+import com.metis.meishuquan.push.PushType;
+import com.metis.meishuquan.push.UnReadManager;
 import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.view.circle.ContactListItemView;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.rong.imlib.RongIMClient;
 
 /**
  * Created by wudi on 4/2/2015.
@@ -42,6 +38,8 @@ public class ContactListFragment extends CircleBaseFragment {
     private ViewGroup rootView;
     private ExpandableListView listView;
     private CircleFriendListAdapter adapter;
+
+    private UserAdvanceInfo newFriendInfo = null, crowdChatInfo = null;
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -59,6 +57,21 @@ public class ContactListFragment extends CircleBaseFragment {
         }
     };
 
+    private UnReadManager.Observable mObservable = new UnReadManager.Observable() {
+        @Override
+        public void onChanged(String tag, int count, int delta) {
+            if (newFriendInfo != null) {
+                newFriendInfo.showRed = count > 0;
+                adapter.notifyDataSetChanged();
+            }
+        }
+    };
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        UnReadManager.getInstance(getActivity()).registerObservable(PushType.FRIEND.getTag(), mObservable);
+    }
     public void onResume() {
         super.onResume();
         MobclickAgent.onPageStart(CLASS_NAME); //统计页面
@@ -123,8 +136,12 @@ public class ContactListFragment extends CircleBaseFragment {
         this.adapter = new CircleFriendListAdapter();
         ChatManager.refreshFriendData();
         this.adapter.friendList = ChatManager.getGroupedFriendList();
-        this.adapter.fakeItems.add(new UserAdvanceInfo("新的朋友", R.drawable.icon_add_friend));
-        this.adapter.fakeItems.add(new UserAdvanceInfo("群聊", R.drawable.icon_chat_group));
+        newFriendInfo = new UserAdvanceInfo("新的朋友", R.drawable.icon_add_friend);
+        int count = UnReadManager.getInstance(getActivity()).getCountByTag(PushType.FRIEND.getTag());
+        newFriendInfo.showRed = count > 0;
+        crowdChatInfo = new UserAdvanceInfo("群聊", R.drawable.icon_chat_group);
+        this.adapter.fakeItems.add(newFriendInfo);
+        this.adapter.fakeItems.add(crowdChatInfo);
         this.listView.setAdapter(adapter);
         expandAll();
 
@@ -159,6 +176,7 @@ public class ContactListFragment extends CircleBaseFragment {
     @Override
     public void onDestroy() {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
+        UnReadManager.getInstance(getActivity()).registerObservable(PushType.FRIEND.getTag(), mObservable);
         super.onDestroy();
     }
 
@@ -270,7 +288,7 @@ public class ContactListFragment extends CircleBaseFragment {
                 info = friendList.get(groupPosition - 1).get(childPosition);
                 ((ContactListItemView) convertView).setNormalMode(info.getUserId(), info.getName(), "", info.getPortraitUri(), 0, false);
             }
-
+            ((ContactListItemView) convertView).setRedDotVisiblity(info.showRed ? View.VISIBLE : View.GONE);
             return convertView;
         }
 

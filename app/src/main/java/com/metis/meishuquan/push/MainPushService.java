@@ -84,6 +84,16 @@ public class MainPushService extends UmengBaseIntentService {
                 it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 PushNotifyManager.getInstance(context).showNotify(msg, it);
                 break;
+            case APPLY_FRIEND:
+                it = new Intent(context, MainActivity.class);
+                it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                PushNotifyManager.getInstance(context).showNotify(msg, it);
+                break;
+            case FRIEND:
+                it = new Intent(context, MainActivity.class);
+                it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                PushNotifyManager.getInstance(context).showNotify(msg, it);
+                break;
             case NEWS:
                 it = new Intent(context, MainActivity.class);
                 it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

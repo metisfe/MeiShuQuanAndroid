@@ -28,7 +28,7 @@ import java.io.InputStreamReader;
 
 public class AboutActivity extends BaseActivity implements View.OnClickListener {
 
-    private MyInfoBtn mScoreBtn = null, mVersionBtn = null,
+    private MyInfoBtn mScoreBtn = null,
             mAboutMeishuquanBtn = null, mStatementBtn = null;
 
     @Override
@@ -36,23 +36,22 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        mScoreBtn = (MyInfoBtn) this.findViewById(R.id.about_score);
-        mVersionBtn = (MyInfoBtn) findViewById(R.id.about_version);
-        mAboutMeishuquanBtn = (MyInfoBtn) findViewById(R.id.about_meishuquan);
-        mStatementBtn = (MyInfoBtn) findViewById(R.id.about_statement);
+//<<<<<<< HEAD
+//        mScoreBtn = (MyInfoBtn) this.findViewById(R.id.about_score);
+//        mVersionBtn = (MyInfoBtn) findViewById(R.id.about_version);
+//        mAboutMeishuquanBtn = (MyInfoBtn) findViewById(R.id.about_meishuquan);
+//        mStatementBtn = (MyInfoBtn) findViewById(R.id.about_statement);
+//=======
+        mScoreBtn = (MyInfoBtn)this.findViewById(R.id.about_score);
+
+        mAboutMeishuquanBtn = (MyInfoBtn)findViewById(R.id.about_meishuquan);
+        mStatementBtn = (MyInfoBtn)findViewById(R.id.about_statement);
 
         mScoreBtn.setOnClickListener(this);
-        mVersionBtn.setOnClickListener(this);
         mAboutMeishuquanBtn.setOnClickListener(this);
         mStatementBtn.setOnClickListener(this);
 
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
-            mVersionBtn.setSecondaryText(getString(R.string.about_current_version, info.versionName));
-            //Toast.makeText(this, getString(R.string.about_current_version) + ":" + info.versionName, Toast.LENGTH_SHORT).show();
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+
     }
 
     @Override

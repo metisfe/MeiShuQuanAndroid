@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public class TopListItem implements Serializable {
     private int pId;
-    private int userId;
+    private long userId;
     private String userNickName;
     private String userAvatar;
     private String province;
@@ -24,11 +24,11 @@ public class TopListItem implements Serializable {
         this.pId = pId;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 

@@ -148,7 +148,7 @@ public class ActiveOperator {
         }
     }
 
-    public void selectStudio (int studioId, int activityId, final UserInfoOperator.OnGetListener<Result> listener) {
+    public void selectStudio (long studioId, int activityId, final UserInfoOperator.OnGetListener<Result> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_ACTIVE_SELECT_STUDIO);
             sb.append("?" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
@@ -231,7 +231,7 @@ public class ActiveOperator {
         }
     }
 
-    public void changeStudio (int studioId, int activityId, final UserInfoOperator.OnGetListener<Result> listener) {
+    public void changeStudio (long studioId, int activityId, final UserInfoOperator.OnGetListener<Result> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_ACTIVE_CHANGE_STUDIO);
             sb.append("?" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
@@ -332,8 +332,8 @@ public class ActiveOperator {
 
     public static class SimpleActiveInfo {
         public int pId;
-        public int userId;
-        public int studioId;
+        public long userId;
+        public long studioId;
         public String createDatetime;
         public int activityId;
         public boolean isJoin;
@@ -350,11 +350,11 @@ public class ActiveOperator {
             this.pId = pId;
         }
 
-        public int getUserId() {
+        public long getUserId() {
             return userId;
         }
 
-        public void setUserId(int userId) {
+        public void setUserId(long userId) {
             this.userId = userId;
         }
 
@@ -390,11 +390,11 @@ public class ActiveOperator {
             this.updateCount = updateCount;
         }
 
-        public int getStudioId() {
+        public long getStudioId() {
             return studioId;
         }
 
-        public void setStudioId(int studioId) {
+        public void setStudioId(long studioId) {
             this.studioId = studioId;
         }
 

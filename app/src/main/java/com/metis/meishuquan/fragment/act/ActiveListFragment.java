@@ -36,6 +36,7 @@ import com.metis.meishuquan.model.circle.CirclePushBlogParm;
 import com.metis.meishuquan.model.commons.ActiveInfo;
 import com.metis.meishuquan.model.commons.Result;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
+import com.metis.meishuquan.util.ActivityUtils;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 
 import java.util.ArrayList;
@@ -330,9 +331,10 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent it = new Intent(getActivity(), StudioActivity.class);
+                    ActivityUtils.startNameCardActivity(getActivity(), item.getUserId());
+                    /*Intent it = new Intent(getActivity(), StudioActivity.class);
                     it.putExtra(StudioActivity.KEY_USER_ID, item.getUserId());
-                    startActivity(it);
+                    startActivity(it);*/
                 }
             });
             holder.joinBtn.setSelected(itemDelegate.isChecked());
@@ -402,6 +404,9 @@ public abstract class ActiveListFragment extends Fragment implements View.OnClic
                                                 ActiveOperator.getInstance().changeStudio(item.getUserId(), mActiveInfo.getpId(), new UserInfoOperator.OnGetListener<Result>() {
                                                     @Override
                                                     public void onGet(boolean succeed, Result result) {
+                                                        if (getActivity() == null) {
+                                                            return;
+                                                        }
                                                         if (succeed) {
                                                             mSimpleInfo.setStudioId(item.getUserId());
                                                             notifyDataSetChanged();
