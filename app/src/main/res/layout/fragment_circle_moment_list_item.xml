@@ -149,6 +149,7 @@
 
     <com.metis.meishuquan.view.course.FlowLayout
         android:id="@+id/id_flowlayout_at_users"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

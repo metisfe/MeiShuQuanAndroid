@@ -12,6 +12,7 @@ import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.activity.act.SelectStudioActivity;
 import com.metis.meishuquan.activity.act.StudentListActivity;
+import com.metis.meishuquan.activity.topline.NewDetailActivity;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.umeng.message.UTrack;
 import com.umeng.message.UmengBaseIntentService;
@@ -95,7 +96,8 @@ public class MainPushService extends UmengBaseIntentService {
                 PushNotifyManager.getInstance(context).showNotify(msg, it);
                 break;
             case NEWS:
-                it = new Intent(context, MainActivity.class);
+                it = new Intent(context, NewDetailActivity.class);
+                it.putExtra(NewDetailActivity.KEY_NEWS_ID,0);
                 it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 PushNotifyManager.getInstance(context).showNotify(msg, it);
                 break;
