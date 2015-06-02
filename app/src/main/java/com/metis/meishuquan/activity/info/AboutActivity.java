@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.view.shared.MyInfoBtn;
 import com.metis.meishuquan.view.shared.TitleView;
@@ -35,15 +36,23 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        mScoreBtn = (MyInfoBtn)this.findViewById(R.id.about_score);
-        mVersionBtn = (MyInfoBtn)findViewById(R.id.about_version);
-        mAboutMeishuquanBtn = (MyInfoBtn)findViewById(R.id.about_meishuquan);
-        mStatementBtn = (MyInfoBtn)findViewById(R.id.about_statement);
+        mScoreBtn = (MyInfoBtn) this.findViewById(R.id.about_score);
+        mVersionBtn = (MyInfoBtn) findViewById(R.id.about_version);
+        mAboutMeishuquanBtn = (MyInfoBtn) findViewById(R.id.about_meishuquan);
+        mStatementBtn = (MyInfoBtn) findViewById(R.id.about_statement);
 
         mScoreBtn.setOnClickListener(this);
         mVersionBtn.setOnClickListener(this);
         mAboutMeishuquanBtn.setOnClickListener(this);
         mStatementBtn.setOnClickListener(this);
+
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
+            mVersionBtn.setSecondaryText(getString(R.string.about_current_version, info.versionName));
+            //Toast.makeText(this, getString(R.string.about_current_version) + ":" + info.versionName, Toast.LENGTH_SHORT).show();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -65,23 +74,19 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                 }
                 break;
             case R.id.about_version:
-                try {
-                    PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
-                    Toast.makeText(this, getString(R.string.about_current_version) + ":" + info.versionName, Toast.LENGTH_SHORT).show();
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                }
+                Toast.makeText(this, R.string.about_checking, Toast.LENGTH_SHORT).show();
+                MainApplication.MainActivity.updateApp(AboutActivity.this);
                 break;
             case R.id.about_meishuquan:
                 String content = readStringFromAssets("about");
-                it = new Intent (this, TextActivity.class);
+                it = new Intent(this, TextActivity.class);
                 it.putExtra(TextActivity.KEY_CONTENT, content);
                 it.putExtra(TextActivity.KEY_TITLE, mAboutMeishuquanBtn.getText());
                 startActivity(it);
                 break;
             case R.id.about_statement:
 
-                it = new Intent (this, TextActivity.class);
+                it = new Intent(this, TextActivity.class);
                 it.putExtra(TextActivity.KEY_CONTENT, readStringFromAssets("statement"));
                 it.putExtra(TextActivity.KEY_TITLE, mStatementBtn.getText());
                 startActivity(it);
@@ -89,7 +94,7 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         }
     }
 
-    private String readStringFromAssets (String path) {
+    private String readStringFromAssets(String path) {
         try {
             InputStream is = getAssets().open(path);
             InputStreamReader reader = new InputStreamReader(is);

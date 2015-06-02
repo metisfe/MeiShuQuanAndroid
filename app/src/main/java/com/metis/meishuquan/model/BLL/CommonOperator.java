@@ -1,11 +1,13 @@
 package com.metis.meishuquan.model.BLL;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.util.Pair;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
+import com.metis.meishuquan.model.assess.Bimp;
 import com.metis.meishuquan.model.circle.MomentsGroup;
 import com.metis.meishuquan.model.circle.UserSearch;
 import com.metis.meishuquan.model.commons.AndroidVersion;
@@ -17,6 +19,8 @@ import com.metis.meishuquan.model.enums.PrivateResultEnum;
 import com.metis.meishuquan.model.enums.PrivateTypeEnum;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
+import com.metis.meishuquan.util.FileUtil;
+import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.SystemUtil;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -161,41 +165,72 @@ public class CommonOperator {
         }
     }*/
 
-    public void fileUpload(FileUploadTypeEnum type, List<File> path, ServiceFilterResponseCallback callback) throws IOException {
-        final int length = path.size();
+    public void fileUpload(FileUploadTypeEnum type, List<String> path, ServiceFilterResponseCallback callback) throws IOException {
+        int totalSize = 0;
+        List<Bitmap> lstCheckedPhoto = new ArrayList<Bitmap>();
+        for (int i = 0; i < path.size(); i++) {
+            try {
+                Bitmap bitmap = Bimp.getInstance().revitionImageSize(path.get(i));
+                lstCheckedPhoto.add(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        //计算总字节长度和子长度
         StringBuilder sb = new StringBuilder();
-        long totalLength = 0;
-        for (int i = 0; i < length; i++) {
-            File file = path.get(i);
-            long len = file.length();
-            totalLength += len;
-            sb.append("," + len);
-        }
-        byte[] array = new byte[0];
-        ByteArrayOutputStream baos = new ByteArrayOutputStream((int) totalLength);
-        for (int i = 0; i < length; i++) {
-            File file = path.get(i);
-            long len = file.length();
-            byte[] data = new byte[(int) len];
-            FileInputStream fis = new FileInputStream(file);
-            fis.read(data);
-            baos.write(data, 0, (int) len);
-            baos.close();
-            byte[] newArray = baos.toByteArray();
-            array = byteMerger(array, newArray);
+        for (int i = 0; i < lstCheckedPhoto.size(); i++) {
+            byte[] imgByte = ImageLoaderUtils.BitmapToByteArray(lstCheckedPhoto.get(i));
+            sb.append(imgByte.length);
+            if (i < lstCheckedPhoto.size() - 1) {
+                sb.append(",");
+            }
+            totalSize += imgByte.length;
         }
 
-        sb.insert(0, "," + length);
-        sb.insert(0, totalLength + "");
-        this.fileUpload(type, sb.toString(), array, callback);
+        //组织define
+        String define = totalSize + "," + lstCheckedPhoto.size() + "," + sb.toString();
+
+        List<byte[]> lstArrays = new ArrayList<byte[]>();
+        for (int i = 0; i < lstCheckedPhoto.size(); i++) {
+            byte[] imgByte = ImageLoaderUtils.BitmapToByteArray(lstCheckedPhoto.get(i));
+            lstArrays.add(imgByte);
+        }
+        byte[] totalByte = FileUtil.sysCopy(lstArrays);
+
+//        final int length = path.size();
+//        StringBuilder sb = new StringBuilder();
+//        long totalLength = 0;
+//        for (int i = 0; i < length; i++) {
+//            File file = path.get(i);
+//            long len = file.length();
+//            totalLength += len;
+//            sb.append("," + len);
+//        }
+//        byte[] array = new byte[0];
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream((int) totalLength);
+//        for (int i = 0; i < length; i++) {
+//            File file = path.get(i);
+//            long len = file.length();
+//            byte[] data = new byte[(int) len];
+//            FileInputStream fis = new FileInputStream(file);
+//            fis.read(data);
+//            baos.write(data, 0, (int) len);
+//            baos.close();
+//            byte[] newArray = baos.toByteArray();
+//            array = byteMerger(array, newArray);
+//        }
+//
+//        sb.insert(0, "," + length);
+//        sb.insert(0, totalLength + "");
+        this.fileUpload(type, define, totalByte, callback);
     }
 
-    public static byte[] byteMerger(byte[] byte_1, byte[] byte_2) {
-        byte[] byte_3 = new byte[byte_1.length + byte_2.length];
-        System.arraycopy(byte_1, 0, byte_3, 0, byte_1.length);
-        System.arraycopy(byte_2, 0, byte_3, byte_1.length, byte_2.length);
-        return byte_3;
-    }
+//    public static byte[] byteMerger(byte[] byte_1, byte[] byte_2) {
+//        byte[] byte_3 = new byte[byte_1.length + byte_2.length];
+//        System.arraycopy(byte_1, 0, byte_3, 0, byte_1.length);
+//        System.arraycopy(byte_2, 0, byte_3, byte_1.length, byte_2.length);
+//        return byte_3;
+//    }
 
     /**
      * 上传文件

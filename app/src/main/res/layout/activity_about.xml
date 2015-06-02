@@ -20,8 +20,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         bs:imageVisible="false"
-        bs:secondaryTextVisible="false"
-        bs:text="@string/about_current_version"
+        bs:secondaryTextVisible="true"
+        bs:text="@string/about_check_update"
         android:layout_marginTop="10dp"
         ></com.metis.meishuquan.view.shared.MyInfoBtn>
     <com.metis.meishuquan.view.shared.MyInfoBtn

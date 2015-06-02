@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
 import com.umeng.analytics.MobclickAgent;
@@ -30,6 +31,7 @@ public class ChatActivity extends FragmentActivity {
         getIntent().setData(Uri.parse("rong://io.rong.imkit.demo").buildUpon().appendPath("conversation").appendPath(type.toLowerCase())
                 .appendQueryParameter("targetId", targetId).appendQueryParameter("title", title).build());
         setContentView(R.layout.activity_circle_chatactivity);
+        MainApplication.refreshRong();
         this.titleBar = (CircleTitleBar) this.findViewById(R.id.activity_circle_chatactivity_titlebar);
         titleBar.setText(title);
         titleBar.setRightButton("", R.drawable.icon_circle_chat, new View.OnClickListener() {

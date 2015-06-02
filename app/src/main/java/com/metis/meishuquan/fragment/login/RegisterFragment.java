@@ -62,7 +62,7 @@ public class RegisterFragment extends Fragment {
     private UserOperator userOperator;
     private String requestCode = "";
     private int selectedId;//身份
-    private ProgressDialog progressDialog = new ProgressDialog(getActivity());
+    private ProgressDialog progressDialog;
 
     private Pattern pattern = Pattern.compile("^1\\d{10}");
 
@@ -171,8 +171,7 @@ public class RegisterFragment extends Fragment {
                     if (selectedId == -1) {
                         Log.e("roleId", "selectedRoleId为-1");
                     }
-                    progressDialog = new ProgressDialog(getActivity());
-                    progressDialog.show(getActivity(), "", "正在注册，请稍候！");
+                    progressDialog = ProgressDialog.show(getActivity(),"", "正在注册，请稍候！");
                     userOperator.register(phone, verCode, pwd, selectedId, new ApiOperationCallback<ReturnInfo<String>>() {
                         @Override
                         public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {

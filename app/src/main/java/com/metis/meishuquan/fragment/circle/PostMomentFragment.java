@@ -145,16 +145,13 @@ public class PostMomentFragment extends Fragment {
             public void onClick(View view) {
                 if (!isSend) {
                     if (!mImagePaths.isEmpty()) {
-                        List<File> files = new ArrayList<File>();
-                        for (int i = 0; i < mImagePaths.size(); i++) {
-                            files.add(new File(mImagePaths.get(i)));
-                        }
                         progressDialog = ProgressDialog.show(getActivity(), "", "发送中...");
                         try {
-                            CommonOperator.getInstance().fileUpload(FileUploadTypeEnum.IMG, files, new ServiceFilterResponseCallback() {
+                            CommonOperator.getInstance().fileUpload(FileUploadTypeEnum.IMG, mImagePaths, new ServiceFilterResponseCallback() {
 
                                 @Override
                                 public void onResponse(ServiceFilterResponse response, Exception exception) {
+                                    progressDialog.cancel();
                                     String feedbackContent = response.getContent();
                                     if (TextUtils.isEmpty(feedbackContent)) {
                                         Toast.makeText(getActivity(), "上传图片失败", Toast.LENGTH_SHORT).show();
@@ -162,15 +159,15 @@ public class PostMomentFragment extends Fragment {
                                     }
                                     Gson gson = new Gson();
                                     Log.v(TAG, "content=" + feedbackContent);
-                                    Result<List<CircleImage>> imageListResult = gson.fromJson(feedbackContent, new TypeToken<Result<List<CircleImage>>>() {
-                                    }.getType());
+                                    Result<List<CircleImage>> imageListResult = null;
+                                    try {
+                                        imageListResult = gson.fromJson(feedbackContent, new TypeToken<Result<List<CircleImage>>>() {
+                                        }.getType());
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                        return;
+                                    }
                                     String content = editText.getText().toString();
-//                                    String encodeContent = "";
-//                                    try {
-//                                        encodeContent = URLEncoder.encode(content, "utf-8");
-//                                    } catch (UnsupportedEncodingException e) {
-//                                        e.printStackTrace();
-//                                    }
 
                                     CirclePushBlogParm parm = new CirclePushBlogParm();
                                     parm.setContent(content);

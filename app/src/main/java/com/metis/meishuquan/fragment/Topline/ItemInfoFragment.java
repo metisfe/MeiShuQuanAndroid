@@ -39,6 +39,7 @@ import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.ImagePreviewActivity;
@@ -79,7 +80,7 @@ import java.util.StringTokenizer;
 public class ItemInfoFragment extends Fragment {
 
     private static final String CLASS_NAME = ItemInfoFragment.class.getSimpleName();
-
+    public static final String KEY_NAVAGT = "navigate";
     public static final String KEY_IMAGE_URL_ARRAY = "image_url_array",
             KEY_THUMB_URL_ARRAY = "thumb_url_array";
     public static final String KEY_TITLE_VISIBLE = "title_visible";
@@ -116,6 +117,7 @@ public class ItemInfoFragment extends Fragment {
     private String shareImageUrl = "";
     private boolean titleVisible = true;
     private FragmentManager fm;
+    private int flag = 0;//用于标识是否为NewDetailActivity调用
 
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
@@ -136,6 +138,7 @@ public class ItemInfoFragment extends Fragment {
         Bundle args = this.getArguments();
         if (args != null) {
             newsId = args.getInt(KEY_NEWSID);
+            flag = args.getInt(KEY_NAVAGT);
 //            shareImageUrl = args.getString(KEY_SHARE_IMG_URL);
             //根据新闻Id获取新闻内容
             getInfoData(newsId);
@@ -382,6 +385,10 @@ public class ItemInfoFragment extends Fragment {
         this.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//返回
+                if (flag == 1001) {
+                    getActivity().finish();
+                    startActivity(new Intent(getActivity(), MainActivity.class));
+                }
                 hideInputView();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.remove(ItemInfoFragment.this);

@@ -192,4 +192,10 @@ public class MainApplication extends MultiDexApplication {
         map.put("DeviceType", 1 + "");
         UserInfoOperator.getInstance().updateUserInfo(userInfo.getUserId(), map);
     }
+
+    public static void refreshRong() {
+        String token = userInfo.getToken();
+        ChatManager.userRongId = userInfo.getRongCloudId();
+        MainApplication.rongConnect(token);
+    }
 }
