@@ -186,7 +186,7 @@ public class PostMomentFragment extends Fragment {
 
                         CirclePushBlogParm parm = new CirclePushBlogParm();
                         parm.setContent(content);
-                        parm.setDevice("美术圈");
+                        parm.setDevice(android.os.Build.MODEL);
                         parm.setType(SupportTypeEnum.Circle.getVal());
 
                         send(parm);
