@@ -821,7 +821,9 @@ public class MomentDetailFragment extends Fragment {
     class CircleMomentDetailLikeAdapter extends BaseAdapter {
         private List<CUserModel> likeList = new ArrayList<CUserModel>();
         private ViewHolder holder;
-        private int columnCount = 5;
+        private float density = MainApplication.Resources.getDisplayMetrics().density;
+        private float screenWidth = MainApplication.Resources.getDisplayMetrics().widthPixels;
+        private int columnCount = (int) (screenWidth / (density * 90));
 
         public CircleMomentDetailLikeAdapter(List<CUserModel> momentList) {
             this.likeList = momentList;
