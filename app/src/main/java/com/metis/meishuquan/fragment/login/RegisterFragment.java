@@ -62,6 +62,7 @@ public class RegisterFragment extends Fragment {
     private UserOperator userOperator;
     private String requestCode = "";
     private int selectedId;//身份
+    private ProgressDialog progressDialog = new ProgressDialog(getActivity());
 
     private Pattern pattern = Pattern.compile("^1\\d{10}");
 
@@ -145,8 +146,8 @@ public class RegisterFragment extends Fragment {
                     Toast.makeText(getActivity(), "请输入验证码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (!verCode.isEmpty() && verCode.length() < 6) {
-                    Toast.makeText(getActivity(), "请输入6位验证码", Toast.LENGTH_SHORT).show();
+                if (verCode.length() != 4) {
+                    Toast.makeText(getActivity(), "请输入4位验证码", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (pwd.isEmpty()) {
@@ -170,13 +171,14 @@ public class RegisterFragment extends Fragment {
                     if (selectedId == -1) {
                         Log.e("roleId", "selectedRoleId为-1");
                     }
-                    final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+                    progressDialog = new ProgressDialog(getActivity());
                     progressDialog.show(getActivity(), "", "正在注册，请稍候！");
                     userOperator.register(phone, verCode, pwd, selectedId, new ApiOperationCallback<ReturnInfo<String>>() {
                         @Override
                         public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                             progressDialog.cancel();
                             if (result != null && result.getInfo().equals(String.valueOf(0))) {
+                                progressDialog.dismiss();
                                 Gson gson = new Gson();
                                 String json = gson.toJson(result);
                                 Log.e("userInfo", json);
@@ -214,6 +216,7 @@ public class RegisterFragment extends Fragment {
                                 Toast.makeText(MainApplication.UIContext, "注册成功", Toast.LENGTH_SHORT).show();
                                 getActivity().finish();
                             } else if (result != null && result.getInfo().equals(String.valueOf(1))) {
+                                progressDialog.dismiss();
                                 Toast.makeText(MainApplication.UIContext, result.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }

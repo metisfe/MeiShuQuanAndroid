@@ -120,7 +120,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
 
         Utils.showConfigureNetwork(this);
         onNewIntent(this.getIntent());
-        updateApp();
+        updateApp(MainActivity.this);
         CommonOperator.getInstance().getMomentsGroupsToCache();//获取朋友圈分组信息
 
         IntentFilter intentFilter = new IntentFilter("join_succeed");
@@ -310,7 +310,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
         }
     }
 
-    private void updateApp() {
+    public void updateApp(final Context context) {
         //TODO:比较上次检测时间是否超过24小时
 //        String json = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey(SharedPreferencesUtil.LAST_APP_VERSION);
 //        if (!json.isEmpty()) {
@@ -339,7 +339,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
                     final AndroidVersion androidVersion = (AndroidVersion) info.getData();
                     String curentVersion = "";
                     try {
-                        PackageInfo pinfo = getPackageManager().getPackageInfo(MainActivity.this.getPackageName(), PackageManager.GET_CONFIGURATIONS);
+                        PackageInfo pinfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_CONFIGURATIONS);
                         curentVersion = pinfo.versionName;
                     } catch (PackageManager.NameNotFoundException e) {
                         e.printStackTrace();
@@ -347,7 +347,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
                     Log.i("curentVersion", curentVersion);
                     if (androidVersion != null && !androidVersion.getVersionNumber().equals(curentVersion)) {
                         String msg = "现有可用更新,版本号为 V" + androidVersion.getVersionNumber() + "，是否下载更新？";
-                        new AlertDialog.Builder(MainActivity.this)
+                        new AlertDialog.Builder(context)
                                 .setTitle("提示")
                                 .setMessage(msg)
                                 .setPositiveButton("现在更新", new DialogInterface.OnClickListener() {
@@ -357,7 +357,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
                                         intent.setAction("android.intent.action.VIEW");
                                         Uri uri = Uri.parse(androidVersion.getDownUrl());
                                         intent.setData(uri);
-                                        startActivity(intent);
+                                        context.startActivity(intent);
                                     }
                                 })
                                 .setNegativeButton("以后", new DialogInterface.OnClickListener() {
