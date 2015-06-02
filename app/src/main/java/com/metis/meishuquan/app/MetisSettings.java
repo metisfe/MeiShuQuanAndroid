@@ -13,6 +13,9 @@ public class MetisSettings {
 
     private Context mContext;
     private SharedPreferences mGlobalPreferences;
+    /**
+     * ÐòÁÐ»¯Ãû³Æ
+     */
     public static final String SHARED_PREFERENCE_NAME = "com.metis.meishuquan";
 
 
@@ -56,6 +59,11 @@ public class MetisSettings {
     public final StringPreference RONGLOGINSTATE = new StringPreference("RONGLOGINSTATE", null);
 
 
+    /**
+     * save or update user info
+     *
+     * @param user
+     */
     public void persistentUser(User user) {
         if (user == null)
             return;
