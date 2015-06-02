@@ -11,6 +11,7 @@ import android.util.Log;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.model.BLL.CommonOperator;
+import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
@@ -24,8 +25,11 @@ import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.UmengRegistrar;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
@@ -167,11 +171,25 @@ public class MainApplication extends MultiDexApplication {
                     } else {
                         GlobalData.tabs.clear();
                     }
+
+                    //上传DeviceToken
+                    updateDeviceToken();
                 } else {
                     SharedPreferencesUtil.getInstanse(UIContext).delete(SharedPreferencesUtil.USER_LOGIN_INFO);
                     MainApplication.userInfo = new User();
                 }
             }
         });
+    }
+
+    public static void updateDeviceToken() {
+        UmengRegistrar.setDebug(UIContext, true, true);
+        String device_token = UmengRegistrar.getRegistrationId(UIContext);
+        Log.v("MainApplication", "onCreate device_token=" + device_token);
+        Map<String, String> map = new HashMap<String, String>();
+
+        map.put("DeviceToken", device_token);
+        map.put("DeviceType", 1 + "");
+        UserInfoOperator.getInstance().updateUserInfo(userInfo.getUserId(), map);
     }
 }
