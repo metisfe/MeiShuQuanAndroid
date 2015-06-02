@@ -176,7 +176,7 @@
                 android:background="@drawable/red_round_conner_bg"
                 android:text="5"
                 android:textSize="10sp"
-                android:minWidth="10dp"
+                android:minWidth="12dp"
                 android:minHeight="10dp"
                 android:paddingLeft="1dp"
                 android:paddingRight="1dp"
