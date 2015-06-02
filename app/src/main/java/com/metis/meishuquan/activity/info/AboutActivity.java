@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.view.shared.MyInfoBtn;
 import com.metis.meishuquan.view.shared.TitleView;
@@ -44,6 +45,14 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         mVersionBtn.setOnClickListener(this);
         mAboutMeishuquanBtn.setOnClickListener(this);
         mStatementBtn.setOnClickListener(this);
+
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
+            mVersionBtn.setSecondaryText(getString(R.string.about_current_version, info.versionName));
+            //Toast.makeText(this, getString(R.string.about_current_version) + ":" + info.versionName, Toast.LENGTH_SHORT).show();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -65,12 +74,8 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                 }
                 break;
             case R.id.about_version:
-                try {
-                    PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
-                    Toast.makeText(this, getString(R.string.about_current_version) + ":" + info.versionName, Toast.LENGTH_SHORT).show();
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                }
+                Toast.makeText(this, R.string.about_checking, Toast.LENGTH_SHORT).show();
+                MainApplication.MainActivity.updateApp();
                 break;
             case R.id.about_meishuquan:
                 String content = readStringFromAssets("about");

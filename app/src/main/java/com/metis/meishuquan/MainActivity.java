@@ -310,7 +310,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
         }
     }
 
-    private void updateApp() {
+    public void updateApp() {
         //TODO:比较上次检测时间是否超过24小时
 //        String json = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey(SharedPreferencesUtil.LAST_APP_VERSION);
 //        if (!json.isEmpty()) {

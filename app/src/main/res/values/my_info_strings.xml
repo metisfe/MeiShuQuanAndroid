@@ -60,7 +60,9 @@
     <string name="info_delete_this_item">删除本条数据</string>
     
     <string name="about_to_score">我要评分</string>
-    <string name="about_current_version">当前版本</string>
+    <string name="about_check_update">检查更新</string>
+    <string name="about_checking">正在检查更新中...</string>
+    <string name="about_current_version">当前版本%1$s</string>
     <string name="about_meishuquan">关于美术圈</string>
     <string name="about_statement">免责声明</string>
 
