@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.act.ActDetailActivity;
+import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.adapter.topline.ToplineCustomAdapter;
 import com.metis.meishuquan.model.BLL.ActiveOperator;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
@@ -129,7 +130,11 @@ public class ItemFragment extends Fragment {
         this.imgAct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getActivity(), ActDetailActivity.class));
+                if (MainApplication.isLogin()) {
+                    startActivity(new Intent(getActivity(), ActDetailActivity.class));
+                } else {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                }
             }
         });
     }
