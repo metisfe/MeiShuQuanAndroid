@@ -38,6 +38,8 @@ import com.umeng.analytics.MobclickAgent;
  */
 public class ReplyActivity extends FragmentActivity {
 
+    public static final String VALUE_ACTIVITY_INPUT="我正在参加#超级美术生#海选，一定要帮我到美术圈APP集齐10个赞哦！这样我就有机会免费进全国最好画室中最贵的VIP班学习啦！";
+
     public static final String PARM = "parm";
     public static final String TITLE = "title";
     public static final String CONTENT = "content";
@@ -139,9 +141,9 @@ public class ReplyActivity extends FragmentActivity {
         this.rl_reply = (RelativeLayout) this.findViewById(R.id.id_rl_reply);
         this.rl_circle = (RelativeLayout) this.findViewById(R.id.id_rl_circle);
 
-        if (this.parm.getType() == SupportTypeEnum.ActivityStudent.getVal()) {
-            this.etInput.setText("我正在参加#超级美术生#海选，一定要帮我到美术圈APP集齐10个赞哦！这样我就有机会免费进全国最好画室中最贵的VIP班学习啦！");
-        }
+//        if (this.parm.getType() == SupportTypeEnum.Activity.getVal()) {
+//            this.etInput.setText("我正在参加#超级美术生#海选，一定要帮我到美术圈APP集齐10个赞哦！这样我就有机会免费进全国最好画室中最贵的VIP班学习啦！");
+//        }
     }
 
     private void initEvent() {

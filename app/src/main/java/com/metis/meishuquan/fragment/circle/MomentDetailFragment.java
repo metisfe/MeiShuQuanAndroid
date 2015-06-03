@@ -695,6 +695,7 @@ public class MomentDetailFragment extends Fragment {
                         commentList = data.commentList;
                         likeList = data.supportList;
                         replyList = data.relayList;
+                        actionBar.showTab(1);
                         momentActionBar.showTab(1);
                         momentActionBar.setData(replyList != null ? replyList.size() : 0, commentList != null ? commentList.size() : 0, likeList != null ? likeList.size() : 0);
                         //用于更新圈子列表

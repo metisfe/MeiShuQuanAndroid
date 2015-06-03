@@ -274,6 +274,7 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
                     it.putExtra(ReplyActivity.TITLE, mInfo.getTitle());
                     it.putExtra(ReplyActivity.CONTENT, mInfo.getContent());
                     it.putExtra(ReplyActivity.IMAGEURL, mInfo.getImage());
+                    it.putExtra(ReplyActivity.INPUT_CONTENT,ReplyActivity.VALUE_ACTIVITY_INPUT);
 
                 }
                 break;

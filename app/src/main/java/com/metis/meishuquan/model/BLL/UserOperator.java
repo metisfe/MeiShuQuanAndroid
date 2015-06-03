@@ -110,7 +110,7 @@ public class UserOperator {
                 PATH.append("&code=" + code);
                 PATH.append("&newPwd=" + newPwd);
                 PATH.append("&type=" + 1);
-                PATH.append("&session=" + MainApplication.getSession());
+                PATH.append("&session=" + MainApplication.userInfo.getCookie());
                 List<Pair<String, String>> pram = new ArrayList<>();
                 Pair<String, String> pair1 = new Pair<>("account", account);
                 Pair<String, String> pair2 = new Pair<>("code", code);
