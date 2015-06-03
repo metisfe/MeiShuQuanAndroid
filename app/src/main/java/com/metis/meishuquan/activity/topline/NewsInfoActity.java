@@ -67,7 +67,6 @@ public class NewsInfoActity extends FragmentActivity {
         //接收参数
         if (getIntent().getExtras() != null) {
             newsId = getIntent().getExtras().getInt(KEY_NEWSID);
-            shareImageUrl = getIntent().getExtras().getString(KEY_SHARE_IMG_URL);
             getInfoData(newsId, null);
         }
 

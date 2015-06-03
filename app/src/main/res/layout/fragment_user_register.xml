@@ -15,8 +15,8 @@
 
         <Button
             android:id="@+id/id_btn_user_register_back"
-            android:layout_width="44dp"
-            android:layout_height="match_parent"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:background="@drawable/bg_btn_arrow_left" />

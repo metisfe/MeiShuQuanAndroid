@@ -87,5 +87,14 @@
         android:layout_marginRight="10dp"
         android:layout_centerVertical="true"
         android:visibility="gone" />
-
+    <ImageView
+        android:id="@+id/view_cicle_red_dot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:visibility="gone"
+        android:src="@drawable/guide_dot"
+        />
 </RelativeLayout>

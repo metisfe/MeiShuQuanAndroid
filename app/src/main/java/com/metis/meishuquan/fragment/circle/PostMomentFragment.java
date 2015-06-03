@@ -2,14 +2,13 @@ package com.metis.meishuquan.fragment.circle;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,10 +46,7 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.umeng.analytics.MobclickAgent;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,6 +75,7 @@ public class PostMomentFragment extends Fragment {
     private static final int EmotionSwitchContainerHeight = MainApplication.Resources.getDimensionPixelSize(R.dimen.switch_emotion_container_height);
     private int MarginTopForEmotionSwitch = ScreenHeight - EmotionSelectViewHeight - EmotionSwitchContainerHeight;
     private EmotionSelectView emotionSelectView;
+    private ProgressDialog progressDialog;
 
     private List<String> mImagePaths = new ArrayList<String>();
 
@@ -143,16 +140,13 @@ public class PostMomentFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (!isSend) {
+                    progressDialog = ProgressDialog.show(getActivity(), "", "发送中...");
                     if (!mImagePaths.isEmpty()) {
-                        List<File> files = new ArrayList<File>();
-                        for (int i = 0; i < mImagePaths.size(); i++) {
-                            files.add(new File(mImagePaths.get(i)));
-                        }
                         try {
-                            CommonOperator.getInstance().fileUpload(FileUploadTypeEnum.IMG, files, new ServiceFilterResponseCallback() {
-
+                            CommonOperator.getInstance().fileUpload(FileUploadTypeEnum.IMG, mImagePaths, new ServiceFilterResponseCallback() {
                                 @Override
                                 public void onResponse(ServiceFilterResponse response, Exception exception) {
+                                    progressDialog.cancel();
                                     String feedbackContent = response.getContent();
                                     if (TextUtils.isEmpty(feedbackContent)) {
                                         Toast.makeText(getActivity(), "上传图片失败", Toast.LENGTH_SHORT).show();
@@ -160,19 +154,19 @@ public class PostMomentFragment extends Fragment {
                                     }
                                     Gson gson = new Gson();
                                     Log.v(TAG, "content=" + feedbackContent);
-                                    Result<List<CircleImage>> imageListResult = gson.fromJson(feedbackContent, new TypeToken<Result<List<CircleImage>>>() {
-                                    }.getType());
-                                    String content = editText.getText().toString();
-                                    String encodeContent = "";
+                                    Result<List<CircleImage>> imageListResult = null;
                                     try {
-                                        encodeContent = URLEncoder.encode(content, "utf-8");
-                                    } catch (UnsupportedEncodingException e) {
-                                        e.printStackTrace();
+                                        imageListResult = gson.fromJson(feedbackContent, new TypeToken<Result<List<CircleImage>>>() {
+                                        }.getType());
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                        return;
                                     }
+                                    String content = editText.getText().toString();
 
                                     CirclePushBlogParm parm = new CirclePushBlogParm();
-                                    parm.setContent(encodeContent);
-                                    parm.setDevice("美术圈");
+                                    parm.setContent(content);
+                                    parm.setDevice(Build.MODEL);
                                     parm.setType(SupportTypeEnum.Circle.getVal());
                                     parm.setImages(imageListResult.getData());
 
@@ -187,7 +181,7 @@ public class PostMomentFragment extends Fragment {
 
                         CirclePushBlogParm parm = new CirclePushBlogParm();
                         parm.setContent(content);
-                        parm.setDevice("美术圈");
+                        parm.setDevice(Build.MODEL);
                         parm.setType(SupportTypeEnum.Circle.getVal());
 
                         send(parm);
@@ -211,7 +205,6 @@ public class PostMomentFragment extends Fragment {
             isSend = false;
             return;
         }
-        final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "发送中...");
         CircleOperator.getInstance().pushBlog(parm, new ApiOperationCallback<ReturnInfo<CCircleDetailModel>>() {
             @Override
             public void onCompleted(ReturnInfo<CCircleDetailModel> result, Exception exception, ServiceFilterResponse response) {
@@ -219,7 +212,6 @@ public class PostMomentFragment extends Fragment {
                 if (result != null && result.isSuccess()) {
                     String json = new Gson().toJson(result);
                     Log.i("pushBlog", json);
-
                     Toast.makeText(MainApplication.UIContext, "发送成功", Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
                     finish();

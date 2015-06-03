@@ -54,6 +54,7 @@ import com.metis.meishuquan.view.circle.PopupAttentionWindow;
 import com.metis.meishuquan.view.circle.moment.MomentActionBar;
 import com.metis.meishuquan.view.circle.moment.MomentPageListView;
 import com.metis.meishuquan.view.circle.moment.comment.EmotionTextView;
+import com.metis.meishuquan.view.common.NinePictruesView;
 import com.metis.meishuquan.view.course.FlowLayout;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -92,7 +93,7 @@ public class MomentDetailFragment extends Fragment {
     private EmotionTextView content;
     private EmotionTextView replyContent;
     private TextView device;
-    private ImageView imgForCircle;
+    private NinePictruesView imgForCircle;
     private ImageView imgAttention;
     private MomentActionBar momentActionBar;
 
@@ -290,7 +291,7 @@ public class MomentDetailFragment extends Fragment {
         content = (EmotionTextView) headerView.findViewById(R.id.id_tv_content);
         replyContent = (EmotionTextView) headerView.findViewById(R.id.id_emotion_tv_content);
         device = (TextView) headerView.findViewById(R.id.tv_device);
-        imgForCircle = (ImageView) headerView.findViewById(R.id.id_img_for_circle);
+        imgForCircle = (NinePictruesView) headerView.findViewById(R.id.id_img_for_circle);
         momentActionBar = (MomentActionBar) headerView.findViewById(R.id.moment_action_bar);
 
         fl_atUsers = (FlowLayout) headerView.findViewById(R.id.id_flowlayout_at_users);
@@ -387,7 +388,8 @@ public class MomentDetailFragment extends Fragment {
             if (moment.relayCircle == null) {
                 replyContent.setVisibility(View.GONE);
                 if (moment.images != null && moment.images.size() > 0 && !moment.images.get(0).equals("")) {
-                    ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.images.get(0).Thumbnails, imgForCircle);
+                    imgForCircle.setLstCircleImage(moment.images);
+//                    ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.images.get(0).Thumbnails, imgForCircle);
                 } else {
                     imgForCircle.setVisibility(View.GONE);
                 }
@@ -401,7 +403,8 @@ public class MomentDetailFragment extends Fragment {
                 }
                 if (moment.relayCircle.images != null && moment.relayCircle.images.size() > 0) {
                     imgForCircle.setVisibility(View.VISIBLE);
-                    ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.relayCircle.images.get(0).Thumbnails, imgForCircle);
+                    imgForCircle.setLstCircleImage(moment.relayCircle.images);
+//                    ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(moment.relayCircle.images.get(0).Thumbnails, imgForCircle);
                 } else {
                     imgForCircle.setVisibility(View.GONE);
                 }
@@ -760,7 +763,7 @@ public class MomentDetailFragment extends Fragment {
             viewHolder.avatar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ActivityUtils.startNameCardActivity(getActivity(), (int) (moment.user.userId));
+                    ActivityUtils.startNameCardActivity(getActivity(), comment.user.userId);
                 }
             });
             ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(comment.user.avatar, viewHolder.avatar, ImageLoaderUtils.getRoundDisplayOptions(getResources().getDimensionPixelSize(R.dimen.user_portrait_height)));
@@ -821,7 +824,9 @@ public class MomentDetailFragment extends Fragment {
     class CircleMomentDetailLikeAdapter extends BaseAdapter {
         private List<CUserModel> likeList = new ArrayList<CUserModel>();
         private ViewHolder holder;
-        private int columnCount = 5;
+        private float density = MainApplication.Resources.getDisplayMetrics().density;
+        private float screenWidth = MainApplication.Resources.getDisplayMetrics().widthPixels;
+        private int columnCount = 4;
 
         public CircleMomentDetailLikeAdapter(List<CUserModel> momentList) {
             this.likeList = momentList;
@@ -845,6 +850,8 @@ public class MomentDetailFragment extends Fragment {
         @Override
         public View getView(final int i, View convertView, ViewGroup view) {
             ViewHolder viewHolder = new ViewHolder();
+            columnCount = (int) (screenWidth / (density * 90));
+            Log.i("columnCount", "" + columnCount);
             if (convertView == null) {
                 convertView = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_circle_moment_detail_like_list_item, null);
 

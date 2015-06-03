@@ -1,14 +1,11 @@
 package com.metis.meishuquan.fragment.Topline;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -42,10 +39,10 @@ import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.ImagePreviewActivity;
-import com.metis.meishuquan.activity.info.homepage.StudioActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.adapter.topline.CommonAdapter;
 import com.metis.meishuquan.model.BLL.CommonOperator;
@@ -55,7 +52,6 @@ import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.BlockTypeEnum;
 import com.metis.meishuquan.model.enums.PrivateResultEnum;
-import com.metis.meishuquan.model.enums.PrivateTypeEnum;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.model.topline.ContentInfo;
 import com.metis.meishuquan.model.topline.RelatedRead;
@@ -65,9 +61,7 @@ import com.metis.meishuquan.model.topline.UserMark;
 import com.metis.meishuquan.util.ActivityUtils;
 import com.metis.meishuquan.util.Helper;
 import com.metis.meishuquan.util.ImageLoaderUtils;
-import com.metis.meishuquan.util.ImageUtil;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
-import com.metis.meishuquan.view.Common.MatchParentImageView;
 import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.metis.meishuquan.view.topline.MeasureableListView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -86,7 +80,7 @@ import java.util.StringTokenizer;
 public class ItemInfoFragment extends Fragment {
 
     private static final String CLASS_NAME = ItemInfoFragment.class.getSimpleName();
-
+    public static final String KEY_NAVAGT = "navigate";
     public static final String KEY_IMAGE_URL_ARRAY = "image_url_array",
             KEY_THUMB_URL_ARRAY = "thumb_url_array";
     public static final String KEY_TITLE_VISIBLE = "title_visible";
@@ -123,6 +117,7 @@ public class ItemInfoFragment extends Fragment {
     private String shareImageUrl = "";
     private boolean titleVisible = true;
     private FragmentManager fm;
+    private int flag = 0;//用于标识是否为NewDetailActivity调用
 
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
@@ -143,6 +138,7 @@ public class ItemInfoFragment extends Fragment {
         Bundle args = this.getArguments();
         if (args != null) {
             newsId = args.getInt(KEY_NEWSID);
+            flag = args.getInt(KEY_NAVAGT);
 //            shareImageUrl = args.getString(KEY_SHARE_IMG_URL);
             //根据新闻Id获取新闻内容
             getInfoData(newsId);
@@ -389,6 +385,10 @@ public class ItemInfoFragment extends Fragment {
         this.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//返回
+                if (flag == 1001) {
+                    getActivity().finish();
+                    startActivity(new Intent(getActivity(), MainActivity.class));
+                }
                 hideInputView();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.remove(ItemInfoFragment.this);

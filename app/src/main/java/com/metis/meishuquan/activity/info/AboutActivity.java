@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.view.shared.MyInfoBtn;
 import com.metis.meishuquan.view.shared.TitleView;
@@ -27,7 +28,7 @@ import java.io.InputStreamReader;
 
 public class AboutActivity extends BaseActivity implements View.OnClickListener {
 
-    private MyInfoBtn mScoreBtn = null, mVersionBtn = null,
+    private MyInfoBtn mScoreBtn = null,
             mAboutMeishuquanBtn = null, mStatementBtn = null;
 
     @Override
@@ -36,14 +37,15 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         setContentView(R.layout.activity_about);
 
         mScoreBtn = (MyInfoBtn)this.findViewById(R.id.about_score);
-        mVersionBtn = (MyInfoBtn)findViewById(R.id.about_version);
+
         mAboutMeishuquanBtn = (MyInfoBtn)findViewById(R.id.about_meishuquan);
         mStatementBtn = (MyInfoBtn)findViewById(R.id.about_statement);
 
         mScoreBtn.setOnClickListener(this);
-        mVersionBtn.setOnClickListener(this);
         mAboutMeishuquanBtn.setOnClickListener(this);
         mStatementBtn.setOnClickListener(this);
+
+
     }
 
     @Override
@@ -64,14 +66,7 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                     Toast.makeText(this, "no activity found to handle this intent", Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case R.id.about_version:
-                try {
-                    PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
-                    Toast.makeText(this, getString(R.string.about_current_version) + ":" + info.versionName, Toast.LENGTH_SHORT).show();
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                }
-                break;
+
             case R.id.about_meishuquan:
                 String content = readStringFromAssets("about");
                 it = new Intent (this, TextActivity.class);

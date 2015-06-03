@@ -1,10 +1,11 @@
-package com.metis.meishuquan.view.Common.delegate;
+package com.metis.meishuquan.view.common.delegate;
 
 import com.metis.meishuquan.R;
 
 public enum DelegateType {
 
-    DIVIDER_TITLE (100, R.layout.layout_student_item_header);
+    DIVIDER_TITLE (100, R.layout.layout_student_item_header),
+    STUDENT (200, R.layout.layout_student_item);
 
     private int mType, mLayoutId;
 

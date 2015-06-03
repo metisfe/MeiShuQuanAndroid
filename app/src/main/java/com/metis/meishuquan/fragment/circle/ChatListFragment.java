@@ -175,6 +175,8 @@ public class ChatListFragment extends CircleBaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MainApplication.refreshRong();
+
                 RongIMClient.Conversation conversation = adapter.data.get(position);
                 Intent intent = new Intent(getActivity(), ChatActivity.class);
                 intent.putExtra("title", ChatManager.getConversationTitle(conversation));

@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 
+import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.circle.CDiscussion;
 import com.metis.meishuquan.model.circle.CPhoneFriend;
@@ -121,6 +122,7 @@ public class ChatManager {
             }
         }
         //TODO: save to DB
+        SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(SharedPreferencesUtil.CONTACTS + MainApplication.userInfo.getUserId(), new Gson().toJson(userModels));
     }
 
     public static void putDiscussion(String targetId, RongIMClient.Discussion discussion) {

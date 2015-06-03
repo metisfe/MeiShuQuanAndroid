@@ -14,7 +14,7 @@ public class SharedPreferencesUtil {
     /*头条*/
     public static final String CHANNELS = "CHANNELS";
     public static final String CHANNELID_NEWS = "NEWS";
-    public static String KEY_PRIVATE_NEWS="";
+    public static String KEY_PRIVATE_NEWS = "";
 
     /*点评*/
     public static final String ASSESS_LIST_FILTER_DATA = "ASSESS_LIST_FILTER_DATA";//点评列表筛选条件
@@ -29,6 +29,9 @@ public class SharedPreferencesUtil {
     public static final String USER_ROLE = "USER_ROLE";
     public static final String USER_LOGIN_INFO = "USER_LOGIN_INFO";
     public static final String CHECKED_CHANNEL_ITEMS = "CHECKED_CHANNEL_ITEMS";//已选择的课程类型
+
+    /*圈子*/
+    public static final String CONTACTS = "CONTACTS";
 
     /*系统*/
     public static final String MOMENTS_GROUP_INFO = "MOMENTS_GROUP_INFO";

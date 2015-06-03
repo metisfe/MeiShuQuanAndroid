@@ -25,8 +25,6 @@ public class UnReadManager extends AbsManager{
 
     private static final String TAG = UnReadManager.class.getSimpleName();
 
-    public static final String TAG_NEW_STUDENT = "new_student";
-
     private static UnReadManager sManager = null;
 
     private SharedPreferences mPreference = null;

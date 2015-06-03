@@ -8,4 +8,19 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         />
+    <FrameLayout
+        android:id="@+id/guide_dot_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        >
+        <LinearLayout
+            android:id="@+id/guide_dircle_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            />
+    </FrameLayout>
 </RelativeLayout>

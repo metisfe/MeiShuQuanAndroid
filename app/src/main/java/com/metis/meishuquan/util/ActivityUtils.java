@@ -17,7 +17,7 @@ import java.util.List;
  * Created by WJ on 2015/5/18.
  */
 public class ActivityUtils {
-    public static void startNameCardActivity (Context context, int userId) {
+    public static void startNameCardActivity (Context context, long userId) {
         Intent it = new Intent (context, StudioActivity.class);
         it.putExtra(StudioActivity.KEY_USER_ID, userId);
         context.startActivity(it);
@@ -49,6 +49,15 @@ public class ActivityUtils {
         } catch (Exception e) {
             Toast.makeText(context, R.string.act_not_found_exception, Toast.LENGTH_SHORT).show();
         }
+    }
 
+    public static void callSomeOne (Context context, String phoneNumber) {
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try {
+            context.startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(context, R.string.act_not_found_exception, Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -38,6 +38,7 @@ public class ResetPwdFragment extends Fragment {
     private TimeCount time;
     private String code = "";//验证码
     private UserOperator userOperator;
+    private Pattern pattern = Pattern.compile("^1\\d{10}");
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -80,8 +81,7 @@ public class ResetPwdFragment extends Fragment {
                     Toast.makeText(getActivity(), "请输入手机号", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
-                if (!p.matcher(phone).matches()) {
+                if (!pattern.matcher(phone).matches()) {
                     Toast.makeText(getActivity(), "请输入正确的手机号", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -89,8 +89,8 @@ public class ResetPwdFragment extends Fragment {
                     Toast.makeText(getActivity(), "请输入验证码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (!verCode.isEmpty() && verCode.length() < 6) {
-                    Toast.makeText(getActivity(), "请输入6位验证码", Toast.LENGTH_SHORT).show();
+                if (verCode.length() != 4) {
+                    Toast.makeText(getActivity(), "请输入4位验证码", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (pwd.isEmpty()) {
@@ -136,8 +136,7 @@ public class ResetPwdFragment extends Fragment {
                     Toast.makeText(getActivity(), "请输入手机号码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
-                if (!p.matcher(phone).matches()) {
+                if (!pattern.matcher(phone).matches()) {
                     Toast.makeText(getActivity(), "您输入的手机格式有误", Toast.LENGTH_SHORT).show();
                     return;
                 }
