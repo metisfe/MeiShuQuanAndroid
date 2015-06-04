@@ -23,6 +23,7 @@ import com.metis.meishuquan.activity.act.StudentListActivity;
 import com.metis.meishuquan.activity.info.AdvanceActivity;
 import com.metis.meishuquan.activity.info.ImagePreviewActivity;
 import com.metis.meishuquan.activity.info.InfoActivity;
+import com.metis.meishuquan.activity.info.InviteActivity;
 import com.metis.meishuquan.activity.info.MyCommentsActivity;
 import com.metis.meishuquan.activity.info.MyCourseActivity;
 import com.metis.meishuquan.activity.info.MyFavoritesActivity;
@@ -55,7 +56,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     private TabBar tabBar;
     private View mInfoContainer = null, mLoginView = null, mInfoDetailsContainer = null;
     private TextView mInfoName = null, mAttentionCountTv = null, mFollowersCountTv = null;
-    private View mCollectionView, mSuperDogView, mCommentView, mMyAskView, mClassesView, mNameCardView, mAdvanceView, mSettingView;
+    private View mCollectionView, mSuperDogView, mInviteView, mCommentView, mMyAskView, mClassesView, mNameCardView, mAdvanceView, mSettingView;
     private ImageView mProfileIv = null;
 
     private MainApplication mMainApplication = null;
@@ -124,6 +125,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         mCollectionView = view.findViewById(R.id.my_info_collections);
         mCommentView = view.findViewById(R.id.my_info_comments);
         mSuperDogView = view.findViewById(R.id.my_info_super_dog);
+        mInviteView = view.findViewById(R.id.my_info_invite);
         mMyAskView = view.findViewById(R.id.my_info_asks);
         mClassesView = view.findViewById(R.id.my_info_classes);
         mNameCardView = view.findViewById(R.id.my_info_name_card);
@@ -136,6 +138,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         mCollectionView.setOnClickListener(this);
         mCommentView.setOnClickListener(this);
         mSuperDogView.setOnClickListener(this);
+        mInviteView.setOnClickListener(this);
         mMyAskView.setOnClickListener(this);
         mClassesView.setOnClickListener(this);
         mNameCardView.setOnClickListener(this);
@@ -256,6 +259,9 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                     startActivity(new Intent(getActivity(), LoginActivity.class));
                     Toast.makeText(getActivity(), R.string.my_info_toast_not_login, Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.my_info_invite:
+                startActivity(new Intent(getActivity(), InviteActivity.class));
                 break;
             case R.id.my_info_asks:
                 if (MainApplication.isLogin()) {

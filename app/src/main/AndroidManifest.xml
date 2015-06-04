@@ -611,7 +611,11 @@
         <activity
             android:name=".activity.topline.NewDetailActivity"
             android:label="@string/title_activity_new_detail"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activity.info.InviteActivity"
+            android:label="@string/title_activity_invite" >
         </activity>
     </application>
 

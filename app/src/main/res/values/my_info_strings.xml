@@ -14,6 +14,7 @@
     
     <string name="my_info_classes">我的课程</string>
     <string name="my_info_super_dog">超级美术生</string>
+    <string name="my_info_invite">邀请码</string>
     <string name="my_info_name_card">我的名片(二维码)</string>
     <string name="my_info_advaces">意见反馈</string>
     <string name="my_info_settings">设置</string>
@@ -266,4 +267,8 @@
     <string name="friends_wait_to_add">%1$d个好友待添加</string>
     <string name="friends_wait_to_ask">%1$d个好友待邀请</string>
     <string name="friends_had_add">%1$d个已添加好友</string>
+
+    <string name="invite_share">分享给其他人</string>
+    <string name="invite_my_code">我的邀请码:%1$s</string>
+    <string name="invite_down_count">当前下载人数:%1$d人</string>
 </resources>

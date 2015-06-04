@@ -220,6 +220,27 @@
             </com.metis.meishuquan.view.shared.MyInfoBtn>
 
             <com.metis.meishuquan.view.shared.MyInfoBtn
+                android:id="@+id/my_info_invite"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                bs:src="@drawable/ic_super_dog"
+                bs:text="@string/my_info_invite"
+                android:layout_marginTop="@dimen/px_to_dip_10">
+
+                <include
+                    layout="@layout/divider_horizontail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1px"
+                    android:layout_alignParentTop="true" />
+
+                <include
+                    layout="@layout/divider_horizontail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true" />
+            </com.metis.meishuquan.view.shared.MyInfoBtn>
+
+            <com.metis.meishuquan.view.shared.MyInfoBtn
                 android:id="@+id/my_info_name_card"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

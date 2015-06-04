@@ -82,4 +82,5 @@
     <string name="title_activity_hello">@string/app_name</string>
     <string name="title_activity_student_list">StudentListActivity</string>
     <string name="title_activity_new_detail">NewDetailActivity</string>
+    <string name="title_activity_invite">邀请码</string>
 </resources>

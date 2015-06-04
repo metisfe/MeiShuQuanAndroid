@@ -17,4 +17,6 @@
     <dimen name="comment_profile_size">40dp</dimen>
 
     <dimen name="student_list_item_profile_item">70dp</dimen>
+
+    <dimen name="invite_qr_code_size">180dp</dimen>
 </resources>
