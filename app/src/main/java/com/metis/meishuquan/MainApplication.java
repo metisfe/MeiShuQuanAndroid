@@ -132,6 +132,11 @@ public class MainApplication extends MultiDexApplication {
         });
     }
 
+    public static void refreshRong(){
+        ChatManager.userRongId = userInfo.getRongCloudId();
+        MainApplication.rongConnect(userInfo.getToken());
+    }
+
     public static void setDisplayMetrics(DisplayMetrics dm) {
         displayMetrics = dm;
     }

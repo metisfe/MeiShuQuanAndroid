@@ -1,19 +1,14 @@
 package com.metis.meishuquan.model.provider;
 
-import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.ProgressBar;
 
-import com.google.common.util.concurrent.ListenableFuture;
 import com.loopj.android.http.AsyncHttpClient;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.framework.cache.DiskCache;
-import com.metis.meishuquan.framework.util.ThreadPool;
 import com.metis.meishuquan.model.contract.Pagination;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.contract.Timeline;
-import com.metis.meishuquan.util.ContractUtility;
 import com.metis.meishuquan.util.SystemUtil;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
