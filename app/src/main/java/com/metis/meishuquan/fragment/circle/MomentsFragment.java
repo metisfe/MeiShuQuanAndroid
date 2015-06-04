@@ -122,6 +122,11 @@ public class MomentsFragment extends CircleBaseFragment {
                 if (position == list.size() + 1 || position == 0) {
                     return;
                 }
+
+                Bundle bundle = new Bundle();
+                bundle.putInt(MomentDetailFragment.KEY_MOMENT_ID, list.get(position - 1).id);
+                momentDetailFragment.setArguments(bundle);
+                
                 GlobalData.moment = list.get(position - 1);
 
                 FragmentManager fm = getActivity().getSupportFragmentManager();

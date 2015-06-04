@@ -14,6 +14,7 @@
         android:layout_height="50dp" />
 
     <RelativeLayout
+        android:id="@+id/id_rl_content_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="10dp">
@@ -29,13 +30,31 @@
         <TextView
             android:id="@+id/views_circle_circlechatlistitemview_title"
             android:singleLine="true"
-            android:textColor="@color/black"
+            android:textColor="@color/common_color_424242"
             android:textSize="16sp"
             android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:text="测试"
             android:layout_toLeftOf="@id/views_circle_circlechatlistitemview_time"
             android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/views_circle_custom_at_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/common_color_424242"
+            android:textSize="16sp"
+            android:layout_centerVertical="true"
+            android:visibility="gone"
+            android:text="" />
+
+        <ImageView
+            android:id="@+id/id_num_flag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/views_circle_circlechatlistitemview_content"

@@ -73,8 +73,7 @@ import java.util.List;
  */
 public class MomentDetailFragment extends Fragment {
     public static final String CLASS_NAME = MomentDetailFragment.class.getSimpleName();
-
-    private int newsId = 0;
+    public static final String KEY_MOMENT_ID = "KEY_MOMENT_ID";
 
     private MomentPageListView listView;
     private Button btnBack;
@@ -109,6 +108,8 @@ public class MomentDetailFragment extends Fragment {
     private boolean isAttention;
 
     private FragmentManager fm;
+
+    private int momentId;
 
     private CircleMomentDetailReplyAdpater circleMomentDetailReplyAdpater;
     private CircleMomentDetailCommentAdapter circleMomentCommentAdapter;
@@ -148,7 +149,13 @@ public class MomentDetailFragment extends Fragment {
 //            this.moment = GlobalData.moment;
 //        }
         final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "正在加载...");
-        CircleOperator.getInstance().getMomentDetail(GlobalData.moment.id, new ApiOperationCallback<ReturnInfo<String>>() {
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            momentId = bundle.getInt(KEY_MOMENT_ID);
+        }
+
+        CircleOperator.getInstance().getMomentDetail(momentId, new ApiOperationCallback<ReturnInfo<String>>() {
             @Override
             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                 progressDialog.cancel();

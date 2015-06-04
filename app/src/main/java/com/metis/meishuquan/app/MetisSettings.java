@@ -13,9 +13,7 @@ public class MetisSettings {
 
     private Context mContext;
     private SharedPreferences mGlobalPreferences;
-    /**
-     * ÐòÁÐ»¯Ãû³Æ
-     */
+
     public static final String SHARED_PREFERENCE_NAME = "com.metis.meishuquan";
 
 
@@ -25,7 +23,7 @@ public class MetisSettings {
     }
 
     /**
-     * BEGIN INCLUDED{ ÓÃ»§ÐÅÏ¢ }
+     * BEGIN INCLUDED{  }
      */
     public final StringPreference USER_ID = new StringPreference("USER_id", null);
     public final StringPreference NAME = new StringPreference("NAME", null);
@@ -131,7 +129,7 @@ public class MetisSettings {
     }
 
     /**
-     * String²ÎÊý±£´æ
+     * Stringï¿½ï¿½ï¿½ï¿½ï¿½
      */
     public class StringPreference extends CommonPreference<String> {
 
@@ -155,8 +153,8 @@ public class MetisSettings {
         private T defaultValue;
 
         /**
-         * @param id           Êý¾Ý±£´æµÄKey
-         * @param defaultValue ³õÊ¼Öµ
+         * @param id           ï¿½ï¿½Ý±ï¿½ï¿½ï¿½ï¿½Key
+         * @param defaultValue ï¿½ï¿½Ê¼Öµ
          */
         public CommonPreference(String id, T defaultValue) {
             this.id = id;
@@ -176,7 +174,7 @@ public class MetisSettings {
         }
 
         /**
-         * ÖØÖÃÎª³õÊ¼Öµ
+         * ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½Ê¼Öµ
          */
         public void resetToDefault() {
             setValue(getDefaultValue());

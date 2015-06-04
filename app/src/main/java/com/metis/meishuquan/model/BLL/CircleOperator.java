@@ -6,9 +6,12 @@ import android.widget.Toast;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CParamCircleComment;
+import com.metis.meishuquan.model.circle.CRelatedCircleModel;
+import com.metis.meishuquan.model.circle.CircleMoments;
 import com.metis.meishuquan.model.circle.CirclePushBlogParm;
 import com.metis.meishuquan.model.commons.Result;
 import com.metis.meishuquan.model.contract.ReturnInfo;
+import com.metis.meishuquan.model.enums.MessageTypeEnum;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.SystemUtil;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
@@ -27,6 +30,7 @@ public class CircleOperator {
     private static final String URL_DELETE_CIRCLE = "v1.1/Circle/DeleteMyCircle?circleid=";
     private static final String URL_CIRCLE_DETAIL = "v1.1/Circle/CircleDetail?";
     private static final String URL_CIRCLE_PUSH_COMMENT = "v1.1/Circle/PushCommentByPost?";
+    private static final String URL_CIRCLE_AT_ME = "v1.1/Message/AndIRelated?";
 
     private static CircleOperator operator = null;
     private boolean flag;
@@ -141,5 +145,37 @@ public class CircleOperator {
         }
     }
 
+
+    public void getAtMeData(int lastId, ApiOperationCallback<ReturnInfo<String>> callback) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuffer PATH = new StringBuffer(URL_CIRCLE_AT_ME);
+                PATH.append("type=" + MessageTypeEnum.ATME.getVal());
+                PATH.append("&lastId=" + lastId);
+                PATH.append("&session=" + MainApplication.userInfo.getCookie());
+                Log.i("moment_detail", PATH.toString());
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+            }
+        } else {
+            Toast.makeText(MainApplication.UIContext, "网络不给力，请稍候再试", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void getCommentMeData(int lastId, ApiOperationCallback callback) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuffer PATH = new StringBuffer(URL_CIRCLE_AT_ME);
+                PATH.append("type=" + MessageTypeEnum.COMMENTME.getVal());
+                PATH.append("lastId=" + lastId);
+                PATH.append("&session=" + MainApplication.userInfo.getCookie());
+                Log.i("moment_detail", PATH.toString());
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+            }
+        } else {
+            Toast.makeText(MainApplication.UIContext, "网络不给力，请稍候再试", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }

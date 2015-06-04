@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
@@ -27,6 +28,7 @@ import com.metis.meishuquan.util.ChatManager;
 import com.metis.meishuquan.util.ViewUtils;
 import com.metis.meishuquan.view.circle.CircleChatListItemView;
 import com.metis.meishuquan.view.circle.PopupAddWindow;
+import com.metis.meishuquan.view.common.BadgeView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.umeng.analytics.MobclickAgent;
@@ -48,6 +50,8 @@ public class ChatListFragment extends CircleBaseFragment {
     private ListView listView;
     private List<RongIMClient.Conversation> clist = null;
     private ChatListAdapter adapter;
+
+    private FragmentManager fm;
 
     @Override
     public void onAttach(Activity activity) {
@@ -106,7 +110,7 @@ public class ChatListFragment extends CircleBaseFragment {
                         args.putString("title", "消息");
                         startFriendPickFragment.setArguments(args);
 
-                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        fm = getActivity().getSupportFragmentManager();
                         FragmentTransaction ft = fm.beginTransaction();
                         ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
                         ft.add(R.id.content_container, startFriendPickFragment);
@@ -117,7 +121,7 @@ public class ChatListFragment extends CircleBaseFragment {
                     @Override
                     public void onClick(View v) {
                         AddFriendFragment addFriendFragment = new AddFriendFragment();
-                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        fm = getActivity().getSupportFragmentManager();
                         FragmentTransaction ft = fm.beginTransaction();
                         ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
                         ft.add(R.id.content_container, addFriendFragment);
@@ -150,11 +154,22 @@ public class ChatListFragment extends CircleBaseFragment {
     }
 
     private void refreshList() {
+        clist.clear();
+        //添加@我的
+        RongIMClient.Conversation atMe = new RongIMClient.Conversation();
+        atMe.setObjectName("@我的");
+        atMe.setConversationType(RongIMClient.ConversationType.SYSTEM);
+        //添加评论我的
+        RongIMClient.Conversation commentMe = new RongIMClient.Conversation();
+        commentMe.setObjectName("评论我的");
+        commentMe.setConversationType(RongIMClient.ConversationType.SYSTEM);
+        clist.add(atMe);
+        clist.add(commentMe);
         if (this.listView != null && adapter != null && MainApplication.rongClient != null) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    clist = MainApplication.rongClient.getConversationList();
+                    clist.addAll(MainApplication.rongClient.getConversationList());
                 }
             }).start();
             if (clist != null) adapter.data = clist;
@@ -171,32 +186,45 @@ public class ChatListFragment extends CircleBaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_circle_chatlistfragment, container, false);
         listView = (ListView) rootView.findViewById(R.id.fragment_circle_chatlistfragment_listview);
+        fm = getActivity().getSupportFragmentManager();
+        clist = new ArrayList<RongIMClient.Conversation>();
         adapter = new ChatListAdapter();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MainApplication.refreshRong();
+                //@我的
+                if (position == 0) {
+                    AtMeFragment atMeFragment = new AtMeFragment();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.add(R.id.content_container, atMeFragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }
 
-                RongIMClient.Conversation conversation = adapter.data.get(position);
-                Intent intent = new Intent(getActivity(), ChatActivity.class);
-                intent.putExtra("title", ChatManager.getConversationTitle(conversation));
-                intent.putExtra("targetId", conversation.getTargetId());
-                intent.putExtra("type", conversation.getConversationType().toString());
-                getActivity().startActivity(intent);
+                //评论
+                else if (position == 1) {
+
+                } else {
+                    MainApplication.refreshRong();
+
+                    RongIMClient.Conversation conversation = adapter.data.get(position);
+                    Intent intent = new Intent(getActivity(), ChatActivity.class);
+                    intent.putExtra("title", ChatManager.getConversationTitle(conversation));
+                    intent.putExtra("targetId", conversation.getTargetId());
+                    intent.putExtra("type", conversation.getConversationType().toString());
+                    getActivity().startActivity(intent);
+                }
             }
         });
-
-        if (MainApplication.rongClient != null) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    adapter.data = MainApplication.rongClient.getConversationList();
-                }
-            }).start();
-
-        }
-//        else {
-//            startActivity(new Intent(getActivity(), LoginActivity.class));
+//        if (MainApplication.rongClient != null) {
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    clist.addAll(MainApplication.rongClient.getConversationList());
+//                    adapter.data = clist;
+//                    adapter.notifyDataSetChanged();
+//                }
+//            }).start();
 //        }
 
         listView.setAdapter(adapter);

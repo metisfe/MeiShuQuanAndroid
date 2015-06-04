@@ -384,6 +384,8 @@ public class ChatManager {
                     title = "Some discussion";
                 }
                 return title;
+            case SYSTEM:
+//                title=
             default:
                 return "some other type";
         }

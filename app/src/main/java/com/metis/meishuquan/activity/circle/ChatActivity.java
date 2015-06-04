@@ -1,15 +1,26 @@
 package com.metis.meishuquan.activity.circle;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.model.circle.CUserModel;
+import com.metis.meishuquan.util.ActivityUtils;
+import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
 import com.umeng.analytics.MobclickAgent;
+
+import java.util.List;
+
+import io.rong.imkit.RongIM;
+import io.rong.imlib.RongIMClient;
 
 /**
  * Created by wudi on 4/7/2015.
@@ -41,6 +52,33 @@ public class ChatActivity extends FragmentActivity {
                 intent.putExtra("type", type);
                 intent.putExtra("targetId", targetId);
                 startActivity(intent);
+            }
+        });
+
+        RongIM.setConversationBehaviorListener(new RongIM.ConversationBehaviorListener() {
+            @Override
+            public boolean onClickUserPortrait(Context context, RongIMClient.ConversationType conversationType, RongIMClient.UserInfo userInfo) {
+                String json = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey(SharedPreferencesUtil.CONTACTS + MainApplication.userInfo.getUserId());
+                List<CUserModel> userModels = new Gson().fromJson(json, new TypeToken<List<CUserModel>>() {
+                }.getType());
+                String userId = "";
+                if (userInfo.getUserId().equals(MainApplication.userInfo.getRongCloudId())) {
+                    userId = String.valueOf(MainApplication.userInfo.getUserId());
+                } else {
+                    for (int i = 0; i < userModels.size(); i++) {
+                        if (userModels.get(i).getUserName().equals(userInfo.getName())) {
+                            userId = String.valueOf(userModels.get(i).userId);
+                            break;
+                        }
+                    }
+                }
+                ActivityUtils.startNameCardActivity(context, Long.parseLong(userId));
+                return true;
+            }
+
+            @Override
+            public boolean onClickMessage(Context context, RongIMClient.Message message) {
+                return false;
             }
         });
 
