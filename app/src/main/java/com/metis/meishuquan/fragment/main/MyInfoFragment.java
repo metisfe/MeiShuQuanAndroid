@@ -33,6 +33,7 @@ import com.metis.meishuquan.activity.info.homepage.StudioActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.login.LoginFragment;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
+import com.metis.meishuquan.model.commons.InviteCodeInfo;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.enums.LoginStateEnum;
@@ -62,6 +63,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     private MainApplication mMainApplication = null;
 
     private User mUser = null;
+    private InviteCodeInfo mCodeInfo = null;
 
     private UnReadManager.Observable mObservable = new UnReadManager.Observable() {
         @Override
@@ -172,6 +174,16 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                     MainApplication.userInfo = mUser;
                     mLoginView.setVisibility(View.GONE);
                     mInfoDetailsContainer.setVisibility(View.VISIBLE);
+                    UserInfoOperator.getInstance().getInviteCode(new UserInfoOperator.OnGetListener<InviteCodeInfo>() {
+                        @Override
+                        public void onGet(boolean succeed, InviteCodeInfo inviteCodeInfo) {
+                            if (succeed) {
+                                mCodeInfo = inviteCodeInfo;
+                                mInviteView.setVisibility(View.VISIBLE);
+                                ((MyInfoBtn)mInviteView).setSecondaryText(inviteCodeInfo.getInvitationCodeNum() + "");
+                            }
+                        }
+                    });
                     fillUserInfo(user);
                 } else {
                     mLoginView.setVisibility(View.VISIBLE);
@@ -261,7 +273,10 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
             case R.id.my_info_invite:
-                startActivity(new Intent(getActivity(), InviteActivity.class));
+                Intent inviteIt = new Intent(getActivity(), InviteActivity.class);
+                Log.v(TAG, "onPostCase = " + mCodeInfo);
+                inviteIt.putExtra(InviteActivity.KEY_INVITE_CODE_INFO, mCodeInfo);
+                startActivity(inviteIt);
                 break;
             case R.id.my_info_asks:
                 if (MainApplication.isLogin()) {

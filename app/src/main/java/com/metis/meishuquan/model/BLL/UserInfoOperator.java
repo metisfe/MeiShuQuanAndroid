@@ -20,6 +20,7 @@ import com.metis.meishuquan.model.assess.Bimp;
 import com.metis.meishuquan.model.assess.City;
 import com.metis.meishuquan.model.commons.College;
 import com.metis.meishuquan.model.commons.Comment;
+import com.metis.meishuquan.model.commons.InviteCodeInfo;
 import com.metis.meishuquan.model.commons.Item;
 import com.metis.meishuquan.model.commons.MyFriendList;
 import com.metis.meishuquan.model.commons.Option;
@@ -80,7 +81,9 @@ public class UserInfoOperator {
                             URL_GET_AREA_LIST = "v1.1/UserCenter/ProvinceLink?id=",
                             URL_GET_MY_FRIENDS = "v1.1/Message/MyFriendList?type=",
                             URL_GET_MY_PHOTOS = "v1.1/UserCenter/MyPhotos?userid=",
-                            URL_GET_PROVINCE_STUDIO = "v1.1/UserCenter/GetProvincStudioCount?id=";
+                            URL_GET_PROVINCE_STUDIO = "v1.1/UserCenter/GetProvincStudioCount?id=",
+                            URL_GET_INVITE_CODE = "v1.1/UserCenter/GetMyInvitationCode",
+                            URL_GET_MY_INVITED_ONES = "v1.1/UserCenter/GetMyInvitionUser";
 
     private static String KEY_USER_ID = "userId",
                         KEY_INDEX = "index",
@@ -95,7 +98,8 @@ public class UserInfoOperator {
                         KEY_NET_WORK = "NetWork",
                         KEY_FEED_MESSAGE = "FeedMessage",
                         KEY_FEED_IMAGE = "FeedImage",
-                        KEY_CREATE_TIME = "Createtime";
+                        KEY_CREATE_TIME = "Createtime",
+                        KEY_LAST_ID = "lastid";
 
     public static UserInfoOperator getInstance () {
         return sOperator;
@@ -837,6 +841,74 @@ public class UserInfoOperator {
                             editor.putString(id + "", json);
                             editor.commit();*/
                         }
+                        if (listener != null) {
+                            if (listResult.getOption().getStatus() == 0) {
+                                listener.onGet(true, listResult.getData());
+                            } else {
+                                listener.onGet(false, null);
+                            }
+                        }
+
+                    } else {
+                        if (listener != null) {
+                            listener.onGet(false, null);
+                        }
+                    }
+
+                }
+            });
+        }
+    }
+
+    public void getInviteCode (final OnGetListener<InviteCodeInfo> listener) {
+
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            StringBuilder sb = new StringBuilder(URL_GET_INVITE_CODE);
+            sb.append("?" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+            Log.v(TAG, "getInviteCode request=" + sb.toString());
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String json = gson.toJson(result);
+                        Log.v(TAG, "getInviteCode result=" + json);
+                        Result<InviteCodeInfo> listResult = gson.fromJson(json, new TypeToken<Result<InviteCodeInfo>>(){}.getType());
+                        if (listener != null) {
+                            if (listResult.getOption().getStatus() == 0) {
+                                listener.onGet(true, listResult.getData());
+                            } else {
+                                listener.onGet(false, null);
+                            }
+                        }
+
+                    } else {
+                        if (listener != null) {
+                            listener.onGet(false, null);
+                        }
+                    }
+
+                }
+            });
+        }
+    }
+
+    public void getMyInvitedOnes (long lastId, final OnGetListener<InviteCodeInfo> listener) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            StringBuilder sb = new StringBuilder(URL_GET_MY_INVITED_ONES);
+            sb.append("?" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
+            sb.append("&" + KEY_LAST_ID + "=" + lastId);
+            Log.v(TAG, "getInviteCode request=" + sb.toString());
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String json = gson.toJson(result);
+                        Log.v(TAG, "getInviteCode result=" + json);
+                        Result<InviteCodeInfo> listResult = gson.fromJson(json, new TypeToken<Result<InviteCodeInfo>>(){}.getType());
                         if (listener != null) {
                             if (listResult.getOption().getStatus() == 0) {
                                 listener.onGet(true, listResult.getData());

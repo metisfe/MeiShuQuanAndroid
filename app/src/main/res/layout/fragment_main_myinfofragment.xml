@@ -223,9 +223,11 @@
                 android:id="@+id/my_info_invite"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                bs:src="@drawable/ic_super_dog"
+                bs:src="@drawable/my_info_invite"
                 bs:text="@string/my_info_invite"
-                android:layout_marginTop="@dimen/px_to_dip_10">
+                android:layout_marginTop="@dimen/px_to_dip_10"
+                android:visibility="gone"
+                >
 
                 <include
                     layout="@layout/divider_horizontail"

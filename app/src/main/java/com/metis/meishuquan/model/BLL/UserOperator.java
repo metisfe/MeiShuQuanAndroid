@@ -1,5 +1,6 @@
 package com.metis.meishuquan.model.BLL;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 
@@ -66,7 +67,7 @@ public class UserOperator {
         }
     }
 
-    public void register(String phone, String code, String pwd, int roleId, ApiOperationCallback<ReturnInfo<String>> callback) {
+    public void register(String phone, String code, String pwd, int roleId, String inviteCode, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuilder PATH = new StringBuilder(REGISTER);
@@ -74,6 +75,9 @@ public class UserOperator {
                 PATH.append("&code=" + code);
                 PATH.append("&pwd=" + pwd);
                 PATH.append("&roleId=" + roleId);
+                if (!TextUtils.isEmpty(inviteCode)) {
+                    PATH.append("&invitationcode=" + inviteCode);
+                }
                 PATH.append("&session=" + SESSION);
                 List<Pair<String, String>> pram = new ArrayList<>();
                 Pair<String, String> pair1 = new Pair<>("phone", phone);

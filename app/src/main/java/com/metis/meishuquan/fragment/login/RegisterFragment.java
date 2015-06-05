@@ -53,7 +53,7 @@ import io.rong.imlib.RongIMClient;
  */
 public class RegisterFragment extends Fragment {
     private Button btnBack, btnSubmit, btnGetVerificationCode;
-    private EditText etUserName, etVerificationCode, etPwd;
+    private EditText etUserName, etVerificationCode, etPwd, inviteCodeEt;
     private CheckBox chLicense;
     private TextView tvLicence;
 
@@ -87,6 +87,7 @@ public class RegisterFragment extends Fragment {
         etUserName = (EditText) rootView.findViewById(R.id.id_resister_et_username);
         etVerificationCode = (EditText) rootView.findViewById(R.id.id_resister_et_verificationCode);
         etPwd = (EditText) rootView.findViewById(R.id.id_register_et_pwd);
+        inviteCodeEt = (EditText)rootView.findViewById(R.id.id_register_et_invite_code);
         chLicense = (CheckBox) rootView.findViewById(R.id.id_register_chb_license);
 
         tvLicence.setText(Html.fromHtml("<font color=\"black\">" + "我同意并遵守" + "</font><font color=\"red\">" + "“美术圈”用户协议" + "</font>"));
@@ -172,7 +173,8 @@ public class RegisterFragment extends Fragment {
                         Log.e("roleId", "selectedRoleId为-1");
                     }
                     progressDialog = ProgressDialog.show(getActivity(),"", "正在注册，请稍候！");
-                    userOperator.register(phone, verCode, pwd, selectedId, new ApiOperationCallback<ReturnInfo<String>>() {
+                    String inviteCode = inviteCodeEt.getText().toString();
+                    userOperator.register(phone, verCode, pwd, selectedId, inviteCode, new ApiOperationCallback<ReturnInfo<String>>() {
                         @Override
                         public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                             progressDialog.cancel();

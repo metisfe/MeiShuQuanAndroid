@@ -22,114 +22,176 @@
                 />
             <TextView
                 android:id="@+id/invite_tip"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:layout_marginTop="5dp"
+                android:textSize="12sp"
+                android:textColor="#7e7e7e"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/invite_tip"
                 />
-
             <TextView
                 android:id="@+id/invite_content"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:background="@drawable/bg_grey_outline"
+                android:layout_margin="16dp"
+                android:padding="6dp"
+                android:textColor="#868686"
                 />
             <TextView
                 android:id="@+id/invite_download_count"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:textColor="#ff0000"
+                android:textSize="18sp"
+                android:layout_gravity="center_horizontal"
                 />
             <TextView
                 android:id="@+id/invite_my_code"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:gravity="center"
+                android:textColor="#7e7e7e"
+                android:textSize="14sp"
+                android:background="@drawable/bg_grey_round"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
                 />
             <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                >
                 <TextView
                     android:id="@+id/invite_share_tip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:text="@string/invite_share"
+                    android:textSize="18sp"
+                    android:textColor="#424242"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginRight="6dp"
                     />
                 <View
                     android:layout_width="fill_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="1px"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/invite_share_tip"
-                    android:background="#cccccc"
+                    android:background="#d4d3d3"
+                    android:layout_marginLeft="16dp"
                     />
                 <View
                     android:layout_width="fill_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="1px"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/invite_share_tip"
-                    android:background="#cccccc"
+                    android:background="#d4d3d3"
+                    android:layout_marginRight="16dp"
                     />
             </RelativeLayout>
             <GridLayout
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/invite_share_grid"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
                 >
                 <LinearLayout
+                    android:id="@+id/invite_share_wechat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     >
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/invite_wechat"
                         />
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:text="@string/invite_wechat"
+                        android:textColor="#7e7e7e"
+                        android:layout_gravity="center_horizontal"
+                        />
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/invite_share_weibo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     >
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/invite_weibo"
                         />
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:text="@string/invite_weibo"
+                        android:textColor="#7e7e7e"
+                        android:layout_gravity="center_horizontal"
+                        />
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/invite_share_qq"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     >
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/invite_qq"
                         />
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:text="@string/invite_qq"
+                        android:textColor="#7e7e7e"
+                        android:layout_gravity="center_horizontal"
+                        />
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/invite_share_friends"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     >
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/invite_friends"
                         />
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:text="@string/invite_friends"
+                        android:textColor="#7e7e7e"
+                        android:layout_gravity="center_horizontal"
+                        />
                 </LinearLayout>
             </GridLayout>
         </LinearLayout>
