@@ -82,6 +82,15 @@ public class ChatActivity extends FragmentActivity {
             }
         });
 
+        RongIM.GetUserInfoProvider userInfoProvider = new RongIM.GetUserInfoProvider() {
+            @Override
+            public RongIMClient.UserInfo getUserInfo(String s) {
+
+                return null;
+            }
+        };
+        RongIM.setGetUserInfoProvider(userInfoProvider, false);
+
         titleBar.setLeftButton("返回", 0, new View.OnClickListener() {
             @Override
             public void onClick(View v) {

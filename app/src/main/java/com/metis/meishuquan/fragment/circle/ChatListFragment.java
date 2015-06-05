@@ -206,13 +206,15 @@ public class ChatListFragment extends CircleBaseFragment {
 
                 } else {
                     MainApplication.refreshRong();
-
                     RongIMClient.Conversation conversation = adapter.data.get(position);
-                    Intent intent = new Intent(getActivity(), ChatActivity.class);
-                    intent.putExtra("title", ChatManager.getConversationTitle(conversation));
-                    intent.putExtra("targetId", conversation.getTargetId());
-                    intent.putExtra("type", conversation.getConversationType().toString());
-                    getActivity().startActivity(intent);
+                    RongIM.getInstance().startPrivateChat(getActivity(),conversation.getTargetId(),ChatManager.getConversationTitle(conversation));
+
+
+//                    Intent intent = new Intent(getActivity(), ChatActivity.class);
+//                    intent.putExtra("title", ChatManager.getConversationTitle(conversation));
+//                    intent.putExtra("targetId", conversation.getTargetId());
+//                    intent.putExtra("type", conversation.getConversationType().toString());
+//                    getActivity().startActivity(intent);
                 }
             }
         });
