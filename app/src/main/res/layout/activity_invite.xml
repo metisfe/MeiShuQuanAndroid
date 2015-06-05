@@ -117,6 +117,7 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:src="@drawable/invite_wechat"
+                        android:layout_gravity="center_horizontal"
                         />
                     <TextView
                         android:layout_width="wrap_content"
@@ -139,6 +140,7 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:src="@drawable/invite_weibo"
+                        android:layout_gravity="center_horizontal"
                         />
                     <TextView
                         android:layout_width="wrap_content"
@@ -161,6 +163,7 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:src="@drawable/invite_qq"
+                        android:layout_gravity="center_horizontal"
                         />
                     <TextView
                         android:layout_width="wrap_content"
@@ -183,6 +186,7 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:src="@drawable/invite_friends"
+                        android:layout_gravity="center_horizontal"
                         />
                     <TextView
                         android:layout_width="wrap_content"
