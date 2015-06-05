@@ -3,6 +3,7 @@ package com.metis.meishuquan.view.circle.moment.comment;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class EmotionTextView extends TextView

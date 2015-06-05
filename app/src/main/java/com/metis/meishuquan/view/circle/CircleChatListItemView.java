@@ -51,8 +51,18 @@ public class CircleChatListItemView extends LinearLayout {
             this.timeView.setVisibility(View.GONE);
             this.imgFlag.setVisibility(VISIBLE);
             this.imgFlag.setImageResource(R.drawable.btn_right_arrow);
+
             this.customView.setVisibility(View.VISIBLE);
             this.customView.setText(conversation.getObjectName());
+        } else if (conversation.getConversationType() != RongIMClient.ConversationType.SYSTEM) {
+            this.titleView.setVisibility(View.VISIBLE);
+            this.contentView.setVisibility(View.VISIBLE);
+            this.timeView.setVisibility(View.VISIBLE);
+            this.imgFlag.setVisibility(GONE);
+
+            this.customView.setVisibility(View.GONE);
+            this.titleView.setText(ChatManager.getConversationTitle(conversation));
+            this.contentView.setText(ChatManager.getLastString(conversation));
         }
 
         //标识未读数量
@@ -66,9 +76,6 @@ public class CircleChatListItemView extends LinearLayout {
         } else {
             badge.hide();
         }
-
-        this.titleView.setText(ChatManager.getConversationTitle(conversation));
-        this.contentView.setText(ChatManager.getLastString(conversation));
 
         Time time = new Time();
         time.set(conversation.getReceivedTime() > conversation.getSentTime() ? conversation.getReceivedTime() : conversation.getSentTime());

@@ -162,12 +162,12 @@ public class CircleOperator {
         }
     }
 
-    public void getCommentMeData(int lastId, ApiOperationCallback callback) {
+    public void getCommentMeData(int lastId, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuffer PATH = new StringBuffer(URL_CIRCLE_AT_ME);
                 PATH.append("type=" + MessageTypeEnum.COMMENTME.getVal());
-                PATH.append("lastId=" + lastId);
+                PATH.append("&lastId=" + lastId);
                 PATH.append("&session=" + MainApplication.userInfo.getCookie());
                 Log.i("moment_detail", PATH.toString());
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,

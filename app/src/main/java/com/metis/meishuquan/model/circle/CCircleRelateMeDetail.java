@@ -1,6 +1,7 @@
 package com.metis.meishuquan.model.circle;
 
 import com.google.gson.annotations.SerializedName;
+import com.metis.meishuquan.util.Utils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -32,4 +33,8 @@ public class CCircleRelateMeDetail implements Serializable {
 
     @SerializedName("lastComment")
     public CCircleCommentModel lastComment;
+
+    public String getTimeText() {
+        return Utils.getDateFromNow(Utils.getDate(createTime, null));
+    }
 }

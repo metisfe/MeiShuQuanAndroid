@@ -189,6 +189,8 @@ public class ChatListFragment extends CircleBaseFragment {
         fm = getActivity().getSupportFragmentManager();
         clist = new ArrayList<RongIMClient.Conversation>();
         adapter = new ChatListAdapter();
+
+        //列表点击事件
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -203,18 +205,33 @@ public class ChatListFragment extends CircleBaseFragment {
 
                 //评论
                 else if (position == 1) {
+                    CircleCommentMeFragment commentMeFragment = new CircleCommentMeFragment();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.add(R.id.content_container, commentMeFragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }
 
-                } else {
+                //聊天
+                else {
                     MainApplication.refreshRong();
                     RongIMClient.Conversation conversation = adapter.data.get(position);
-                    RongIM.getInstance().startPrivateChat(getActivity(),conversation.getTargetId(),ChatManager.getConversationTitle(conversation));
+//                    RongIM.getInstance().startPrivateChat(getActivity(),conversation.getTargetId(),ChatManager.getConversationTitle(conversation));
 
+//                    RongIMClient.Conversation newConverstion=null;
+//                    RongIM.setGetUserInfoProvider(new RongIM.GetUserInfoProvider() {
+//                        @Override
+//                        public RongIMClient.UserInfo getUserInfo(String s) {
+//
+//                            return null;
+//                        }
+//                    },false);
 
-//                    Intent intent = new Intent(getActivity(), ChatActivity.class);
-//                    intent.putExtra("title", ChatManager.getConversationTitle(conversation));
-//                    intent.putExtra("targetId", conversation.getTargetId());
-//                    intent.putExtra("type", conversation.getConversationType().toString());
-//                    getActivity().startActivity(intent);
+                    Intent intent = new Intent(getActivity(), ChatActivity.class);
+                    intent.putExtra("title", ChatManager.getConversationTitle(conversation));
+                    intent.putExtra("targetId", conversation.getTargetId());
+                    intent.putExtra("type", conversation.getConversationType().toString());
+                    getActivity().startActivity(intent);
                 }
             }
         });

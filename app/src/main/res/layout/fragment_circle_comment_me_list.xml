@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:clickable="true"
+    android:background="@color/common_color_e2e2e2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:clickable="true"
+        android:background="@color/bg_topline_topbar">
+
+        <Button
+            android:id="@+id/id_btn_back"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_btn_arrow_left" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true" >
+
+            <ImageView
+                android:id="@+id/id_img_dynamic"
+                android:layout_width="@dimen/item_info_title_profile_size"
+                android:layout_height="@dimen/item_info_title_profile_size"
+                android:layout_centerVertical="true"
+                android:visibility="gone"
+                android:src="@drawable/default_user_dynamic" />
+
+            <TextView
+                android:id="@+id/id_tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:singleLine="true"
+                android:maxLength="6"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/id_img_dynamic"
+                android:textColor="#fb6d6d"
+                android:textSize="18sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <com.metis.meishuquan.view.shared.DragListView
+        android:id="@+id/fragment_circle_comment_me_list"
+        android:layout_width="match_parent"
+        android:background="@color/transparent"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
+        android:divider="@color/transparent"
+        android:alwaysDrawnWithCache="false"
+        android:dividerHeight="5dp"
+        android:listSelector="@color/transparent"
+        android:layout_height="match_parent" />
+</LinearLayout>
