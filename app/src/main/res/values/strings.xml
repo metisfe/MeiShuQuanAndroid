@@ -83,4 +83,5 @@
     <string name="title_activity_student_list">StudentListActivity</string>
     <string name="title_activity_new_detail">NewDetailActivity</string>
     <string name="title_activity_invite">邀请码</string>
+    <string name="title_activity_focus">FocusActivity</string>
 </resources>

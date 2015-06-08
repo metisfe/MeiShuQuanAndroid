@@ -11,6 +11,8 @@ public class UserMark implements Serializable {
     private boolean isSupport;//是否已赞
     private boolean isOpposition;//是否已踩
     private boolean isCanDel;//是否删除
+    private boolean isAttention;
+    private boolean mutualAttention;
 
     public boolean isFavorite() {
         return isFavorite;
@@ -42,5 +44,21 @@ public class UserMark implements Serializable {
 
     public void setCanDel(boolean isCanDel) {
         this.isCanDel = isCanDel;
+    }
+
+    public boolean isAttention() {
+        return isAttention;
+    }
+
+    public void setIsAttention(boolean isAttention) {
+        this.isAttention = isAttention;
+    }
+
+    public boolean isMutualAttention() {
+        return mutualAttention;
+    }
+
+    public void setMutualAttention(boolean mutualAttention) {
+        this.mutualAttention = mutualAttention;
     }
 }

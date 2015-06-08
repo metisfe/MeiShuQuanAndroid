@@ -59,6 +59,8 @@
     <string name="info_profile_gallery">相册</string>
     <string name="info_profile_camera">相机</string>
     <string name="info_delete_this_item">删除本条数据</string>
+    <string name="info_focus_list">关注列表</string>
+    <string name="info_fans_list">粉丝列表</string>
     
     <string name="about_to_score">我要评分</string>
     <string name="about_check_update">检查更新</string>

@@ -617,6 +617,10 @@
             android:name=".activity.info.InviteActivity"
             android:label="@string/title_activity_invite" >
         </activity>
+        <activity
+            android:name=".activity.info.FocusActivity"
+            android:label="@string/title_activity_focus" >
+        </activity>
     </application>
 
 </manifest>
