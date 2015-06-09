@@ -52,6 +52,7 @@ import com.metis.meishuquan.adapter.topline.ToplineCustomAdapter;
 import com.metis.meishuquan.fragment.Topline.ItemInfoFragment;
 import com.metis.meishuquan.fragment.circle.MomentDetailFragment;
 import com.metis.meishuquan.fragment.commons.InputDialogFragment;
+import com.metis.meishuquan.fragment.commons.InputFragment;
 import com.metis.meishuquan.fragment.commons.ListDialogFragment;
 import com.metis.meishuquan.fragment.commons.StudioFragment;
 import com.metis.meishuquan.manager.common.UserManager;
@@ -1217,7 +1218,7 @@ public class StudioActivity extends BaseActivity implements
                         @Override
                         public void onOkClick(View view, CharSequence cs) {
                             mUser.setAchievement(cs.toString());
-                            UserManager.updateMyInfo(User.KEY_USER_RESUME, cs.toString());
+                            UserManager.updateMyInfo(User.KEY_ACHIEVEMENT, cs.toString());
                         }
                     });
                     break;
@@ -1280,7 +1281,11 @@ public class StudioActivity extends BaseActivity implements
     };
 
     private void showDialogAndUpdate (String title, String text, String hint, final InputDialogFragment.OnOkListener listener) {
-        InputDialogFragment.getInstance(title, text, hint, new InputDialogFragment.OnOkListener() {
+        InputDialogFragment fragment = new InputDialogFragment ();
+        fragment.setTitle(title);
+        fragment.setText(text);
+        fragment.setHint(hint);
+        fragment.setOnOkListener(new InputDialogFragment.OnOkListener() {
             @Override
             public void onOkClick(View view, CharSequence cs) {
                 if (listener != null) {
@@ -1288,7 +1293,17 @@ public class StudioActivity extends BaseActivity implements
                 }
                 //updateInfo(key, cs.toString());
             }
-        }).show(getSupportFragmentManager(), "");
+        });
+        fragment.show(getSupportFragmentManager(), TAG);
+        /*InputDialogFragment.getInstance(title, text, hint, new InputDialogFragment.OnOkListener() {
+            @Override
+            public void onOkClick(View view, CharSequence cs) {
+                if (listener != null) {
+                    listener.onOkClick(view, cs);
+                }
+                //updateInfo(key, cs.toString());
+            }
+        }).show(getSupportFragmentManager(), "");*/
     }
 
 

@@ -30,6 +30,7 @@ import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.topline.UserMark;
 import com.metis.meishuquan.util.ActivityUtils;
 import com.metis.meishuquan.util.ImageLoaderUtils;
+import com.metis.meishuquan.util.ScrollBottomListener;
 import com.metis.meishuquan.view.common.delegate.AbsDelegate;
 import com.metis.meishuquan.view.common.delegate.AbsViewHolder;
 import com.metis.meishuquan.view.common.delegate.DelegateAdapter;
@@ -66,20 +67,36 @@ public class FocusActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_focus);
 
+        final long userId = getIntent().getIntExtra(KEY_USER_ID, 0);
+        mType = getIntent().getIntExtra(KEY_FOCUS_TYPE, 0);
+
         mFocusRecyclerView = (RecyclerView)findViewById(R.id.focus_recycler_view);
 
         mLinearManager = new LinearLayoutManager(this);
         mFocusRecyclerView.setLayoutManager(mLinearManager);
+        mFocusRecyclerView.setOnScrollListener(new ScrollBottomListener() {
 
-        long userId = getIntent().getIntExtra(KEY_USER_ID, 0);
-        mType = getIntent().getIntExtra(KEY_FOCUS_TYPE, 0);
+            @Override
+            public void onScrolledBottom() {
+                Log.v(TAG, "onScrolledBottom");
+                long lastId = 0;
+                if (mDataList.size() > 0) {
+                    lastId = ((FocusOrFollower)(mDataList.get(mDataList.size() - 1).getSource())).getId();
+                }
+                loadData(userId, lastId);
+            }
+        });
 
         mAdapter = new FocusAdapter(this, mDataList);
         mFocusRecyclerView.setAdapter(mAdapter);
         if (mType == TYPE_FOLLOWER) {
             setTitleCenter(getString(R.string.info_fans_list));
         }
-        CircleOperator.getInstance().getFocusList(userId, 0, mType, new UserInfoOperator.OnGetListener<List<FocusOrFollower>>() {
+        loadData(userId, 0);
+    }
+
+    private void loadData (long userId, final long lastId) {
+        CircleOperator.getInstance().getFocusList(userId, lastId, mType, new UserInfoOperator.OnGetListener<List<FocusOrFollower>>() {
                     @Override
                     public void onGet(boolean succeed, List<FocusOrFollower> focusOrFollowers) {
                         /*if (mType == TYPE_FOLLOWER) {
@@ -90,12 +107,17 @@ public class FocusActivity extends BaseActivity {
                             mDataList.clear();
                             mDataList.addAll(delegates);
                         } else {*/
-                            List<FocusDelegate> delegates = new ArrayList<FocusDelegate>();
-                            for (FocusOrFollower er : focusOrFollowers) {
-                                delegates.add(new FocusDelegate(er));
-                            }
+                        if (!succeed) {
+                            return;
+                        }
+                        List<FocusDelegate> delegates = new ArrayList<FocusDelegate>();
+                        for (FocusOrFollower er : focusOrFollowers) {
+                            delegates.add(new FocusDelegate(er));
+                        }
+                        if (lastId == 0) {
                             mDataList.clear();
-                            mDataList.addAll(delegates);
+                        }
+                        mDataList.addAll(delegates);
                         //}
                         mAdapter.notifyDataSetChanged();
                     }
