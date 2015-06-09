@@ -1,7 +1,9 @@
 package com.metis.meishuquan.fragment.commons;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,10 @@ public class InputDialogFragment extends DialogFragment {
     private TextView mTitleTv = null;
     private EditText mInputEt = null;
     private Button mOkBtn = null;
+
+    public InputDialogFragment() {
+        this.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Dialog);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,17 +76,43 @@ public class InputDialogFragment extends DialogFragment {
 
     public void setText (String text) {
         mText = text;
-        if (mInputEt != null && mText != null) {
-            mInputEt.append(mText);
-            mInputEt.selectAll();
+        if (mText == null) {
+            mText = "";
+        }
+        if (mInputEt != null) {
+            mInputEt.setText("");
+            mInputEt.setText(mText);
         }
     }
 
     public void setHint (String hint) {
         mHint = hint;
-        if (mInputEt != null && mHint != null) {
+        if (mHint == null) {
+            mHint = "";
+        }
+        if (mInputEt != null) {
             mInputEt.setHint(mHint);
         }
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        super.onCancel(dialog);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mTitleTv = null;
+        mTitle = null;
+        mText = null;
+        mHint = null;
+        mListener = null;
     }
 
     public void setOnOkListener (OnOkListener listener) {

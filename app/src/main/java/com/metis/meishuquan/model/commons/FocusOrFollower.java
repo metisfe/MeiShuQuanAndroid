@@ -9,6 +9,14 @@ import java.io.Serializable;
  * Created by WJ on 2015/6/8.
  */
 public class FocusOrFollower implements Serializable {
+
+    public static final int
+            TYPE_NONE = 0,
+            TYPE_I_FOCUS = 1,
+            TYPE_FOCUS_ME = 2,
+            TYPE_FOCUS_EACH = 3;
+
+
     private long id;
     private long userId;
     private CUserModel usermodel;

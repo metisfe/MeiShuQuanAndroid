@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.act.ActDetailActivity;
 import com.metis.meishuquan.activity.act.SelectStudioActivity;
 import com.metis.meishuquan.activity.circle.ReplyActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
@@ -213,9 +214,11 @@ public class ActDetailFragment extends Fragment implements View.OnClickListener{
         //Toast.makeText(getActivity(), "getUserRole " + mUser.getUserRole(), Toast.LENGTH_SHORT).show();
         if (mSimpleActiveInfo.pId > 0 && !mSimpleActiveInfo.isJoin) {
             mJoinBtn.setText(R.string.act_joined_already);
+            ((ActDetailActivity)getActivity()).switchToSecondTab();
             //mJoinBtn.setText(R.string.act_title_check);
         } else if (mSimpleActiveInfo.isJoin) {
             mJoinBtn.setText(R.string.act_joined_already);
+            ((ActDetailActivity)getActivity()).switchToSecondTab();
         }
     }
 

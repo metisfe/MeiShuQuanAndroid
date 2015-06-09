@@ -156,7 +156,7 @@ public class CircleOperator {
         }
     }
 
-    public void cancelAttention(int userId, ApiOperationCallback<ReturnInfo<String>> callback) {
+    public void cancelAttention(long userId, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuffer PATH = new StringBuffer(URL_CANCEL_ATTENTION);

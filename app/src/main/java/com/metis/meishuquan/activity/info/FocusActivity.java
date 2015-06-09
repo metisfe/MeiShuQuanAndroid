@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +30,7 @@ import com.metis.meishuquan.model.enums.IdTypeEnum;
 import com.metis.meishuquan.model.topline.UserMark;
 import com.metis.meishuquan.util.ActivityUtils;
 import com.metis.meishuquan.util.ImageLoaderUtils;
+import com.metis.meishuquan.util.ScrollBottomListener;
 import com.metis.meishuquan.view.common.delegate.AbsDelegate;
 import com.metis.meishuquan.view.common.delegate.AbsViewHolder;
 import com.metis.meishuquan.view.common.delegate.DelegateAdapter;
@@ -41,6 +43,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FocusActivity extends BaseActivity {
+
+    private static final String TAG = FocusActivity.class.getSimpleName();
 
     public static final String
             KEY_USER_ID = "user_id",
@@ -63,20 +67,36 @@ public class FocusActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_focus);
 
+        final long userId = getIntent().getIntExtra(KEY_USER_ID, 0);
+        mType = getIntent().getIntExtra(KEY_FOCUS_TYPE, 0);
+
         mFocusRecyclerView = (RecyclerView)findViewById(R.id.focus_recycler_view);
 
         mLinearManager = new LinearLayoutManager(this);
         mFocusRecyclerView.setLayoutManager(mLinearManager);
+        mFocusRecyclerView.setOnScrollListener(new ScrollBottomListener() {
 
-        long userId = getIntent().getIntExtra(KEY_USER_ID, 0);
-        mType = getIntent().getIntExtra(KEY_FOCUS_TYPE, 0);
+            @Override
+            public void onScrolledBottom() {
+                Log.v(TAG, "onScrolledBottom");
+                long lastId = 0;
+                if (mDataList.size() > 0) {
+                    lastId = ((FocusOrFollower)(mDataList.get(mDataList.size() - 1).getSource())).getId();
+                }
+                loadData(userId, lastId);
+            }
+        });
 
         mAdapter = new FocusAdapter(this, mDataList);
         mFocusRecyclerView.setAdapter(mAdapter);
         if (mType == TYPE_FOLLOWER) {
             setTitleCenter(getString(R.string.info_fans_list));
         }
-        CircleOperator.getInstance().getFocusList(userId, 0, mType, new UserInfoOperator.OnGetListener<List<FocusOrFollower>>() {
+        loadData(userId, 0);
+    }
+
+    private void loadData (long userId, final long lastId) {
+        CircleOperator.getInstance().getFocusList(userId, lastId, mType, new UserInfoOperator.OnGetListener<List<FocusOrFollower>>() {
                     @Override
                     public void onGet(boolean succeed, List<FocusOrFollower> focusOrFollowers) {
                         /*if (mType == TYPE_FOLLOWER) {
@@ -87,12 +107,17 @@ public class FocusActivity extends BaseActivity {
                             mDataList.clear();
                             mDataList.addAll(delegates);
                         } else {*/
-                            List<FocusDelegate> delegates = new ArrayList<FocusDelegate>();
-                            for (FocusOrFollower er : focusOrFollowers) {
-                                delegates.add(new FocusDelegate(er));
-                            }
+                        if (!succeed) {
+                            return;
+                        }
+                        List<FocusDelegate> delegates = new ArrayList<FocusDelegate>();
+                        for (FocusOrFollower er : focusOrFollowers) {
+                            delegates.add(new FocusDelegate(er));
+                        }
+                        if (lastId == 0) {
                             mDataList.clear();
-                            mDataList.addAll(delegates);
+                        }
+                        mDataList.addAll(delegates);
                         //}
                         mAdapter.notifyDataSetChanged();
                     }
@@ -126,7 +151,15 @@ public class FocusActivity extends BaseActivity {
                             CircleOperator.getInstance().attention(userId, item.getItemId(), new ApiOperationCallback<ReturnInfo<String>>() {
                                 @Override
                                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                                    Log.v(TAG, "attention callback = " + response.getContent());
                                     if (result.isSuccess()) {
+                                        FocusOrFollower source = delegate.getSource();
+                                        if (source.getRelationType() == FocusOrFollower.TYPE_FOCUS_ME) {
+                                            source.setRelationType(FocusOrFollower.TYPE_FOCUS_EACH);
+                                        } else if (source.getRelationType() == FocusOrFollower.TYPE_NONE) {
+                                            source.setRelationType(FocusOrFollower.TYPE_I_FOCUS);
+                                        }
+                                        mAdapter.notifyDataSetChanged();
                                         /*if (user.getRelationType() == 0) {
                                         } else if (user.getRelationType() == 2) {
                                         }*/
@@ -188,17 +221,40 @@ public class FocusActivity extends BaseActivity {
                     profileIv,
                     ImageLoaderUtils.getNormalDisplayOptions(R.drawable.default_portrait_fang));
             mBtn.setVisibility(focusDelegate.isMySelf ? View.GONE : View.VISIBLE);
-            /*if (source.getUserMark().isMutualAttention()) {
+            if (source.getRelationType() == FocusOrFollower.TYPE_FOCUS_EACH) {
                 mBtn.setImageResource(R.drawable.ic_focused_each);
-            } else if (source.getUserMark().isAttention()) {
+            } else if (source.getRelationType() == FocusOrFollower.TYPE_I_FOCUS) {
                 mBtn.setImageResource(R.drawable.ic_has_focused);
             } else {
                 mBtn.setImageResource(R.drawable.ic_focus_on);
-            }*/
+            }
             mBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    payAttention(model, focusDelegate, mBtn);
+                    final FocusOrFollower source = focusDelegate.getSource();
+                    if (source.getRelationType() == FocusOrFollower.TYPE_FOCUS_EACH) {
+                        CircleOperator.getInstance().cancelAttention(source.getUserId(), new ApiOperationCallback<ReturnInfo<String>>() {
+                            @Override
+                            public void onCompleted(ReturnInfo<String> stringReturnInfo, Exception e1, ServiceFilterResponse serviceFilterResponse) {
+                                if (stringReturnInfo.isSuccess()) {
+                                    source.setRelationType(FocusOrFollower.TYPE_FOCUS_ME);
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        });
+                    } else if (source.getRelationType() == FocusOrFollower.TYPE_I_FOCUS) {
+                        CircleOperator.getInstance().cancelAttention(source.getUserId(), new ApiOperationCallback<ReturnInfo<String>>() {
+                            @Override
+                            public void onCompleted(ReturnInfo<String> stringReturnInfo, Exception e1, ServiceFilterResponse serviceFilterResponse) {
+                                if (stringReturnInfo.isSuccess()) {
+                                    source.setRelationType(FocusOrFollower.TYPE_NONE);
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        });
+                    } else {
+                        payAttention(model, focusDelegate, mBtn);
+                    }
                 }
             });
             itemView.setOnClickListener(new View.OnClickListener() {
