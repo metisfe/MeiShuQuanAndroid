@@ -140,12 +140,11 @@
         android:id="@+id/id_tv_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:textSize="15sp"
         android:text="本人热情、开朗、有责任感、有进取心、团队合作能力强、学习能力强"
-        android:textColor="#7e7e7e" />
+        android:textColor="@color/common_color_424242" />
 
     <com.metis.meishuquan.view.course.FlowLayout
         android:id="@+id/id_flowlayout_at_users"
@@ -221,7 +220,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:layout_marginTop="10dp"
         android:orientation="vertical">
 
         <com.metis.meishuquan.view.circle.moment.comment.EmotionTextView
@@ -233,6 +231,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:visibility="gone"
+            android:textColor="@color/common_color_424242"
             android:text="微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖"
             android:background="@color/transparent" />
 

@@ -870,6 +870,9 @@ public class UserInfoOperator {
 
                 @Override
                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    if (response != null) {
+                        Log.v(TAG, "getInviteCode callback=" + response.getContent());
+                    }
                     if (result != null) {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);

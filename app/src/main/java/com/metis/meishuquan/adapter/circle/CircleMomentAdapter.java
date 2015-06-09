@@ -531,6 +531,7 @@ public class CircleMomentAdapter extends BaseAdapter {
                         if (result == null || !result.isSuccess()) {
                             return;
                         }
+                        moment.supportCount += 1;
                         SharedPreferencesUtil.getInstanse(mContext).add(MainApplication.userInfo.getUserId() + moment.id + "", KEY_ISSUPPORT);
                         //Toast.makeText(MainApplication.UIContext, "点赞成功！", Toast.LENGTH_LONG).show();
                     }
@@ -538,29 +539,44 @@ public class CircleMomentAdapter extends BaseAdapter {
     }
 
     private void comment(CCircleDetailModel moment) {
-        GlobalData.momentsReplyCount = moment.comentCount;
-        GlobalData.getInstance().moment = moment;
-        if (!MainApplication.isLogin()) {
-            mContext.startActivity(new Intent(mContext, LoginActivity.class));
-            return;
-        }
-        MomentCommentFragment momentCommentFragment = new MomentCommentFragment();
-        momentCommentFragment.setOnCommentSuccessListner(new MomentDetailFragment.OnCommentSuccessListner() {
-            @Override
-            public void onSuccess(CCircleCommentModel circleCommentModel) {
-                MomentDetailFragment momentDetailFragment = new MomentDetailFragment();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
-                ft.add(R.id.content_container, momentDetailFragment);
-                ft.addToBackStack(null);
-                ft.commit();
+        if (moment.comentCount == 0) {
+            GlobalData.momentsReplyCount = moment.comentCount;
+            GlobalData.getInstance().moment = moment;
+            if (!MainApplication.isLogin()) {
+                mContext.startActivity(new Intent(mContext, LoginActivity.class));
+                return;
             }
-        });
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
-        ft.add(R.id.content_container, momentCommentFragment);
-        ft.addToBackStack(null);
-        ft.commit();
+            MomentCommentFragment momentCommentFragment = new MomentCommentFragment();
+            momentCommentFragment.setOnCommentSuccessListner(new MomentDetailFragment.OnCommentSuccessListner() {
+                @Override
+                public void onSuccess(CCircleCommentModel circleCommentModel) {
+                    MomentDetailFragment momentDetailFragment = new MomentDetailFragment();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                    ft.add(R.id.content_container, momentDetailFragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }
+            });
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+            ft.add(R.id.content_container, momentCommentFragment);
+            ft.addToBackStack(null);
+            ft.commit();
+        } else {
+            MomentDetailFragment momentDetailFragment = new MomentDetailFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt(MomentDetailFragment.KEY_MOMENT_ID, moment.id);
+            momentDetailFragment.setArguments(bundle);
+
+            GlobalData.moment = moment;
+
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+            ft.add(R.id.content_container, momentDetailFragment);
+            ft.addToBackStack(null);
+            ft.commit();
+        }
     }
 
     //转发

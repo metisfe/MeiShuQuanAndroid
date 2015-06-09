@@ -83,7 +83,7 @@ public class NewsInfoActity extends FragmentActivity {
     }
 
     private void initHeaderView() {
-        this.headerView = LayoutInflater.from(this).inflate(R.layout.layout_news_info_activity_headerview, null, true);
+        this.headerView = LayoutInflater.from(this).inflate(R.layout.layout_news_info_activity_headerview, null, false);
         this.tvNewsTitle = (TextView) headerView.findViewById(R.id.id_title);
         this.tvPublishTime = (TextView) headerView.findViewById(R.id.id_tv_create_time);
 
