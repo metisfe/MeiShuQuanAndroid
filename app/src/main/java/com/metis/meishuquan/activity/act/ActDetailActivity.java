@@ -190,4 +190,9 @@ public class ActDetailActivity extends BaseActivity implements RadioGroup.OnChec
                 break;
         }
     }
+
+    public void switchToSecondTab () {
+        mListBtn.setChecked(true);
+        //mDetailBtn
+    }
 }

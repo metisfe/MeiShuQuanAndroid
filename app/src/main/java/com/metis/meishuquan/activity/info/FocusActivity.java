@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +42,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FocusActivity extends BaseActivity {
+
+    private static final String TAG = FocusActivity.class.getSimpleName();
 
     public static final String
             KEY_USER_ID = "user_id",
@@ -126,7 +129,15 @@ public class FocusActivity extends BaseActivity {
                             CircleOperator.getInstance().attention(userId, item.getItemId(), new ApiOperationCallback<ReturnInfo<String>>() {
                                 @Override
                                 public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                                    Log.v(TAG, "attention callback = " + response.getContent());
                                     if (result.isSuccess()) {
+                                        FocusOrFollower source = delegate.getSource();
+                                        if (source.getRelationType() == FocusOrFollower.TYPE_FOCUS_ME) {
+                                            source.setRelationType(FocusOrFollower.TYPE_FOCUS_EACH);
+                                        } else if (source.getRelationType() == FocusOrFollower.TYPE_NONE) {
+                                            source.setRelationType(FocusOrFollower.TYPE_I_FOCUS);
+                                        }
+                                        mAdapter.notifyDataSetChanged();
                                         /*if (user.getRelationType() == 0) {
                                         } else if (user.getRelationType() == 2) {
                                         }*/
@@ -188,17 +199,40 @@ public class FocusActivity extends BaseActivity {
                     profileIv,
                     ImageLoaderUtils.getNormalDisplayOptions(R.drawable.default_portrait_fang));
             mBtn.setVisibility(focusDelegate.isMySelf ? View.GONE : View.VISIBLE);
-            /*if (source.getUserMark().isMutualAttention()) {
+            if (source.getRelationType() == FocusOrFollower.TYPE_FOCUS_EACH) {
                 mBtn.setImageResource(R.drawable.ic_focused_each);
-            } else if (source.getUserMark().isAttention()) {
+            } else if (source.getRelationType() == FocusOrFollower.TYPE_I_FOCUS) {
                 mBtn.setImageResource(R.drawable.ic_has_focused);
             } else {
                 mBtn.setImageResource(R.drawable.ic_focus_on);
-            }*/
+            }
             mBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    payAttention(model, focusDelegate, mBtn);
+                    final FocusOrFollower source = focusDelegate.getSource();
+                    if (source.getRelationType() == FocusOrFollower.TYPE_FOCUS_EACH) {
+                        CircleOperator.getInstance().cancelAttention(source.getUserId(), new ApiOperationCallback<ReturnInfo<String>>() {
+                            @Override
+                            public void onCompleted(ReturnInfo<String> stringReturnInfo, Exception e1, ServiceFilterResponse serviceFilterResponse) {
+                                if (stringReturnInfo.isSuccess()) {
+                                    source.setRelationType(FocusOrFollower.TYPE_FOCUS_ME);
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        });
+                    } else if (source.getRelationType() == FocusOrFollower.TYPE_I_FOCUS) {
+                        CircleOperator.getInstance().cancelAttention(source.getUserId(), new ApiOperationCallback<ReturnInfo<String>>() {
+                            @Override
+                            public void onCompleted(ReturnInfo<String> stringReturnInfo, Exception e1, ServiceFilterResponse serviceFilterResponse) {
+                                if (stringReturnInfo.isSuccess()) {
+                                    source.setRelationType(FocusOrFollower.TYPE_NONE);
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        });
+                    } else {
+                        payAttention(model, focusDelegate, mBtn);
+                    }
                 }
             });
             itemView.setOnClickListener(new View.OnClickListener() {
