@@ -340,47 +340,58 @@ public class StudioActivity extends BaseActivity implements
         });
     }
 
+    private List<MomentsGroup> mMomentGroups = null;
     private void payAttention (final User user) {
         //mCustomRight.setEnabled(false);
-        CommonOperator.getInstance().getMomentsGroupsAsync(new UserInfoOperator.OnGetListener<List<MomentsGroup>>() {
-            @Override
-            public void onGet(boolean succeed, List<MomentsGroup> momentsGroups) {
-                if (succeed) {
-                    PopupMenu popupMenu = new PopupMenu(StudioActivity.this, mCustomRight);
-                    popupMenu.inflate(R.menu.studio_menu);
-                    for (int i = 0; i < momentsGroups.size(); i++) {
-                        MomentsGroup group = momentsGroups.get(i);
-                        popupMenu.getMenu().add(R.id.studio_menu, group.id, i, group.name);
+        if (mMomentGroups != null) {
+            showPopMenu(user, mMomentGroups);
+        } else {
+            CommonOperator.getInstance().getMomentsGroupsAsync(new UserInfoOperator.OnGetListener<List<MomentsGroup>>() {
+                @Override
+                public void onGet(boolean succeed, List<MomentsGroup> momentsGroups) {
+                    if (succeed) {
+                        mMomentGroups = momentsGroups;
+                        showPopMenu(user, mMomentGroups);
                     }
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-
-                            CircleOperator.getInstance().attention(user.getUserId(), item.getItemId(), new ApiOperationCallback<ReturnInfo<String>>() {
-                                @Override
-                                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                                    mCustomRight.setEnabled(true);
-                                    if (result.isSuccess()) {
-                                        if (user.getRelationType() == 0) {
-                                            mCustomRight.setText(R.string.studio_has_focused);
-                                            mCustomRight.setTextColor(getResources().getColor(android.R.color.holo_red_light));
-                                            user.setRelationType(1);
-                                        } else if (user.getRelationType() == 2) {
-                                            mCustomRight.setText(R.string.studio_focused_each);
-                                            mCustomRight.setTextColor(getResources().getColor(android.R.color.holo_orange_light));
-                                            user.setRelationType(3);
-                                        }
-                                        mCustomRight.setOnClickListener(null);
-                                    }
-                                }
-                            });
-                            return false;
-                        }
-                    });
-                    popupMenu.show();
                 }
+            });
+        }
+
+    }
+
+    private void showPopMenu (final User user, List<MomentsGroup> momentsGroups) {
+        PopupMenu popupMenu = new PopupMenu(StudioActivity.this, mCustomRight);
+        popupMenu.inflate(R.menu.studio_menu);
+        for (int i = 0; i < momentsGroups.size(); i++) {
+            MomentsGroup group = momentsGroups.get(i);
+            popupMenu.getMenu().add(R.id.studio_menu, group.id, i, group.name);
+        }
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                CircleOperator.getInstance().attention(user.getUserId(), item.getItemId(), new ApiOperationCallback<ReturnInfo<String>>() {
+                    @Override
+                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                        mCustomRight.setEnabled(true);
+                        if (result.isSuccess()) {
+                            if (user.getRelationType() == 0) {
+                                mCustomRight.setText(R.string.studio_has_focused);
+                                mCustomRight.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+                                user.setRelationType(1);
+                            } else if (user.getRelationType() == 2) {
+                                mCustomRight.setText(R.string.studio_focused_each);
+                                mCustomRight.setTextColor(getResources().getColor(android.R.color.holo_orange_light));
+                                user.setRelationType(3);
+                            }
+                            mCustomRight.setOnClickListener(null);
+                        }
+                    }
+                });
+                return false;
             }
         });
+        popupMenu.show();
     }
 
     @Override
