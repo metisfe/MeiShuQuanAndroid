@@ -71,7 +71,7 @@ public class CircleChatListItemView extends LinearLayout {
             Log.i("unReadCount", unReadCount + "");
             badge.setText(unReadCount + "");
             badge.setTextSize(10);
-            badge.setBackground(badge.getDefaultBackground());
+            badge.setBackgroundDrawable(badge.getDefaultBackground());
             badge.show();
         } else {
             badge.hide();
@@ -92,7 +92,7 @@ public class CircleChatListItemView extends LinearLayout {
             } else {
                 ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(url, imageView, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.default_portrait_fang));
             }
-        } else if (conversation.getConversationType() == RongIMClient.ConversationType.SYSTEM) {
+        } else if (conversation.getConversationType() == RongIMClient.ConversationType.CUSTOMER_SERVICE) {
             if (conversation.getObjectName().equals("@我的")) {
                 imageView.setImageResource(R.drawable.icon_at_me);
             } else if (conversation.getObjectName().equals("评论我的")) {

@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
 import io.rong.message.TextMessage;
 

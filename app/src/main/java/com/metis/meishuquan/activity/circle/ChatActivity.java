@@ -55,7 +55,9 @@ public class ChatActivity extends FragmentActivity {
             }
         });
 
+
         RongIM.setConversationBehaviorListener(new RongIM.ConversationBehaviorListener() {
+            //聊天界面，用户头像点击事件，点击进入个人主页
             @Override
             public boolean onClickUserPortrait(Context context, RongIMClient.ConversationType conversationType, RongIMClient.UserInfo userInfo) {
                 String json = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey(SharedPreferencesUtil.CONTACTS + MainApplication.userInfo.getUserId());
@@ -76,20 +78,22 @@ public class ChatActivity extends FragmentActivity {
                 return true;
             }
 
+            //消息点击事件（未实现）
             @Override
             public boolean onClickMessage(Context context, RongIMClient.Message message) {
                 return false;
             }
         });
 
-        RongIM.GetUserInfoProvider userInfoProvider = new RongIM.GetUserInfoProvider() {
-            @Override
-            public RongIMClient.UserInfo getUserInfo(String s) {
-
-                return null;
-            }
-        };
-        RongIM.setGetUserInfoProvider(userInfoProvider, false);
+//        //更新本地缓存的用户信息
+//        RongIM.GetUserInfoProvider userInfoProvider = new RongIM.GetUserInfoProvider() {
+//            @Override
+//            public RongIMClient.UserInfo getUserInfo(String userId) {
+//                return null;
+//            }
+//        };
+//        userInfoProvider.getUserInfo(targetId);
+//        RongIM.setGetUserInfoProvider(userInfoProvider, true);
 
         titleBar.setLeftButton("返回", 0, new View.OnClickListener() {
             @Override
