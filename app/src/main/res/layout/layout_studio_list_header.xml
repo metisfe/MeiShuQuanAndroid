@@ -11,15 +11,45 @@
         android:src="@drawable/ic_launcher"
         android:scaleType="centerCrop"
         />
-    <TextView
+    <RelativeLayout
         android:id="@+id/studio_list_header_extras"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textColor="#cfd5ec"
-        android:gravity="center"
         android:layout_alignBottom="@+id/studio_list_header_cover"
-        />
+        android:layout_centerHorizontal="true"
+        >
+        <TextView
+            android:id="@+id/studio_list_header_focus"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#cfd5ec"
+            android:layout_toLeftOf="@+id/center_line"
+            android:singleLine="true"
+            android:gravity="right"
+            />
+        <View
+            android:id="@+id/center_line"
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:background="#cfd5ec"
+            android:layout_alignTop="@+id/studio_list_header_focus"
+            android:layout_alignBottom="@+id/studio_list_header_focus"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            />
+        <TextView
+            android:id="@+id/studio_list_header_fans"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#cfd5ec"
+            android:layout_toRightOf="@+id/center_line"
+            android:singleLine="true"
+            />
+    </RelativeLayout>
+
     <Button
         android:id="@+id/studio_list_header_msg"
         android:layout_width="40dp"

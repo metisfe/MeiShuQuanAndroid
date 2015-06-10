@@ -125,7 +125,8 @@
 
     <string name="name_card_scan">扫描</string>
 
-    <string name="studio_fans_and_focus">粉丝%1$d | 关注%2$d</string>
+    <string name="studio_fans_count">粉丝%1$d</string>
+    <string name="studio_focus_count">关注%1$d</string>
     <string name="studio_send_msg">私信</string>
     <string name="studio_introduce">画室简介</string>
     <string name="studio_album">画室相册</string>
