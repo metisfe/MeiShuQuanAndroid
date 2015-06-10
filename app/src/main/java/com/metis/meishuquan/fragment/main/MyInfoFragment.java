@@ -236,11 +236,18 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.my_info_profile:
-                Intent previewIt = new Intent(getActivity(), ImagePreviewActivity.class);
-                ArrayList<String> urls = new ArrayList<String>();
-                urls.add(mUser.getUserAvatar());
-                previewIt.putStringArrayListExtra(ImagePreviewActivity.KEY_IMAGE_URL_ARRAY, urls);
-                startActivity(previewIt);
+                if (mUser != null) {
+                    Intent previewIt = new Intent(getActivity(), ImagePreviewActivity.class);
+                    ArrayList<String> urls = new ArrayList<String>();
+                    urls.add(mUser.getUserAvatar());
+                    if (urls.size() > 0) {
+                        previewIt.putStringArrayListExtra(ImagePreviewActivity.KEY_IMAGE_URL_ARRAY, urls);
+                        startActivity(previewIt);
+                    }
+                } else {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    Toast.makeText(getActivity(), R.string.my_info_toast_not_login, Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.my_info_login:
                 //showLoginFragment();
