@@ -119,7 +119,31 @@
                     android:textColor="#424242"
                     android:textSize="12sp" />
             </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/rl_share_qq"
+                android:layout_width="70dp"
+                android:layout_height="80dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="12.5dp"
+                android:layout_toRightOf="@+id/rl_share_meishuquan">
 
+                <Button
+                    android:id="@+id/id_btn_share_qq"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/icon_share_qq" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/id_btn_share_qq"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5dp"
+                    android:text="QQ"
+                    android:textColor="#424242"
+                    android:textSize="12sp" />
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/rl_share_sina_weibo"

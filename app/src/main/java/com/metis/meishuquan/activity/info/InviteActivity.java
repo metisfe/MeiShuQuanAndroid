@@ -2,14 +2,9 @@ package com.metis.meishuquan.activity.info;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.drawable.ShapeDrawable;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +12,7 @@ import android.widget.Toast;
 
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.manager.common.QrCodeMakerTask;
+import com.metis.meishuquan.manager.common.ShareManager;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
 import com.metis.meishuquan.model.commons.InviteCodeInfo;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -25,10 +21,12 @@ import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.controller.listener.SocializeListeners;
 import com.umeng.socialize.media.BaseShareContent;
+import com.umeng.socialize.media.QQShareContent;
 import com.umeng.socialize.media.QZoneShareContent;
 import com.umeng.socialize.media.SinaShareContent;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.sso.QZoneSsoHandler;
+import com.umeng.socialize.sso.UMQQSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
@@ -41,9 +39,9 @@ public class InviteActivity extends BaseActivity implements View.OnClickListener
 
     private ImageView mQrIv = null;
     private TextView mContentTv, mDownloadCountTv, mMyCodeTv;
-    private View mShareWeChatView, mShareWeiboView, mShareQQView, mShareFriendsView;
+    private View mShareWeChatView, mShareWeiboView, mShareQzoneView, mShareQQView, mShareFriendsView;
 
-    private UMSocialService mController = null;
+    //private UMSocialService mController = null;
     private Bitmap mQrCodeBmp = null;
 
     private InviteCodeInfo mCodeInfo = null;
@@ -59,17 +57,20 @@ public class InviteActivity extends BaseActivity implements View.OnClickListener
         mMyCodeTv = (TextView)findViewById(R.id.invite_my_code);
         mShareWeChatView = findViewById(R.id.invite_share_wechat);
         mShareWeiboView = findViewById(R.id.invite_share_weibo);
+        mShareQzoneView = findViewById(R.id.invite_share_qzone);
         mShareQQView = findViewById(R.id.invite_share_qq);
         mShareFriendsView = findViewById(R.id.invite_share_friends);
 
         mShareWeChatView.setOnClickListener(this);
         mShareWeiboView.setOnClickListener(this);
+        mShareQzoneView.setOnClickListener(this);
         mShareQQView.setOnClickListener(this);
         mShareFriendsView.setOnClickListener(this);
 
-        mController = UMServiceFactory.getUMSocialService("www.baidu.com");
+        /*mController = UMServiceFactory.getUMSocialService("www.baidu.com");
+        initQQ(this);
         initQZ(this);
-        initWX(this);
+        initWX(this);*/
     }
 
     @Override
@@ -118,7 +119,7 @@ public class InviteActivity extends BaseActivity implements View.OnClickListener
             case R.id.invite_share_wechat:
                 WeiXinShareContent weiXinShareContent = new WeiXinShareContent();
                 fillShareContent(this, weiXinShareContent);
-                mController.directShare(this, SHARE_MEDIA.WEIXIN, new SocializeListeners.SnsPostListener() {
+                ShareManager.getInstance(this).getSocialService().directShare(this, SHARE_MEDIA.WEIXIN, new SocializeListeners.SnsPostListener() {
                     @Override
                     public void onStart() {
 
@@ -134,7 +135,7 @@ public class InviteActivity extends BaseActivity implements View.OnClickListener
             case R.id.invite_share_weibo:
                 SinaShareContent sinaShareContent = new SinaShareContent();
                 fillShareContent(this, sinaShareContent);
-                mController.directShare(this, SHARE_MEDIA.SINA, new SocializeListeners.SnsPostListener() {
+                ShareManager.getInstance(this).getSocialService().directShare(this, SHARE_MEDIA.SINA, new SocializeListeners.SnsPostListener() {
                     @Override
                     public void onStart() {
 
@@ -146,10 +147,10 @@ public class InviteActivity extends BaseActivity implements View.OnClickListener
                     }
                 });
                 break;
-            case R.id.invite_share_qq:
+            case R.id.invite_share_qzone:
                 QZoneShareContent qZoneShareContent = new QZoneShareContent();
                 fillShareContent(this, qZoneShareContent);
-                mController.directShare(this, SHARE_MEDIA.QZONE, new SocializeListeners.SnsPostListener() {
+                ShareManager.getInstance(this).getSocialService().directShare(this, SHARE_MEDIA.QZONE, new SocializeListeners.SnsPostListener() {
                     @Override
                     public void onStart() {
 
@@ -162,10 +163,13 @@ public class InviteActivity extends BaseActivity implements View.OnClickListener
                     }
                 });
                 break;
+            case R.id.invite_share_qq:
+                shareToQQ();
+                break;
             case R.id.invite_share_friends:
                 CircleShareContent circleShareContent = new CircleShareContent();
                 fillShareContent(this, circleShareContent);
-                mController.directShare(this, SHARE_MEDIA.WEIXIN_CIRCLE, new SocializeListeners.SnsPostListener() {
+                ShareManager.getInstance(this).getSocialService().directShare(this, SHARE_MEDIA.WEIXIN_CIRCLE, new SocializeListeners.SnsPostListener() {
                     @Override
                     public void onStart() {
 
@@ -183,6 +187,13 @@ public class InviteActivity extends BaseActivity implements View.OnClickListener
     private void initQZ(Activity context) {
         QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(context, "1104485283", "k9f8JhWppP5r1N5t");
         qZoneSsoHandler.addToSocialSDK();
+    }
+
+    private void initQQ (Activity activity) {
+        //参数1为当前Activity， 参数2为开发者在QQ互联申请的APP ID，参数3为开发者在QQ互联申请的APP kEY.
+        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(activity, "1104485283",
+                "k9f8JhWppP5r1N5t");
+        qqSsoHandler.addToSocialSDK();
     }
 
     private void initWX(Context context) {
@@ -205,6 +216,22 @@ public class InviteActivity extends BaseActivity implements View.OnClickListener
         content.setShareContent(mCodeInfo.getInvitationDesc());
         content.setTargetUrl(mCodeInfo.getInvitationurl());
         content.setShareImage(new UMImage(activity, mQrCodeBmp));
-        mController.setShareMedia(content);
+        ShareManager.getInstance(this).getSocialService().setShareMedia(content);
+    }
+
+    private void shareToQQ () {
+        QQShareContent content = new QQShareContent();
+        fillShareContent(this, content);
+        ShareManager.getInstance(this).getSocialService().directShare(this, SHARE_MEDIA.QQ, new SocializeListeners.SnsPostListener() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onComplete(SHARE_MEDIA share_media, int i, SocializeEntity socializeEntity) {
+
+            }
+        });
     }
 }

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.circle.ReplyActivity;
+import com.metis.meishuquan.manager.common.ShareManager;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CirclePushBlogParm;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
@@ -31,6 +32,7 @@ import com.umeng.socialize.media.BaseShareContent;
 import com.umeng.socialize.media.QZoneShareContent;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.sso.QZoneSsoHandler;
+import com.umeng.socialize.sso.UMQQSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
@@ -48,7 +50,7 @@ public class SharePopupWindow extends PopupWindow {
 
 
     private boolean isInited = false;
-    private UMSocialService mController = null;
+    //private UMSocialService mController = null;
 
     private String
             mInsideTitle = "",
@@ -63,7 +65,7 @@ public class SharePopupWindow extends PopupWindow {
 
     public SharePopupWindow(final Activity mContext, View parent) {
         this.mContext = mContext;
-        initYM(mContext);
+        //initYM(mContext);
 
         View view = View.inflate(mContext, R.layout.popup_share, null);
         view.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_ins));
@@ -85,6 +87,7 @@ public class SharePopupWindow extends PopupWindow {
         Button btnQzone = (Button) view.findViewById(R.id.id_btn_share_qq_zone);
         Button btnSinaWeibo = (Button) view.findViewById(R.id.id_btn_share_sina_weibo);
         Button btnCancel = (Button) view.findViewById(R.id.id_btn_cancel);
+        Button btnQQ = (Button)view.findViewById(R.id.id_btn_share_qq);
 
         //分享美术圈
         btnMeishuquan.setOnClickListener(new View.OnClickListener() {
@@ -180,7 +183,7 @@ public class SharePopupWindow extends PopupWindow {
                 dismiss();
                 CircleShareContent content = new CircleShareContent();
                 fillShareContent(mContext, content);
-                mController.directShare(mContext, SHARE_MEDIA.WEIXIN_CIRCLE, new SocializeListeners.SnsPostListener() {
+                ShareManager.getInstance(mContext).getSocialService().directShare(mContext, SHARE_MEDIA.WEIXIN_CIRCLE, new SocializeListeners.SnsPostListener() {
                     @Override
                     public void onStart() {
 
@@ -201,7 +204,7 @@ public class SharePopupWindow extends PopupWindow {
                 dismiss();
                 WeiXinShareContent content = new WeiXinShareContent();
                 fillShareContent(mContext, content);
-                mController.directShare(mContext, SHARE_MEDIA.WEIXIN, new SocializeListeners.SnsPostListener() {
+                ShareManager.getInstance(mContext).getSocialService().directShare(mContext, SHARE_MEDIA.WEIXIN, new SocializeListeners.SnsPostListener() {
                     @Override
                     public void onStart() {
 
@@ -222,7 +225,7 @@ public class SharePopupWindow extends PopupWindow {
                 dismiss();
                 QZoneShareContent content = new QZoneShareContent();
                 fillShareContent(mContext, content);
-                mController.directShare(mContext, SHARE_MEDIA.QZONE, new SocializeListeners.SnsPostListener() {
+                ShareManager.getInstance(mContext).getSocialService().directShare(mContext, SHARE_MEDIA.QZONE, new SocializeListeners.SnsPostListener() {
                     @Override
                     public void onStart() {
 
@@ -246,7 +249,12 @@ public class SharePopupWindow extends PopupWindow {
                 //SinaShareContent
             }
         });
+        btnQQ.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -256,16 +264,23 @@ public class SharePopupWindow extends PopupWindow {
 
     }
 
-    private void initYM(Activity context) {
-        mController = UMServiceFactory.getUMSocialService("www.baidu.com");
-        mController.getConfig().removePlatform(SHARE_MEDIA.TENCENT);
-
+    /*private void initYM(Activity context) {
+        ShareManager.getInstance(context).getSocialService() = UMServiceFactory.getUMSocialService("www.baidu.com");
+        //mController.getConfig().removePlatform(SHARE_MEDIA.TENCENT);
+        initQQ(context);
         initQZ(context);
         initWX(context);
         isInited = true;
-    }
+    }*/
 
-    private void initQZ(Activity context) {
+    /*private void initQQ (Activity activity) {
+        //参数1为当前Activity， 参数2为开发者在QQ互联申请的APP ID，参数3为开发者在QQ互联申请的APP kEY.
+        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(activity, "1104485283",
+                "k9f8JhWppP5r1N5t");
+        qqSsoHandler.addToSocialSDK();
+    }*/
+
+    /*private void initQZ(Activity context) {
         QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(context, "1104485283", "k9f8JhWppP5r1N5t");
         qZoneSsoHandler.addToSocialSDK();
     }
@@ -280,7 +295,7 @@ public class SharePopupWindow extends PopupWindow {
         UMWXHandler wxCircleHandler = new UMWXHandler(context, appID, appSecret);
         wxCircleHandler.setToCircle(true);
         wxCircleHandler.addToSocialSDK();
-    }
+    }*/
 
     public void setShareInfo(String title, String content, String targetUrl, String imageUrl) {
         if (TextUtils.isEmpty(title) || TextUtils.isEmpty(targetUrl) || TextUtils.isEmpty(content) || TextUtils.isEmpty(imageUrl)) {
@@ -327,7 +342,7 @@ public class SharePopupWindow extends PopupWindow {
         content.setShareContent(mContent);
         content.setTargetUrl(mTargetUrl);
         content.setShareImage(new UMImage(activity, mImageUrl));
-        mController.setShareMedia(content);
+        ShareManager.getInstance(activity).getSocialService().setShareMedia(content);
     }
 
     private void sendShareInfoToUMeng(String name) {

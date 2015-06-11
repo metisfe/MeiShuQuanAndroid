@@ -277,6 +277,7 @@
     <string name="invite_down_count">当前下载人数:%1$d人</string>
     <string name="invite_wechat">微信</string>
     <string name="invite_weibo">新浪微博</string>
-    <string name="invite_qq">QQ空间</string>
+    <string name="invite_qzone">QQ空间</string>
+    <string name="invite_qq">QQ</string>
     <string name="invite_friends">朋友圈</string>
 </resources>
