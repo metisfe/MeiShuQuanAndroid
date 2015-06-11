@@ -45,7 +45,7 @@ public class CircleChatListItemView extends LinearLayout {
     }
 
     public void setData(RongIMClient.Conversation conversation) {
-        if (conversation.getConversationType() == RongIMClient.ConversationType.SYSTEM) {
+        if (conversation.getConversationType() == RongIMClient.ConversationType.CUSTOMER_SERVICE) {
             this.titleView.setVisibility(View.GONE);
             this.contentView.setVisibility(View.GONE);
             this.timeView.setVisibility(View.GONE);
@@ -54,7 +54,7 @@ public class CircleChatListItemView extends LinearLayout {
 
             this.customView.setVisibility(View.VISIBLE);
             this.customView.setText(conversation.getObjectName());
-        } else if (conversation.getConversationType() != RongIMClient.ConversationType.SYSTEM) {
+        } else if (conversation.getConversationType() != RongIMClient.ConversationType.CUSTOMER_SERVICE) {
             this.titleView.setVisibility(View.VISIBLE);
             this.contentView.setVisibility(View.VISIBLE);
             this.timeView.setVisibility(View.VISIBLE);

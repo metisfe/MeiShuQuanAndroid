@@ -10,11 +10,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -82,6 +85,7 @@ public class NewsInfoActity extends FragmentActivity {
         this.listView = (ListView) this.findViewById(R.id.id_listview_news_info);
     }
 
+    //初始化HeaderView并添加至listView
     private void initHeaderView() {
         this.headerView = LayoutInflater.from(this).inflate(R.layout.layout_news_info_activity_headerview, null, false);
         this.tvNewsTitle = (TextView) headerView.findViewById(R.id.id_title);
@@ -92,6 +96,7 @@ public class NewsInfoActity extends FragmentActivity {
         bindHeaderViewData();
     }
 
+    //绑定headerView数据
     private void bindHeaderViewData() {
         if (newsInfo != null) {
             this.tvNewsTitle.setText(newsInfo.getData().getTitle());
@@ -99,6 +104,7 @@ public class NewsInfoActity extends FragmentActivity {
         }
     }
 
+    //初始化事件
     private void initEvent() {
 
     }
@@ -111,7 +117,14 @@ public class NewsInfoActity extends FragmentActivity {
                     if (result.getInfo().equals(String.valueOf(0))) {
                         Gson gson = new Gson();
                         String json = gson.toJson(result);
+                        newsInfo = gson.fromJson(json, new TypeToken<TopLineNewsInfo>() {
+                        }.getType());
 
+                        if (newsInfo.getData() == null) {
+                            Toast.makeText(NewsInfoActity.this, "相关新闻不存在!", Toast.LENGTH_SHORT).show();
+                            finish();
+                            return;
+                        }
                         if (!TextUtils.isEmpty(json)) {
                             newsInfo = gson.fromJson(json, new TypeToken<TopLineNewsInfo>() {
                             }.getType());
@@ -124,5 +137,51 @@ public class NewsInfoActity extends FragmentActivity {
                 }
             }
         });
+    }
+
+    class NewsInfoAdapter extends BaseAdapter {
+
+        private TopLineNewsInfo newsInfo;
+
+        public NewsInfoAdapter(TopLineNewsInfo newsInfo) {
+            if (newsInfo == null) {
+                newsInfo = new TopLineNewsInfo();
+            }
+            this.newsInfo = newsInfo;
+        }
+
+        public void setNewsInfo(TopLineNewsInfo newsInfo) {
+            this.newsInfo = newsInfo;
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return super.getViewTypeCount();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return super.getItemViewType(position);
+        }
+
+        @Override
+        public int getCount() {
+            return 0;
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            return null;
+        }
     }
 }

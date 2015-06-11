@@ -163,8 +163,14 @@ public class ChatListFragment extends CircleBaseFragment {
         RongIMClient.Conversation commentMe = new RongIMClient.Conversation();
         commentMe.setObjectName("评论我的");
         commentMe.setConversationType(RongIMClient.ConversationType.CUSTOMER_SERVICE);
+        //添加评论我的
+        RongIMClient.Conversation chatRoom = new RongIMClient.Conversation();
+        commentMe.setObjectName("聊天室");
+        commentMe.setConversationType(RongIMClient.ConversationType.CUSTOMER_SERVICE);
         clist.add(atMe);
         clist.add(commentMe);
+        clist.add(chatRoom);
+
         if (this.listView != null && adapter != null && MainApplication.rongClient != null) {
             new Thread(new Runnable() {
                 @Override
@@ -211,10 +217,13 @@ public class ChatListFragment extends CircleBaseFragment {
                     ft.addToBackStack(null);
                     ft.commit();
 
-//                    // 启动聊天室
-//                    RongIM.getInstance().startChatroom(getActivity(), "321", "XXX");
                 }
 
+                //聊天室
+                else if (position == 2) {
+                    // 启动聊天室
+//                    RongIM.getInstance().startChatroom(getActivity(), "321", "XXX");
+                }
                 //聊天
                 else {
                     MainApplication.refreshRong();

@@ -2,24 +2,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:paddingBottom="7.5dp"
+    android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    android:background="@color/white">
+    android:paddingTop="7.5dp">
 
     <ImageView
         android:id="@+id/img_thumbnail"
         android:layout_width="100dp"
         android:layout_height="65dp"
-        android:layout_marginBottom="7.5dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="7.5dp"
         android:background="#e2e2e2"
         android:scaleType="centerCrop" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_below="@+id/img_thumbnail"
-        android:background="#ccc" />
+    <!--<View-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:layout_below="@+id/img_thumbnail"-->
+    <!--android:background="#ccc" />-->
 
     <RelativeLayout
         android:id="@+id/rl_title"
