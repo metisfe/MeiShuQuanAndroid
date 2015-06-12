@@ -19,6 +19,7 @@ import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.circle.ChatActivity;
+import com.metis.meishuquan.activity.circle.ChatRoomListActivity;
 import com.metis.meishuquan.activity.circle.SearchUserInfoActivity;
 import com.metis.meishuquan.activity.info.QrScanActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
@@ -158,15 +159,15 @@ public class ChatListFragment extends CircleBaseFragment {
         //添加@我的
         RongIMClient.Conversation atMe = new RongIMClient.Conversation();
         atMe.setObjectName("@我的");
-        atMe.setConversationType(RongIMClient.ConversationType.CUSTOMER_SERVICE);
+        atMe.setConversationType(RongIMClient.ConversationType.SYSTEM);
         //添加评论我的
         RongIMClient.Conversation commentMe = new RongIMClient.Conversation();
         commentMe.setObjectName("评论我的");
-        commentMe.setConversationType(RongIMClient.ConversationType.CUSTOMER_SERVICE);
-        //添加评论我的
+        commentMe.setConversationType(RongIMClient.ConversationType.SYSTEM);
+        //添加聊天室
         RongIMClient.Conversation chatRoom = new RongIMClient.Conversation();
-        commentMe.setObjectName("聊天室");
-        commentMe.setConversationType(RongIMClient.ConversationType.CUSTOMER_SERVICE);
+        chatRoom.setObjectName("志愿答疑群组");
+        chatRoom.setConversationType(RongIMClient.ConversationType.SYSTEM);
         clist.add(atMe);
         clist.add(commentMe);
         clist.add(chatRoom);
@@ -221,15 +222,15 @@ public class ChatListFragment extends CircleBaseFragment {
 
                 //聊天室
                 else if (position == 2) {
-                    // 启动聊天室
-//                    RongIM.getInstance().startChatroom(getActivity(), "321", "XXX");
+                    startActivity(new Intent(getActivity(), ChatRoomListActivity.class));
                 }
+
                 //聊天
                 else {
                     MainApplication.refreshRong();
                     RongIMClient.Conversation conversation = adapter.data.get(position);
 //                    RongIM.getInstance().startPrivateChat(getActivity(),conversation.getTargetId(),ChatManager.getConversationTitle(conversation));
-
+//
 //                    RongIMClient.Conversation newConverstion=null;
 //                    RongIM.setGetUserInfoProvider(new RongIM.GetUserInfoProvider() {
 //                        @Override

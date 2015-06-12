@@ -45,16 +45,20 @@ public class ChatActivity extends FragmentActivity {
         MainApplication.refreshRong();
         this.titleBar = (CircleTitleBar) this.findViewById(R.id.activity_circle_chatactivity_titlebar);
         titleBar.setText(title);
-        titleBar.setRightButton("", R.drawable.icon_circle_chat, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ChatActivity.this, ChatConfigActivity.class);
-                intent.putExtra("type", type);
-                intent.putExtra("targetId", targetId);
-                startActivity(intent);
-            }
-        });
-
+        if (!this.type.equals(RongIMClient.ConversationType.CHATROOM.toString())) {
+            titleBar.showRight();
+            titleBar.setRightButton("", R.drawable.icon_circle_chat, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ChatActivity.this, ChatConfigActivity.class);
+                    intent.putExtra("type", type);
+                    intent.putExtra("targetId", targetId);
+                    startActivity(intent);
+                }
+            });
+        } else {
+            titleBar.hideRight();
+        }
 
         RongIM.setConversationBehaviorListener(new RongIM.ConversationBehaviorListener() {
             //聊天界面，用户头像点击事件，点击进入个人主页

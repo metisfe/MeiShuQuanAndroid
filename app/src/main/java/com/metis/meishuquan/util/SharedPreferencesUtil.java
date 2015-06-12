@@ -32,6 +32,8 @@ public class SharedPreferencesUtil {
 
     /*圈子*/
     public static final String CONTACTS = "CONTACTS";
+    public static final String DEFAULT_CHATROOM = "DEFAULT_CHATROOM";
+
 
     /*系统*/
     public static final String MOMENTS_GROUP_INFO = "MOMENTS_GROUP_INFO";

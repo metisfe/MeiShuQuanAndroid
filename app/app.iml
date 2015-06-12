@@ -77,6 +77,7 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 21 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="Rong_IMKit_v1_4_2" level="project" />
     <orderEntry type="library" exported="" name="pinyin4j-2.5.0" level="project" />
     <orderEntry type="library" exported="" name="android-core-3.2.0" level="project" />
     <orderEntry type="library" exported="" name="Rong_IMKit_v1_4_8" level="project" />
@@ -91,8 +92,8 @@
     <orderEntry type="library" exported="" name="android-async-http-1.4.4" level="project" />
     <orderEntry type="library" exported="" name="umeng_social_sdk" level="project" />
     <orderEntry type="library" exported="" name="SocialSDK_QQZone_1" level="project" />
-    <orderEntry type="library" exported="" name="SocialSDK_QQZone_2" level="project" />
     <orderEntry type="library" exported="" name="com.umeng.message.lib_v2.2.0" level="project" />
+    <orderEntry type="library" exported="" name="SocialSDK_QQZone_2" level="project" />
     <orderEntry type="library" exported="" name="SocialSDK_QQZone_3" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="mobileservices-1.1.5" level="project" />

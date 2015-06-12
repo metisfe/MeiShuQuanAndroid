@@ -41,6 +41,8 @@ public class CircleOperator {
     private static final String URL_CIRCLE_PUSH_COMMENT = "v1.1/Circle/PushCommentByPost?";
     private static final String URL_CIRCLE_AT_ME = "v1.1/Message/AndIRelated?";
     private static final String URL_GET_FOCUS_LIST = "v1.1/Circle/GetFocusUserList";
+    private static final String URL_GET_DEFAULT_CHATROOM_LIST = "v1.1/Message/GetDefaultDiscussion";
+
 
     private static CircleOperator operator = null;
     private boolean flag;
@@ -94,8 +96,9 @@ public class CircleOperator {
             Toast.makeText(MainApplication.UIContext, "网络不给力，请稍候再试", Toast.LENGTH_SHORT).show();
         }
     }
+
     /*?userid={userid}&lastid={lastid}&foucetype={foucetype}*/
-    public void getFocusList (long userId, long lastId, int type, final UserInfoOperator.OnGetListener<List<FocusOrFollower>> listener) {
+    public void getFocusList(long userId, long lastId, int type, final UserInfoOperator.OnGetListener<List<FocusOrFollower>> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuffer PATH = new StringBuffer(URL_GET_FOCUS_LIST);
@@ -113,7 +116,8 @@ public class CircleOperator {
                                     Gson gson = new Gson();
                                     String json = gson.toJson(stringResult);
                                     Log.v(TAG, "getFocusList result=" + json);
-                                    Result<List<FocusOrFollower>> result = gson.fromJson(json, new TypeToken<Result<List<FocusOrFollower>>>(){}.getType());
+                                    Result<List<FocusOrFollower>> result = gson.fromJson(json, new TypeToken<Result<List<FocusOrFollower>>>() {
+                                    }.getType());
                                     if (listener != null) {
                                         listener.onGet(result.getOption().getStatus() == 0, result.getData());
                                     }
@@ -219,4 +223,17 @@ public class CircleOperator {
         }
     }
 
+    public void getDefaultChatRomm(ApiOperationCallback<ReturnInfo<String>> callback) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuffer PATH = new StringBuffer(URL_GET_DEFAULT_CHATROOM_LIST);
+                PATH.append("?session=" + MainApplication.userInfo.getCookie());
+                Log.i("default_chatroom", PATH.toString());
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+            }
+        } else {
+            Toast.makeText(MainApplication.UIContext, "网络不给力，请稍候再试", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

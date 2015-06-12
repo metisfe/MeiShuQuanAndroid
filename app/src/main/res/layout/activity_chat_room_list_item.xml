@@ -19,6 +19,6 @@
         android:singleLine="true"
         android:text="123"
         android:textColor="@color/common_color_424242"
-        android:textSize="12sp" />
+        android:textSize="16sp" />
 
 </RelativeLayout>

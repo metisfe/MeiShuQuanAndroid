@@ -45,7 +45,7 @@ public class CircleChatListItemView extends LinearLayout {
     }
 
     public void setData(RongIMClient.Conversation conversation) {
-        if (conversation.getConversationType() == RongIMClient.ConversationType.CUSTOMER_SERVICE) {
+        if (conversation.getConversationType() == RongIMClient.ConversationType.SYSTEM) {
             this.titleView.setVisibility(View.GONE);
             this.contentView.setVisibility(View.GONE);
             this.timeView.setVisibility(View.GONE);
@@ -54,7 +54,7 @@ public class CircleChatListItemView extends LinearLayout {
 
             this.customView.setVisibility(View.VISIBLE);
             this.customView.setText(conversation.getObjectName());
-        } else if (conversation.getConversationType() != RongIMClient.ConversationType.CUSTOMER_SERVICE) {
+        } else if (conversation.getConversationType() != RongIMClient.ConversationType.SYSTEM) {
             this.titleView.setVisibility(View.VISIBLE);
             this.contentView.setVisibility(View.VISIBLE);
             this.timeView.setVisibility(View.VISIBLE);
@@ -92,11 +92,13 @@ public class CircleChatListItemView extends LinearLayout {
             } else {
                 ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(url, imageView, ImageLoaderUtils.getNormalDisplayOptions(R.drawable.default_portrait_fang));
             }
-        } else if (conversation.getConversationType() == RongIMClient.ConversationType.CUSTOMER_SERVICE) {
+        } else if (conversation.getConversationType() == RongIMClient.ConversationType.SYSTEM) {
             if (conversation.getObjectName().equals("@我的")) {
                 imageView.setImageResource(R.drawable.icon_at_me);
             } else if (conversation.getObjectName().equals("评论我的")) {
                 imageView.setImageResource(R.drawable.icon_comment_me);
+            }else if (conversation.getObjectName().equals("志愿答疑群组")){
+                imageView.setImageResource(R.drawable.icon_chat_room);
             }
         } else {
             imageView.setImageResource(R.drawable.view_circle_groupicon);
