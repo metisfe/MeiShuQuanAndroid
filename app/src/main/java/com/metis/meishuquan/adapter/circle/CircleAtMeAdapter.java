@@ -542,6 +542,13 @@ public class CircleAtMeAdapter extends BaseAdapter {
             return;
         }
         MomentCommentFragment momentCommentFragment = new MomentCommentFragment();
+
+        //传递参数
+        Bundle bundle = new Bundle();
+        bundle.putInt(MomentCommentFragment.KEY_COMMENT_ID, moment.id);
+        momentCommentFragment.setArguments(bundle);
+
+        //评论成功回调
         momentCommentFragment.setOnCommentSuccessListner(new MomentDetailFragment.OnCommentSuccessListner() {
             @Override
             public void onSuccess(CCircleCommentModel circleCommentModel) {

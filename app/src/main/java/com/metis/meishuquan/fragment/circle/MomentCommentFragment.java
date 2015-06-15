@@ -71,6 +71,7 @@ import java.util.List;
  */
 public class MomentCommentFragment extends Fragment {
     public static final String CLASS_NAME = MomentCommentFragment.class.getSimpleName();
+    public static final String KEY_COMMENT_ID = "KEY_COMMENT_ID";//圈子评论，回复评论
 
     private static final int KEYBOARD_DRAWABLE_RESOURCE_ID = R.drawable.circle_moment_emotion_icon_keyboard;
     private static final int EMOTION_DRAWABLE_RESOURCE_ID = R.drawable.circle_moment_icon_emotion;
@@ -146,8 +147,9 @@ public class MomentCommentFragment extends Fragment {
 //                    e.printStackTrace();
 //                }
 
+                int id=getArguments().getInt(KEY_COMMENT_ID,0);
                 CParamCircleComment param = new CParamCircleComment();
-                param.setId(GlobalData.moment.id);
+                param.setId(id);
                 param.setContent(editText.getText().toString());
                 CircleOperator.getInstance().pushCommentByPost(param, new ApiOperationCallback<ReturnInfo<String>>() {
                     @Override

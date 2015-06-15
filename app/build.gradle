@@ -16,7 +16,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 21
         versionCode 4
-        versionName "1.4.4"
+        versionName "1.4.5"
         multiDexEnabled true
     }
     buildTypes {
@@ -66,4 +66,5 @@ dependencies {
     compile files('libs/com.umeng.message.lib_v2.2.0.jar')
     compile 'com.android.support:multidex:1.0.0'
     compile files('libs/Rong_IMKit_v1_4_2.jar')
+    compile 'com.nhaarman.listviewanimations:lib-core:3.1.0@aar'
 }

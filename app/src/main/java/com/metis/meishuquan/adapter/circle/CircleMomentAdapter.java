@@ -538,7 +538,7 @@ public class CircleMomentAdapter extends BaseAdapter {
                 });
     }
 
-    private void comment(CCircleDetailModel moment) {
+    private void comment(final CCircleDetailModel moment) {
         if (moment.comentCount == 0) {
             GlobalData.momentsReplyCount = moment.comentCount;
             GlobalData.getInstance().moment = moment;
@@ -547,10 +547,22 @@ public class CircleMomentAdapter extends BaseAdapter {
                 return;
             }
             MomentCommentFragment momentCommentFragment = new MomentCommentFragment();
+
+            //传递参数
+            Bundle bundle = new Bundle();
+            bundle.putInt(MomentCommentFragment.KEY_COMMENT_ID, moment.id);
+            momentCommentFragment.setArguments(bundle);
+
             momentCommentFragment.setOnCommentSuccessListner(new MomentDetailFragment.OnCommentSuccessListner() {
                 @Override
                 public void onSuccess(CCircleCommentModel circleCommentModel) {
                     MomentDetailFragment momentDetailFragment = new MomentDetailFragment();
+
+                    //传递参数
+                    Bundle bundle= new Bundle();
+                    bundle.putInt(MomentDetailFragment.KEY_MOMENT_ID,moment.id);
+                    momentDetailFragment.setArguments(bundle);
+
                     FragmentTransaction ft = fm.beginTransaction();
                     ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
                     ft.add(R.id.content_container, momentDetailFragment);

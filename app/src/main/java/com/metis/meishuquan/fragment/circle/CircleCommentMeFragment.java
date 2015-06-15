@@ -1,10 +1,12 @@
 package com.metis.meishuquan.fragment.circle;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ClickableSpan;
@@ -25,7 +27,9 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.model.BLL.CircleOperator;
+import com.metis.meishuquan.model.circle.CCircleCommentModel;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CCircleRelateMeDetail;
 import com.metis.meishuquan.model.circle.CRelatedCircleModel;
@@ -159,7 +163,7 @@ public class CircleCommentMeFragment extends Fragment {
         @Override
         public View getView(int i, View convertView, ViewGroup viewGroup) {
             ViewHolder holder = null;
-            CCircleRelateMeDetail relateMeDetail = list.get(i);
+            final CCircleRelateMeDetail relateMeDetail = list.get(i);
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_circle_comment_me_list_item, null, false);
@@ -169,6 +173,7 @@ public class CircleCommentMeFragment extends Fragment {
                 holder.tvTime = (TextView) convertView.findViewById(R.id.id_createtime);
                 holder.tvDevice = (TextView) convertView.findViewById(R.id.tv_device);
                 holder.tvCommentContent = (EmotionTextView) convertView.findViewById(R.id.id_tv_content);
+                holder.imgReply = (ImageView) convertView.findViewById(R.id.id_img_reply);
 
                 holder.ll_weibo_content = (LinearLayout) convertView.findViewById(R.id.id_ll_not_circle);
                 holder.imgWeiboPic = (ImageView) convertView.findViewById(R.id.id_img_for_not_circle);
@@ -187,6 +192,7 @@ public class CircleCommentMeFragment extends Fragment {
             holder.tvDevice.setText("");//来源
 
             //最后一条评论内容
+            holder.tvCommentContent.setText("");
             holder.tvCommentContent.append("回复");
             SpannableString at = new SpannableString("@" + relateMeDetail.user.name);
             ForegroundColorSpan span = new ForegroundColorSpan(Color.BLUE);
@@ -201,6 +207,35 @@ public class CircleCommentMeFragment extends Fragment {
             holder.tvCommentContent.append(at);
             holder.tvCommentContent.append(":" + relateMeDetail.lastComment.content);
 
+            //回复
+            holder.imgReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!MainApplication.isLogin()) {
+                        startActivity(new Intent(getActivity(), LoginActivity.class));
+                        return;
+                    }
+                    MomentCommentFragment momentCommentFragment = new MomentCommentFragment();
+                    momentCommentFragment.setOnCommentSuccessListner(new MomentDetailFragment.OnCommentSuccessListner() {
+                        @Override
+                        public void onSuccess(CCircleCommentModel circleCommentModel) {
+
+                        }
+                    });
+                    //传递参数
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(MomentCommentFragment.KEY_COMMENT_ID, relateMeDetail.lastComment.id);
+                    momentCommentFragment.setArguments(bundle);
+
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+                    ft.add(R.id.content_container, momentCommentFragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }
+            });
+
             //原微博
             if (relateMeDetail.relayImgUrl != null) {
                 ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(relateMeDetail.relayImgUrl, holder.imgWeiboPic);
@@ -214,7 +249,7 @@ public class CircleCommentMeFragment extends Fragment {
         }
 
         class ViewHolder {
-            private ImageView imgHeaderView;
+            private ImageView imgHeaderView, imgReply;
             private TextView tvName;
             private TextView tvRole;
             private TextView tvTime;

@@ -600,6 +600,12 @@ public class MomentDetailFragment extends Fragment {
                     return;
                 }
                 MomentCommentFragment momentCommentFragment = new MomentCommentFragment();
+
+                //传递参数
+                Bundle bundle= new Bundle();
+                bundle.putInt(MomentCommentFragment.KEY_COMMENT_ID,momentId);
+                momentCommentFragment.setArguments(bundle);
+
                 momentCommentFragment.setOnCommentSuccessListner(new OnCommentSuccessListner() {
                     @Override
                     public void onSuccess(CCircleCommentModel circleCommentModel) {
