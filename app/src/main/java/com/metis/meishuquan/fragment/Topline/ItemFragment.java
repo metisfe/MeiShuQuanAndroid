@@ -92,10 +92,10 @@ public class ItemFragment extends Fragment {
 
         //初始化成员
         toplineAdapter = new ToplineCustomAdapter(getActivity(), list);
-//        AnimationAdapter mAnimAdapter = new AlphaInAnimationAdapter(toplineAdapter);
-//        mAnimAdapter.setAbsListView(listView);
-//        listView.setAdapter(mAnimAdapter);
-        this.listView.setAdapter(toplineAdapter);
+        AnimationAdapter mAnimAdapter = new AlphaInAnimationAdapter(toplineAdapter);
+        mAnimAdapter.setAbsListView(listView);
+        listView.setAdapter(mAnimAdapter);
+//        this.listView.setAdapter(toplineAdapter);
         return contextView;
     }
 

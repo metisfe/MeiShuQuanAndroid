@@ -78,6 +78,7 @@ public class NewsInfoActity extends FragmentActivity {
         initEvent();
     }
 
+    //初始化控件
     private void initView() {
         this.btnBack = (Button) this.findViewById(R.id.id_btn_back);
         this.imgUserHead = (ImageView) this.findViewById(R.id.id_img_dynamic);
@@ -109,6 +110,7 @@ public class NewsInfoActity extends FragmentActivity {
 
     }
 
+    //获取新闻详情
     public void getInfoData(final int newsId, final UserInfoOperator.OnGetListener<TopLineNewsInfo> listener) {
         TopLineOperator.getInstance().getNewsInfoById(newsId, new ApiOperationCallback<ReturnInfo<String>>() {
             @Override
@@ -139,6 +141,9 @@ public class NewsInfoActity extends FragmentActivity {
         });
     }
 
+    /**
+     * 新闻详情列表适配器
+     */
     class NewsInfoAdapter extends BaseAdapter {
 
         private TopLineNewsInfo newsInfo;
