@@ -626,6 +626,10 @@
             android:name=".activity.circle.ChatRoomListActivity"
             android:label="@string/title_activity_chat_room_list" >
         </activity>
+        <activity
+            android:name=".HomeActivity"
+            android:label="@string/title_activity_home" >
+        </activity>
     </application>
 
 </manifest>

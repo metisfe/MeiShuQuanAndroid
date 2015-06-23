@@ -9,14 +9,14 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:textColor="#424242"
         android:layout_toLeftOf="@+id/area_item_count"
         android:singleLine="true"
         />
     <TextView
         android:id="@+id/area_item_count"
-        android:layout_width="41dp"
+        android:layout_width="32dp"
         android:layout_height="16dp"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"

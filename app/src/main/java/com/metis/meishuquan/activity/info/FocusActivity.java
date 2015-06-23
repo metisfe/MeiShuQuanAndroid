@@ -107,11 +107,14 @@ public class FocusActivity extends BaseActivity {
                             mDataList.clear();
                             mDataList.addAll(delegates);
                         } else {*/
-                        if (!succeed) {
+                        if (!succeed || focusOrFollowers == null) {
                             return;
                         }
                         List<FocusDelegate> delegates = new ArrayList<FocusDelegate>();
                         for (FocusOrFollower er : focusOrFollowers) {
+                            if (er.getUsermodel() == null) {
+                                continue;
+                            }
                             delegates.add(new FocusDelegate(er));
                         }
                         if (lastId == 0) {

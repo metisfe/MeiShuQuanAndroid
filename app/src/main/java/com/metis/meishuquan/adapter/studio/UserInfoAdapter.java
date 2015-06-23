@@ -36,12 +36,13 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
     private static final String TAG = UserInfoAdapter.class.getSimpleName();
 
     private Context mContext = null;
-    private User mUser = null;
+    private List<User> mUserList = null;
     private boolean canEdit = false;
 
     private View.OnClickListener mOnClickListener = null;
 
     private String locationSchool = null;
+    private String mGender = null;
 
     public UserInfoAdapter (Context context, User user) {
         this (context, user, false);
@@ -49,18 +50,19 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
 
     public UserInfoAdapter (Context context, User user, boolean canEdit) {
         mContext = context;
-        mUser = user;
+        mUserList = new ArrayList<User>();
+        mUserList.add(user);
         this.canEdit = canEdit;
     }
 
     @Override
     public int getCount() {
-        return 1;
+        return mUserList.size();
     }
 
     @Override
     public User getItem(int i) {
-        return mUser;
+        return mUserList.get(i);
     }
 
     @Override
@@ -70,6 +72,7 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+        final User mUser = getItem(i);
         view = LayoutInflater.from(mContext).inflate(R.layout.layout_user_info, null);
 
         View mProfileContainer = view.findViewById(R.id.info_profile_container);
@@ -108,7 +111,7 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
         mMeishuquanIdView.setSecondaryText(mUser.getAccout());
         mMeishuquanIdView.setArrowVisible(canEdit && TextUtils.isEmpty(mUser.getAccout()) ? View.VISIBLE : View.INVISIBLE);
 
-        mGenderView.setSecondaryText(mUser.getGender());
+        mGenderView.setSecondaryText(mGender == null ? mUser.getGender() : mGender);
         mGenderView.setArrowVisible(canEdit ? View.VISIBLE : View.INVISIBLE);
 
         mConstellationView.setSecondaryText(mUser.getHoroscope());
@@ -244,6 +247,10 @@ public class UserInfoAdapter extends BaseAdapter implements View.OnClickListener
 
     public void setLocationSchool (String schoolNames) {
         locationSchool = schoolNames;
+    }
+
+    public void setGender (String gender) {
+        mGender = gender;
     }
 
     @Override

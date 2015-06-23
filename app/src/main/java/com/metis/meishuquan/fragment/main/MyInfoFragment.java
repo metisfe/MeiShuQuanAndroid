@@ -224,7 +224,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         } else {
             mProfileIv.setImageResource(R.drawable.ic_launcher);
         }
-
+        mSuperDogView.setVisibility(user.getUserRoleEnum() == IdTypeEnum.TEACHER ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -300,8 +300,6 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                         startActivity(new Intent(getActivity(), StudentListActivity.class));
                     } else if (mUser.getUserRoleEnum() == IdTypeEnum.STUDENT) {
                         startActivity(new Intent(getActivity(), SelectStudioActivity.class));
-                    } else {
-                        Toast.makeText(getActivity(), "Nothing " + mUser.getUserRole() + " " + mUser.getUserRoleEnum().name(), Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     startActivity(new Intent(getActivity(), LoginActivity.class));

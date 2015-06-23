@@ -1063,14 +1063,20 @@ public class StudioActivity extends BaseActivity implements
                 } else {
                     mGender = maleStr;
                 }
-
                 mUser.setGender(mGender);
                 UserManager.updateMyInfo(User.KEY_GENDER, mGender);
-                if (mAdapter != null && mAdapter instanceof UserInfoAdapter) {
-                    Log.v(TAG, "showDialog " + mGender + " try to notify refresh");
-                    UserInfoAdapter adapter = (UserInfoAdapter) mAdapter;
-                    adapter.notifyDataSetChanged();
-                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mAdapter != null && mAdapter instanceof UserInfoAdapter) {
+                            Log.v(TAG, "showDialog " + mGender + " try to notify refresh");
+                            UserInfoAdapter adapter = (UserInfoAdapter) mAdapter;
+                            adapter.setGender(mGender);
+
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                });
                 //updateInfo(User.KEY_GENDER, mGenderView.getSecondaryText().toString());
             }
         });
