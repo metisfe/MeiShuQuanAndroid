@@ -1,7 +1,5 @@
 package com.metis.meishuquan.fragment.main;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,8 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
 import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
@@ -26,18 +22,13 @@ import com.metis.meishuquan.fragment.circle.CircleBaseFragment;
 import com.metis.meishuquan.fragment.circle.ContactListFragment;
 import com.metis.meishuquan.fragment.circle.MomentsFragment;
 import com.metis.meishuquan.fragment.circle.PostMomentFragment;
-import com.metis.meishuquan.model.circle.MomentsGroup;
-import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.push.PushType;
 import com.metis.meishuquan.push.UnReadManager;
 import com.metis.meishuquan.util.GlobalData;
-import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.circle.CircleTitleBar;
 import com.metis.meishuquan.view.circle.PopupMomentsWindow;
 import com.metis.meishuquan.view.shared.TabBar;
 import com.viewpagerindicator.TabPageIndicator;
-
-import java.util.List;
 
 /**
  * Created by wudi on 4/2/2015.

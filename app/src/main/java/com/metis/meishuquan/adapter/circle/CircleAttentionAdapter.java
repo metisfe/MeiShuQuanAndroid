@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class CircleAttentionAdapter extends BaseAdapter {
     private Context context;
-    private List<MomentsGroup> lstMomentsGroup;
+    private List<MomentsGroup> lstMomentsGroup=new ArrayList<MomentsGroup>();
     private String json = "";
 
     public CircleAttentionAdapter(Context context, int type) {
@@ -46,10 +46,13 @@ public class CircleAttentionAdapter extends BaseAdapter {
                     if (result != null && result.isSuccess()) {
                         json = new Gson().toJson(result);
                         lstMomentsGroup = getLstMomentsGroupByJson(type, json);
+                        SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(SharedPreferencesUtil.MOMENTS_GROUP_INFO,json);
+                        notifyDataSetChanged();
                     }
                 }
             });
         } else {
+            lstMomentsGroup.clear();
             lstMomentsGroup = getLstMomentsGroupByJson(type, json);
         }
     }
