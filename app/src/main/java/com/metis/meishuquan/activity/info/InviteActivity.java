@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.fragment.commons.WebFragment;
 import com.metis.meishuquan.manager.common.QrCodeMakerTask;
 import com.metis.meishuquan.manager.common.ShareManager;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
@@ -40,7 +41,7 @@ public class InviteActivity extends BaseActivity implements View.OnClickListener
     private ImageView mQrIv = null;
     private TextView mContentTv, mDownloadCountTv, mMyCodeTv;
     private View mShareWeChatView, mShareWeiboView, mShareQzoneView, mShareQQView, mShareFriendsView;
-
+    //private WebFragment mWebFragment = null;
     //private UMSocialService mController = null;
     private Bitmap mQrCodeBmp = null;
 
@@ -50,6 +51,8 @@ public class InviteActivity extends BaseActivity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invite);
+
+        //mWebFragment = (WebFragment)getSupportFragmentManager().findFragmentById(R.id.invite_web_fragment);
 
         mQrIv = (ImageView)findViewById(R.id.invite_qr_code);
         mContentTv = (TextView)findViewById(R.id.invite_content);
@@ -66,6 +69,8 @@ public class InviteActivity extends BaseActivity implements View.OnClickListener
         mShareQzoneView.setOnClickListener(this);
         mShareQQView.setOnClickListener(this);
         mShareFriendsView.setOnClickListener(this);
+
+        //mWebFragment.loadUrl("http://meishuquan.net/H5/ShowShareInvitationCode.aspx");
 
         /*mController = UMServiceFactory.getUMSocialService("www.baidu.com");
         initQQ(this);
@@ -95,7 +100,7 @@ public class InviteActivity extends BaseActivity implements View.OnClickListener
 
     private void fillCodeInfo (InviteCodeInfo codeInfo) {
         new QrCodeMakerTask().makeQrCode(
-                new QrCodeMakerTask.Task(codeInfo.getInvitationurl(), getResources().getDimensionPixelSize(R.dimen.invite_qr_code_size)),
+                new QrCodeMakerTask.Task(codeInfo.getDownUrl(), getResources().getDimensionPixelSize(R.dimen.invite_qr_code_size)),
                 new QrCodeMakerTask.Callback() {
                     @Override
                     public void onCallback(Bitmap bitmap) {

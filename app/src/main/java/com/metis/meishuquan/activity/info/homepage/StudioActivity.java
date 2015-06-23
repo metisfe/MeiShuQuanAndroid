@@ -6,9 +6,11 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -82,6 +84,8 @@ import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.tencent.connect.UserInfo;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -185,6 +189,19 @@ public class StudioActivity extends BaseActivity implements
             }
         });
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //Toast.makeText(this, "onSaveInstanceState ", Toast.LENGTH_SHORT).show();
+        outState.putString("cameraPath", mCameraOutputPath);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        //Toast.makeText(this, "onRestoreInstanceState " + savedInstanceState.getString("cameraPath"), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -886,11 +903,26 @@ public class StudioActivity extends BaseActivity implements
                 break;
             case REQUEST_CODE_CAMERA:
                 if (resultCode == RESULT_OK) {
-                    Log.v(TAG, "onActivityResult mCameraPath=" + mCameraOutputPath);
-                    mUser.setUserAvatar(ImageDownloader.Scheme.FILE.wrap(mCameraOutputPath));
-                    final int size = getResources().getDimensionPixelSize(R.dimen.studio_profile_size);
-                    UserInfoOperator.getInstance().updateUserProfile(MainApplication.userInfo.getUserId(), mCameraOutputPath);
-                    ImageLoaderUtils.getImageLoader(this).displayImage(ImageDownloader.Scheme.FILE.wrap(mCameraOutputPath), mTitleProfile, ImageLoaderUtils.getRoundDisplayOptionsStill(size));
+
+                    Bitmap bmp = (Bitmap)data.getExtras().get("data");
+
+                    try {
+                        File file = new File(getCacheDir(), System.currentTimeMillis() + ".jpg");
+                        FileOutputStream fos = new FileOutputStream(file);
+                        bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                        Log.v(TAG, "onActivityResult mCameraPath=" + file.getAbsolutePath());
+                        if (mUser != null) {
+                            mUser.setUserAvatar(file.getPath());
+                        }
+                        final int size = getResources().getDimensionPixelSize(R.dimen.studio_profile_size);
+                        ImageLoaderUtils.getImageLoader(this).displayImage(ImageDownloader.Scheme.FILE.wrap(file.getPath()), mTitleProfile, ImageLoaderUtils.getRoundDisplayOptionsStill(size));
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                    //UserInfoOperator.getInstance().updateUserProfile(MainApplication.userInfo.getUserId(), mCameraOutputPath);
+                    UserInfoOperator.getInstance().updateUserProfile(MainApplication.userInfo.getUserId(), bmp);
+
                     mAdapter.notifyDataSetChanged();
                 }
                 break;
@@ -1013,8 +1045,9 @@ public class StudioActivity extends BaseActivity implements
                 + ".jpg");
         //path = file.getPath();
         Uri imageUri = Uri.fromFile(file);
-        openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        //openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(openCameraIntent, requestCode);
+        Log.v(TAG, "file.absPath=" + file.getAbsolutePath());
         return file.getAbsolutePath();
     }
 
@@ -1373,6 +1406,7 @@ public class StudioActivity extends BaseActivity implements
                             break;
                         case R.string.info_profile_camera:
                             mCameraOutputPath = camera(mRequestCodeCamera);
+                            Log.v(TAG, "mCameraOutputPath " + mCameraOutputPath);
                             break;
                     }
                     ListDialogFragment.getInstance().dismiss();
