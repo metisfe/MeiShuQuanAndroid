@@ -23,7 +23,7 @@
             android:id="@+id/views_circle_titlebar_leftbuttonimage"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_centerInParent="true" />
+            android:layout_centerVertical="true" />
     </RelativeLayout>
 
     <TextView

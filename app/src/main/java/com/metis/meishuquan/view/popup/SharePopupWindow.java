@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,7 +88,7 @@ public class SharePopupWindow extends PopupWindow {
         Button btnQzone = (Button) view.findViewById(R.id.id_btn_share_qq_zone);
         Button btnSinaWeibo = (Button) view.findViewById(R.id.id_btn_share_sina_weibo);
         Button btnCancel = (Button) view.findViewById(R.id.id_btn_cancel);
-        Button btnQQ = (Button)view.findViewById(R.id.id_btn_share_qq);
+        Button btnQQ = (Button) view.findViewById(R.id.id_btn_share_qq);
 
         //分享美术圈
         btnMeishuquan.setOnClickListener(new View.OnClickListener() {
@@ -299,7 +300,9 @@ public class SharePopupWindow extends PopupWindow {
 
     public void setShareInfo(String title, String content, String targetUrl, String imageUrl) {
         if (TextUtils.isEmpty(title) || TextUtils.isEmpty(targetUrl) || TextUtils.isEmpty(content) || TextUtils.isEmpty(imageUrl)) {
-            throw new IllegalArgumentException("title or targetUrl is Empty");
+            //throw new IllegalArgumentException("title or targetUrl is Empty");
+            Toast.makeText(mContext, "缺少关键信息，请稍候再试", Toast.LENGTH_SHORT).show();
+            return;
         }
         mOutsideTitle = title;
         mContent = content;
@@ -314,7 +317,9 @@ public class SharePopupWindow extends PopupWindow {
     //新闻模块调用
     public void setShareInfo(String title, String content, String targetUrl, String imageUrl, int type, int shareId) {
         if (TextUtils.isEmpty(title) || TextUtils.isEmpty(targetUrl) || TextUtils.isEmpty(content) || TextUtils.isEmpty(imageUrl)) {
-            throw new IllegalArgumentException("title or targetUrl is Empty");
+            //throw new IllegalArgumentException("title or targetUrl is Empty");
+            Toast.makeText(mContext, "缺少关键信息，请稍候再试", Toast.LENGTH_SHORT).show();
+            return;
         }
         mOutsideTitle = title;
         mContent = content;
@@ -326,8 +331,11 @@ public class SharePopupWindow extends PopupWindow {
 
     //微博模块调用
     public void setShareInfo(String title, String content, String targetUrl, String imageUrl, CCircleDetailModel moment) {
+        Log.i("分享", "targetUrl:" + targetUrl + "imageUrl:" + imageUrl + "content:" + content);
         if (TextUtils.isEmpty(targetUrl) || TextUtils.isEmpty(content) || TextUtils.isEmpty(imageUrl)) {
-            throw new IllegalArgumentException("title or targetUrl is Empty");
+            //throw new IllegalArgumentException("title or targetUrl is Empty");
+            Toast.makeText(mContext, "缺少关键信息，请稍候再试", Toast.LENGTH_SHORT).show();
+            return;
         }
         mInsideTitle = "@ " + moment.user.name;//分享至美术圈
         mOutsideTitle = "分享 " + moment.user.name + " 的内容";//分享至外面

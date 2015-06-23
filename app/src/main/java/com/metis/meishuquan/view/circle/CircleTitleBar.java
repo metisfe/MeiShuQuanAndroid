@@ -55,7 +55,7 @@ public class CircleTitleBar extends RelativeLayout {
         }
 
         if (resourceId > 0) {
-            this.leftImageView.setImageResource(resourceId);
+            this.leftImageView.setBackgroundResource(resourceId);
         }
 
         this.leftButton.setOnClickListener(leftClick);
