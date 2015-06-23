@@ -357,7 +357,7 @@ public class ItemInfoFragment extends Fragment {
         }
 
         //得到最终包含有链接文字的字符串
-        String finalWord = sb.toString().trim();
+        String finalWord = sb.toString();
         shareContent = finalWord;
 
         //创建一个 SpannableString对象

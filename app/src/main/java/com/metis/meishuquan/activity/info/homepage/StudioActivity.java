@@ -6,9 +6,11 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -52,6 +54,7 @@ import com.metis.meishuquan.adapter.topline.ToplineCustomAdapter;
 import com.metis.meishuquan.fragment.Topline.ItemInfoFragment;
 import com.metis.meishuquan.fragment.circle.MomentDetailFragment;
 import com.metis.meishuquan.fragment.commons.InputDialogFragment;
+import com.metis.meishuquan.fragment.commons.InputFragment;
 import com.metis.meishuquan.fragment.commons.ListDialogFragment;
 import com.metis.meishuquan.fragment.commons.StudioFragment;
 import com.metis.meishuquan.manager.common.UserManager;
@@ -81,6 +84,8 @@ import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.tencent.connect.UserInfo;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -184,6 +189,19 @@ public class StudioActivity extends BaseActivity implements
             }
         });
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //Toast.makeText(this, "onSaveInstanceState ", Toast.LENGTH_SHORT).show();
+        outState.putString("cameraPath", mCameraOutputPath);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        //Toast.makeText(this, "onRestoreInstanceState " + savedInstanceState.getString("cameraPath"), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -339,47 +357,58 @@ public class StudioActivity extends BaseActivity implements
         });
     }
 
+    private List<MomentsGroup> mMomentGroups = null;
     private void payAttention (final User user) {
         //mCustomRight.setEnabled(false);
-        CommonOperator.getInstance().getMomentsGroupsAsync(new UserInfoOperator.OnGetListener<List<MomentsGroup>>() {
-            @Override
-            public void onGet(boolean succeed, List<MomentsGroup> momentsGroups) {
-                if (succeed) {
-                    PopupMenu popupMenu = new PopupMenu(StudioActivity.this, mCustomRight);
-                    popupMenu.inflate(R.menu.studio_menu);
-                    for (int i = 0; i < momentsGroups.size(); i++) {
-                        MomentsGroup group = momentsGroups.get(i);
-                        popupMenu.getMenu().add(R.id.studio_menu, group.id, i, group.name);
+        if (mMomentGroups != null) {
+            showPopMenu(user, mMomentGroups);
+        } else {
+            CommonOperator.getInstance().getMomentsGroupsAsync(new UserInfoOperator.OnGetListener<List<MomentsGroup>>() {
+                @Override
+                public void onGet(boolean succeed, List<MomentsGroup> momentsGroups) {
+                    if (succeed) {
+                        mMomentGroups = momentsGroups;
+                        showPopMenu(user, mMomentGroups);
                     }
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-
-                            CircleOperator.getInstance().attention(user.getUserId(), item.getItemId(), new ApiOperationCallback<ReturnInfo<String>>() {
-                                @Override
-                                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
-                                    mCustomRight.setEnabled(true);
-                                    if (result.isSuccess()) {
-                                        if (user.getRelationType() == 0) {
-                                            mCustomRight.setText(R.string.studio_has_focused);
-                                            mCustomRight.setTextColor(getResources().getColor(android.R.color.holo_red_light));
-                                            user.setRelationType(1);
-                                        } else if (user.getRelationType() == 2) {
-                                            mCustomRight.setText(R.string.studio_focused_each);
-                                            mCustomRight.setTextColor(getResources().getColor(android.R.color.holo_orange_light));
-                                            user.setRelationType(3);
-                                        }
-                                        mCustomRight.setOnClickListener(null);
-                                    }
-                                }
-                            });
-                            return false;
-                        }
-                    });
-                    popupMenu.show();
                 }
+            });
+        }
+
+    }
+
+    private void showPopMenu (final User user, List<MomentsGroup> momentsGroups) {
+        PopupMenu popupMenu = new PopupMenu(StudioActivity.this, mCustomRight);
+        popupMenu.inflate(R.menu.studio_menu);
+        for (int i = 0; i < momentsGroups.size(); i++) {
+            MomentsGroup group = momentsGroups.get(i);
+            popupMenu.getMenu().add(R.id.studio_menu, group.id, i, group.name);
+        }
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                CircleOperator.getInstance().attention(user.getUserId(), item.getItemId(), new ApiOperationCallback<ReturnInfo<String>>() {
+                    @Override
+                    public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                        mCustomRight.setEnabled(true);
+                        if (result.isSuccess()) {
+                            if (user.getRelationType() == 0) {
+                                mCustomRight.setText(R.string.studio_has_focused);
+                                mCustomRight.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+                                user.setRelationType(1);
+                            } else if (user.getRelationType() == 2) {
+                                mCustomRight.setText(R.string.studio_focused_each);
+                                mCustomRight.setTextColor(getResources().getColor(android.R.color.holo_orange_light));
+                                user.setRelationType(3);
+                            }
+                            mCustomRight.setOnClickListener(null);
+                        }
+                    }
+                });
+                return false;
             }
         });
+        popupMenu.show();
     }
 
     @Override
@@ -874,11 +903,26 @@ public class StudioActivity extends BaseActivity implements
                 break;
             case REQUEST_CODE_CAMERA:
                 if (resultCode == RESULT_OK) {
-                    Log.v(TAG, "onActivityResult mCameraPath=" + mCameraOutputPath);
-                    mUser.setUserAvatar(ImageDownloader.Scheme.FILE.wrap(mCameraOutputPath));
-                    final int size = getResources().getDimensionPixelSize(R.dimen.studio_profile_size);
-                    UserInfoOperator.getInstance().updateUserProfile(MainApplication.userInfo.getUserId(), mCameraOutputPath);
-                    ImageLoaderUtils.getImageLoader(this).displayImage(ImageDownloader.Scheme.FILE.wrap(mCameraOutputPath), mTitleProfile, ImageLoaderUtils.getRoundDisplayOptionsStill(size));
+
+                    Bitmap bmp = (Bitmap)data.getExtras().get("data");
+
+                    try {
+                        File file = new File(getCacheDir(), System.currentTimeMillis() + ".jpg");
+                        FileOutputStream fos = new FileOutputStream(file);
+                        bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                        Log.v(TAG, "onActivityResult mCameraPath=" + file.getAbsolutePath());
+                        if (mUser != null) {
+                            mUser.setUserAvatar(file.getPath());
+                        }
+                        final int size = getResources().getDimensionPixelSize(R.dimen.studio_profile_size);
+                        ImageLoaderUtils.getImageLoader(this).displayImage(ImageDownloader.Scheme.FILE.wrap(file.getPath()), mTitleProfile, ImageLoaderUtils.getRoundDisplayOptionsStill(size));
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                    //UserInfoOperator.getInstance().updateUserProfile(MainApplication.userInfo.getUserId(), mCameraOutputPath);
+                    UserInfoOperator.getInstance().updateUserProfile(MainApplication.userInfo.getUserId(), bmp);
+
                     mAdapter.notifyDataSetChanged();
                 }
                 break;
@@ -1001,8 +1045,9 @@ public class StudioActivity extends BaseActivity implements
                 + ".jpg");
         //path = file.getPath();
         Uri imageUri = Uri.fromFile(file);
-        openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        //openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(openCameraIntent, requestCode);
+        Log.v(TAG, "file.absPath=" + file.getAbsolutePath());
         return file.getAbsolutePath();
     }
 
@@ -1051,14 +1096,20 @@ public class StudioActivity extends BaseActivity implements
                 } else {
                     mGender = maleStr;
                 }
-
                 mUser.setGender(mGender);
                 UserManager.updateMyInfo(User.KEY_GENDER, mGender);
-                if (mAdapter != null && mAdapter instanceof UserInfoAdapter) {
-                    Log.v(TAG, "showDialog " + mGender + " try to notify refresh");
-                    UserInfoAdapter adapter = (UserInfoAdapter) mAdapter;
-                    adapter.notifyDataSetChanged();
-                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mAdapter != null && mAdapter instanceof UserInfoAdapter) {
+                            Log.v(TAG, "showDialog " + mGender + " try to notify refresh");
+                            UserInfoAdapter adapter = (UserInfoAdapter) mAdapter;
+                            adapter.setGender(mGender);
+
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                });
                 //updateInfo(User.KEY_GENDER, mGenderView.getSecondaryText().toString());
             }
         });
@@ -1217,7 +1268,7 @@ public class StudioActivity extends BaseActivity implements
                         @Override
                         public void onOkClick(View view, CharSequence cs) {
                             mUser.setAchievement(cs.toString());
-                            UserManager.updateMyInfo(User.KEY_USER_RESUME, cs.toString());
+                            UserManager.updateMyInfo(User.KEY_ACHIEVEMENT, cs.toString());
                         }
                     });
                     break;
@@ -1280,7 +1331,11 @@ public class StudioActivity extends BaseActivity implements
     };
 
     private void showDialogAndUpdate (String title, String text, String hint, final InputDialogFragment.OnOkListener listener) {
-        InputDialogFragment.getInstance(title, text, hint, new InputDialogFragment.OnOkListener() {
+        InputDialogFragment fragment = new InputDialogFragment ();
+        fragment.setTitle(title);
+        fragment.setText(text);
+        fragment.setHint(hint);
+        fragment.setOnOkListener(new InputDialogFragment.OnOkListener() {
             @Override
             public void onOkClick(View view, CharSequence cs) {
                 if (listener != null) {
@@ -1288,7 +1343,17 @@ public class StudioActivity extends BaseActivity implements
                 }
                 //updateInfo(key, cs.toString());
             }
-        }).show(getSupportFragmentManager(), "");
+        });
+        fragment.show(getSupportFragmentManager(), TAG);
+        /*InputDialogFragment.getInstance(title, text, hint, new InputDialogFragment.OnOkListener() {
+            @Override
+            public void onOkClick(View view, CharSequence cs) {
+                if (listener != null) {
+                    listener.onOkClick(view, cs);
+                }
+                //updateInfo(key, cs.toString());
+            }
+        }).show(getSupportFragmentManager(), "");*/
     }
 
 
@@ -1341,6 +1406,7 @@ public class StudioActivity extends BaseActivity implements
                             break;
                         case R.string.info_profile_camera:
                             mCameraOutputPath = camera(mRequestCodeCamera);
+                            Log.v(TAG, "mCameraOutputPath " + mCameraOutputPath);
                             break;
                     }
                     ListDialogFragment.getInstance().dismiss();

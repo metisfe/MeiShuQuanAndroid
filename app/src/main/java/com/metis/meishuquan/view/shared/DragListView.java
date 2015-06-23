@@ -300,15 +300,15 @@ public class DragListView extends ListView implements AbsListView.OnScrollListen
      * @param resultSize
      */
     public void setResultSize(int resultSize) {
-        if (resultSize == 0) {
+        if (resultSize == 0) {//暂无数据
             isLoadFull = true;
             loadFull.setVisibility(View.GONE);
             loading.setVisibility(View.GONE);
             more.setVisibility(View.GONE);
-            noData.setVisibility(View.VISIBLE);//已全部加载
-        } else if (resultSize > 0 && resultSize < pageSize) {
+            noData.setVisibility(View.VISIBLE);
+        } else if (resultSize > 0 && resultSize < pageSize) {//已全部加载
             isLoadFull = true;
-            loadFull.setVisibility(View.VISIBLE);//暂无数据
+            loadFull.setVisibility(View.VISIBLE);
             loading.setVisibility(View.GONE);
             more.setVisibility(View.GONE);
             noData.setVisibility(View.GONE);

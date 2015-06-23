@@ -1,6 +1,7 @@
 package com.metis.meishuquan.fragment.commons;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,14 +15,17 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.info.BaseActivity;
+import com.metis.meishuquan.activity.info.FocusActivity;
 import com.metis.meishuquan.model.BLL.StudioBaseInfo;
 import com.metis.meishuquan.model.commons.User;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
@@ -39,7 +43,8 @@ public class StudioFragment extends Fragment{
 
     private View mHeaderView = null;
     private ImageView mHeadCoverIv = null;
-    private TextView mHeaderExtraTv = null;
+    private RelativeLayout mHeaderExtraTv = null;
+    private TextView mFocusTv, mFansTv;
     private Button mHeaderMsgBtn = null;
 
     private BaseAdapter mAdapter = null;
@@ -81,7 +86,9 @@ public class StudioFragment extends Fragment{
         mListView = (ListView)view.findViewById(R.id.studio_list_view);
         mHeaderView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_studio_list_header, null);
         mHeadCoverIv = (ImageView)mHeaderView.findViewById(R.id.studio_list_header_cover);
-        mHeaderExtraTv = (TextView)mHeaderView.findViewById(R.id.studio_list_header_extras);
+        mHeaderExtraTv = (RelativeLayout)mHeaderView.findViewById(R.id.studio_list_header_extras);
+        mFocusTv = (TextView)mHeaderView.findViewById(R.id.studio_list_header_focus);
+        mFansTv = (TextView)mHeaderView.findViewById(R.id.studio_list_header_fans);
         mHeaderMsgBtn = (Button)mHeaderView.findViewById(R.id.studio_list_header_msg);
         setAdapter(mAdapter);
 
@@ -148,7 +155,7 @@ public class StudioFragment extends Fragment{
         );
     }
 
-    private void fillHeader (User user) {
+    private void fillHeader (final User user) {
         if (isDetached()) {
             return;
         }
@@ -178,7 +185,26 @@ public class StudioFragment extends Fragment{
                 coverUrl, mHeadCoverIv,
                 ImageLoaderUtils.getNormalDisplayOptions(R.drawable.ic_launcher)
         );
-        mHeaderExtraTv.setText(MainApplication.UIContext.getString(R.string.studio_fans_and_focus, user.getFansNum(), user.getFocusNum()));
+        mFocusTv.setText(MainApplication.UIContext.getString(R.string.studio_focus_count, user.getFocusNum()));
+        mFansTv.setText(MainApplication.UIContext.getString(R.string.studio_fans_count, user.getFansNum()));
+        mFocusTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent it = new Intent(getActivity(), FocusActivity.class);
+                it.putExtra(FocusActivity.KEY_FOCUS_TYPE, FocusActivity.TYPE_FOCUS);
+                it.putExtra(FocusActivity.KEY_USER_ID, user.getUserId());
+                startActivity(it);
+            }
+        });
+        mFansTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent it = new Intent(getActivity(), FocusActivity.class);
+                it.putExtra(FocusActivity.KEY_FOCUS_TYPE, FocusActivity.TYPE_FOLLOWER);
+                it.putExtra(FocusActivity.KEY_USER_ID, user.getUserId());
+                startActivity(it);
+            }
+        });
         for (int i = 0; i < mMenuItems.length; i++) {
             final int index = i;
             final MenuItem item = mMenuItems[i];

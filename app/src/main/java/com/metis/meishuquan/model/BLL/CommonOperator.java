@@ -16,7 +16,6 @@ import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.BlockTypeEnum;
 import com.metis.meishuquan.model.enums.FileUploadTypeEnum;
 import com.metis.meishuquan.model.enums.PrivateResultEnum;
-import com.metis.meishuquan.model.enums.PrivateTypeEnum;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.FileUtil;
@@ -30,14 +29,6 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutput;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -56,7 +47,7 @@ public class CommonOperator {
     private static CommonOperator operator = null;
     private final String PUBLISHCOMMENT = "v1.1/Comment/PublishComment";//发表评论
     private final String PRIVATE = "v1.1/Comment/Favorite";
-    private final String FileUpload = "v1.1/File/Upload";//文件上传
+    private final String FILEUPLOAD = "v1.1/File/Upload";//文件上传
     private final String ANDROIDVERSION = "v1.1/Default/AndroidVersion";//获取最新版本
     private final String CHECKLOGINSTATE = "v1.1/Default/Start?session=";//校验账号状态
     private final String MOMENTSGROUPS = "v1.1/Circle/MyDiscussions";//朋友圈分组信息
@@ -243,7 +234,7 @@ public class CommonOperator {
     public void fileUpload(FileUploadTypeEnum type, String define, byte[] imgByte, ServiceFilterResponseCallback callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
-                StringBuilder FILEUPLOAD = new StringBuilder(FileUpload);
+                StringBuilder FILEUPLOAD = new StringBuilder(this.FILEUPLOAD);
                 FILEUPLOAD.append("?type=" + type.getVal());
                 FILEUPLOAD.append("&define=" + define);
                 FILEUPLOAD.append("&session=" + MainApplication.userInfo.getCookie());

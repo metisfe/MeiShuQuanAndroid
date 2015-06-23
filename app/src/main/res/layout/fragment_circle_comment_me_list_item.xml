@@ -18,6 +18,14 @@
             android:scaleType="centerCrop"
             android:background="@drawable/default_portrait_fang" />
 
+        <ImageView
+            android:id="@+id/id_img_reply"
+            android:layout_width="50dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/icon_circle_replay"/>
+
         <TextView
             android:id="@+id/id_username"
             android:layout_width="wrap_content"

@@ -600,6 +600,12 @@ public class MomentDetailFragment extends Fragment {
                     return;
                 }
                 MomentCommentFragment momentCommentFragment = new MomentCommentFragment();
+
+                //传递参数
+                Bundle bundle = new Bundle();
+                bundle.putInt(MomentCommentFragment.KEY_COMMENT_ID, momentId);
+                momentCommentFragment.setArguments(bundle);
+
                 momentCommentFragment.setOnCommentSuccessListner(new OnCommentSuccessListner() {
                     @Override
                     public void onSuccess(CCircleCommentModel circleCommentModel) {
@@ -766,6 +772,14 @@ public class MomentDetailFragment extends Fragment {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
+
+            //弹出选项：复制、删除
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    
+                }
+            });
 
             final CCircleCommentModel comment = commentList.get(i);
             viewHolder.avatar.setOnClickListener(new View.OnClickListener() {

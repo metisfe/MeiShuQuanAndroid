@@ -7,11 +7,13 @@ import net.sourceforge.pinyin4j.PinyinHelper;
 
 import java.io.Serializable;
 
+import io.realm.RealmObject;
+
 /**
  * Created by jiaxh on 4/18/2015.
  */
 
-public class CUserModel implements Serializable, FriendMatchFragment.UserInfoImpl {
+public class CUserModel extends RealmObject implements Serializable, FriendMatchFragment.UserInfoImpl {
 
     @SerializedName("userId")
     public int userId;

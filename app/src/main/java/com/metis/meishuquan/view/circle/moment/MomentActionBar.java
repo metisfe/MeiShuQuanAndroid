@@ -52,12 +52,12 @@ public class MomentActionBar extends LinearLayout {
     }
 
     public void setCheck() {
-        this.imgSupport.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.icon_support));
+        this.imgSupport.setImageDrawable(getResources().getDrawable(R.drawable.icon_support));
         this.tvLikeCount.setTextColor(Color.RED);
     }
 
     public void setUncheck() {
-        this.imgSupport.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.icon_unsupport));
+        this.imgSupport.setImageDrawable(getResources().getDrawable(R.drawable.icon_unsupport));
         this.tvLikeCount.setTextColor(getResources().getColor(R.color.common_color_7e7e7e));
     }
 

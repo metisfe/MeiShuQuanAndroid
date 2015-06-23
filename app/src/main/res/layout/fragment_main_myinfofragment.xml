@@ -72,41 +72,53 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:singleLine="true"
-                            android:textSize="13sp"
-                            android:textColor="#424242"
-                            android:text="@string/my_info_attention" />
-
-                        <TextView
-                            android:id="@+id/my_info_attention"
+                        <LinearLayout
+                            android:id="@+id/my_info_attention_container"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:singleLine="true"
-                            android:textSize="13sp"
-                            android:textColor="#7e7e7e" />
+                            android:orientation="horizontal"
+                            >
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:singleLine="true"
+                                android:textSize="13sp"
+                                android:textColor="#424242"
+                                android:text="@string/my_info_attention" />
 
-                        <TextView
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:singleLine="true"
-                            android:textSize="13sp"
-                            android:textColor="#424242"
-                            android:text="@string/my_info_followers"
-                            android:layout_marginLeft="20dp" />
-
-                        <TextView
-                            android:id="@+id/my_info_followers"
+                            <TextView
+                                android:id="@+id/my_info_attention"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:singleLine="true"
+                                android:textSize="13sp"
+                                android:textColor="#7e7e7e"
+                                />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/my_info_followers_container"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:singleLine="true"
-                            android:textSize="13sp"
-                            android:textColor="#7e7e7e" />
+                            android:orientation="horizontal"
+                            >
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:singleLine="true"
+                                android:textSize="13sp"
+                                android:textColor="#424242"
+                                android:text="@string/my_info_followers"
+                                android:layout_marginLeft="20dp" />
+
+                            <TextView
+                                android:id="@+id/my_info_followers"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:singleLine="true"
+                                android:textSize="13sp"
+                                android:textColor="#7e7e7e" />
+                        </LinearLayout>
                     </LinearLayout>
-
                 </LinearLayout>
 
                 <TextView

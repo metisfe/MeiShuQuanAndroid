@@ -5,9 +5,9 @@
     android:background="@color/bg_topline_topbar">
     <ImageView
         android:id="@+id/back"
-        android:layout_width="56dp"
-        android:layout_height="fill_parent"
-        android:src="@drawable/btn_back"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/bg_btn_arrow_left"
         android:layout_centerVertical="true"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"

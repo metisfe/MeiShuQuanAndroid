@@ -11,6 +11,7 @@ public class InviteCodeInfo implements Serializable {
     private int invitationCount;
     private String invitationDesc;
     private String invitationurl;
+    private String downUrl;
 
     public long getUserid() {
         return userid;
@@ -50,5 +51,13 @@ public class InviteCodeInfo implements Serializable {
 
     public void setInvitationurl(String invitationurl) {
         this.invitationurl = invitationurl;
+    }
+
+    public String getDownUrl() {
+        return downUrl;
+    }
+
+    public void setDownUrl(String downUrl) {
+        this.downUrl = downUrl;
     }
 }

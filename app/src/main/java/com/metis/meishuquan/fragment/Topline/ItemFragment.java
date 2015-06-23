@@ -36,6 +36,8 @@ import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.shared.DragListView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -90,20 +92,23 @@ public class ItemFragment extends Fragment {
 
         //初始化成员
         toplineAdapter = new ToplineCustomAdapter(getActivity(), list);
-        this.listView.setAdapter(toplineAdapter);
+        AnimationAdapter mAnimAdapter = new AlphaInAnimationAdapter(toplineAdapter);
+        mAnimAdapter.setAbsListView(listView);
+        listView.setAdapter(mAnimAdapter);
+//        this.listView.setAdapter(toplineAdapter);
         return contextView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        MobclickAgent.onPageStart("MainScreen"); //统计页面
+        MobclickAgent.onPageStart("ItemFragment"); //统计页面
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        MobclickAgent.onPageEnd("MainScreen");
+        MobclickAgent.onPageEnd("ItemFragment");
     }
 
     private void getActiveInfo(final View headerView) {
@@ -146,6 +151,7 @@ public class ItemFragment extends Fragment {
      */
     private void initView(View contextView) {
         this.listView = (DragListView) contextView.findViewById(R.id.listview_topbar_fragment);
+        this.listView.setPageSize(30);
     }
 
     private void initEvent() {
@@ -222,6 +228,7 @@ public class ItemFragment extends Fragment {
                     }
                     listView.setResultSize(data.getData().size());
                     toplineAdapter.notifyDataSetChanged();
+                    listView.invalidate();
                 }
             }
         }, channelId, lastNewsId);

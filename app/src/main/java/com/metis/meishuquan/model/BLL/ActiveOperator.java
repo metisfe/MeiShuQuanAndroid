@@ -22,8 +22,6 @@ import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
-import io.rong.imkit.Res;
-
 /**
  * Created by WJ on 2015/5/4.
  */

@@ -19,6 +19,7 @@ import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.circle.ChatActivity;
+import com.metis.meishuquan.activity.circle.ChatRoomListActivity;
 import com.metis.meishuquan.activity.circle.SearchUserInfoActivity;
 import com.metis.meishuquan.activity.info.QrScanActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
@@ -163,8 +164,14 @@ public class ChatListFragment extends CircleBaseFragment {
         RongIMClient.Conversation commentMe = new RongIMClient.Conversation();
         commentMe.setObjectName("评论我的");
         commentMe.setConversationType(RongIMClient.ConversationType.SYSTEM);
+        //添加聊天室
+        RongIMClient.Conversation chatRoom = new RongIMClient.Conversation();
+        chatRoom.setObjectName("志愿答疑群组");
+        chatRoom.setConversationType(RongIMClient.ConversationType.SYSTEM);
         clist.add(atMe);
         clist.add(commentMe);
+        clist.add(chatRoom);
+
         if (this.listView != null && adapter != null && MainApplication.rongClient != null) {
             new Thread(new Runnable() {
                 @Override
@@ -210,6 +217,12 @@ public class ChatListFragment extends CircleBaseFragment {
                     ft.add(R.id.content_container, commentMeFragment);
                     ft.addToBackStack(null);
                     ft.commit();
+
+                }
+
+                //聊天室
+                else if (position == 2) {
+                    startActivity(new Intent(getActivity(), ChatRoomListActivity.class));
                 }
 
                 //聊天
@@ -217,7 +230,7 @@ public class ChatListFragment extends CircleBaseFragment {
                     MainApplication.refreshRong();
                     RongIMClient.Conversation conversation = adapter.data.get(position);
 //                    RongIM.getInstance().startPrivateChat(getActivity(),conversation.getTargetId(),ChatManager.getConversationTitle(conversation));
-
+//
 //                    RongIMClient.Conversation newConverstion=null;
 //                    RongIM.setGetUserInfoProvider(new RongIM.GetUserInfoProvider() {
 //                        @Override

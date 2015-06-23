@@ -5,7 +5,9 @@ import com.metis.meishuquan.R;
 public enum DelegateType {
 
     DIVIDER_TITLE (100, R.layout.layout_student_item_header),
-    STUDENT (200, R.layout.layout_student_item);
+    STUDENT (200, R.layout.layout_student_item),
+    USER_FOCUS (300, R.layout.layout_focus_item),
+    USER_FOLLOWER (304, R.layout.layout_focus_item);
 
     private int mType, mLayoutId;
 

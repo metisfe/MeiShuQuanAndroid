@@ -21,6 +21,7 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.act.SelectStudioActivity;
 import com.metis.meishuquan.activity.act.StudentListActivity;
 import com.metis.meishuquan.activity.info.AdvanceActivity;
+import com.metis.meishuquan.activity.info.FocusActivity;
 import com.metis.meishuquan.activity.info.ImagePreviewActivity;
 import com.metis.meishuquan.activity.info.InfoActivity;
 import com.metis.meishuquan.activity.info.InviteActivity;
@@ -57,6 +58,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     private TabBar tabBar;
     private View mInfoContainer = null, mLoginView = null, mInfoDetailsContainer = null;
     private TextView mInfoName = null, mAttentionCountTv = null, mFollowersCountTv = null;
+    private View mAttentionView = null, mFollowersView = null;
     private View mCollectionView, mSuperDogView, mInviteView, mCommentView, mMyAskView, mClassesView, mNameCardView, mAdvanceView, mSettingView;
     private ImageView mProfileIv = null;
 
@@ -124,6 +126,9 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         mAttentionCountTv = (TextView) view.findViewById(R.id.my_info_attention);
         mFollowersCountTv = (TextView) view.findViewById(R.id.my_info_followers);
 
+        mAttentionView = view.findViewById(R.id.my_info_attention_container);
+        mFollowersView = view.findViewById(R.id.my_info_followers_container);
+
         mCollectionView = view.findViewById(R.id.my_info_collections);
         mCommentView = view.findViewById(R.id.my_info_comments);
         mSuperDogView = view.findViewById(R.id.my_info_super_dog);
@@ -136,6 +141,9 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
 
         mInfoContainer.setOnClickListener(this);
         mLoginView.setOnClickListener(this);
+
+        mAttentionView.setOnClickListener(this);
+        mFollowersView.setOnClickListener(this);
 
         mCollectionView.setOnClickListener(this);
         mCommentView.setOnClickListener(this);
@@ -216,7 +224,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         } else {
             mProfileIv.setImageResource(R.drawable.ic_launcher);
         }
-
+        mSuperDogView.setVisibility(user.getUserRoleEnum() == IdTypeEnum.TEACHER ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -228,15 +236,43 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.my_info_profile:
-                Intent previewIt = new Intent(getActivity(), ImagePreviewActivity.class);
-                ArrayList<String> urls = new ArrayList<String>();
-                urls.add(mUser.getUserAvatar());
-                previewIt.putStringArrayListExtra(ImagePreviewActivity.KEY_IMAGE_URL_ARRAY, urls);
-                startActivity(previewIt);
+                if (mUser != null) {
+                    Intent previewIt = new Intent(getActivity(), ImagePreviewActivity.class);
+                    ArrayList<String> urls = new ArrayList<String>();
+                    urls.add(mUser.getUserAvatar());
+                    if (urls.size() > 0) {
+                        previewIt.putStringArrayListExtra(ImagePreviewActivity.KEY_IMAGE_URL_ARRAY, urls);
+                        startActivity(previewIt);
+                    }
+                } else {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    Toast.makeText(getActivity(), R.string.my_info_toast_not_login, Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.my_info_login:
                 //showLoginFragment();
                 startActivity(new Intent(getActivity(), LoginActivity.class));
+                break;
+            case R.id.my_info_attention_container:
+                if (MainApplication.isLogin()) {
+                    Intent focusIt = new Intent(getActivity(), FocusActivity.class);
+                    focusIt.putExtra(FocusActivity.KEY_USER_ID, MainApplication.userInfo.getUserId());
+                    startActivity(focusIt);
+                } else {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    Toast.makeText(getActivity(), R.string.my_info_toast_not_login, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.my_info_followers_container:
+                if (MainApplication.isLogin()) {
+                    Intent focusIt = new Intent(getActivity(), FocusActivity.class);
+                    focusIt.putExtra(FocusActivity.KEY_USER_ID, MainApplication.userInfo.getUserId());
+                    focusIt.putExtra(FocusActivity.KEY_FOCUS_TYPE, FocusActivity.TYPE_FOLLOWER);
+                    startActivity(focusIt);
+                } else {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    Toast.makeText(getActivity(), R.string.my_info_toast_not_login, Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.my_info_collections:
                 if (MainApplication.isLogin()) {
@@ -264,8 +300,6 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
                         startActivity(new Intent(getActivity(), StudentListActivity.class));
                     } else if (mUser.getUserRoleEnum() == IdTypeEnum.STUDENT) {
                         startActivity(new Intent(getActivity(), SelectStudioActivity.class));
-                    } else {
-                        Toast.makeText(getActivity(), "Nothing " + mUser.getUserRole() + " " + mUser.getUserRoleEnum().name(), Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     startActivity(new Intent(getActivity(), LoginActivity.class));

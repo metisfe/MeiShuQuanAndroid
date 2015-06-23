@@ -3,26 +3,35 @@ package com.metis.meishuquan.model.BLL;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CParamCircleComment;
 import com.metis.meishuquan.model.circle.CRelatedCircleModel;
 import com.metis.meishuquan.model.circle.CircleMoments;
 import com.metis.meishuquan.model.circle.CirclePushBlogParm;
+import com.metis.meishuquan.model.commons.FocusOrFollower;
 import com.metis.meishuquan.model.commons.Result;
 import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.MessageTypeEnum;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.SystemUtil;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+
+import java.util.List;
 
 /**
  * Created by wangjin on 15/4/13.
  */
 public class CircleOperator {
+
+    private static final String TAG = CircleOperator.class.getSimpleName();
+
     private static final String Log_PubLishComment_url = "Log_PubLishComment_url";
     private static final String URL_PUSHBLOG = "v1.1/Circle/PushBlog?";
     private static final String URL_ATTENTION = "v1.1/Circle/FocusUserForGroup?";
@@ -31,6 +40,8 @@ public class CircleOperator {
     private static final String URL_CIRCLE_DETAIL = "v1.1/Circle/CircleDetail?";
     private static final String URL_CIRCLE_PUSH_COMMENT = "v1.1/Circle/PushCommentByPost?";
     private static final String URL_CIRCLE_AT_ME = "v1.1/Message/AndIRelated?";
+    private static final String URL_GET_FOCUS_LIST = "v1.1/Circle/GetFocusUserList";
+    private static final String URL_GET_DEFAULT_CHATROOM_LIST = "v1.1/Message/GetDefaultDiscussion";
 
     private static CircleOperator operator = null;
     private boolean flag;
@@ -85,6 +96,39 @@ public class CircleOperator {
         }
     }
 
+    /*?userid={userid}&lastid={lastid}&foucetype={foucetype}*/
+    public void getFocusList(long userId, long lastId, int type, final UserInfoOperator.OnGetListener<List<FocusOrFollower>> listener) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuffer PATH = new StringBuffer(URL_GET_FOCUS_LIST);
+                PATH.append("?userid=" + userId);
+                PATH.append("&lastid=" + lastId);
+                PATH.append("&focustype=" + type);
+                PATH.append("&session=" + MainApplication.userInfo.getCookie());
+                Log.v(TAG, "getFocusList request=" + PATH);
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
+                        (Class<Result<String>>) new Result().getClass(), new ApiOperationCallback<Result<String>>() {
+                            @Override
+                            public void onCompleted(Result<String> stringResult, Exception e1, ServiceFilterResponse serviceFilterResponse) {
+                                Log.v(TAG, "getFocusList callback=" + serviceFilterResponse.getContent());
+                                if (stringResult != null) {
+                                    Gson gson = new Gson();
+                                    String json = gson.toJson(stringResult);
+                                    Log.v(TAG, "getFocusList result=" + json);
+                                    Result<List<FocusOrFollower>> result = gson.fromJson(json, new TypeToken<Result<List<FocusOrFollower>>>() {
+                                    }.getType());
+                                    if (listener != null) {
+                                        listener.onGet(result.getOption().getStatus() == 0, result.getData());
+                                    }
+                                }
+                            }
+                        });
+            }
+        } else {
+            Toast.makeText(MainApplication.UIContext, "网络不给力，请稍候再试", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void deleteCircle(int circleId, ApiOperationCallback<Result<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
@@ -115,7 +159,7 @@ public class CircleOperator {
         }
     }
 
-    public void cancelAttention(int userId, ApiOperationCallback<ReturnInfo<String>> callback) {
+    public void cancelAttention(long userId, ApiOperationCallback<ReturnInfo<String>> callback) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuffer PATH = new StringBuffer(URL_CANCEL_ATTENTION);
@@ -178,4 +222,17 @@ public class CircleOperator {
         }
     }
 
+    public void getDefaultChatRomm(ApiOperationCallback<ReturnInfo<String>> callback) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuffer PATH = new StringBuffer(URL_GET_DEFAULT_CHATROOM_LIST);
+                PATH.append("?session=" + MainApplication.userInfo.getCookie());
+                Log.i("default_chatroom", PATH.toString());
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+            }
+        } else {
+            Toast.makeText(MainApplication.UIContext, "网络不给力，请稍候再试", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

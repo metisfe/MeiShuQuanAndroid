@@ -35,10 +35,10 @@
         />
     <TextView
         android:id="@+id/my_info_btn_text"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/my_info_btn_img"
-        android:layout_toLeftOf="@+id/my_info_btn_secondary_text"
+        android:layout_alignWithParentIfMissing="true"
         android:layout_centerVertical="true"
         android:gravity="left|center_vertical"
         android:singleLine="true"
@@ -48,9 +48,10 @@
         />
     <TextView
         android:id="@+id/my_info_btn_secondary_text"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:singleLine="true"
+        android:layout_toRightOf="@+id/my_info_btn_text"
         android:layout_toLeftOf="@+id/my_info_btn_arrow"
         android:layout_centerVertical="true"
         android:gravity="center_vertical|right"

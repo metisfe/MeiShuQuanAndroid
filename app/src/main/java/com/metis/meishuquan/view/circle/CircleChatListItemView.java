@@ -71,7 +71,7 @@ public class CircleChatListItemView extends LinearLayout {
             Log.i("unReadCount", unReadCount + "");
             badge.setText(unReadCount + "");
             badge.setTextSize(10);
-            badge.setBackground(badge.getDefaultBackground());
+            badge.setBackgroundDrawable(badge.getDefaultBackground());
             badge.show();
         } else {
             badge.hide();
@@ -97,6 +97,8 @@ public class CircleChatListItemView extends LinearLayout {
                 imageView.setImageResource(R.drawable.icon_at_me);
             } else if (conversation.getObjectName().equals("评论我的")) {
                 imageView.setImageResource(R.drawable.icon_comment_me);
+            }else if (conversation.getObjectName().equals("志愿答疑群组")){
+                imageView.setImageResource(R.drawable.icon_chat_room);
             }
         } else {
             imageView.setImageResource(R.drawable.view_circle_groupicon);

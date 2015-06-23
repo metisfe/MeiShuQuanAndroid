@@ -55,7 +55,7 @@ public class CircleTitleBar extends RelativeLayout {
         }
 
         if (resourceId > 0) {
-            this.leftImageView.setImageResource(resourceId);
+            this.leftImageView.setBackgroundResource(resourceId);
         }
 
         this.leftButton.setOnClickListener(leftClick);
@@ -76,6 +76,18 @@ public class CircleTitleBar extends RelativeLayout {
         }
 
         this.rightButton.setOnClickListener(rightClick);
+    }
+
+    public void hideRight(){
+        this.rightButton.setVisibility(GONE);
+        this.rightTextView.setVisibility(GONE);
+        this.rightImageView.setVisibility(GONE);
+    }
+
+    public void showRight(){
+        this.rightButton.setVisibility(VISIBLE);
+        this.rightTextView.setVisibility(VISIBLE);
+        this.rightImageView.setVisibility(VISIBLE);
     }
 
     public void hideAll() {

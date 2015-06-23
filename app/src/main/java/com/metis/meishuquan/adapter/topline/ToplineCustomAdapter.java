@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,7 +17,7 @@ import java.util.List;
 /**
  * Created by wj on 3/15/2015.
  */
-public class ToplineCustomAdapter extends ToplineAdapter {
+public class ToplineCustomAdapter extends BaseAdapter {
 
     private int resourseId;
     private LayoutInflater mInflater;
@@ -26,14 +27,14 @@ public class ToplineCustomAdapter extends ToplineAdapter {
     private ViewHolder holder;
 
     public ToplineCustomAdapter(Context context, int resourseId) {
-        super(context);
+//        super(context);
         this.context = context;
         this.resourseId = resourseId;
         this.mInflater = LayoutInflater.from(context);
     }
 
     public ToplineCustomAdapter(Context context, List<News> lstData) {
-        super(context);
+//        super(context);
         this.context = context;
         this.lstData = lstData;
         this.mInflater = LayoutInflater.from(context);
@@ -73,6 +74,7 @@ public class ToplineCustomAdapter extends ToplineAdapter {
             holder.img_thumbnail.setTag(news.getNewsId());
         }
 
+        holder.img_thumbnail.setImageDrawable(context.getResources().getDrawable(R.drawable.bg_topline_default_background));
         ImageLoaderUtils.getImageLoader(this.context).displayImage(news.getImgUrl().trim(), holder.img_thumbnail);
         holder.tv_title.setText(news.getTitle());
         String source = news.getSource().getTitle().trim();

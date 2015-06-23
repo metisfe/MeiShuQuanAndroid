@@ -1,0 +1,24 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/id_img_chat_room"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@color/common_color_e2e2e2" />
+
+    <TextView
+        android:id="@+id/id_tv_chat_room_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/id_img_chat_room"
+        android:singleLine="true"
+        android:text="123"
+        android:textColor="@color/common_color_424242"
+        android:textSize="16sp" />
+
+</RelativeLayout>
