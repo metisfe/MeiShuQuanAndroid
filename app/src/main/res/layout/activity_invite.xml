@@ -53,9 +53,10 @@
                 android:id="@+id/invite_content"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:gravity="top|left"
                 android:background="@drawable/bg_grey_outline"
                 android:layout_margin="16dp"
+                android:lineSpacingExtra="1.2dip"
                 android:padding="6dp"
                 android:textColor="#868686"
                 />
