@@ -118,7 +118,7 @@ public class StartFriendPickFragment extends Fragment {
             }
         };
 
-        titleBar.setLeftButton("返回", 0, new View.OnClickListener() {
+        titleBar.setLeftButton("", R.drawable.bg_btn_arrow_left, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

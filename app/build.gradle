@@ -16,7 +16,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 21
         versionCode 4
-        versionName "1.4.6"
+        versionName "1.4.7"
         multiDexEnabled true
     }
     buildTypes {
@@ -68,4 +68,5 @@ dependencies {
     compile files('libs/Rong_IMKit_v1_4_2.jar')
     compile 'com.nhaarman.listviewanimations:lib-core:3.1.0@aar'
     compile files('libs/nineoldandroids-2.4.0.jar')
+    compile files('libs/realm-0.81.1.jar')
 }

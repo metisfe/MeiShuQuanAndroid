@@ -113,7 +113,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.about_version:
                 Toast.makeText(this, R.string.about_checking, Toast.LENGTH_SHORT).show();
-                MainApplication.MainActivity.updateApp(SettingActivity.this);
+                MainApplication.MainActivity.updateApp(SettingActivity.this,true);
                 break;
             case R.id.setting_logout:
                 //disconnect rong

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <array name="moment_comment_item">
+        <item>回复</item>
+        <item>复制</item>
+        <item>删除</item>
+    </array>
 
     <string-array name="emotion_names">
         <item>太阳</item>
@@ -9,7 +14,7 @@
         <item>熊猫</item>
         <item>ok</item>
         <item>顶</item>
-        
+
         <item>踩</item>
         <item>吻</item>
         <item>腼腆</item>
@@ -17,7 +22,7 @@
         <item>迷恋</item>
         <item>酷</item>
         <item>哼</item>
-        
+
         <item>么么</item>
         <item>吐舌头</item>
         <item>鬼脸</item>
@@ -25,7 +30,7 @@
         <item>悲伤</item>
         <item>哭泣</item>
         <item>玫瑰</item>
-        
+
         <item>甜甜圈</item>
         <item>庆祝</item>
         <item>欢笑</item>
@@ -33,7 +38,7 @@
         <item>微笑</item>
         <item>哈哈</item>
         <item>大笑</item>
-        
+
         <item>眯眼</item>
         <item>无语</item>
         <item>鄙视</item>
@@ -41,7 +46,7 @@
         <item>亲亲</item>
         <item>愤怒</item>
         <item>生气</item>
-        
+
         <item>迷茫</item>
         <item>哎</item>
         <item>惊恐</item>
@@ -49,5 +54,5 @@
         <item>口罩</item>
         <item>胜利</item>
     </string-array>
-    
+
 </resources>

@@ -6,6 +6,7 @@ package com.metis.meishuquan.model.circle;
 public class CParamCircleComment {
     private int Id = 0;
     private String Content = "";
+    private int relyUserId = 0;
 
     public int getId() {
         return Id;
@@ -21,5 +22,13 @@ public class CParamCircleComment {
 
     public void setContent(String content) {
         this.Content = content;
+    }
+
+    public int getRelyUserId() {
+        return relyUserId;
+    }
+
+    public void setRelyUserId(int relyUserId) {
+        this.relyUserId = relyUserId;
     }
 }

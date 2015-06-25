@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.metis.meishuquan.activity.info.SettingActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.commons.FragmentWaitingForAssess;
 import com.metis.meishuquan.fragment.commons.FragmentWaitingForClass;
@@ -120,7 +121,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
 
         Utils.showConfigureNetwork(this);
         onNewIntent(this.getIntent());
-        updateApp(MainActivity.this);
+        updateApp(MainActivity.this,false);
         CommonOperator.getInstance().getMomentsGroupsToCache();//获取朋友圈分组信息
 
         IntentFilter intentFilter = new IntentFilter("join_succeed");
@@ -310,7 +311,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
         }
     }
 
-    public void updateApp(final Context context) {
+    public void updateApp(final Context context, final boolean isSetting) {
         //TODO:比较上次检测时间是否超过24小时
 //        String json = SharedPreferencesUtil.getInstanse(MainApplication.UIContext).getStringByKey(SharedPreferencesUtil.LAST_APP_VERSION);
 //        if (!json.isEmpty()) {
@@ -361,6 +362,17 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
                                     }
                                 })
                                 .setNegativeButton("以后", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                    }
+                                })
+                                .show();
+                    } else if (isSetting == true && androidVersion != null && androidVersion.getVersionNumber().equals(curentVersion)) {
+                        new AlertDialog.Builder(context)
+                                .setTitle("提示")
+                                .setMessage("亲，已是最新版本")
+                                .setNegativeButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         dialogInterface.dismiss();

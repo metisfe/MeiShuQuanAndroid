@@ -42,6 +42,7 @@ public class CircleOperator {
     private static final String URL_CIRCLE_AT_ME = "v1.1/Message/AndIRelated?";
     private static final String URL_GET_FOCUS_LIST = "v1.1/Circle/GetFocusUserList";
     private static final String URL_GET_DEFAULT_CHATROOM_LIST = "v1.1/Message/GetDefaultDiscussion";
+    private static final String URL_DELETE_COMMENT = "v1.1/Circle/DeleteMyCommnet?";
 
     private static CircleOperator operator = null;
     private boolean flag;
@@ -229,6 +230,22 @@ public class CircleOperator {
                 PATH.append("?session=" + MainApplication.userInfo.getCookie());
                 Log.i("default_chatroom", PATH.toString());
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpGet.METHOD_NAME, null,
+                        (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
+            }
+        } else {
+            Toast.makeText(MainApplication.UIContext, "网络不给力，请稍候再试", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void deleteComment(int circleid, int commnetid, ApiOperationCallback<ReturnInfo<String>> callback) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            if (flag) {
+                StringBuffer PATH = new StringBuffer(URL_DELETE_COMMENT);
+                PATH.append("?circleid=" + circleid);
+                PATH.append("?commnetid=" + commnetid);
+                PATH.append("?session=" + MainApplication.userInfo.getCookie());
+                Log.i("url_deleteComment", PATH.toString());
+                ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpPost.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
             }
         } else {

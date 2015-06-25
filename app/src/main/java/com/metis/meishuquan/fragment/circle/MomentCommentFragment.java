@@ -72,6 +72,8 @@ import java.util.List;
 public class MomentCommentFragment extends Fragment {
     public static final String CLASS_NAME = MomentCommentFragment.class.getSimpleName();
     public static final String KEY_COMMENT_ID = "KEY_COMMENT_ID";//圈子评论，回复评论
+    public static final String KEY_RELAYUSERID = "KEY_RELAYUSERID";
+    public static final String KEY_ISREPLY = "KEY_ISREPLY";
 
     private static final int KEYBOARD_DRAWABLE_RESOURCE_ID = R.drawable.circle_moment_emotion_icon_keyboard;
     private static final int EMOTION_DRAWABLE_RESOURCE_ID = R.drawable.circle_moment_icon_emotion;
@@ -86,6 +88,7 @@ public class MomentCommentFragment extends Fragment {
     private FragmentManager fm;
     private TextView cancelButton, publishButton;
 
+    private TextView title;
     private Button buttonPublish;
     private ProgressDialog progressDialog;
     private String originalMessage;
@@ -95,6 +98,8 @@ public class MomentCommentFragment extends Fragment {
     private ImageButton emotionKeyboardSwitchButton;
     private boolean isEmotionSoftInputSwitchInMiddle;
     private boolean isEmotionInputShown;
+
+    private boolean isReplay;
 
     private MomentDetailFragment.OnCommentSuccessListner onCommentSuccessListner;
 
@@ -116,6 +121,14 @@ public class MomentCommentFragment extends Fragment {
 //        }
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_circle_moment_comment, null, false);
         fm = getActivity().getSupportFragmentManager();
+
+        title = (TextView) rootView.findViewById(R.id.moment_detail_tv_nickname);
+        isReplay = getArguments().getBoolean(KEY_ISREPLY);
+        if (isReplay) {
+            title.setText("回复评论");
+        } else {
+            title.setText("写评论");
+        }
 
         cancelButton = (TextView) rootView.findViewById(R.id.moment_comment_cancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -147,9 +160,13 @@ public class MomentCommentFragment extends Fragment {
 //                    e.printStackTrace();
 //                }
 
-                int id=getArguments().getInt(KEY_COMMENT_ID,0);
+                int id = getArguments().getInt(KEY_COMMENT_ID, 0);
+                int relayUserId = getArguments().getInt(KEY_RELAYUSERID);
                 CParamCircleComment param = new CParamCircleComment();
                 param.setId(id);
+                if (isReplay) {
+                    param.setRelyUserId(relayUserId);
+                }
                 param.setContent(editText.getText().toString());
                 CircleOperator.getInstance().pushCommentByPost(param, new ApiOperationCallback<ReturnInfo<String>>() {
                     @Override

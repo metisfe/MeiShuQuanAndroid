@@ -32,6 +32,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmObject;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
 import io.rong.message.TextMessage;
@@ -48,6 +51,8 @@ public class ChatManager {
 
     private static OnReceivedListener onReceivedListener;
     private static OnFriendListReceivedListener onFriendListReceivedListener;
+
+    private static RealmConfiguration realmConfiguration= new RealmConfiguration.Builder(MainApplication.UIContext).build();
 
     public static List<String> getMyWatchGroup() {
         return myWatchGroup;
@@ -123,6 +128,11 @@ public class ChatManager {
             }
         }
         //TODO: save to DB
+//        Realm realm= Realm.getInstance(realmConfiguration);
+//        realm.beginTransaction();
+//        realm.copyToRealm((Iterable<RealmObject>) contacts);
+//        realm.commitTransaction();
+
         SharedPreferencesUtil.getInstanse(MainApplication.UIContext).update(SharedPreferencesUtil.CONTACTS + MainApplication.userInfo.getUserId(), new Gson().toJson(userModels));
     }
 

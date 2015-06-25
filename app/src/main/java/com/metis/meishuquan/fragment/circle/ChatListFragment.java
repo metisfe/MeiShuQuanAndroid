@@ -108,7 +108,7 @@ public class ChatListFragment extends CircleBaseFragment {
                         StartFriendPickFragment startFriendPickFragment = new StartFriendPickFragment();
                         Bundle args = new Bundle();
                         args.putString("fromtype", "friendpickfragment");
-                        args.putString("title", "消息");
+                        args.putString("title", "选择联系人");
                         startFriendPickFragment.setArguments(args);
 
                         fm = getActivity().getSupportFragmentManager();

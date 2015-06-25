@@ -2,6 +2,8 @@ package com.metis.meishuquan.fragment.circle;
 
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -10,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.ClipboardManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -39,6 +42,7 @@ import com.metis.meishuquan.model.circle.CCircleCommentModel;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CCircleReplyModel;
 import com.metis.meishuquan.model.circle.CCircleTabModel;
+import com.metis.meishuquan.model.circle.CParamCircleComment;
 import com.metis.meishuquan.model.circle.CUserModel;
 import com.metis.meishuquan.model.circle.CircleMomentDetail;
 import com.metis.meishuquan.model.circle.CirclePushCommentResult;
@@ -46,6 +50,7 @@ import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.enums.SupportTypeEnum;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.ActivityUtils;
+import com.metis.meishuquan.util.AlertDialogUtils;
 import com.metis.meishuquan.util.GlobalData;
 import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
@@ -235,7 +240,6 @@ public class MomentDetailFragment extends Fragment {
                     isCommentShown = true;
                     isShareShow = false;
                     isLikeShow = false;
-
                 }
             }
 
@@ -583,6 +587,36 @@ public class MomentDetailFragment extends Fragment {
         }
     }
 
+    private void writeComment(boolean isReplay, int replyUserId) {
+        if (!MainApplication.isLogin()) {
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+            return;
+        }
+        MomentCommentFragment momentCommentFragment = new MomentCommentFragment();
+
+        //传递参数
+        Bundle bundle = new Bundle();
+        bundle.putInt(MomentCommentFragment.KEY_COMMENT_ID, momentId);
+        if (isReplay) {
+            bundle.putInt(MomentCommentFragment.KEY_RELAYUSERID, replyUserId);
+        }
+        bundle.putBoolean(MomentCommentFragment.KEY_ISREPLY, isReplay);
+        momentCommentFragment.setArguments(bundle);
+
+        momentCommentFragment.setOnCommentSuccessListner(new OnCommentSuccessListner() {
+            @Override
+            public void onSuccess(CCircleCommentModel circleCommentModel) {
+                commentCountAddOne(circleCommentModel);
+            }
+        });
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+        ft.add(R.id.content_container, momentCommentFragment);
+        ft.addToBackStack(null);
+        ft.commit();
+    }
+
     //初始化事件
     private void initEvent() {
         this.btnBack.setOnClickListener(new View.OnClickListener() {
@@ -595,36 +629,7 @@ public class MomentDetailFragment extends Fragment {
         this.rl_writeCommont.setOnClickListener(new View.OnClickListener() {//写评论
             @Override
             public void onClick(View view) {//写评论
-                if (!MainApplication.isLogin()) {
-                    startActivity(new Intent(getActivity(), LoginActivity.class));
-                    return;
-                }
-                MomentCommentFragment momentCommentFragment = new MomentCommentFragment();
-
-                //传递参数
-                Bundle bundle = new Bundle();
-                bundle.putInt(MomentCommentFragment.KEY_COMMENT_ID, momentId);
-                momentCommentFragment.setArguments(bundle);
-
-                momentCommentFragment.setOnCommentSuccessListner(new OnCommentSuccessListner() {
-                    @Override
-                    public void onSuccess(CCircleCommentModel circleCommentModel) {
-                        commentCountAddOne(circleCommentModel);
-                    }
-                });
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
-                ft.add(R.id.content_container, momentCommentFragment);
-                ft.addToBackStack(null);
-                ft.commit();
-
-//                if (loginState != null && loginState.equals("已登录")) {
-
-//                } else {
-//                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-//                    getActivity().startActivity(intent);
-//                }
+                writeComment(false, 0);
             }
         });
 
@@ -777,7 +782,34 @@ public class MomentDetailFragment extends Fragment {
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    
+                    AlertDialogUtils.showMenuDialog(getActivity(), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            switch (i) {
+                                case 0://回复
+                                    writeComment(true, commentList.get(i).user.userId);
+                                    break;
+                                case 1://复制
+                                    ClipboardManager clip = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                                    clip.setText(commentList.get(i - 1).content);
+                                    Toast.makeText(getActivity(), "已复制到剪切板", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 2://删除
+                                    CircleOperator.getInstance().deleteComment(commentList.get(i).circleId, commentList.get(i).id, new ApiOperationCallback<ReturnInfo<String>>() {
+                                        @Override
+                                        public void onCompleted(ReturnInfo<String> result, Exception e, ServiceFilterResponse serviceFilterResponse) {
+                                            if (result != null && result.isSuccess()) {
+                                                Log.i("deleteComment_result", new Gson().toJson(result));
+                                            }
+                                        }
+                                    });
+                                    commentList.remove(i);
+                                    notifyDataSetChanged();
+                                    break;
+                            }
+                        }
+                    });
+//                    Toast.makeText(getActivity(), "评论回复" + commentList.get(i).content, Toast.LENGTH_SHORT).show();
                 }
             });
 

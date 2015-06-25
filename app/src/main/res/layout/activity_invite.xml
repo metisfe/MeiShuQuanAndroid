@@ -54,9 +54,9 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="top|left"
+                android:lineSpacingExtra="1.2dip"
                 android:background="@drawable/bg_grey_outline"
                 android:layout_margin="16dp"
-                android:lineSpacingExtra="1.2dip"
                 android:padding="6dp"
                 android:textColor="#868686"
                 />
@@ -129,7 +129,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 >

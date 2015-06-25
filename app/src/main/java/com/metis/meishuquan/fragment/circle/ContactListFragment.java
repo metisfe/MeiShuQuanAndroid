@@ -134,7 +134,6 @@ public class ContactListFragment extends CircleBaseFragment {
         });
 
         this.adapter = new CircleFriendListAdapter();
-        ChatManager.refreshFriendData();
         this.adapter.friendList = ChatManager.getGroupedFriendList();
         newFriendInfo = new UserAdvanceInfo("新的朋友", R.drawable.icon_add_friend);
         int count = UnReadManager.getInstance(getActivity()).getCountByTag(PushType.FRIEND.getTag());
