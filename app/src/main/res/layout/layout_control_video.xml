@@ -11,11 +11,14 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="#88ff0000"
         >
         <ImageView
             android:id="@+id/play"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_launcher"
+            />
         <SeekBar
             android:id="@+id/progress"
             android:layout_width="fill_parent"

@@ -77,7 +77,7 @@ public class ControlVideoView extends RelativeLayout {
         }
     };
 
-    private void playVideo() {
+    public void playVideo() {
         mVideoView.setVideoPath(mVideoPath);
         mVideoView.requestFocus();
         mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {

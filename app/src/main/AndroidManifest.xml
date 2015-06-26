@@ -630,7 +630,13 @@
             android:name=".HomeActivity"
             android:label="@string/title_activity_home" >
         </activity>
-        <activity android:name="com.jit.video.VideoActivity"/>
+        <activity android:name="com.jit.video.VideoActivity" />
+        <activity
+            android:name=".activity.TestActivity"
+            android:label="@string/title_activity_test"
+            android:screenOrientation="sensor"
+            >
+        </activity>
     </application>
 
 </manifest>
