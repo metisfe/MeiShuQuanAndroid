@@ -804,7 +804,10 @@ public class MomentDetailFragment extends Fragment {
                                     Toast.makeText(getActivity(), "已复制到剪切板", Toast.LENGTH_SHORT).show();
                                     break;
                                 case 2://删除
-                                    CircleOperator.getInstance().deleteComment(commentList.get(i).circleId, commentList.get(i).id, new ApiOperationCallback<ReturnInfo<String>>() {
+                                    CCircleCommentModel comment = commentList.get(i);
+                                    commentList.remove(i);
+                                    notifyDataSetChanged();
+                                    CircleOperator.getInstance().deleteComment(comment.circleId, comment.id, new ApiOperationCallback<ReturnInfo<String>>() {
                                         @Override
                                         public void onCompleted(ReturnInfo<String> result, Exception e, ServiceFilterResponse serviceFilterResponse) {
                                             if (result != null && result.isSuccess()) {
@@ -812,8 +815,6 @@ public class MomentDetailFragment extends Fragment {
                                             }
                                         }
                                     });
-                                    commentList.remove(i);
-                                    notifyDataSetChanged();
                                     break;
                             }
                         }
