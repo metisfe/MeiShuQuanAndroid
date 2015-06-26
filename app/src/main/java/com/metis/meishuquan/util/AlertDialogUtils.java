@@ -11,9 +11,13 @@ import com.metis.meishuquan.R;
  */
 public class AlertDialogUtils {
 
-    public static void showMenuDialog(Context context, DialogInterface.OnClickListener onClickListener) {
+    public static void showMenuDialog(Context context, boolean isMe, DialogInterface.OnClickListener onClickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setItems(context.getResources().getStringArray(R.array.moment_comment_item), onClickListener);
+        if (isMe) {
+            builder.setItems(context.getResources().getStringArray(R.array.moment_comment_item), onClickListener);
+        } else {
+            builder.setItems(context.getResources().getStringArray(R.array.moment_comment_item_not_me), onClickListener);
+        }
         builder.show();
     }
 }

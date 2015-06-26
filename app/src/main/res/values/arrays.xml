@@ -6,6 +6,11 @@
         <item>删除</item>
     </array>
 
+    <array name="moment_comment_item_not_me">
+        <item>回复</item>
+        <item>复制</item>
+    </array>
+
     <string-array name="emotion_names">
         <item>太阳</item>
         <item>满分</item>

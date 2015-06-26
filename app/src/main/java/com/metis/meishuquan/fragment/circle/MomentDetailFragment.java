@@ -778,11 +778,20 @@ public class MomentDetailFragment extends Fragment {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
+            //判断点击当前的评论是否为自己的评论
+            boolean isMySelf = false;
+            if (commentList.get(i).user.userId == MainApplication.userInfo.getUserId()) {
+                isMySelf = true;
+            } else {
+                isMySelf = false;
+            }
+
             //弹出选项：复制、删除
+            final boolean finalIsMySelf = isMySelf;
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    AlertDialogUtils.showMenuDialog(getActivity(), new DialogInterface.OnClickListener() {
+                    AlertDialogUtils.showMenuDialog(getActivity(), finalIsMySelf, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             switch (i) {
