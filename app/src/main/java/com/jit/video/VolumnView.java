@@ -11,6 +11,8 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.metis.meishuquan.R;
+
 /**
  * 仿小米声音调节环形进度条
  */

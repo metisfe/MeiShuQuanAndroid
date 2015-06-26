@@ -9,6 +9,7 @@ import java.util.TimerTask;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -29,7 +30,9 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-public class MainActivity extends Activity implements OnClickListener {
+import com.metis.meishuquan.R;
+
+public class VideoActivity extends Activity implements OnClickListener {
 
 	// 自定义VideoView
 	private FullScreenVideoView mVideo;
@@ -55,7 +58,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	// 视频播放时间
 	private int playTime;
 
-	private String videoUrl = "https://metisfile.blob.core.chinacloudapi.cn/asset-e522435d-1500-80c3-4f36-f1e51ae52c3b/%E5%8F%B0%E9%9D%A2%E9%9D%99%E7%89%A9%EF%BC%88%E4%BA%8C%EF%BC%89.mp4?sv=2012-02-12&sr=c&si=936408be-4490-4948-8e5e-385c8ad05c04&sig=l47tV%2FVV5%2Fue4ZVeQITVKtuJzfmUzlOCO8GV7yyxk08%3D&st=2015-06-25T02:58:11Z&se=2115-06-01T02:58:11Z";
+	private String videoUrl = "https://metisfile.blob.core.chinacloudapi.cn/asset-932c435d-1500-80c3-a911-f1e51bc8ca1a/%E5%8F%B0%E9%9D%A2%E9%9D%99%E7%89%A9%EF%BC%88%E4%BA%8C%EF%BC%89.mp4?sv=2012-02-12&sr=c&si=bfabcdf1-dcb9-423a-b1e6-81185d253ce9&sig=a7ouuLUTVdjetWgGfOQGShNOuSZIK%2FH4Cwa4%2FgBNLkY%3D&st=2015-06-26T06:09:12Z&se=2115-06-02T06:09:12Z";
 	// 自动隐藏顶部和底部View的时间
 	private static final int HIDE_TIME = 5000;
 
@@ -68,7 +71,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_video);
 		volumnController = new VolumnController(this);
 		mVideo = (FullScreenVideoView) findViewById(R.id.videoview);
 		mPlayTime = (TextView) findViewById(R.id.play_time);
@@ -90,6 +93,12 @@ public class MainActivity extends Activity implements OnClickListener {
 		mSeekBar.setOnSeekBarChangeListener(mSeekBarChangeListener);
 
 		playVideo();
+		this.mTopView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+			}
+		});
 	}
 
 	@Override

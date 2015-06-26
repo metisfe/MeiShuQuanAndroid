@@ -15,4 +15,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         />
+    <ImageView
+        android:id="@+id/home_dock_circle_mask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_tabbar_circle_selected1"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        />
 </RelativeLayout>

@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
+import com.metis.meishuquan.R;
+
 public class VolumnController {
 	private Toast t;
 	private VolumnView tv;
