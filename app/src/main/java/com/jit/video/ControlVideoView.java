@@ -42,14 +42,26 @@ public class ControlVideoView extends RelativeLayout {
 
     private static final int HIDE_TIME = 5000;
 
-    // 音频管理器
     private AudioManager mAudioManager;
 
-    // 声音调节Toast
     private VolumnController volumnController;
 
-    // 原始屏幕亮度
     private int orginalLight;
+
+    private OnClickListener mOnClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.play:
+                    if (mVideoView.isPlaying()) {
+                        pause();
+                    } else {
+                        playVideo();
+                    }
+                    break;
+            }
+        }
+    };
 
     public ControlVideoView(Context context) {
         this(context, null);
@@ -76,6 +88,8 @@ public class ControlVideoView extends RelativeLayout {
 
         mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
+        mPlay.setOnClickListener(mOnClickListener);
+
     }
 
     public void setVideoPath (String path) {
@@ -90,6 +104,12 @@ public class ControlVideoView extends RelativeLayout {
         }
     };
 
+    public void pause () {
+        mVideoView.pause();
+        playTime = mVideoView.getCurrentPosition();
+        mPlay.setImageResource(R.drawable.ic_play);
+    }
+
     public void playVideo() {
         mVideoView.setVideoPath(mVideoPath);
         mVideoView.requestFocus();
@@ -100,6 +120,7 @@ public class ControlVideoView extends RelativeLayout {
                 mVideoView.setVideoHeight(mp.getVideoHeight());*/
 
                 mVideoView.start();
+                mPlay.setImageResource(R.drawable.ic_pause);
                 if (playTime != 0) {
                     mVideoView.seekTo(playTime);
                 }
@@ -164,7 +185,7 @@ public class ControlVideoView extends RelativeLayout {
                     float deltaY = y - mLastMotionY;
                     float absDeltaX = Math.abs(deltaX);
                     float absDeltaY = Math.abs(deltaY);
-                    // 声音调节标识
+
                     boolean isAdjustAudio = false;
                     if (absDeltaX > threshold && absDeltaY > threshold) {
                         if (absDeltaX < absDeltaY) {
@@ -235,16 +256,16 @@ public class ControlVideoView extends RelativeLayout {
             switch (msg.what) {
                 case 1:
                     if (mVideoView.getCurrentPosition() > 0) {
-                        //mPlayTime.setText(formatTime(mVideoView.getCurrentPosition()));
+                        mPlayTime.setText(formatTime(mVideoView.getCurrentPosition()));
                         int progress = mVideoView.getCurrentPosition() * 100 / mVideoView.getDuration();
                         mSeekBar.setProgress(progress);
                         if (mVideoView.getCurrentPosition() > mVideoView.getDuration() - 100) {
-                            //mPlayTime.setText("00:00");
+                            mPlayTime.setText("00:00");
                             mSeekBar.setProgress(0);
                         }
                         mSeekBar.setSecondaryProgress(mVideoView.getBufferPercentage());
                     } else {
-                        //mPlayTime.setText("00:00");
+                        mPlayTime.setText("00:00");
                         mSeekBar.setProgress(0);
                     }
 
