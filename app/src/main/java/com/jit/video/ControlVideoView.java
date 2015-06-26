@@ -13,10 +13,16 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.metis.meishuquan.R;
 
+import org.w3c.dom.Text;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,8 +34,13 @@ public class ControlVideoView extends RelativeLayout {
     private SeekBar mSeekBar;
     private ImageView mPlay;
     private VideoView mVideoView;
+    private TextView mDurationTime, mPlayTime;
 
     private String mVideoPath = null;
+
+    private int playTime = 0;
+
+    private static final int HIDE_TIME = 5000;
 
     // “Ù∆µπ‹¿Ì∆˜
     private AudioManager mAudioManager;
@@ -58,6 +69,8 @@ public class ControlVideoView extends RelativeLayout {
         mSeekBar = (SeekBar)findViewById(R.id.progress);
         mPlay = (ImageView)findViewById(R.id.play);
         mVideoView = (VideoView)findViewById(R.id.video_view);
+        mDurationTime = (TextView)findViewById(R.id.duration);
+        mPlayTime = (TextView)findViewById(R.id.current);
 
         volumnController = new VolumnController(context);
 
@@ -87,13 +100,13 @@ public class ControlVideoView extends RelativeLayout {
                 mVideoView.setVideoHeight(mp.getVideoHeight());*/
 
                 mVideoView.start();
-                /*if (playTime != 0) {
-                    mVideo.seekTo(playTime);
+                if (playTime != 0) {
+                    mVideoView.seekTo(playTime);
                 }
 
                 mHandler.removeCallbacks(hideRunnable);
                 mHandler.postDelayed(hideRunnable, HIDE_TIME);
-                mDurationTime.setText(formatTime(mVideo.getDuration()));*/
+                mDurationTime.setText(formatTime(mVideoView.getDuration()));
                 Timer timer = new Timer();
                 timer.schedule(new TimerTask() {
 
@@ -108,7 +121,7 @@ public class ControlVideoView extends RelativeLayout {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 mPlay.setImageResource(R.drawable.video_btn_down);
-                //mPlayTime.setText("00:00");
+                mPlayTime.setText("00:00");
                 mSeekBar.setProgress(0);
             }
         });
@@ -117,6 +130,12 @@ public class ControlVideoView extends RelativeLayout {
 
     public VideoView getVideoView () {
         return mVideoView;
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private String formatTime(long time) {
+        DateFormat formatter = new SimpleDateFormat("mm:ss");
+        return formatter.format(new Date(time));
     }
 
     private float mLastMotionX;

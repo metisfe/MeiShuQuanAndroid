@@ -19,11 +19,22 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_launcher"
             />
+        <TextView
+            android:id="@+id/current"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/play"
+            />
         <SeekBar
             android:id="@+id/progress"
             android:layout_width="fill_parent"
             android:layout_height="2dp"
-            android:layout_toRightOf="@+id/play"
+            android:layout_toRightOf="@+id/current"
+            android:layout_toLeftOf="@+id/duration"
             />
+        <TextView
+            android:id="@+id/duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </RelativeLayout>
 </RelativeLayout>
