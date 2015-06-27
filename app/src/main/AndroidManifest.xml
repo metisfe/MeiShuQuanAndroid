@@ -634,7 +634,7 @@
         <activity
             android:name=".activity.TestActivity"
             android:label="@string/title_activity_test"
-            android:screenOrientation="sensor"
+            android:configChanges="orientation"
             >
         </activity>
     </application>

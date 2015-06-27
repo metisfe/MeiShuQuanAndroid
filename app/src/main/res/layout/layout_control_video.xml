@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:background="#999999"
+    >
     <VideoView
         android:id="@+id/video_view"
         android:layout_width="fill_parent"
@@ -10,7 +12,7 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_alignBottom="@+id/video_view"
         android:background="#88666666"
         >
         <ImageView
@@ -31,11 +33,12 @@
         <SeekBar
             android:id="@+id/progress"
             android:layout_width="fill_parent"
-            android:layout_height="2dp"
+            android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/current"
             android:layout_toLeftOf="@+id/duration"
             android:layout_centerVertical="true"
-            android:background="#88ffffff"
+            android:background="@android:color/transparent"
+            android:progressDrawable="@drawable/seekbar_drawable"
             android:max="100"
             />
         <TextView

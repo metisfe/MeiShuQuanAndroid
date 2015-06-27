@@ -10,7 +10,9 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -35,6 +37,8 @@ public class ControlVideoView extends RelativeLayout {
     private ImageView mPlay;
     private VideoView mVideoView;
     private TextView mDurationTime, mPlayTime;
+    private ImageView mFullScreenBtn = null;
+
 
     private String mVideoPath = null;
 
@@ -43,6 +47,8 @@ public class ControlVideoView extends RelativeLayout {
     private static final int HIDE_TIME = 5000;
 
     private AudioManager mAudioManager;
+
+    private OnPlayEndListener mEndListener = null;
 
     private VolumnController volumnController;
 
@@ -63,6 +69,10 @@ public class ControlVideoView extends RelativeLayout {
         }
     };
 
+    private boolean isFullScreen = false;
+
+    private MediaController mController = null;
+
     public ControlVideoView(Context context) {
         this(context, null);
     }
@@ -74,6 +84,7 @@ public class ControlVideoView extends RelativeLayout {
     public ControlVideoView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
+
     }
 
     private void init (Context context) {
@@ -83,13 +94,57 @@ public class ControlVideoView extends RelativeLayout {
         mVideoView = (VideoView)findViewById(R.id.video_view);
         mDurationTime = (TextView)findViewById(R.id.duration);
         mPlayTime = (TextView)findViewById(R.id.current);
+        mFullScreenBtn = (ImageView)findViewById(R.id.full_screen);
 
         volumnController = new VolumnController(context);
 
         mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
         mPlay.setOnClickListener(mOnClickListener);
+        mFullScreenBtn.setOnClickListener(mOnClickListener);
 
+        mController = new MediaController(context);
+        mController.hide();
+        mController.setVisibility(GONE);
+        mVideoView.setMediaController(mController);
+
+        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                mVideoView.seekTo(mVideoView.getDuration() / 100 * seekBar.getProgress());
+            }
+        });
+
+    }
+
+    public void setFullScreenClickListener (OnClickListener listener) {
+        mFullScreenBtn.setOnClickListener(listener);
+    }
+
+    public boolean isFullScreen () {
+        return isFullScreen;
+    }
+
+    public void setFullScreen (boolean fullScreen) {
+        isFullScreen = fullScreen;
+        mFullScreenBtn.setImageResource(fullScreen ? R.drawable.ic_arrow_collapse : R.drawable.ic_arrow_expand);
+        /*if (isFullScreen) {
+            int screenWid = getContext().getResources().getDisplayMetrics().widthPixels;
+            int screenHei = getContext().getResources().getDisplayMetrics().heightPixels;
+            this.setLayoutParams(new ViewGroup.LayoutParams(screenWid, screenHei));
+        } else {
+            this.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        }*/
     }
 
     public void setVideoPath (String path) {
@@ -120,6 +175,7 @@ public class ControlVideoView extends RelativeLayout {
                 mVideoView.setVideoHeight(mp.getVideoHeight());*/
 
                 mVideoView.start();
+
                 mPlay.setImageResource(R.drawable.ic_pause);
                 if (playTime != 0) {
                     mVideoView.seekTo(playTime);
@@ -141,9 +197,13 @@ public class ControlVideoView extends RelativeLayout {
         mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                mPlay.setImageResource(R.drawable.video_btn_down);
+                mHandler.removeCallbacks(hideRunnable);
+                mPlay.setImageResource(R.drawable.ic_play);
                 mPlayTime.setText("00:00");
                 mSeekBar.setProgress(0);
+                if (mEndListener != null) {
+                    mEndListener.onEnd();
+                }
             }
         });
         mVideoView.setOnTouchListener(mTouchListener);
@@ -279,4 +339,12 @@ public class ControlVideoView extends RelativeLayout {
             }
         }
     };
+
+    public void setOnPlayEndListener (OnPlayEndListener listener) {
+        mEndListener = listener;
+    }
+
+    public static interface OnPlayEndListener {
+        public void onEnd ();
+    }
 }
