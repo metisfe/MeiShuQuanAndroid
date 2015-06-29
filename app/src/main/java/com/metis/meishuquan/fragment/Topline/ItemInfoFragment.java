@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -43,6 +44,7 @@ import com.jit.video.ControlVideoView;
 import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.TestActivity;
 import com.metis.meishuquan.activity.info.ImagePreviewActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.adapter.topline.CommonAdapter;
@@ -258,6 +260,7 @@ public class ItemInfoFragment extends Fragment {
                 }
                 if (contentInfo.getType() != null && contentInfo.getType().equals("VOIDE")) {
                     //addImageView(contentInfo.getData().getUrl(), contentInfo.getData().getWidth(), contentInfo.getData().getHeight());
+                    addVideoView(contentInfo.getData().getUrl(), contentInfo.getData().getWidth(), contentInfo.getData().getHeight());
                 }
             }
 
@@ -381,30 +384,33 @@ public class ItemInfoFragment extends Fragment {
         ll_content.addView(textView);
     }
 
-    private void addVideoView(final String url) {
+    private void addVideoView(final String url, int width, int height) {
         if (ll_content == null) {
             ll_content = (LinearLayout) rootView.findViewById(R.id.id_ll_news_content);//内容父布局
         }
-        ControlVideoView videoView = new ControlVideoView(getActivity(), null);
+        final ControlVideoView videoView = new ControlVideoView(getActivity(), null);
 
         videoView.setVideoPath(url);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(320, 200);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.topMargin = 10;
-//        lp.width = MainApplication.Resources.getDisplayMetrics().widthPixels;
-//        lp.height = (MainApplication.Resources.getDisplayMetrics().widthPixels * height) / width;
+        lp.width = MainApplication.Resources.getDisplayMetrics().widthPixels;
+        lp.height = (MainApplication.Resources.getDisplayMetrics().widthPixels * height) / width;
         lp.gravity = Gravity.CENTER_HORIZONTAL;
         videoView.setLayoutParams(lp);
         ll_content.addView(videoView);
-//        imageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(getActivity(), ImagePreviewActivity.class);
-//                intent.putStringArrayListExtra(ImagePreviewActivity.KEY_IMAGE_URL_ARRAY, lstImgUrls);
-//                intent.putExtra(ImagePreviewActivity.KEY_START_INDEX, lstImgUrls.indexOf(url));
-//                startActivity(intent);
-//                getActivity().overridePendingTransition(R.anim.activity_zoomin, 0);
-//            }
-//        });
+        videoView.setFullScreenClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!videoView.isFullScreen()) {
+                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                    videoView.setFullScreen(true);
+                } else {
+                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    videoView.setFullScreen(false);
+                }
+            }
+        });
     }
 
     //初始化事件
