@@ -38,6 +38,7 @@ public class ControlVideoView extends RelativeLayout {
     private VideoView mVideoView;
     private TextView mDurationTime, mPlayTime;
     private ImageView mFullScreenBtn = null;
+    private RelativeLayout mControlContainer = null;
 
 
     private String mVideoPath = null;
@@ -95,6 +96,7 @@ public class ControlVideoView extends RelativeLayout {
         mDurationTime = (TextView)findViewById(R.id.duration);
         mPlayTime = (TextView)findViewById(R.id.current);
         mFullScreenBtn = (ImageView)findViewById(R.id.full_screen);
+        mControlContainer = (RelativeLayout)findViewById(R.id.control_container);
 
         volumnController = new VolumnController(context);
 
@@ -155,7 +157,7 @@ public class ControlVideoView extends RelativeLayout {
 
         @Override
         public void run() {
-            //showOrHide();
+            showOrHide();
         }
     };
 
@@ -294,7 +296,7 @@ public class ControlVideoView extends RelativeLayout {
                     mLastMotionY = 0;
                     startX = (int) 0;
                     if (isClick) {
-                        //showOrHide();
+                        showOrHide();
                     }
                     isClick = true;
                     break;
@@ -331,7 +333,7 @@ public class ControlVideoView extends RelativeLayout {
 
                     break;
                 case 2:
-                    //showOrHide();
+                    showOrHide();
                     break;
 
                 default:
@@ -339,6 +341,19 @@ public class ControlVideoView extends RelativeLayout {
             }
         }
     };
+
+
+
+    private void showOrHide () {
+        if (mControlContainer.getVisibility() == VISIBLE) {
+            mControlContainer.setVisibility(GONE);
+            mHandler.removeCallbacks(hideRunnable);
+        } else {
+            mControlContainer.setVisibility(VISIBLE);
+            mHandler.postDelayed(hideRunnable, 3000);
+        }
+
+    }
 
     public void setOnPlayEndListener (OnPlayEndListener listener) {
         mEndListener = listener;

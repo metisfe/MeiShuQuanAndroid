@@ -47,7 +47,7 @@ public class TestActivity extends BaseActivity {
             public void onEnd() {
                 if (mCvv.isFullScreen()) {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                    mCvv.setFullScreen(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
                     return;
                 }
             }
@@ -60,6 +60,7 @@ public class TestActivity extends BaseActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        mCvv.setFullScreen(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         Log.v(TAG, "onConfigurationChanged");
     }
 
