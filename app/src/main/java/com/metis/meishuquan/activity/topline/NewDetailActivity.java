@@ -40,6 +40,7 @@ public class NewDetailActivity extends FragmentActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(NewDetailActivity.this, MainActivity.class));
+        finish();
+//        startActivity(new Intent(NewDetailActivity.this, MainActivity.class));
     }
 }

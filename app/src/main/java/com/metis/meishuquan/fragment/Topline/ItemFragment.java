@@ -22,6 +22,7 @@ import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.act.ActDetailActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
+import com.metis.meishuquan.activity.topline.NewDetailActivity;
 import com.metis.meishuquan.adapter.topline.ToplineCustomAdapter;
 import com.metis.meishuquan.model.BLL.ActiveOperator;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
@@ -177,7 +178,7 @@ public class ItemFragment extends Fragment {
                 if (list.size() == 0) {
                     return;
                 }
-                if ((i) <= (list.size() + 1)) {
+                if (i <= (list.size() + 1)) {
                     int newsId = 0;
                     if (headerView == null) {
                         newsId = list.get(i - 1).getNewsId();//获取新闻Id
@@ -185,18 +186,20 @@ public class ItemFragment extends Fragment {
                         newsId = list.get(i - 2).getNewsId();//获取新闻Id
                     }
 
-                    ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
-                    Bundle args = new Bundle();
-                    args.putInt("newsId", newsId);
-                    args.putString(ItemInfoFragment.KEY_SHARE_IMG_URL, headerView == null ? list.get(i - 1).getImgUrl() : list.get(i - 2).getImgUrl());
-                    itemInfoFragment.setArguments(args);
+//                    ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
+//                    Bundle args = new Bundle();
+//                    args.putInt("newsId", newsId);
+//                    itemInfoFragment.setArguments(args);
+//
+//                    FragmentManager fm = getActivity().getSupportFragmentManager();
+//                    FragmentTransaction ft = fm.beginTransaction();
+//                    ft.add(R.id.content_container, itemInfoFragment);
+//                    ft.addToBackStack(null);
+//                    ft.commit();
 
-                    FragmentManager fm = getActivity().getSupportFragmentManager();
-                    FragmentTransaction ft = fm.beginTransaction();
-//            ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
-                    ft.add(R.id.content_container, itemInfoFragment);
-                    ft.addToBackStack(null);
-                    ft.commit();
+                    Intent intent = new Intent(getActivity(), NewDetailActivity.class);
+                    intent.putExtra(NewDetailActivity.KEY_NEWS_ID, newsId);
+                    startActivity(intent);
                 }
             }
         });

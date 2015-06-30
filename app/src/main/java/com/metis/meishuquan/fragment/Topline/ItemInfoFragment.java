@@ -47,6 +47,7 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.TestActivity;
 import com.metis.meishuquan.activity.info.ImagePreviewActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
+import com.metis.meishuquan.activity.topline.NewDetailActivity;
 import com.metis.meishuquan.adapter.topline.CommonAdapter;
 import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.BLL.TopLineOperator;
@@ -142,7 +143,6 @@ public class ItemInfoFragment extends Fragment {
         if (args != null) {
             newsId = args.getInt(KEY_NEWSID);
             flag = args.getInt(KEY_NAVAGT);
-//            shareImageUrl = args.getString(KEY_SHARE_IMG_URL);
             //根据新闻Id获取新闻内容
             getInfoData(newsId);
         }
@@ -420,7 +420,6 @@ public class ItemInfoFragment extends Fragment {
             public void onClick(View view) {//返回
                 if (flag == 1001) {
                     getActivity().finish();
-                    startActivity(new Intent(getActivity(), MainActivity.class));
                 }
                 hideInputView();
                 FragmentTransaction ft = fm.beginTransaction();
@@ -438,17 +437,20 @@ public class ItemInfoFragment extends Fragment {
                     Toast.makeText(getActivity(), "相关新闻已被删除", Toast.LENGTH_SHORT);
                     return;
                 }
-                ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
-                Bundle bundle = new Bundle();
-                bundle.putInt(KEY_NEWSID, newsId);
-                bundle.putString(KEY_SHARE_IMG_URL, "xxxx");
-                itemInfoFragment.setArguments(bundle);
-
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.add(R.id.content_container, itemInfoFragment);
-                ft.addToBackStack(null);
-                ft.commit();
+                Intent intent = new Intent(getActivity(), NewDetailActivity.class);
+                intent.putExtra(NewDetailActivity.KEY_NEWS_ID, newsId);
+                startActivity(intent);
+//                ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
+//                Bundle bundle = new Bundle();
+//                bundle.putInt(KEY_NEWSID, newsId);
+//                bundle.putString(KEY_SHARE_IMG_URL, "xxxx");
+//                itemInfoFragment.setArguments(bundle);
+//
+//                FragmentManager fm = getActivity().getSupportFragmentManager();
+//                FragmentTransaction ft = fm.beginTransaction();
+//                ft.add(R.id.id_rl_news_info_container, itemInfoFragment);
+//                ft.addToBackStack(null);
+//                ft.commit();
             }
         });
 
@@ -536,7 +538,6 @@ public class ItemInfoFragment extends Fragment {
                         }
                     });
                 }
-
             }
         });
 
@@ -545,7 +546,6 @@ public class ItemInfoFragment extends Fragment {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
                     hideInputView();
-
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     hideInputView();
                 }
@@ -685,7 +685,7 @@ public class ItemInfoFragment extends Fragment {
         CommentListFragment commentListFragment = new CommentListFragment();
         commentListFragment.setArguments(args);
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.add(R.id.content_container, commentListFragment);
+        fragmentTransaction.add(R.id.id_rl_news_info_container, commentListFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
         fragmentTransaction.commit();
@@ -704,8 +704,8 @@ public class ItemInfoFragment extends Fragment {
 
         rl_Input.setVisibility(View.VISIBLE);
         editText.setText("");
-        editText.setFocusableInTouchMode(true);
-        editText.requestFocus();
+//        editText.setFocusableInTouchMode(true);
+//        editText.requestFocus();
     }
 
     //为控件绑定数据

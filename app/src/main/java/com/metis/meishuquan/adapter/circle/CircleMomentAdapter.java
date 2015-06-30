@@ -559,8 +559,8 @@ public class CircleMomentAdapter extends BaseAdapter {
                     MomentDetailFragment momentDetailFragment = new MomentDetailFragment();
 
                     //传递参数
-                    Bundle bundle= new Bundle();
-                    bundle.putInt(MomentDetailFragment.KEY_MOMENT_ID,moment.id);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(MomentDetailFragment.KEY_MOMENT_ID, moment.id);
                     momentDetailFragment.setArguments(bundle);
 
                     FragmentTransaction ft = fm.beginTransaction();
@@ -597,9 +597,10 @@ public class CircleMomentAdapter extends BaseAdapter {
         String title = "xxx";
         String content = "xxx";
         if (moment.relayCircle == null) {
-            content = moment.content.isEmpty() ? "分享图片" : moment.content;
+//            content = moment.content.isEmpty() ? "分享图片" : moment.content;
+            content = "";
         } else if (moment.relayCircle != null) {
-            content = moment.relayCircle.desc.isEmpty() ? "分享图片" : moment.relayCircle.desc;
+            content = moment.content.equals("") ? "" : moment.content;
         }
 
         String shareUrl = moment.getShareUrl() + moment.id;

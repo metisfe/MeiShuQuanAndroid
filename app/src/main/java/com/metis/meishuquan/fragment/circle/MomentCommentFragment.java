@@ -166,8 +166,10 @@ public class MomentCommentFragment extends Fragment {
                 param.setId(id);
                 if (isReplay) {
                     param.setRelyUserId(relayUserId);
+                    param.setContent("回复" + MainApplication.userInfo.getName() + ":" + editText.getText().toString());
+                } else {
+                    param.setContent(editText.getText().toString());
                 }
-                param.setContent(editText.getText().toString());
                 CircleOperator.getInstance().pushCommentByPost(param, new ApiOperationCallback<ReturnInfo<String>>() {
                     @Override
                     public void onCompleted(ReturnInfo<String> result, Exception e, ServiceFilterResponse serviceFilterResponse) {
@@ -197,6 +199,7 @@ public class MomentCommentFragment extends Fragment {
                             circleCommentModel.content = editText.getText().toString();
                             circleCommentModel.createTime = Utils.getCurrentTime();
                             circleCommentModel.user = new CUserModel();
+                            circleCommentModel.user.identity = MainApplication.userInfo.getUserId();
                             circleCommentModel.user.avatar = MainApplication.userInfo.getUserAvatar();
                             circleCommentModel.user.name = MainApplication.userInfo.getName();
                             onCommentSuccessListner.onSuccess(circleCommentModel);

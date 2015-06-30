@@ -19,4 +19,12 @@ public class CCircleCommentModel {
     public boolean isValid() {
         return user != null && !TextUtils.isEmpty(content) && !TextUtils.isEmpty(createTime);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (((CCircleCommentModel) o).id == this.id) {
+            return true;
+        }
+        return false;
+    }
 }

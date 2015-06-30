@@ -110,13 +110,13 @@ public class Utils {
             return "刚刚";
         } else if (diffTime < HOUR_IN_MILISECOND) {
             int minutes = (int) (diffTime / MINUTE_IN_MILISECOND);
-            return String.format("%d分钟以前", minutes);
+            return String.format("%d分钟前", minutes);
         } else if (diffTime < DAY_IN_MILISECOND) {
             int hours = (int) (diffTime / HOUR_IN_MILISECOND);
             if (hours == 1) {
-                return "1小时之前";
+                return "1小时前";
             } else {
-                return String.format("%d 小时之前", hours);
+                return String.format("%d小时前", hours);
             }
         } else {
             SimpleDateFormat outputFmt = new SimpleDateFormat(DAY_FORMAT);

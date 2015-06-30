@@ -64,8 +64,6 @@
                 android:paddingLeft="10dp"
                 android:singleLine="true"
                 android:textSize="14sp">
-
-                <requestFocus />
             </EditText>
 
             <LinearLayout

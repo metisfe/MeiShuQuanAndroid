@@ -760,7 +760,7 @@ public class MomentDetailFragment extends Fragment {
         }
 
         @Override
-        public View getView(final int i, View convertView, ViewGroup view) {
+        public View getView(final int p, View convertView, ViewGroup view) {
             ViewHolder viewHolder = new ViewHolder();
             if (convertView == null) {
                 convertView = LayoutInflater.from(MainApplication.UIContext).inflate(R.layout.fragment_circle_moment_detail_comment_list_item, null);
@@ -780,7 +780,7 @@ public class MomentDetailFragment extends Fragment {
 
             //判断点击当前的评论是否为自己的评论
             boolean isMySelf = false;
-            if (commentList.get(i).user.userId == MainApplication.userInfo.getUserId()) {
+            if (commentList.get(p).user.userId == MainApplication.userInfo.getUserId()) {
                 isMySelf = true;
             } else {
                 isMySelf = false;
@@ -796,16 +796,16 @@ public class MomentDetailFragment extends Fragment {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             switch (i) {
                                 case 0://回复
-                                    writeComment(true, commentList.get(i).user.userId);
+                                    writeComment(true, commentList.get(p).user.userId);
                                     break;
                                 case 1://复制
                                     ClipboardManager clip = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                                    clip.setText(commentList.get(i - 1).content);
+                                    clip.setText(commentList.get(p).content);
                                     Toast.makeText(getActivity(), "已复制到剪切板", Toast.LENGTH_SHORT).show();
                                     break;
                                 case 2://删除
-                                    CCircleCommentModel comment = commentList.get(i);
-                                    commentList.remove(i);
+                                    CCircleCommentModel comment = commentList.get(p);
+                                    commentList.remove(comment);
                                     notifyDataSetChanged();
                                     CircleOperator.getInstance().deleteComment(comment.circleId, comment.id, new ApiOperationCallback<ReturnInfo<String>>() {
                                         @Override
@@ -823,7 +823,7 @@ public class MomentDetailFragment extends Fragment {
                 }
             });
 
-            final CCircleCommentModel comment = commentList.get(i);
+            final CCircleCommentModel comment = commentList.get(p);
             viewHolder.avatar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

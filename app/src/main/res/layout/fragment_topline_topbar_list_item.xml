@@ -58,6 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
             android:layout_marginRight="5dp"
             android:layout_toLeftOf="@+id/tv_comment_count"
             android:text="阅读(100)"
@@ -73,6 +74,7 @@
             android:gravity="right"
             android:text="评论(10)"
             android:textColor="#7e7e7e"
-            android:textSize="11sp" />
+            android:textSize="11sp"
+            android:visibility="gone" />
     </RelativeLayout>
 </RelativeLayout>

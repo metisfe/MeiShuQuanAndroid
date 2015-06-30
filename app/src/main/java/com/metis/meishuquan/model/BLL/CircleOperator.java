@@ -241,9 +241,9 @@ public class CircleOperator {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             if (flag) {
                 StringBuffer PATH = new StringBuffer(URL_DELETE_COMMENT);
-                PATH.append("?circleid=" + circleid);
-                PATH.append("?commnetid=" + commnetid);
-                PATH.append("?session=" + MainApplication.userInfo.getCookie());
+                PATH.append("circleid=" + circleid);
+                PATH.append("&commnetid=" + commnetid);
+                PATH.append("&session=" + MainApplication.userInfo.getCookie());
                 Log.i("url_deleteComment", PATH.toString());
                 ApiDataProvider.getmClient().invokeApi(PATH.toString(), null, HttpPost.METHOD_NAME, null,
                         (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), callback);
