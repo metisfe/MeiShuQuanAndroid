@@ -597,10 +597,9 @@ public class CircleMomentAdapter extends BaseAdapter {
         String title = "xxx";
         String content = "xxx";
         if (moment.relayCircle == null) {
-//            content = moment.content.isEmpty() ? "分享图片" : moment.content;
-            content = "";
+            content = moment.content.isEmpty() ? "分享图片" : moment.content;
         } else if (moment.relayCircle != null) {
-            content = moment.content.equals("") ? "" : moment.content;
+            content = moment.relayCircle.desc.isEmpty() ? "分享图片" : moment.relayCircle.desc;
         }
 
         String shareUrl = moment.getShareUrl() + moment.id;

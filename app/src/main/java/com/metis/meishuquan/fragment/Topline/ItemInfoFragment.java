@@ -123,14 +123,14 @@ public class ItemInfoFragment extends Fragment {
     private FragmentManager fm;
     private int flag = 0;//用于标识是否为NewDetailActivity调用
 
-    @Override
-    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
-        int animId = R.anim.right_out;
-        if (enter) {
-            animId = R.anim.right_in;
-        }
-        return AnimationUtils.loadAnimation(getActivity(), animId);
-    }
+//    @Override
+//    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+//        int animId = R.anim.right_out;
+//        if (enter) {
+//            animId = R.anim.right_in;
+//        }
+//        return AnimationUtils.loadAnimation(getActivity(), animId);
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -402,13 +402,13 @@ public class ItemInfoFragment extends Fragment {
         videoView.setFullScreenClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!videoView.isFullScreen()) {
-                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                    videoView.setFullScreen(true);
-                } else {
-                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                    videoView.setFullScreen(false);
-                }
+//                if (!videoView.isFullScreen()) {
+//                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//                    videoView.setFullScreen(true);
+//                } else {
+//                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//                    videoView.setFullScreen(false);
+//                }
             }
         });
     }

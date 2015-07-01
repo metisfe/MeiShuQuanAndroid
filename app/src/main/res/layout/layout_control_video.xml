@@ -2,61 +2,61 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#999999"
-    >
+    android:background="#999999">
+
     <VideoView
         android:id="@+id/video_view"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        />
+        android:layout_height="fill_parent" />
+
     <RelativeLayout
         android:id="@+id/control_container"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/video_view"
-        android:background="#88666666"
-        >
+        android:background="#88666666">
+
         <ImageView
             android:id="@+id/play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_play"
-            />
+            android:src="@drawable/ic_play" />
+
         <TextView
             android:id="@+id/current"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/play"
             android:text="00:00"
-            android:textColor="@android:color/white"
-            android:layout_centerVertical="true"
-            />
+            android:textColor="@android:color/white" />
+
         <SeekBar
             android:id="@+id/progress"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/current"
-            android:layout_toLeftOf="@+id/duration"
             android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/duration"
+            android:layout_toRightOf="@+id/current"
             android:background="@android:color/transparent"
-            android:progressDrawable="@drawable/seekbar_drawable"
             android:max="100"
-            />
+            android:progressDrawable="@drawable/seekbar_drawable" />
+
         <TextView
             android:id="@+id/duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/full_screen"
             android:layout_alignWithParentIfMissing="true"
-            android:textColor="@android:color/white"
             android:layout_centerVertical="true"
-            />
+            android:layout_toLeftOf="@+id/full_screen"
+            android:textColor="@android:color/white" />
+
         <ImageView
             android:id="@+id/full_screen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:src="@drawable/ic_arrow_expand"
-            />
+            android:visibility="gone" />
     </RelativeLayout>
 </RelativeLayout>

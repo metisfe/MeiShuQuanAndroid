@@ -166,14 +166,14 @@ public class MomentCommentFragment extends Fragment {
                 param.setId(id);
                 if (isReplay) {
                     param.setRelyUserId(relayUserId);
-                    param.setContent("回复" + MainApplication.userInfo.getName() + ":" + editText.getText().toString());
+                    param.setContent("回复 " + MainApplication.userInfo.getName() + ":" + editText.getText().toString());
                 } else {
                     param.setContent(editText.getText().toString());
                 }
                 CircleOperator.getInstance().pushCommentByPost(param, new ApiOperationCallback<ReturnInfo<String>>() {
                     @Override
                     public void onCompleted(ReturnInfo<String> result, Exception e, ServiceFilterResponse serviceFilterResponse) {
-                        progressDialog.cancel();
+                        progressDialog.dismiss();
                         if (result != null && result.isSuccess()) {
                             if (result == null || !result.isSuccess()) {
                                 Toast.makeText(MainApplication.UIContext, "发送失败，请检查网络后重试", Toast.LENGTH_SHORT).show();

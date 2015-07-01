@@ -38,7 +38,7 @@ import com.umeng.analytics.MobclickAgent;
  */
 public class ReplyActivity extends FragmentActivity {
 
-    public static final String VALUE_ACTIVITY_INPUT="我正在参加#超级美术生#海选，一定要帮我到美术圈APP集齐10个赞哦！这样我就有机会免费进全国最好画室中最贵的VIP班学习啦！";
+    public static final String VALUE_ACTIVITY_INPUT = "我正在参加#超级美术生#海选，一定要帮我到美术圈APP集齐10个赞哦！这样我就有机会免费进全国最好画室中最贵的VIP班学习啦！";
 
     public static final String PARM = "parm";
     public static final String TITLE = "title";
@@ -81,7 +81,7 @@ public class ReplyActivity extends FragmentActivity {
             this.title = bundle.getString(TITLE, "");
             this.content = bundle.getString(CONTENT, "");
             this.imgUrl = bundle.getString(IMAGEURL, "");
-            this.inputContent = bundle.getString(INPUT_CONTENT, "");
+            this.inputContent = bundle.getString(INPUT_CONTENT, "转发微博");
         }
 
         initView();
@@ -107,7 +107,11 @@ public class ReplyActivity extends FragmentActivity {
             this.rl_circle.setVisibility(View.VISIBLE);
             this.rl_reply.setVisibility(View.GONE);
             this.tvCircleTitle.setText(title);
-            this.tvCircleContent.setText(content);
+            if (parm.getContent().equals("") && !parm.getImages().equals("")) {
+                this.tvCircleContent.setText("分享图片");
+            } else {
+                this.tvCircleContent.setText(content);
+            }
             this.etInput.setText(inputContent);
             if (imgUrl != null && !imgUrl.isEmpty()) {
                 ImageLoaderUtils.getImageLoader(this).displayImage(imgUrl, imgCirclePic);

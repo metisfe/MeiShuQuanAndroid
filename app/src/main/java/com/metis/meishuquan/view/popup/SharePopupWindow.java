@@ -90,7 +90,7 @@ public class SharePopupWindow extends PopupWindow {
         Button btnCancel = (Button) view.findViewById(R.id.id_btn_cancel);
         Button btnQQ = (Button) view.findViewById(R.id.id_btn_share_qq);
 
-        //分享美术圈
+        //分享至美术圈
         btnMeishuquan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -140,7 +140,7 @@ public class SharePopupWindow extends PopupWindow {
                         it.putExtra(ReplyActivity.TITLE, mMoment.relayCircle.title);
                         it.putExtra(ReplyActivity.CONTENT, mMoment.relayCircle.desc);
                         it.putExtra(ReplyActivity.IMAGEURL, mMoment.relayImgUrl);
-                        it.putExtra(ReplyActivity.INPUT_CONTENT, "//@" + mMoment.user.name + " " + mMoment.content);
+                        it.putExtra(ReplyActivity.INPUT_CONTENT, "//@" + mMoment.user.name);
                     } else if (mMoment.relayCircle != null && mMoment.relayCircle.type == SupportTypeEnum.Circle.getVal()) {
                         it.putExtra(ReplyActivity.TITLE, "@" + mMoment.user.name);
                         it.putExtra(ReplyActivity.CONTENT, mMoment.relayCircle.desc);
@@ -150,7 +150,8 @@ public class SharePopupWindow extends PopupWindow {
                         it.putExtra(ReplyActivity.TITLE, "@" + mMoment.user.name);
                         it.putExtra(ReplyActivity.CONTENT, mMoment.content);
                         it.putExtra(ReplyActivity.IMAGEURL, mMoment.relayImgUrl);
-                        it.putExtra(ReplyActivity.INPUT_CONTENT, "//@" + mMoment.user.name + " " + mMoment.content);
+                        it.putExtra(ReplyActivity.INPUT_CONTENT, "");
+//                        it.putExtra(ReplyActivity.INPUT_CONTENT, "//@" + mMoment.user.name + " " + mMoment.content);
                     }
                 }
 
