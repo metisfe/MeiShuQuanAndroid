@@ -2,67 +2,42 @@ package com.metis.meishuquan.fragment.circle;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.activity.login.LoginActivity;
-import com.metis.meishuquan.fragment.main.CircleFragment;
 import com.metis.meishuquan.model.BLL.CircleOperator;
 import com.metis.meishuquan.model.circle.CCircleCommentModel;
-import com.metis.meishuquan.model.circle.CCircleTabModel;
 import com.metis.meishuquan.model.circle.CParamCircleComment;
 import com.metis.meishuquan.model.circle.CUserModel;
-import com.metis.meishuquan.model.circle.CircleMomentDetail;
-import com.metis.meishuquan.model.circle.CirclePushCommentResult;
 import com.metis.meishuquan.model.contract.ReturnInfo;
-import com.metis.meishuquan.model.provider.ApiDataProvider;
 import com.metis.meishuquan.util.GlobalData;
-import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.util.Utils;
 import com.metis.meishuquan.util.ViewUtils;
-import com.metis.meishuquan.view.circle.moment.MomentActionBar;
-import com.metis.meishuquan.view.circle.moment.MomentPageListView;
 import com.metis.meishuquan.view.circle.moment.comment.EmotionEditText;
 import com.metis.meishuquan.view.circle.moment.comment.EmotionSelectView;
-import com.metis.meishuquan.view.popup.SharePopupWindow;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.umeng.analytics.MobclickAgent;
-
-import org.apache.http.client.methods.HttpGet;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * comment
@@ -71,8 +46,9 @@ import java.util.List;
  */
 public class MomentCommentFragment extends Fragment {
     public static final String CLASS_NAME = MomentCommentFragment.class.getSimpleName();
-    public static final String KEY_COMMENT_ID = "KEY_COMMENT_ID";//圈子评论，回复评论
-    public static final String KEY_RELAYUSERID = "KEY_RELAYUSERID";
+    public static final String KEY_CIRCLE_ID = "KEY_CIRCLE_ID";//圈子评论，回复评论
+    public static final String KEY_REPLY_NAME = "KEY_REPLY_NAME";//被回复人用户名
+    public static final String KEY_RELAYUSER_ID = "KEY_RELAYUSER_ID";
     public static final String KEY_ISREPLY = "KEY_ISREPLY";
 
     private static final int KEYBOARD_DRAWABLE_RESOURCE_ID = R.drawable.circle_moment_emotion_icon_keyboard;
@@ -160,16 +136,15 @@ public class MomentCommentFragment extends Fragment {
 //                    e.printStackTrace();
 //                }
 
-                int id = getArguments().getInt(KEY_COMMENT_ID, 0);
-                int relayUserId = getArguments().getInt(KEY_RELAYUSERID);
+                int id = getArguments().getInt(KEY_CIRCLE_ID, 0);
+                int relayUserId = getArguments().getInt(KEY_RELAYUSER_ID);
+                final String userName = getArguments().getString(KEY_REPLY_NAME, "");
                 CParamCircleComment param = new CParamCircleComment();
                 param.setId(id);
                 if (isReplay) {
                     param.setRelyUserId(relayUserId);
-                    param.setContent("回复 " + MainApplication.userInfo.getName() + ":" + editText.getText().toString());
-                } else {
-                    param.setContent(editText.getText().toString());
                 }
+                param.setContent(editText.getText().toString());
                 CircleOperator.getInstance().pushCommentByPost(param, new ApiOperationCallback<ReturnInfo<String>>() {
                     @Override
                     public void onCompleted(ReturnInfo<String> result, Exception e, ServiceFilterResponse serviceFilterResponse) {
@@ -196,10 +171,14 @@ public class MomentCommentFragment extends Fragment {
                             hideKeyBoard();
                             CCircleCommentModel circleCommentModel = new CCircleCommentModel();
                             circleCommentModel.circleId = GlobalData.moment.id;
-                            circleCommentModel.content = editText.getText().toString();
+                            if (isReplay) {
+                                circleCommentModel.content = "回复 " + userName + ":" + editText.getText().toString();
+                            } else {
+                                circleCommentModel.content = editText.getText().toString();
+                            }
                             circleCommentModel.createTime = Utils.getCurrentTime();
                             circleCommentModel.user = new CUserModel();
-                            circleCommentModel.user.identity = MainApplication.userInfo.getUserId();
+                            circleCommentModel.user.userId = MainApplication.userInfo.getUserId();
                             circleCommentModel.user.avatar = MainApplication.userInfo.getUserAvatar();
                             circleCommentModel.user.name = MainApplication.userInfo.getName();
                             onCommentSuccessListner.onSuccess(circleCommentModel);

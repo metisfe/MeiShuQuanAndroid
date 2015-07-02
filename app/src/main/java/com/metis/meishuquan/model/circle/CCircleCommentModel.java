@@ -15,6 +15,8 @@ public class CCircleCommentModel {
     public String content;
     public String createTime;
     public UserMark userMark;
+    public int isRelyComment;//1:是回复他人的评论 0：是正常评论
+    public CUserModel relyUser;
 
     public boolean isValid() {
         return user != null && !TextUtils.isEmpty(content) && !TextUtils.isEmpty(createTime);

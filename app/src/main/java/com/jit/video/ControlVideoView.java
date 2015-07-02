@@ -16,6 +16,7 @@ import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.metis.meishuquan.R;
@@ -72,7 +73,7 @@ public class ControlVideoView extends RelativeLayout {
 
     private boolean isFullScreen = false;
 
-    private MediaController mController = null;
+//    private MediaController mController = null;
 
     public ControlVideoView(Context context) {
         this(context, null);
@@ -105,10 +106,10 @@ public class ControlVideoView extends RelativeLayout {
         mPlay.setOnClickListener(mOnClickListener);
         mFullScreenBtn.setOnClickListener(mOnClickListener);
 
-        mController = new MediaController(context);
-        mController.hide();
-        mController.setVisibility(GONE);
-        mVideoView.setMediaController(mController);
+//        mController = new MediaController(context);
+//        mController.hide();
+//        mController.setVisibility(GONE);
+        //mVideoView.setMediaController(mController);
 
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -208,6 +209,13 @@ public class ControlVideoView extends RelativeLayout {
                 }
             }
         });
+//        mVideoView.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                showOrHide();
+//                Toast.makeText(view.getContext(), "onClick", Toast.LENGTH_SHORT).show();
+//            }
+//        });
         mVideoView.setOnTouchListener(mTouchListener);
     }
 
@@ -236,69 +244,70 @@ public class ControlVideoView extends RelativeLayout {
             final float y = event.getY();
 
             switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    mLastMotionX = x;
-                    mLastMotionY = y;
-                    startX = (int) x;
-                    startY = (int) y;
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    float deltaX = x - mLastMotionX;
-                    float deltaY = y - mLastMotionY;
-                    float absDeltaX = Math.abs(deltaX);
-                    float absDeltaY = Math.abs(deltaY);
-
-                    boolean isAdjustAudio = false;
-                    if (absDeltaX > threshold && absDeltaY > threshold) {
-                        if (absDeltaX < absDeltaY) {
-                            isAdjustAudio = true;
-                        } else {
-                            isAdjustAudio = false;
-                        }
-                    } else if (absDeltaX < threshold && absDeltaY > threshold) {
-                        isAdjustAudio = true;
-                    } else if (absDeltaX > threshold && absDeltaY < threshold) {
-                        isAdjustAudio = false;
-                    } else {
-                        return true;
-                    }
-                    if (isAdjustAudio) {
-                        /*if (x < width / 2) {
-                            if (deltaY > 0) {
-                                lightDown(absDeltaY);
-                            } else if (deltaY < 0) {
-                                lightUp(absDeltaY);
-                            }
-                        } else {
-                            if (deltaY > 0) {
-                                volumeDown(absDeltaY);
-                            } else if (deltaY < 0) {
-                                volumeUp(absDeltaY);
-                            }
-                        }*/
-
-                    } else {
-                        /*if (deltaX > 0) {
-                            forward(absDeltaX);
-                        } else if (deltaX < 0) {
-                            backward(absDeltaX);
-                        }*/
-                    }
-                    mLastMotionX = x;
-                    mLastMotionY = y;
-                    break;
+//                case MotionEvent.ACTION_DOWN:
+//                    mLastMotionX = x;
+//                    mLastMotionY = y;
+//                    startX = (int) x;
+//                    startY = (int) y;
+//                    break;
+//                case MotionEvent.ACTION_MOVE:
+//                    float deltaX = x - mLastMotionX;
+//                    float deltaY = y - mLastMotionY;
+//                    float absDeltaX = Math.abs(deltaX);
+//                    float absDeltaY = Math.abs(deltaY);
+//
+//                    boolean isAdjustAudio = false;
+//                    if (absDeltaX > threshold && absDeltaY > threshold) {
+//                        if (absDeltaX < absDeltaY) {
+//                            isAdjustAudio = true;
+//                        } else {
+//                            isAdjustAudio = false;
+//                        }
+//                    } else if (absDeltaX < threshold && absDeltaY > threshold) {
+//                        isAdjustAudio = true;
+//                    } else if (absDeltaX > threshold && absDeltaY < threshold) {
+//                        isAdjustAudio = false;
+//                    } else {
+//                        return true;
+//                    }
+//                    if (isAdjustAudio) {
+//                        /*if (x < width / 2) {
+//                            if (deltaY > 0) {
+//                                lightDown(absDeltaY);
+//                            } else if (deltaY < 0) {
+//                                lightUp(absDeltaY);
+//                            }
+//                        } else {
+//                            if (deltaY > 0) {
+//                                volumeDown(absDeltaY);
+//                            } else if (deltaY < 0) {
+//                                volumeUp(absDeltaY);
+//                            }
+//                        }*/
+//
+//                    } else {
+//                        /*if (deltaX > 0) {
+//                            forward(absDeltaX);
+//                        } else if (deltaX < 0) {
+//                            backward(absDeltaX);
+//                        }*/
+//                    }
+//                    mLastMotionX = x;
+//                    mLastMotionY = y;
+//                    break;
                 case MotionEvent.ACTION_UP:
-                    if (Math.abs(x - startX) > threshold
-                            || Math.abs(y - startY) > threshold) {
-                        isClick = false;
-                    }
-                    mLastMotionX = 0;
-                    mLastMotionY = 0;
-                    startX = (int) 0;
-                    if (isClick) {
-                        showOrHide();
-                    }
-                    isClick = true;
+                    showOrHide();
+//                    if (Math.abs(x - startX) > threshold
+//                            || Math.abs(y - startY) > threshold) {
+//                        isClick = false;
+//                    }
+//                    mLastMotionX = 0;
+//                    mLastMotionY = 0;
+//                    startX = (int) 0;
+//                    if (isClick) {
+//                        showOrHide();
+//                    }
+//                    isClick = true;
                     break;
 
                 default:

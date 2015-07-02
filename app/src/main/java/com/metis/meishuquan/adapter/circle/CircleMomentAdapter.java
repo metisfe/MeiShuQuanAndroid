@@ -151,6 +151,7 @@ public class CircleMomentAdapter extends BaseAdapter {
             viewHolder.grade = (TextView) convertView.findViewById(R.id.id_tv_grade);
             viewHolder.createTime = (TextView) convertView.findViewById(R.id.id_createtime);
             viewHolder.content = (EmotionTextView) convertView.findViewById(R.id.id_tv_content);
+            viewHolder.content.setTextIsSelectable(true);
             viewHolder.replyCircleContent = (EmotionTextView) convertView.findViewById(R.id.id_emotion_tv_content);
             viewHolder.device = (TextView) convertView.findViewById(R.id.tv_device);
             viewHolder.imgForCircle = (NinePictruesView) convertView.findViewById(R.id.id_img_for_circle);
@@ -550,7 +551,7 @@ public class CircleMomentAdapter extends BaseAdapter {
 
             //传递参数
             Bundle bundle = new Bundle();
-            bundle.putInt(MomentCommentFragment.KEY_COMMENT_ID, moment.id);
+            bundle.putInt(MomentCommentFragment.KEY_CIRCLE_ID, moment.id);
             momentCommentFragment.setArguments(bundle);
 
             momentCommentFragment.setOnCommentSuccessListner(new MomentDetailFragment.OnCommentSuccessListner() {

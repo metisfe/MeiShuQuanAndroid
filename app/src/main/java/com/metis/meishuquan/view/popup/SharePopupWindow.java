@@ -30,6 +30,7 @@ import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.controller.listener.SocializeListeners;
 import com.umeng.socialize.media.BaseShareContent;
+import com.umeng.socialize.media.QQShareContent;
 import com.umeng.socialize.media.QZoneShareContent;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.sso.QZoneSsoHandler;
@@ -251,12 +252,26 @@ public class SharePopupWindow extends PopupWindow {
                 //SinaShareContent
             }
         });
+
         btnQQ.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                QQShareContent content = new QQShareContent();
+                fillShareContent(mContext, content);
+                ShareManager.getInstance(mContext).getSocialService().directShare(mContext, SHARE_MEDIA.QQ, new SocializeListeners.SnsPostListener() {
+                    @Override
+                    public void onStart() {
 
+                    }
+
+                    @Override
+                    public void onComplete(SHARE_MEDIA share_media, int i, SocializeEntity socializeEntity) {
+                        dismiss();
+                    }
+                });
             }
         });
+
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

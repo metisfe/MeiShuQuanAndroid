@@ -196,6 +196,7 @@ public class ItemInfoFragment extends Fragment {
     private void initView(ViewGroup rootView) {
         btnBack = (Button) rootView.findViewById(R.id.id_btn_back);
         tv_title = (TextView) rootView.findViewById(R.id.id_title);
+        tv_title.setTextIsSelectable(true);
         tv_createtime = (TextView) rootView.findViewById(R.id.id_tv_create_time);
         tv_sourse = (TextView) rootView.findViewById(R.id.id_tv_source);
         tv_comment_count = (TextView) rootView.findViewById(R.id.id_tv_topline_info_comment_count);//评论数
@@ -327,6 +328,7 @@ public class ItemInfoFragment extends Fragment {
         textView.setLayoutParams(lp);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
         textView.setLineSpacing(1.2f, 1.2f);
+        textView.setTextIsSelectable(true);
         textView.setTextColor(getResources().getColor(R.color.tv_channel_item));
 
         int k = 0;

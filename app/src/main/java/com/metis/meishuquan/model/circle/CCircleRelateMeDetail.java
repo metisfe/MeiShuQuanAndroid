@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * Model:评论我的详细信息
+ *
  * Created by wangjin on 15/6/4.
  */
 public class CCircleRelateMeDetail implements Serializable {

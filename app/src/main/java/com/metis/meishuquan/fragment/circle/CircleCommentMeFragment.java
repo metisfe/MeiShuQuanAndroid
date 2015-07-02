@@ -224,7 +224,9 @@ public class CircleCommentMeFragment extends Fragment {
                     });
                     //传递参数
                     Bundle bundle = new Bundle();
-                    bundle.putInt(MomentCommentFragment.KEY_COMMENT_ID, relateMeDetail.lastComment.id);
+                    bundle.putInt(MomentCommentFragment.KEY_CIRCLE_ID, relateMeDetail.lastComment.circleId);
+                    bundle.putInt(MomentCommentFragment.KEY_RELAYUSER_ID, relateMeDetail.lastComment.user.userId);
+                    bundle.putBoolean(MomentCommentFragment.KEY_ISREPLY, true);
                     momentCommentFragment.setArguments(bundle);
 
                     FragmentManager fm = getActivity().getSupportFragmentManager();

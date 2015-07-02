@@ -42,7 +42,6 @@ import com.metis.meishuquan.model.circle.CCircleCommentModel;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
 import com.metis.meishuquan.model.circle.CCircleReplyModel;
 import com.metis.meishuquan.model.circle.CCircleTabModel;
-import com.metis.meishuquan.model.circle.CParamCircleComment;
 import com.metis.meishuquan.model.circle.CUserModel;
 import com.metis.meishuquan.model.circle.CircleMomentDetail;
 import com.metis.meishuquan.model.circle.CirclePushCommentResult;
@@ -300,7 +299,9 @@ public class MomentDetailFragment extends Fragment {
         grade = (TextView) headerView.findViewById(R.id.id_tv_grade);
         createTime = (TextView) headerView.findViewById(R.id.id_createtime);
         content = (EmotionTextView) headerView.findViewById(R.id.id_tv_content);
+        content.setTextIsSelectable(true);
         replyContent = (EmotionTextView) headerView.findViewById(R.id.id_emotion_tv_content);
+        replyContent.setTextIsSelectable(true);
         device = (TextView) headerView.findViewById(R.id.tv_device);
         imgForCircle = (NinePictruesView) headerView.findViewById(R.id.id_img_for_circle);
         momentActionBar = (MomentActionBar) headerView.findViewById(R.id.moment_action_bar);
@@ -587,7 +588,7 @@ public class MomentDetailFragment extends Fragment {
         }
     }
 
-    private void writeComment(boolean isReplay, int replyUserId) {
+    private void writeComment(boolean isReplay, int replyUserId, String userName) {
         if (!MainApplication.isLogin()) {
             startActivity(new Intent(getActivity(), LoginActivity.class));
             return;
@@ -596,9 +597,10 @@ public class MomentDetailFragment extends Fragment {
 
         //传递参数
         Bundle bundle = new Bundle();
-        bundle.putInt(MomentCommentFragment.KEY_COMMENT_ID, momentId);
+        bundle.putInt(MomentCommentFragment.KEY_CIRCLE_ID, momentId);
         if (isReplay) {
-            bundle.putInt(MomentCommentFragment.KEY_RELAYUSERID, replyUserId);
+            bundle.putInt(MomentCommentFragment.KEY_RELAYUSER_ID, replyUserId);
+            bundle.putString(MomentCommentFragment.KEY_REPLY_NAME, userName);
         }
         bundle.putBoolean(MomentCommentFragment.KEY_ISREPLY, isReplay);
         momentCommentFragment.setArguments(bundle);
@@ -629,7 +631,7 @@ public class MomentDetailFragment extends Fragment {
         this.rl_writeCommont.setOnClickListener(new View.OnClickListener() {//写评论
             @Override
             public void onClick(View view) {//写评论
-                writeComment(false, 0);
+                writeComment(false, 0, "");
             }
         });
 
@@ -770,6 +772,7 @@ public class MomentDetailFragment extends Fragment {
                 viewHolder.grade = (TextView) convertView.findViewById(R.id.comment_list_item_grade);
                 viewHolder.time = (TextView) convertView.findViewById(R.id.comment_list_item_time);
                 viewHolder.content = (EmotionTextView) convertView.findViewById(R.id.comment_list_item_content);
+                viewHolder.content.setTextIsSelectable(true);
                 viewHolder.support = (ImageView) convertView.findViewById(R.id.id_img_support);
                 viewHolder.likeCount = (TextView) convertView.findViewById(R.id.comment_list_item_like_count);
 
@@ -796,7 +799,7 @@ public class MomentDetailFragment extends Fragment {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             switch (i) {
                                 case 0://回复
-                                    writeComment(true, commentList.get(p).user.userId);
+                                    writeComment(true, commentList.get(p).user.userId, commentList.get(p).user.getUserName());
                                     break;
                                 case 1://复制
                                     ClipboardManager clip = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
@@ -834,6 +837,9 @@ public class MomentDetailFragment extends Fragment {
             viewHolder.name.setText(comment.user.name);
             viewHolder.grade.setText(comment.user.grade);
             viewHolder.time.setText(Utils.getDisplayTime(comment.createTime));
+            if (comment.isRelyComment == 1) {
+                viewHolder.content.setText("回复 @" + comment.relyUser + ":" + comment.content);
+            }
             viewHolder.content.setText(comment.content);
             viewHolder.likeCount.setText(comment.supportCount > 0 ? "" + comment.supportCount : "");
 

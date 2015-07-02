@@ -59,14 +59,14 @@ public class ApiDataProvider extends DataProvider {
 
     public static boolean initProvider() {
         try {
-            mClient = new MobileServiceClient(
-                    FORMAL,
-                    FORMAL_KEY,
-                    MainApplication.UIContext);
 //            mClient = new MobileServiceClient(
-//                    TEST,
-//                    TEST_KEY,
+//                    FORMAL,
+//                    FORMAL_KEY,
 //                    MainApplication.UIContext);
+            mClient = new MobileServiceClient(
+                    TEST,
+                    TEST_KEY,
+                    MainApplication.UIContext);
             return true;
         } catch (MalformedURLException e) {
             e.printStackTrace();

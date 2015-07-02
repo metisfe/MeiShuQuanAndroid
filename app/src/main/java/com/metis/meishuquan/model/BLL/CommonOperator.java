@@ -1,6 +1,7 @@
 package com.metis.meishuquan.model.BLL;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.util.Pair;
 
@@ -162,8 +163,9 @@ public class CommonOperator {
         for (int i = 0; i < path.size(); i++) {
             try {
                 Bitmap bitmap = Bimp.getInstance().revitionImageSize(path.get(i));
+//                Bitmap bitmap = BitmapFactory.decodeFile(path.get(i));
                 lstCheckedPhoto.add(bitmap);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -188,31 +190,6 @@ public class CommonOperator {
         }
         byte[] totalByte = FileUtil.sysCopy(lstArrays);
 
-//        final int length = path.size();
-//        StringBuilder sb = new StringBuilder();
-//        long totalLength = 0;
-//        for (int i = 0; i < length; i++) {
-//            File file = path.get(i);
-//            long len = file.length();
-//            totalLength += len;
-//            sb.append("," + len);
-//        }
-//        byte[] array = new byte[0];
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream((int) totalLength);
-//        for (int i = 0; i < length; i++) {
-//            File file = path.get(i);
-//            long len = file.length();
-//            byte[] data = new byte[(int) len];
-//            FileInputStream fis = new FileInputStream(file);
-//            fis.read(data);
-//            baos.write(data, 0, (int) len);
-//            baos.close();
-//            byte[] newArray = baos.toByteArray();
-//            array = byteMerger(array, newArray);
-//        }
-//
-//        sb.insert(0, "," + length);
-//        sb.insert(0, totalLength + "");
         this.fileUpload(type, define, totalByte, callback);
     }
 
