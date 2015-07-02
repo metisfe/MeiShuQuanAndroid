@@ -136,6 +136,7 @@
         android:id="@+id/id_tv_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="本人热情、开朗、有责任感、有进取心、团队合作能力强、学习能力强"
@@ -222,11 +223,9 @@
             android:id="@+id/id_emotion_tv_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
             android:background="@color/transparent"
             android:maxLines="10"
+            android:padding="10dp"
             android:text="微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖微博原帖"
             android:textColor="@color/common_color_424242"
             android:visibility="gone" />
@@ -236,8 +235,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp" />
+            android:layout_marginLeft="10dp" />
     </LinearLayout>
 
     <View

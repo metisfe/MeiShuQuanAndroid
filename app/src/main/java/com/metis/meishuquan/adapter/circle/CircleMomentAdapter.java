@@ -274,6 +274,10 @@ public class CircleMomentAdapter extends BaseAdapter {
             viewHolder.ll_not_circle.setVisibility(View.VISIBLE);
             viewHolder.ll_circle.setVisibility(View.GONE);
 
+            if (moment.content.length() == 0) {
+                viewHolder.content.setVisibility(View.GONE);
+            }
+
             //活动类型
             if (moment.relayCircle.type == SupportTypeEnum.ActivityStudent.getVal()) {
                 if (moment.content.length() > 0) {
