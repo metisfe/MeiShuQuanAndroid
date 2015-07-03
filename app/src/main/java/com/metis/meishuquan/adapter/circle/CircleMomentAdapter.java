@@ -151,7 +151,7 @@ public class CircleMomentAdapter extends BaseAdapter {
             viewHolder.grade = (TextView) convertView.findViewById(R.id.id_tv_grade);
             viewHolder.createTime = (TextView) convertView.findViewById(R.id.id_createtime);
             viewHolder.content = (EmotionTextView) convertView.findViewById(R.id.id_tv_content);
-            viewHolder.content.setTextIsSelectable(true);
+//            viewHolder.content.setTextIsSelectable(true);
             viewHolder.replyCircleContent = (EmotionTextView) convertView.findViewById(R.id.id_emotion_tv_content);
             viewHolder.device = (TextView) convertView.findViewById(R.id.tv_device);
             viewHolder.imgForCircle = (NinePictruesView) convertView.findViewById(R.id.id_img_for_circle);
@@ -231,10 +231,11 @@ public class CircleMomentAdapter extends BaseAdapter {
             viewHolder.ll_circle.setVisibility(View.VISIBLE);
             viewHolder.ll_circle.setBackgroundColor(MainApplication.UIContext.getResources().getColor(R.color.white));
             viewHolder.replyCircleContent.setVisibility(View.GONE);
+            viewHolder.chooseHuashi.setVisibility(View.GONE);//隐藏选画室
 
             //纯文字
             if (moment.images == null || moment.images.size() == 0) {
-                viewHolder.chooseHuashi.setVisibility(View.GONE);//隐藏选画室
+
                 viewHolder.content.setVisibility(View.VISIBLE);
                 if (moment.content.length() > 0) {
                     viewHolder.content.setText(moment.content);
@@ -249,14 +250,12 @@ public class CircleMomentAdapter extends BaseAdapter {
             else if (moment.content.equals("") && moment.images != null
                     && moment.images.size() > 0) {
                 viewHolder.content.setVisibility(View.GONE);//隐藏文字
-                viewHolder.chooseHuashi.setVisibility(View.GONE);//隐藏选画室
                 viewHolder.imgForCircle.removeAllViews();
                 viewHolder.imgForCircle.setLstCircleImage(moment.images);
             }
 
             //有文字和图片
             else {
-                viewHolder.chooseHuashi.setVisibility(View.GONE);//隐藏选画室
                 viewHolder.content.setVisibility(View.VISIBLE);
                 viewHolder.ll_circle.setVisibility(View.VISIBLE);
                 if (moment.content.length() > 0) {
