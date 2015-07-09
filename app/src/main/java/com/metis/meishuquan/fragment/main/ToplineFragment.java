@@ -140,11 +140,11 @@ public class ToplineFragment extends Fragment {
     //初始化视图及成员
     private void initView(final ViewGroup rootView) {
         this.tabBar = (TabBar) rootView.findViewById(R.id.fragment_shared_toplinefragment_tab_bar);
-        if (GlobalData.tabs.size() > 0) {
-            for (int i = 0; i < GlobalData.tabs.size(); i++) {
-                TabBar.showOrHide(GlobalData.tabs.get(i), true);
-            }
-        }
+//        if (GlobalData.tabs.size() > 0) {
+//            for (int i = 0; i < GlobalData.tabs.size(); i++) {
+//                TabBar.showOrHide(GlobalData.tabs.get(i), true);
+//            }
+//        }
 
         this.viewPager = (ViewPager) rootView.findViewById(R.id.fragment_shared_toplinefragment_viewpager);
         this.indicator = (TabPageIndicator) rootView.findViewById(R.id.topbar_indicator);

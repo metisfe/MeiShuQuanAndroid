@@ -1,11 +1,9 @@
 package com.metis.meishuquan.util;
 
-import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.SparseArray;
 
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
@@ -14,7 +12,6 @@ import com.metis.meishuquan.model.circle.CPhoneFriend;
 import com.metis.meishuquan.model.circle.CUserModel;
 import com.metis.meishuquan.model.circle.MyFriendList;
 import com.metis.meishuquan.model.circle.MyGroupList;
-import com.metis.meishuquan.model.circle.PhoneFriend;
 import com.metis.meishuquan.model.circle.UserAdvanceInfo;
 import com.metis.meishuquan.model.circle.UserInfoMulGet;
 import com.metis.meishuquan.model.provider.ApiDataProvider;
@@ -28,14 +25,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
-import io.realm.RealmObject;
-import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
 import io.rong.message.TextMessage;
 
@@ -52,7 +44,6 @@ public class ChatManager {
     private static OnReceivedListener onReceivedListener;
     private static OnFriendListReceivedListener onFriendListReceivedListener;
 
-    private static RealmConfiguration realmConfiguration= new RealmConfiguration.Builder(MainApplication.UIContext).build();
 
     public static List<String> getMyWatchGroup() {
         return myWatchGroup;

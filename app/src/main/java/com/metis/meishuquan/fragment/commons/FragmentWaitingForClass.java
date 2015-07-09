@@ -28,11 +28,11 @@ public class FragmentWaitingForClass extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.layout_buid_waiting_class_fragment, null, false);
         this.tabBar = (TabBar) rootView.findViewById(R.id.fragment_shared_circlefragment_tab_bar);
-        if (GlobalData.tabs.size() > 0) {
-            for (int i = 0; i < GlobalData.tabs.size(); i++) {
-                TabBar.showOrHide(GlobalData.tabs.get(i), true);
-            }
-        }
+//        if (GlobalData.tabs.size() > 0) {
+//            for (int i = 0; i < GlobalData.tabs.size(); i++) {
+//                TabBar.showOrHide(GlobalData.tabs.get(i), true);
+//            }
+//        }
         this.tabBar.setTabSelectedListener(MainApplication.MainActivity);
         return rootView;
     }

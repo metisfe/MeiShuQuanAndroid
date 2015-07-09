@@ -220,11 +220,11 @@ public class AssessFragment extends Fragment {
     private void initView(ViewGroup rootView) {
         this.fm = getActivity().getSupportFragmentManager();
         this.tabBar = (TabBar) rootView.findViewById(R.id.fragment_shared_commentfragment_tab_bar);
-        if (GlobalData.tabs.size() > 0) {
-            for (int i = 0; i < GlobalData.tabs.size(); i++) {
-                TabBar.showOrHide(GlobalData.tabs.get(i), true);
-            }
-        }
+//        if (GlobalData.tabs.size() > 0) {
+//            for (int i = 0; i < GlobalData.tabs.size(); i++) {
+//                TabBar.showOrHide(GlobalData.tabs.get(i), true);
+//            }
+//        }
 
         this.viewPager = (ViewPager) rootView.findViewById(R.id.fragment_shared_assess_list_viewpager);
         this.indicator = (TabPageIndicator) rootView.findViewById(R.id.assess_indicator);

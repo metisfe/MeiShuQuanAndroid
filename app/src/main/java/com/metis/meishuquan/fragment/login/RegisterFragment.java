@@ -203,13 +203,13 @@ public class RegisterFragment extends Fragment {
                                 MainApplication.userInfo = user.getData();
 
                                 //根据用户角色控制显示模块
-                                if (user.getData().getUserRole() == IdTypeEnum.TEACHER.getVal() || user.getData().getUserRole() == IdTypeEnum.STUDIO.getVal()) {
-                                    TabBar.showOrHide(1, true);
-                                    TabBar.showOrHide(3, true);
-                                } else {
-                                    TabBar.showOrHide(1, false);
-                                    TabBar.showOrHide(3, false);
-                                }
+//                                if (user.getData().getUserRole() == IdTypeEnum.TEACHER.getVal() || user.getData().getUserRole() == IdTypeEnum.STUDIO.getVal()) {
+//                                    TabBar.showOrHide(1, true);
+//                                    TabBar.showOrHide(3, true);
+//                                } else {
+//                                    TabBar.showOrHide(1, false);
+//                                    TabBar.showOrHide(3, false);
+//                                }
 
                                 //hide input method
                                 Utils.hideInputMethod(getActivity(), etPwd);

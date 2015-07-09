@@ -178,11 +178,11 @@ public class ClassFragment extends Fragment {
         this.tvCourseChannelBar.setText(courseChannelBarText);
 
         this.tabBar = (TabBar) rootView.findViewById(R.id.fragment_shared_classfragment_tab_bar);
-        if (GlobalData.tabs.size() > 0) {
-            for (int i = 0; i < GlobalData.tabs.size(); i++) {
-                TabBar.showOrHide(GlobalData.tabs.get(i), true);
-            }
-        }
+//        if (GlobalData.tabs.size() > 0) {
+//            for (int i = 0; i < GlobalData.tabs.size(); i++) {
+//                TabBar.showOrHide(GlobalData.tabs.get(i), true);
+//            }
+//        }
         this.tabBar.setTabSelectedListener(MainApplication.MainActivity);
 
         fm = getActivity().getSupportFragmentManager();

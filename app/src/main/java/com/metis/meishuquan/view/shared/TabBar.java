@@ -170,11 +170,11 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
         }
     }
 
-    public void setActivityTipVisible (int visible) {
+    public void setActivityTipVisible(int visible) {
         activityTip.setVisibility(visible);
     }
 
-    public void setActivityTipText (CharSequence charSequence) {
+    public void setActivityTipText(CharSequence charSequence) {
         activityTip.setText(charSequence);
     }
 
@@ -254,7 +254,7 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
     }
 
     /**
-     * 底部Tab_circle
+     * 底部Tab_circle_圈子
      *
      * @param isSelected 选中状态
      */

@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.metis.coursepart.fragment.CourseTabFragment;
 import com.metis.meishuquan.activity.info.SettingActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.fragment.commons.FragmentWaitingForAssess;
@@ -208,7 +209,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
 //                navigateTo(AssessFragment.class);
                 break;
             case Class:
-                navigateTo(FragmentWaitingForClass.class);
+                navigateTo(CourseTabFragment.class);
 //                navigateTo(ClassFragment.class);
                 break;
             case MyInfo:

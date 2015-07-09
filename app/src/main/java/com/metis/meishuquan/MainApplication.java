@@ -171,12 +171,12 @@ public class MainApplication extends MultiDexApplication {
             @Override
             public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
                 if (result != null && result.isSuccess()) {
-                    if (userInfo.getUserRole() == IdTypeEnum.TEACHER.getVal() || userInfo.getUserRole() == IdTypeEnum.STUDIO.getVal()) {
-                        GlobalData.tabs.add(1);
-                        GlobalData.tabs.add(3);
-                    } else {
-                        GlobalData.tabs.clear();
-                    }
+//                    if (userInfo.getUserRole() == IdTypeEnum.TEACHER.getVal() || userInfo.getUserRole() == IdTypeEnum.STUDIO.getVal()) {
+//                        GlobalData.tabs.add(1);
+//                        GlobalData.tabs.add(3);
+//                    } else {
+//                        GlobalData.tabs.clear();
+//                    }
                 } else {
                     SharedPreferencesUtil.getInstanse(UIContext).delete(SharedPreferencesUtil.USER_LOGIN_INFO);
                     MainApplication.userInfo = new User();

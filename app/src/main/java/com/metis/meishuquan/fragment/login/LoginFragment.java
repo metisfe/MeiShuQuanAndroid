@@ -124,16 +124,16 @@ public class LoginFragment extends BaseFragment {
                             //update field of UserInfo to main application
                             MainApplication.userInfo = user.getData();
                             //根据用户角色控制显示模块
-                            if (user.getData().getUserRole() == IdTypeEnum.TEACHER.getVal() || user.getData().getUserRole() == IdTypeEnum.STUDIO.getVal()) {
-                                GlobalData.tabs.add(1);
-                                GlobalData.tabs.add(3);
-                                TabBar.showOrHide(1, true);
-                                TabBar.showOrHide(3, true);
-                            } else {
-                                GlobalData.tabs.clear();
-                                TabBar.showOrHide(1, false);
-                                TabBar.showOrHide(3, false);
-                            }
+//                            if (user.getData().getUserRole() == IdTypeEnum.TEACHER.getVal() || user.getData().getUserRole() == IdTypeEnum.STUDIO.getVal()) {
+//                                GlobalData.tabs.add(1);
+//                                GlobalData.tabs.add(3);
+//                                TabBar.showOrHide(1, true);
+//                                TabBar.showOrHide(3, true);
+//                            } else {
+//                                GlobalData.tabs.clear();
+//                                TabBar.showOrHide(1, false);
+//                                TabBar.showOrHide(3, false);
+//                            }
 
                             //hide input method
                             Utils.hideInputMethod(getActivity(), etPwd);

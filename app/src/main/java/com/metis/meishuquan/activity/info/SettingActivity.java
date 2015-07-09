@@ -130,9 +130,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 SharedPreferencesUtil spu = SharedPreferencesUtil.getInstanse(this);
                 spu.delete(SharedPreferencesUtil.USER_LOGIN_INFO);
 
-                GlobalData.tabs.clear();
-                TabBar.showOrHide(1, false);
-                TabBar.showOrHide(3, false);
+//                GlobalData.tabs.clear();
+//                TabBar.showOrHide(1, false);
+//                TabBar.showOrHide(3, false);
 
                 //tip
                 //Toast.makeText(this, "���˳�", Toast.LENGTH_SHORT).show();

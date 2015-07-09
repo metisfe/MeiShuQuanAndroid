@@ -106,11 +106,11 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_myinfofragment, container, false);
 
         this.tabBar = (TabBar) rootView.findViewById(R.id.fragment_shared_myinfofragment_tab_bar);
-        if (GlobalData.tabs.size() > 0) {
-            for (int i = 0; i < GlobalData.tabs.size(); i++) {
-                TabBar.showOrHide(GlobalData.tabs.get(i), true);
-            }
-        }
+//        if (GlobalData.tabs.size() > 0) {
+//            for (int i = 0; i < GlobalData.tabs.size(); i++) {
+//                TabBar.showOrHide(GlobalData.tabs.get(i), true);
+//            }
+//        }
         this.tabBar.setTabSelectedListener(MainApplication.MainActivity);
         return rootView;
     }

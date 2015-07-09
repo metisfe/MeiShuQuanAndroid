@@ -19,7 +19,7 @@ public class GlobalData {
     public static int momentsCommentCount = 0;
     public static int momentsLikeCount = 0;
 
-    public static List<Integer> tabs = new ArrayList<Integer>();
+//    public static List<Integer> tabs = new ArrayList<Integer>();
 
     private SelectedTabType tabTypeSelected;
     private int[] titleBarTypeSelected = new int[]{-1, -1, -1, -1, -1};
