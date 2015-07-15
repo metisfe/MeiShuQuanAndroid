@@ -14,7 +14,7 @@
         android:background="@drawable/bg_main_tab_bar">
 
         <RelativeLayout
-            android:id="@+id/view_shared_tabbar_followees"
+            android:id="@+id/view_tabbar_topLine"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -50,7 +50,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/view_shared_tabbar_topstory"
+            android:id="@+id/view_tabbar_comment"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -86,32 +86,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/view_shared_tabbar_circle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@null"
-            android:clickable="true">
-
-            <!--<TextView-->
-            <!--android:id="@+id/view_shared_tabbar_circle_title"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:layout_marginBottom="3dp"-->
-            <!--android:background="@null"-->
-            <!--android:clickable="false"-->
-            <!--android:ellipsize="end"-->
-            <!--android:gravity="center"-->
-            <!--android:includeFontPadding="false"-->
-            <!--android:singleLine="true"-->
-            <!--android:text="Comment"-->
-            <!--android:textSize="11dp" />-->
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/view_shared_tabbar_discover"
+            android:id="@+id/view_tabbar_course"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -127,6 +102,7 @@
                 android:layout_marginTop="-1dp"
                 android:background="@null"
                 android:clickable="false"
+                android:visibility="gone"
                 android:scaleType="fitCenter" />
 
             <TextView
@@ -143,11 +119,49 @@
                 android:includeFontPadding="false"
                 android:singleLine="true"
                 android:text="Class"
+                android:visibility="gone"
                 android:textSize="11dp" />
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/view_shared_tabbar_activity"
+            android:id="@+id/view_tabbar_circle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:clickable="true">
+
+            <ImageView
+                android:id="@+id/view_shared_tabbar_circle_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="-1dp"
+                android:background="@null"
+                android:clickable="false"
+                android:scaleType="fitCenter" />
+
+            <TextView
+                android:id="@+id/view_shared_tabbar_circle_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="3dp"
+                android:background="@null"
+                android:clickable="false"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:singleLine="true"
+                android:text="Circle"
+                android:textSize="11dp" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/view_tabbar_myinfo"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -165,6 +179,7 @@
                 android:background="@null"
                 android:clickable="false"
                 android:scaleType="fitCenter" />
+
             <TextView
                 android:id="@+id/view_shared_tabbar_activity_tip"
                 android:layout_width="wrap_content"
@@ -172,16 +187,16 @@
                 android:layout_alignRight="@+id/view_shared_tabbar_activity_icon"
                 android:layout_alignTop="@+id/view_shared_tabbar_activity_icon"
                 android:background="@drawable/red_round_conner_bg"
-                android:text="5"
-                android:textSize="10sp"
-                android:minWidth="12dp"
+                android:gravity="center"
                 android:minHeight="10dp"
+                android:minWidth="12dp"
                 android:paddingLeft="1dp"
                 android:paddingRight="1dp"
-                android:gravity="center"
+                android:text="5"
                 android:textColor="@android:color/white"
-                android:visibility="gone"
-                />
+                android:textSize="10sp"
+                android:visibility="gone" />
+
             <TextView
                 android:id="@+id/view_shared_tabbar_activity_title"
                 android:layout_width="wrap_content"
@@ -201,11 +216,11 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/view_shared_tabbar_circle_icon"
+        android:id="@+id/view_shared_tabbar_center_icon"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/icon_tabbar_circle_selected2"
+        android:background="@drawable/icon_tabbar_course"
         android:clickable="false"
         android:scaleType="fitCenter" />
 
