@@ -633,9 +633,12 @@
         <activity android:name="com.jit.video.VideoActivity" />
         <activity
             android:name=".activity.TestActivity"
-            android:label="@string/title_activity_test"
             android:configChanges="orientation"
-            >
+            android:label="@string/title_activity_test" >
+        </activity>
+        <activity
+            android:name=".activity.circle.MomentDetailActivity"
+            android:label="@string/title_activity_moment_detail" >
         </activity>
     </application>
 

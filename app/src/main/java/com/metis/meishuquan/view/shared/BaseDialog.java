@@ -215,7 +215,7 @@ public class BaseDialog extends Dialog
                 }
                 else
                 {
-                    TextureRender.getInstance().setBitmap(this.imageUrl, this.icon, R.drawable.no_data_error_image);
+//                    TextureRender.getInstance().setBitmap(this.imageUrl, this.icon, R.drawable.no_data_error_image);
                 }
             }
             else

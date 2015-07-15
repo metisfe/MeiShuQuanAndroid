@@ -36,12 +36,12 @@
         android:id="@+id/fragment_shared_toplinefragment_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/ll_topBar"
-        android:layout_marginBottom="44dp" />
+        android:layout_below="@id/ll_topBar" />
 
     <com.metis.meishuquan.view.shared.TabBar
         android:id="@+id/fragment_shared_toplinefragment_tab_bar"
         bs:tabbarType="followees"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="49dp"
         android:layout_alignParentBottom="true" />

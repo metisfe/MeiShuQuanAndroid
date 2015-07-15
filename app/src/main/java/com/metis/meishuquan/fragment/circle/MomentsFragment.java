@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.activity.circle.MomentDetailActivity;
 import com.metis.meishuquan.adapter.circle.CircleMomentAdapter;
 import com.metis.meishuquan.model.BLL.StudioOperator;
 import com.metis.meishuquan.model.BLL.UserInfoOperator;
@@ -123,19 +124,21 @@ public class MomentsFragment extends CircleBaseFragment {
                 if (position == list.size() + 1 || position == 0) {
                     return;
                 }
-
-                Bundle bundle = new Bundle();
-                bundle.putInt(MomentDetailFragment.KEY_MOMENT_ID, list.get(position - 1).id);
-                momentDetailFragment.setArguments(bundle);
-                
                 GlobalData.moment = list.get(position - 1);
+                Intent intent = new Intent(getActivity(), MomentDetailActivity.class);
+                intent.putExtra(MomentDetailActivity.KEY_MOMENT_ID, list.get(position - 1).id);
+                startActivity(intent);
 
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
-                ft.add(R.id.content_container, momentDetailFragment);
-                ft.addToBackStack(null);
-                ft.commit();
+//                Bundle bundle = new Bundle();
+//                bundle.putInt(MomentDetailFragment.KEY_MOMENT_ID, list.get(position - 1).id);
+//                momentDetailFragment.setArguments(bundle);
+//
+//                FragmentManager fm = getActivity().getSupportFragmentManager();
+//                FragmentTransaction ft = fm.beginTransaction();
+//                ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
+//                ft.add(R.id.content_container, momentDetailFragment);
+//                ft.addToBackStack(null);
+//                ft.commit();
             }
         });
 

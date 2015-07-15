@@ -83,10 +83,10 @@ public class ItemFragment extends Fragment {
         initView(contextView);
 
         //6 为推荐 17 为超级美术生
-        if (channelId == 17 || channelId == 6) {
-            headerView = inflater.inflate(R.layout.view_act_topline, null, false);
-            getActiveInfo(headerView);//获取活动详情
-        }
+//        if (channelId == 17 || channelId == 6) {
+//            headerView = inflater.inflate(R.layout.view_act_topline, null, false);
+//            getActiveInfo(headerView);//获取活动详情
+//        }
 
         //初始化事件
         initEvent();

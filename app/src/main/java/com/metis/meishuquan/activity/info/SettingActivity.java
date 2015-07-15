@@ -21,13 +21,13 @@ import com.metis.meishuquan.util.ImageLoaderUtils;
 import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.shared.MyInfoBtn;
 import com.metis.meishuquan.view.shared.TabBar;
-import com.nostra13.universalimageloader.cache.disc.DiscCacheAware;
+import com.nostra13.universalimageloader.cache.disc.DiskCache;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = SettingActivity.class.getSimpleName();
 
-    private MyInfoBtn mModifyPwdView, mClearCacheView,  mVersionBtn = null, mAboutUsView;
+    private MyInfoBtn mModifyPwdView, mClearCacheView, mVersionBtn = null, mAboutUsView;
 
     private Button mLogoutBtn = null;
 
@@ -36,13 +36,13 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-        mModifyPwdView = (MyInfoBtn)this.findViewById(R.id.setting_modify_pwd);
+        mModifyPwdView = (MyInfoBtn) this.findViewById(R.id.setting_modify_pwd);
         mModifyPwdView.setOnClickListener(this);
-        mAboutUsView = (MyInfoBtn)this.findViewById(R.id.setting_about_us);
+        mAboutUsView = (MyInfoBtn) this.findViewById(R.id.setting_about_us);
         mAboutUsView.setOnClickListener(this);
-        mClearCacheView = (MyInfoBtn)this.findViewById(R.id.setting_clear_cache);
+        mClearCacheView = (MyInfoBtn) this.findViewById(R.id.setting_clear_cache);
         mClearCacheView.setOnClickListener(this);
-        mVersionBtn = (MyInfoBtn)findViewById(R.id.about_version);
+        mVersionBtn = (MyInfoBtn) findViewById(R.id.about_version);
         mVersionBtn.setOnClickListener(this);
 
         mLogoutBtn = (Button) findViewById(R.id.setting_logout);
@@ -106,14 +106,14 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.setting_modify_pwd:
-                startActivity(new Intent (this, ChangePwdActivity.class));
+                startActivity(new Intent(this, ChangePwdActivity.class));
                 break;
             case R.id.setting_about_us:
                 startActivity(new Intent(this, AboutActivity.class));
                 break;
             case R.id.about_version:
                 Toast.makeText(this, R.string.about_checking, Toast.LENGTH_SHORT).show();
-                MainApplication.MainActivity.updateApp(SettingActivity.this,true);
+                MainApplication.MainActivity.updateApp(SettingActivity.this, true);
                 break;
             case R.id.setting_logout:
                 //disconnect rong
@@ -147,25 +147,25 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    private int getCacheSize () {
-        DiscCacheAware cache = ImageLoaderUtils.getImageLoader(this).getDiscCache();
-        return cache.getCurrentSize();
+    private int getCacheSize() {
+        DiskCache cache = ImageLoaderUtils.getImageLoader(this).getDiskCache();
+        return (int) cache.getDirectory().getTotalSpace();
     }
 
-    private float b2m (int size) {
-        return (float)size / (1024 * 1024);
+    private float b2m(int size) {
+        return (float) size / (1024 * 1024);
     }
 
-    private int clear () {
-        DiscCacheAware cache = ImageLoaderUtils.getImageLoader(this).getDiscCache();
+    private int clear() {
+        DiskCache cache = ImageLoaderUtils.getImageLoader(this).getDiscCache();
         cache.clear();
-        return cache.getCurrentSize();
+        return (int) cache.getDirectory().getTotalSpace();
     }
 
-    private String formatSize (float size) {
+    private String formatSize(float size) {
         float floatSize = size * 100;
-        int left = (int)floatSize / 100;
-        int right = (int)floatSize % 100;
+        int left = (int) floatSize / 100;
+        int right = (int) floatSize % 100;
         return left + "." + right + "M";
     }
 

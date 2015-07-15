@@ -1,12 +1,7 @@
 package com.metis.meishuquan.activity.info;
 
-import android.graphics.drawable.Drawable;
-import android.os.Environment;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.os.Environment;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -19,8 +14,6 @@ import com.metis.meishuquan.R;
 import com.metis.meishuquan.fragment.commons.ImagePreviewFragment;
 import com.metis.meishuquan.fragment.commons.ImagePreviewSingleFragment;
 import com.metis.meishuquan.fragment.commons.ListDialogFragment;
-import com.metis.meishuquan.util.DownloadUtil;
-import com.uk.co.senab.photoview.PhotoView;
 
 import java.io.File;
 import java.util.ArrayList;

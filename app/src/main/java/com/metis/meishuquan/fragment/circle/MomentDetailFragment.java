@@ -33,8 +33,10 @@ import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.act.ActDetailActivity;
+import com.metis.meishuquan.activity.circle.MomentDetailActivity;
 import com.metis.meishuquan.activity.info.ImagePreviewActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
+import com.metis.meishuquan.activity.topline.NewDetailActivity;
 import com.metis.meishuquan.fragment.Topline.ItemInfoFragment;
 import com.metis.meishuquan.model.BLL.CircleOperator;
 import com.metis.meishuquan.model.BLL.CommonOperator;
@@ -562,15 +564,18 @@ public class MomentDetailFragment extends Fragment {
 
     //进入新闻详情
     private void navigatToNewsInfo(CCircleDetailModel moment) {
-        ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
-        Bundle args = new Bundle();
-        args.putInt("newsId", moment.relayCircle.id);
-        args.putString(ItemInfoFragment.KEY_SHARE_IMG_URL, moment.relayCircle.activityImg);
-        itemInfoFragment.setArguments(args);
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.content_container, itemInfoFragment);
-        ft.addToBackStack(null);
-        ft.commit();
+        Intent intent = new Intent(getActivity(), NewDetailActivity.class);
+        intent.putExtra(NewDetailActivity.KEY_NEWS_ID, moment.relayCircle.id);
+        startActivity(intent);
+//        ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
+//        Bundle args = new Bundle();
+//        args.putInt("newsId", moment.relayCircle.id);
+//        args.putString(ItemInfoFragment.KEY_SHARE_IMG_URL, moment.relayCircle.activityImg);
+//        itemInfoFragment.setArguments(args);
+//        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+//        ft.add(R.id.content_container, itemInfoFragment);
+//        ft.addToBackStack(null);
+//        ft.commit();
     }
 
     public void commentCountAddOne(CCircleCommentModel circleCommentModel) {
@@ -624,7 +629,8 @@ public class MomentDetailFragment extends Fragment {
         this.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//返回
-                fm.popBackStack();
+//                fm.popBackStack();
+                getActivity().finish();
             }
         });
 

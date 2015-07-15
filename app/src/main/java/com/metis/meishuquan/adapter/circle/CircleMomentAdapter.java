@@ -23,9 +23,8 @@ import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.act.ActDetailActivity;
 import com.metis.meishuquan.activity.act.SelectStudioActivity;
-import com.metis.meishuquan.activity.circle.ReplyActivity;
-import com.metis.meishuquan.activity.info.ImagePreviewActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
+import com.metis.meishuquan.activity.topline.NewDetailActivity;
 import com.metis.meishuquan.fragment.Topline.ItemInfoFragment;
 import com.metis.meishuquan.fragment.circle.MomentCommentFragment;
 import com.metis.meishuquan.fragment.circle.MomentDetailFragment;
@@ -33,7 +32,6 @@ import com.metis.meishuquan.fragment.commons.ListDialogFragment;
 import com.metis.meishuquan.model.BLL.CircleOperator;
 import com.metis.meishuquan.model.circle.CCircleCommentModel;
 import com.metis.meishuquan.model.circle.CCircleDetailModel;
-import com.metis.meishuquan.model.circle.CirclePushBlogParm;
 import com.metis.meishuquan.model.circle.CirclePushCommentResult;
 import com.metis.meishuquan.model.commons.Result;
 import com.metis.meishuquan.model.enums.IdTypeEnum;
@@ -639,15 +637,19 @@ public class CircleMomentAdapter extends BaseAdapter {
 
     //进入新闻详情
     private void navigatToNewsInfo(CCircleDetailModel moment) {
-        ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
-        Bundle args = new Bundle();
-        args.putInt("newsId", moment.relayCircle.id);
-        args.putString(ItemInfoFragment.KEY_SHARE_IMG_URL, moment.relayCircle.activityImg);
-        itemInfoFragment.setArguments(args);
-        FragmentTransaction ft = ((MainActivity) mContext).getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.content_container, itemInfoFragment);
-        ft.addToBackStack(null);
-        ft.commit();
+        Intent intent = new Intent(mContext, NewDetailActivity.class);
+        intent.putExtra(NewDetailActivity.KEY_NEWS_ID, moment.relayCircle.id);
+        mContext.startActivity(intent);
+
+//        ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
+//        Bundle args = new Bundle();
+//        args.putInt("newsId", moment.relayCircle.id);
+//        args.putString(ItemInfoFragment.KEY_SHARE_IMG_URL, moment.relayCircle.activityImg);
+//        itemInfoFragment.setArguments(args);
+//        FragmentTransaction ft = ((MainActivity) mContext).getSupportFragmentManager().beginTransaction();
+//        ft.add(R.id.content_container, itemInfoFragment);
+//        ft.addToBackStack(null);
+//        ft.commit();
     }
 
     private static final String TAG = CircleMomentAdapter.class.getSimpleName();

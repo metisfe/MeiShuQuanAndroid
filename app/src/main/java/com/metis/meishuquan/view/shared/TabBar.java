@@ -179,7 +179,7 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
     }
 
     //清除选中状态
-    private void clearSelected() {
+    public void clearSelected() {
         selectedFolloweesTab(false);
         selectedTopStoryTab(false);
         selectedDiscoverTab(false);
@@ -192,7 +192,7 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
      *
      * @param isSelected 是否选中
      */
-    private void selectedFolloweesTab(boolean isSelected) {
+    public void selectedFolloweesTab(boolean isSelected) {
         this.followeesTitle.setText(R.string.tab_topLine);
         if (isSelected)//选中
         {
@@ -210,7 +210,7 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
      *
      * @param isSelected 选中状态
      */
-    private void selectedTopStoryTab(boolean isSelected) {
+    public void selectedTopStoryTab(boolean isSelected) {
         this.topStoryTitle.setText(R.string.tab_comment);
         if (isSelected) {
             this.topStoryIcon.setImageResource(R.drawable.icon_tabbar_assess_selected);
@@ -226,7 +226,7 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
      *
      * @param isSelected 选中状态
      */
-    private void selectedDiscoverTab(boolean isSelected) {
+    public void selectedDiscoverTab(boolean isSelected) {
         this.discoverTitle.setText(R.string.tab_course);
         if (isSelected) {
             this.discoverIcon.setImageResource(R.drawable.icon_tabbar_course_selected);
@@ -242,7 +242,7 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
      *
      * @param isSelected 选中状态
      */
-    private void selectedActivityTab(boolean isSelected) {
+    public void selectedActivityTab(boolean isSelected) {
         this.activityTitle.setText(R.string.tab_me);
         if (isSelected) {
             this.activityIcon.setImageResource(R.drawable.icon_tabbar_me_selected);
@@ -258,7 +258,7 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
      *
      * @param isSelected 选中状态
      */
-    private void selectedCircleTab(boolean isSelected) {
+    public void selectedCircleTab(boolean isSelected) {
 //        this.circleTitle.setText(R.string.tab_circle);
         if (isSelected) {
             this.circleIcon.setImageResource(R.drawable.icon_tabbar_circle_selected2);

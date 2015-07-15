@@ -87,4 +87,5 @@
     <string name="title_activity_chat_room_list">ChatRoomListActivity</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_activity_test">TestActivity</string>
+    <string name="title_activity_moment_detail">MomentDetailActivity</string>
 </resources>

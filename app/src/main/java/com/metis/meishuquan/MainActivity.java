@@ -63,6 +63,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final String PressBackAgainToQuiteApplicationMessage = "再按一次退出";
+    private TabBar tabbar;
     private ViewGroup popupRoot;
     private boolean doWantToQuite;
     private boolean isNormal;//检验账号是否有异常
@@ -90,14 +91,17 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
 
         doWantToQuite = false;
         setContentView(R.layout.activity_mainactivity);
+        tabbar = (TabBar) this.findViewById(R.id.id_main_tabbar);
         popupRoot = (ViewGroup) this.findViewById(R.id.popup_attach);
+
+        tabbar.setTabSelectedListener(this);
 
         MainApplication.MainActivity = this;
         DisplayMetrics dm = new DisplayMetrics();
         this.getWindowManager().getDefaultDisplay().getMetrics(dm);
         MainApplication.setDisplayMetrics(dm);
 
-        TextureRender.getInstance().setNeedLoadImageFromServer(!AppStatus.isNoImageModeOn());
+        //TextureRender.getInstance().setNeedLoadImageFromServer(!AppStatus.isNoImageModeOn());
 
         Properties prop = new UnifiedConfigurationOverride().loadConfig(MainApplication.MainActivity, false);
         if (prop == null) {
@@ -122,7 +126,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
 
         Utils.showConfigureNetwork(this);
         onNewIntent(this.getIntent());
-        updateApp(MainActivity.this,false);
+        updateApp(MainActivity.this, false);
         CommonOperator.getInstance().getMomentsGroupsToCache();//获取朋友圈分组信息
 
         IntentFilter intentFilter = new IntentFilter("join_succeed");
@@ -200,24 +204,30 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
     @Override
     public void onTabSelected(SelectedTabType type) {
         GlobalData.getInstance().setTabTypeSelected(type);
+        this.tabbar.clearSelected();
         switch (type) {
-            case TopLine:
+            case TopLine://头条
                 navigateTo(ToplineFragment.class);
+                this.tabbar.selectedFolloweesTab(true);
                 break;
-            case Comment:
+            case Comment://评论
                 navigateTo(FragmentWaitingForAssess.class);
+                this.tabbar.selectedTopStoryTab(true);
 //                navigateTo(AssessFragment.class);
                 break;
-            case Class:
+            case Class://课程
                 navigateTo(CourseTabFragment.class);
+                this.tabbar.selectedDiscoverTab(true);
 //                navigateTo(ClassFragment.class);
                 break;
-            case MyInfo:
+            case MyInfo://我
                 navigateTo(MyInfoFragment.class);
+                this.tabbar.selectedActivityTab(true);
                 break;
-            default:
+            default://圈子
                 if (MainApplication.isLogin()) {
                     navigateTo(CircleFragment.class);
+                    this.tabbar.selectedCircleTab(true);
                 } else {
                     startActivityForResult(new Intent(MainActivity.this, LoginActivity.class), 1001);
                 }

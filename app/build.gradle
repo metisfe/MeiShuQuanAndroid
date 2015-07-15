@@ -30,7 +30,7 @@ android {
             signingConfig signingConfigs.test
             renderscriptDebuggable false
             minifyEnabled false
-            zipAlignEnabled true
+            zipAlignEnabled false
         }
     }
     sourceSets {
@@ -44,7 +44,6 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
-    compile files('libs/universal-image-loader-1.9.1.jar')
     compile 'com.android.support:support-v4:21.0.3'
     compile project(':library')
     compile 'com.google.guava:guava:18.0'
@@ -64,11 +63,11 @@ dependencies {
     compile files('libs/SocialSDK_WeiXin_1.jar')
     compile files('libs/SocialSDK_WeiXin_2.jar')
     compile files('libs/com.umeng.message.lib_v2.2.0.jar')
-    compile 'com.android.support:multidex:1.0.0'
-    compile files('libs/Rong_IMKit_v1_4_2.jar')
+    compile 'com.android.support:multidex:1.0.1'
     compile 'com.nhaarman.listviewanimations:lib-core:3.1.0@aar'
     compile files('libs/nineoldandroids-2.4.0.jar')
     compile project(':msnetworklib')
     compile project(':baselib')
     compile project(':coursepart')
+    compile project(':playerlib')
 }

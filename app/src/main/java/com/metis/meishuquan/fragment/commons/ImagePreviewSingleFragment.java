@@ -22,11 +22,12 @@ import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.metis.meishuquan.R;
-import com.uk.co.senab.photoview.PhotoView;
-import com.uk.co.senab.photoview.PhotoViewAttacher;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+
+import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Created by WJ on 2015/4/20.

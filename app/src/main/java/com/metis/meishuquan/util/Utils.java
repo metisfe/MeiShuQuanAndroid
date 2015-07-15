@@ -279,7 +279,7 @@ public class Utils {
     public static void setSnsLogo(ImageView imageView, URL sourceUrl) {
         if (sourceUrl != null) {
             imageView.setVisibility(View.VISIBLE);
-            TextureRender.getInstance().setBitmap(sourceUrl, imageView, R.color.transparent);
+//            TextureRender.getInstance().setBitmap(sourceUrl, imageView, R.color.transparent);
         } else {
             imageView.setVisibility(View.GONE);
         }
