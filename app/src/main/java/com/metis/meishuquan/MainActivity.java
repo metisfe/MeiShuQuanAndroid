@@ -297,7 +297,7 @@ public class MainActivity extends FragmentActivity implements TabBar.TabSelected
                 || name.equals(AssessFragment.class.getSimpleName())
                 || name.equals(CircleFragment.class.getSimpleName())
                 || name.equals(ClassFragment.class.getSimpleName())
-                || name.equals(FragmentWaitingForClass.class.getSimpleName())
+                || name.equals(CourseTabFragment.class.getSimpleName())
                 || name.equals(FragmentWaitingForAssess.class.getSimpleName());
     }
 

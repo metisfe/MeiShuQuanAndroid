@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.metis.base.R;
+import com.metis.base.widget.displayer.SquareRoundDisplayer;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -48,6 +49,29 @@ public class DisplayManager extends AbsManager {
                     .threadPoolSize(5)
                     .diskCacheFileCount(100)
                     .build();
+            mImageLoader.setDefaultLoadingListener(new ImageLoadingListener() {
+                @Override
+                public void onLoadingStarted(String s, View view) {
+                    view.setBackgroundColor(getContext().getResources().getColor(android.R.color.darker_gray));
+                }
+
+                @Override
+                public void onLoadingFailed(String s, View view, FailReason failReason) {
+
+                }
+
+                @Override
+                public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                    if (bitmap != null) {
+                        view.setBackground (null);
+                    }
+                }
+
+                @Override
+                public void onLoadingCancelled(String s, View view) {
+
+                }
+            });
             mImageLoader.init(mConfiguration);
         }
     }
@@ -71,26 +95,18 @@ public class DisplayManager extends AbsManager {
     }
 
     public void display (String uri, ImageView iv) {
-        mImageLoader.displayImage(uri, iv, new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String s, View view) {
-                view.setBackgroundColor(getContext().getResources().getColor(android.R.color.darker_gray));
-            }
+        mImageLoader.displayImage(uri, iv);
+    }
 
-            @Override
-            public void onLoadingFailed(String s, View view, FailReason failReason) {
+    public DisplayImageOptions makeRoundDisplayImageOptions (int size) {
+        DisplayImageOptions mOptions = new DisplayImageOptions.Builder()
+                .cloneFrom(mDefaultOptions)
+                .displayer(new SquareRoundDisplayer(size))
+                .build();
+        return mOptions;
+    }
 
-            }
-
-            @Override
-            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                view.setBackground (null);
-            }
-
-            @Override
-            public void onLoadingCancelled(String s, View view) {
-
-            }
-        });
+    public DisplayImageOptions getDefaultOptions () {
+        return mDefaultOptions;
     }
 }

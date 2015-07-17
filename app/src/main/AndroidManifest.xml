@@ -433,7 +433,12 @@
         <activity
             android:name=".activity.info.homepage.StudioActivity"
             android:label="@string/title_activity_studio"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+            <intent-filter >
+                <action android:name="com.metis.meishuquan.action.user"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.info.homepage.StudioAlbumActivity"
             android:label="@string/title_activity_studio_album"

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import com.metis.base.widget.TitleBar;
 
@@ -26,6 +27,25 @@ public abstract class TitleBarActivity extends AppCompatActivity {
         mContentViewContainer = (FrameLayout)findViewById(R.id.content_view_container);
 
         mTitleBar.setTitleLeft(getTitleLeft());
+        mTitleBar.setTitleCenter(getTitleCenter());
+        if (showAsUpEnable()) {
+            mTitleBar.setDrawableResourceLeft(R.drawable.ic_title_back);
+            mTitleBar.setOnLeftBtnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+        }
+        if (!isTitleBarOverlay()) {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)mContentViewContainer.getLayoutParams();
+            params.addRule(RelativeLayout.BELOW, R.id.title_bar);
+            mContentViewContainer.setLayoutParams(params);
+        }
+    }
+
+    public CharSequence getTitleCenter () {
+        return null;
     }
 
     public TitleBar getTitleBar () {
@@ -34,6 +54,14 @@ public abstract class TitleBarActivity extends AppCompatActivity {
 
     public CharSequence getTitleLeft () {
         return null;
+    }
+
+    public boolean isTitleBarOverlay () {
+        return false;
+    }
+
+    public boolean showAsUpEnable () {
+        return false;
     }
 
     @Override

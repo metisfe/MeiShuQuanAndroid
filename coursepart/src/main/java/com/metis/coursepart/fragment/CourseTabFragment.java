@@ -32,17 +32,17 @@ public class CourseTabFragment extends DockFragment {
 
     private static CourseTabFragment sFragment = new CourseTabFragment();
 
-    public static CourseTabFragment getInstance() {
+    public static CourseTabFragment getInstance () {
         return sFragment;
     }
 
     private DockBar.Dock mDock = null;
     private TitleBar mTitleBar = null;
 
-    //    private CourseVideoFragment mVideoFragment = CourseVideoFragment.getInstance();
-    //    private CourseGalleryFragment mGalleryFragment = CourseGalleryFragment.getInstance();
     private CourseVideoFragment mVideoFragment = new CourseVideoFragment();
     private CourseGalleryFragment mGalleryFragment = new CourseGalleryFragment();
+//    private CourseVideoFragment mVideoFragment = CourseVideoFragment.getInstance();
+//    private CourseGalleryFragment mGalleryFragment = CourseGalleryFragment.getInstance();
     private Fragment mCurrentFragment = null;
 
     @Override
@@ -60,9 +60,9 @@ public class CourseTabFragment extends DockFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mTitleBar = (TitleBar) view.findViewById(R.id.course_title_bar);
+        mTitleBar = (TitleBar)view.findViewById(R.id.course_title_bar);
 
-        RadioGroup switchView = (RadioGroup) LayoutInflater.from(getActivity()).inflate(R.layout.layout_tab_switch, null);
+        RadioGroup switchView = (RadioGroup)LayoutInflater.from(getActivity()).inflate(R.layout.layout_tab_switch, null);
         mTitleBar.setCenterView(switchView);
 
         switchView.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -74,23 +74,26 @@ public class CourseTabFragment extends DockFragment {
                 }
                 if (checkedId == R.id.tab_video) {
                     mCurrentFragment = mVideoFragment;
+                    mTitleBar.setTitleLeft(R.string.title_filter);
                 } else if (checkedId == R.id.tab_gallery) {
                     mCurrentFragment = mGalleryFragment;
+                    mTitleBar.setTitleLeft("");
                 }
                 FragmentUtils.showFragment(getFragmentManager(), mCurrentFragment, R.id.course_fragment_container);
             }
         });
-        ((RadioButton) view.findViewById(R.id.tab_video)).setChecked(true);
+        ((RadioButton)view.findViewById(R.id.tab_video)).setChecked(true);
         //FragmentUtils.showFragment(getFragmentManager(), mVideoFragment, R.id.course_fragment_container);
         //switchView.check(R.id.tab_video);
         //CourseManager.getInstance(getActivity()).getCourseChannelList(null);
 
-        mTitleBar.setTitleLeft(R.string.title_filter);
         mTitleBar.setOnLeftBtnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(getActivity(), FilterActivity.class);
-                startActivity(it);
+                if (mCurrentFragment == mVideoFragment) {
+                    Intent it = new Intent(getActivity(), FilterActivity.class);
+                    startActivity(it);
+                }
             }
         });
     }

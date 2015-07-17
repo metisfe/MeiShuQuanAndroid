@@ -60,18 +60,30 @@ public class AlbumContainerHolder extends AbsViewHolder<AlbumContainerDelegate> 
         List<CourseAlbum> albumList = videoItemDelegate.getSource();
         if (!albumList.isEmpty()) {
             final CourseAlbum firstOne = albumList.get(0);
-            StudioInfo studioInfo = firstOne.studio;
+            final StudioInfo studioInfo = firstOne.studio;
             DisplayManager.getInstance(context).display(firstOne.coursePic, itemBigThumbIv);
             itemBigTitleTv.setText(firstOne.title);
             if (studioInfo != null) {
                 DisplayManager.getInstance(context).display(studioInfo.avatar, itemBigAuthorProfileIv);
                 itemBigAuthorNameTv.setText(studioInfo.name);
+                View.OnClickListener listener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        com.metis.base.ActivityDispatcher.userActivity(context, studioInfo.userId);
+                    }
+                };
+                itemBigAuthorProfileIv.setOnClickListener(listener);
+                itemBigAuthorNameTv.setOnClickListener(listener);
+            } else {
+                itemBigAuthorNameTv.setText("");
+                itemBigAuthorProfileIv.setOnClickListener(null);
+                itemBigAuthorNameTv.setOnClickListener(null);
             }
 
             itemBigView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ActivityDispatcher.videoDetailActivity(context, firstOne.courseId);
+                    ActivityDispatcher.videoDetailActivity(context, firstOne);
                 }
             });
 
@@ -107,10 +119,14 @@ public class AlbumContainerHolder extends AbsViewHolder<AlbumContainerDelegate> 
                     params.height = rvHeight;
                 }
                 itemRv.setLayoutParams(params);
-                subAdapter.addDataItem(new ItemTitleDelegate(firstOne.getChannel()));
+                ItemTitleDelegate titleDelegate = new ItemTitleDelegate(firstOne.getChannel());
+                titleDelegate.setClickable(true);
+                titleDelegate.setFilterId(videoItemDelegate.getFilterId());
+                subAdapter.addDataItem(titleDelegate);
                 subAdapter.addDataList(albumDelegates);
                 subAdapter.notifyDataSetChanged();
             }
         }
     }
+
 }

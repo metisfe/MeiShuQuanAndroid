@@ -8,4 +8,7 @@ public class NetProperty {
     public static final String FORMAL_KEY = "JhSUSARkPDywIlrCKJKQzOJIttIYWU24";
     public static final String TEST = "https://mobiletest.azure-mobile.cn/";
     public static final String TEST_KEY = "TsBWBGVGZmkrUYGvBArWkmJrhHSsnr52";
+
+    public static final String T = FORMAL;
+    public static final String KEY = FORMAL_KEY;
 }

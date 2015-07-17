@@ -1,46 +1,40 @@
 package com.metis.coursepart.activity;
 
-import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.os.Environment;
-import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.metis.base.manager.RequestCallback;
+import com.metis.base.utils.Log;
 import com.metis.coursepart.ActivityDispatcher;
 import com.metis.coursepart.R;
+import com.metis.coursepart.adapter.CourseAdapter;
+import com.metis.coursepart.adapter.delegate.CourseDelegate;
 import com.metis.coursepart.fragment.CourseVideoChapterFragment;
 import com.metis.coursepart.fragment.CourseVideoDetailFragment;
 import com.metis.coursepart.manager.CourseManager;
+import com.metis.coursepart.module.Course;
 import com.metis.coursepart.module.CourseAlbum;
 import com.metis.coursepart.module.CourseSubList;
 import com.metis.msnetworklib.contract.ReturnInfo;
 import com.metis.playerlib.PlayerFragment;
 
-import java.io.File;
 import java.util.List;
 
-import butterknife.InjectView;
-import butterknife.OnClick;
 
-
-public class CourseVideoDetailActivity extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener{
+public class CourseVideoDetailActivity extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener, CourseAdapter.OnCourseClickListener{
 
     private static final String TAG = CourseVideoDetailActivity.class.getSimpleName();
 
@@ -52,13 +46,18 @@ public class CourseVideoDetailActivity extends AppCompatActivity implements View
 
     private TabAdapter mTabAdapter = null;
 
-    private long mCourseId = 0;
+    private CourseAlbum mCourseAlbum = null;
+    //private long mCourseId = 0;
 
     private CourseVideoDetailFragment mDetailFragment = new CourseVideoDetailFragment();
     private CourseVideoChapterFragment mChapterFragment = new CourseVideoChapterFragment();
     private Fragment[] mFragmentArray = {
             mDetailFragment, mChapterFragment
     };
+
+    private CourseDelegate mCurrentCourse = null;
+
+    private String mRequestId = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,29 +78,95 @@ public class CourseVideoDetailActivity extends AppCompatActivity implements View
         mViewPager.setAdapter(mTabAdapter);
         mViewPager.addOnPageChangeListener(this);
         mDetailBtn.setSelected(true);
-        File file = new File(Environment.getExternalStorageDirectory() + File.separator + "Movies" + File.separator + "TR.mp4");
-        mPlayerFragment.setDataSource(file.getAbsolutePath());
-        mPlayerFragment.setTitle(file.getName());
+
     }
 
     @Override
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        mCourseId = getIntent().getLongExtra(ActivityDispatcher.KEY_ALBUM_ID, 0);
-        if (mCourseId != 0) {
-            CourseManager.getInstance(this).getCourseSubList(mCourseId, new RequestCallback<CourseSubList>() {
+        mCourseAlbum = (CourseAlbum)getIntent().getSerializableExtra(ActivityDispatcher.KEY_COURSE_ALBUM);
+        mDetailFragment.setCourseAlbum(mCourseAlbum);
+        if (mCourseAlbum != null) {
+            CourseManager.getInstance(this).getCourseSubList(mCourseAlbum.courseId, new RequestCallback<CourseSubList>() {
                 @Override
-                public void callback(ReturnInfo<CourseSubList> returnInfo) {
+                public void callback(ReturnInfo<CourseSubList> returnInfo, String callbackId) {
                     if (returnInfo.isSuccess()) {
                         CourseSubList courseSubList = returnInfo.getData();
                         List<CourseAlbum> relatedCourse = courseSubList.relatedCourse;
+                        List<Course> subList = courseSubList.courseSubList;
                         if (relatedCourse != null && !relatedCourse.isEmpty()) {
                             mDetailFragment.setRelatedCourses(relatedCourse);
+                        }
+                        if (subList != null && !subList.isEmpty()) {
+                            mChapterFragment.setSubCourseList(subList);
+                            loadSubCourseDetail(subList.get(0).subCourseId);
+
+                            //File file = new File(Environment.getExternalStorageDirectory() + File.separator + "Movies" + File.separator + "TR.mp4");
+                            mPlayerFragment.setDataSource(subList.get(0).videoUrl);
+                            mPlayerFragment.setTitle(subList.get(0).subCourseName);
+
                         }
                     }
                 }
             });
         }
+
+        mChapterFragment.setOnCourseClickListener(this);
+
+    }
+
+    @Override
+    public void onCourseClick(CourseDelegate delegate) {
+        final Course course = delegate.getSource();
+        if (delegate.equals(mCurrentCourse)) {
+            if (delegate.isSelected()) {
+                //TODO pause
+            } else {
+                //TODO resume
+            }
+            delegate.setSelected(!delegate.isSelected());
+        } else {
+            if (mPlayerFragment.isStarted()) {
+                mPlayerFragment.stopPlay(new PlayerFragment.OnStopCompleteListener() {
+                    @Override
+                    public void onStopped() {
+                        mPlayerFragment.setTitle(course.subCourseName);
+                        mPlayerFragment.setDataSource(course.videoUrl);
+                        mPlayerFragment.startPlay();
+                    }
+                });
+            } else {
+                mPlayerFragment.setTitle(course.subCourseName);
+                mPlayerFragment.setDataSource(course.videoUrl);
+                mPlayerFragment.startPlay();
+            }
+
+
+            //TODO perform new video playing
+            if (mCurrentCourse != null) {
+                mCurrentCourse.setSelected(false);
+            }
+            delegate.setSelected(true);
+        }
+        mCurrentCourse = delegate;
+        loadSubCourseDetail(mCurrentCourse.getSource().subCourseId);
+        mChapterFragment.notifyDataSetChanged();
+
+        Toast.makeText(this, delegate.getSource().subCourseName, Toast.LENGTH_SHORT).show();
+    }
+
+    private void loadSubCourseDetail (long subCourseId) {
+        mRequestId = CourseManager.getInstance(CourseVideoDetailActivity.this).getSubCourseDetail(subCourseId, new RequestCallback<Course>() {
+            @Override
+            public void callback(ReturnInfo<Course> returnInfo, String callbackId) {
+                Log.v(TAG, "loadSubCourseDetail " + returnInfo.isSuccess());
+                if (returnInfo.isSuccess()) {
+                    if (callbackId.equals(mRequestId)) {
+                        mDetailFragment.setCurrentCourse(returnInfo.getData());
+                    }
+                }
+            }
+        });
     }
 
     @Override

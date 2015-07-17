@@ -34,6 +34,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.metis.base.ActivityDispatcher;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.WebActivity;
@@ -154,7 +155,10 @@ public class StudioActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studio);
 
-        mUserId = getIntent().getLongExtra(KEY_USER_ID, mUserId);
+        mUserId = getIntent().getLongExtra(KEY_USER_ID, -1);
+        if (mUserId == -1) {
+            mUserId = getIntent().getLongExtra(ActivityDispatcher.KEY_USER_ID, -1);
+        }
         canEdit = mUserId == MainApplication.userInfo.getUserId();
 
         mTitleView = LayoutInflater.from(this).inflate(R.layout.layout_studio_title, null);
