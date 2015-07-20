@@ -434,9 +434,10 @@
             android:name=".activity.info.homepage.StudioActivity"
             android:label="@string/title_activity_studio"
             android:screenOrientation="portrait" >
-            <intent-filter >
-                <action android:name="com.metis.meishuquan.action.user"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+            <intent-filter>
+                <action android:name="com.metis.meishuquan.action.user" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
@@ -644,6 +645,10 @@
         <activity
             android:name=".activity.circle.MomentDetailActivity"
             android:label="@string/title_activity_moment_detail" >
+        </activity>
+        <activity
+            android:name=".activity.MediaWebActivity"
+            android:label="@string/title_activity_media_web" >
         </activity>
     </application>
 

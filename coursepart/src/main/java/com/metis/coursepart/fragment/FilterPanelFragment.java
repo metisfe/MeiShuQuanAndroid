@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.metis.base.utils.Log;
 import com.metis.coursepart.R;
 import com.metis.coursepart.adapter.FilterAdapter;
 import com.metis.coursepart.adapter.FilterSpanSizeLookup;
@@ -28,6 +29,8 @@ import java.util.List;
  */
 public class FilterPanelFragment extends Fragment {
 
+    private static final String TAG = FilterPanelFragment.class.getSimpleName();
+
     private Filter[] mStateFilterArray = {new Filter(1, R.string.filter_recommend), new Filter(2, R.string.filter_new), new Filter(3, R.string.filter_hot)};
     private Filter[] mChargeFilterArray = {Filter.ALL, new Filter(1, R.string.filter_free), new Filter(2, R.string.filter_charge)};
 
@@ -37,7 +40,7 @@ public class FilterPanelFragment extends Fragment {
 
     private OnFilterChangeListener mFilterChangeListener = null;
 
-    private long mCurrentState = -1, mCurrentCategory, mCurrentStudio, mCurrentCharge;
+    private long mCurrentState = 1, mCurrentCategory, mCurrentStudio, mCurrentCharge;
 
     @Nullable
     @Override
@@ -75,10 +78,12 @@ public class FilterPanelFragment extends Fragment {
 
     public void setCurrentState (long state) {
         mCurrentState = state;
+        if (mStateAdapter != null) {
+            mStateAdapter.setSelectedFilterId(state);
+        }
     }
 
     private void initStateRv () {
-
         mStateAdapter = new FilterAdapter(getActivity());
         List<FilterDelegate> stateDelegates = new ArrayList<FilterDelegate>();
         final int stateLength = mStateFilterArray.length;
@@ -89,9 +94,7 @@ public class FilterPanelFragment extends Fragment {
         }
         mStateAdapter.addDataList(stateDelegates);
         mStateFilterRv.setAdapter(mStateAdapter);
-        if (mCurrentState >= 0) {
-            mStateAdapter.setSelectedFilterId(mCurrentState);
-        }
+        setCurrentState(mCurrentState);
         mCurrentState = mStateAdapter.getSelectedFilterId();
         mStateAdapter.setOnFilterSelectedListener(new FilterAdapter.OnFilterSelectedListener() {
             @Override
@@ -149,6 +152,7 @@ public class FilterPanelFragment extends Fragment {
         mCategoryAdapter.setOnFilterSelectedListener(new FilterAdapter.OnFilterSelectedListener() {
             @Override
             public void onSelected(int position, long id) {
+                //Log.v(TAG, "");
                 if (id != mCurrentCategory) {
                     mCurrentCategory = id;
                     onChange();

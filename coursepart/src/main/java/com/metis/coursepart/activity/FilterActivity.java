@@ -1,15 +1,13 @@
 package com.metis.coursepart.activity;
 
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 
-import com.metis.base.TitleBarActivity;
+import com.metis.base.activity.TitleBarActivity;
 import com.metis.base.manager.RequestCallback;
 import com.metis.base.utils.FragmentUtils;
+import com.metis.base.utils.Log;
 import com.metis.coursepart.ActivityDispatcher;
 import com.metis.coursepart.R;
-import com.metis.coursepart.adapter.AlbumAdapter;
 import com.metis.coursepart.fragment.FilterPanelFragment;
 import com.metis.coursepart.fragment.VideoFilterFragment;
 import com.metis.coursepart.manager.CourseManager;
@@ -21,6 +19,8 @@ import com.metis.msnetworklib.contract.ReturnInfo;
 import java.util.List;
 
 public class FilterActivity extends TitleBarActivity {
+
+    private static final String TAG = FilterActivity.class.getSimpleName();
 
     private VideoFilterFragment mVideoFilterFragment = new VideoFilterFragment();
 
@@ -41,7 +41,7 @@ public class FilterActivity extends TitleBarActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        mState = getIntent().getLongExtra(ActivityDispatcher.KEY_STATE_FILTER_ID, -1);
+        mState = getIntent().getLongExtra(ActivityDispatcher.KEY_STATE_FILTER_ID, 1);
         mVideoFilterFragment.getFilterPanelFragment().setCurrentState(mState);
         CourseManager.getInstance(this).getCourseChannelList(new RequestCallback<CourseChannelList>() {
             @Override
