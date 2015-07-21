@@ -44,7 +44,7 @@ public class NetProxy {
     private MobileServiceClient buildClient (Context context) {
         MobileServiceClient client = null;
         try {
-            client = new MobileServiceClient(NetProperty.T, NetProperty.KEY, context);
+            client = new MobileServiceClient(NetProperty.USE, NetProperty.USE_KEY, context);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

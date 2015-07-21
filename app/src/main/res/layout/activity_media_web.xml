@@ -1,8 +1,9 @@
-<LinearLayout android:id="@+id/container"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:orientation="vertical">
+<LinearLayout
+    android:id="@+id/web_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/video_view"
@@ -10,6 +11,47 @@
         android:layout_height="fill_parent"
         android:visibility="gone">
     </FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="@color/bg_topline_topbar"
+        android:clickable="true">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:id="@+id/id_tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/id_img_dynamic"
+                android:maxLength="10"
+                android:singleLine="true"
+                android:textColor="#fb6d6d"
+                android:textSize="18sp"/>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/id_btn_back"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_btn_arrow_left"/>
+
+        <Button
+            android:id="@+id/id_btn_share"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/icon_share"/>
+    </RelativeLayout>
 
     <Button
         android:id="@+id/video_landport"

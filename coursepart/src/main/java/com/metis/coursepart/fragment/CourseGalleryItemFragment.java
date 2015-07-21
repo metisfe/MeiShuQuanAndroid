@@ -20,6 +20,7 @@ import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.metis.base.activity.TitleBarActivity;
+import com.metis.base.fragment.BaseFragment;
 import com.metis.base.manager.CacheDirManager;
 import com.metis.base.utils.FileUtils;
 import com.metis.base.utils.Log;
@@ -38,7 +39,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 /**
  * Created by Beak on 2015/7/9.
  */
-public class CourseGalleryItemFragment extends Fragment implements View.OnClickListener{
+public class CourseGalleryItemFragment extends BaseFragment implements View.OnClickListener{
 
     private static final String TAG = CourseGalleryItemFragment.class.getSimpleName();
 
@@ -148,8 +149,11 @@ public class CourseGalleryItemFragment extends Fragment implements View.OnClickL
             for (int i = 0; i < length; i++) {
                 View child = LayoutInflater.from(getActivity()).inflate(R.layout.layout_tag_item, null);
                 TextView tagTv = (TextView)child.findViewById(R.id.tag_name);
-                tagTv.setText(keyWordList.get(i).keyWordName);
-                mTagsLayout.addView(child);
+                KeyWord keyWord = keyWordList.get(i);
+                if (keyWord != null) {
+                    tagTv.setText(keyWord.keyWordName);
+                    mTagsLayout.addView(child);
+                }
             }
         }
     }

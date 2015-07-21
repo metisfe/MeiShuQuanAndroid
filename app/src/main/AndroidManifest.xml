@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.metis.meishuquan"
-    android:versionCode="4"
-    android:versionName="1.4.8" >
+    android:versionCode="5"
+    android:versionName="1.5.0" >
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -648,6 +648,8 @@
         </activity>
         <activity
             android:name=".activity.MediaWebActivity"
+            android:hardwareAccelerated="true"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_media_web" >
         </activity>
     </application>

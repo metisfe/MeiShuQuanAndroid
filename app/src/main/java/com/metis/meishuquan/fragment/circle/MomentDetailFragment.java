@@ -29,7 +29,6 @@ import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.metis.meishuquan.MainActivity;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.act.ActDetailActivity;
@@ -37,7 +36,6 @@ import com.metis.meishuquan.activity.circle.MomentDetailActivity;
 import com.metis.meishuquan.activity.info.ImagePreviewActivity;
 import com.metis.meishuquan.activity.login.LoginActivity;
 import com.metis.meishuquan.activity.topline.NewDetailActivity;
-import com.metis.meishuquan.fragment.Topline.ItemInfoFragment;
 import com.metis.meishuquan.model.BLL.CircleOperator;
 import com.metis.meishuquan.model.BLL.CommonOperator;
 import com.metis.meishuquan.model.circle.CCircleCommentModel;
@@ -494,7 +492,7 @@ public class MomentDetailFragment extends Fragment {
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    ((MainActivity) getActivity()).removeAllAttachedView();
+                                    ((MomentDetailActivity) getActivity()).removeAllAttachedView();
                                     isAttention = false;
                                 }
                             }, new AdapterView.OnItemClickListener() {
@@ -528,7 +526,7 @@ public class MomentDetailFragment extends Fragment {
                             });
                         }
                     });
-                    ((MainActivity) getActivity()).addAttachView(popupAttentionWindow);
+                    ((MomentDetailActivity) getActivity()).addAttachView(popupAttentionWindow);
                 } else {//取消关注
                     isAttention = false;
                     //本地保存关注状态
@@ -619,7 +617,7 @@ public class MomentDetailFragment extends Fragment {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.setCustomAnimations(R.anim.fragment_in, R.anim.fragment_out);
-        ft.add(R.id.content_container, momentCommentFragment);
+        ft.add(R.id.id_ll_moment_detail_container, momentCommentFragment);
         ft.addToBackStack(null);
         ft.commit();
     }

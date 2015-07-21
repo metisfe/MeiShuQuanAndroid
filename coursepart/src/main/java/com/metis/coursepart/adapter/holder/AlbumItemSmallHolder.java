@@ -42,17 +42,17 @@ public class AlbumItemSmallHolder extends AbsViewHolder<AlbumSmallDelegate> {
         if (studioInfo != null) {
             DisplayManager.getInstance(context).display(studioInfo.avatar, itemAuthorProfileIv);
             itemAuthorNameTv.setText(studioInfo.name);
-            View.OnClickListener userListener = new View.OnClickListener() {
+            /*View.OnClickListener userListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     com.metis.base.ActivityDispatcher.userActivity(context, studioInfo.userId);
                 }
             };
             itemAuthorProfileIv.setOnClickListener(userListener);
-            itemAuthorNameTv.setOnClickListener(userListener);
+            itemAuthorNameTv.setOnClickListener(userListener);*/
         } else {
-            itemAuthorProfileIv.setOnClickListener(null);
-            itemAuthorNameTv.setOnClickListener(null);
+            /*itemAuthorProfileIv.setOnClickListener(null);
+            itemAuthorNameTv.setOnClickListener(null);*/
         }
 
         itemPlayCountTv.setText(context.getString(R.string.course_play_count, album.viewCount));

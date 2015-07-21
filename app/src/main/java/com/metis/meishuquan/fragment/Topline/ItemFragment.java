@@ -2,26 +2,20 @@ package com.metis.meishuquan.fragment.Topline;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
-import com.metis.meishuquan.activity.act.ActDetailActivity;
-import com.metis.meishuquan.activity.login.LoginActivity;
+import com.metis.meishuquan.activity.MediaWebActivity;
 import com.metis.meishuquan.activity.topline.NewDetailActivity;
 import com.metis.meishuquan.adapter.topline.ToplineCustomAdapter;
 import com.metis.meishuquan.model.BLL.ActiveOperator;
@@ -32,8 +26,6 @@ import com.metis.meishuquan.model.contract.ReturnInfo;
 import com.metis.meishuquan.model.topline.News;
 import com.metis.meishuquan.model.topline.ToplineNewsList;
 import com.metis.meishuquan.util.ImageLoaderUtils;
-import com.metis.meishuquan.util.ImageUtil;
-import com.metis.meishuquan.util.SharedPreferencesUtil;
 import com.metis.meishuquan.view.shared.DragListView;
 import com.microsoft.windowsazure.mobileservices.ApiOperationCallback;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
@@ -115,32 +107,42 @@ public class ItemFragment extends Fragment {
     }
 
     private void getActiveInfo(final View headerView) {
-        ActiveOperator.getInstance().getActiveDetail(new UserInfoOperator.OnGetListener<ActiveInfo>() {
+        ActiveOperator.getInstance().getActivityList(new UserInfoOperator.OnGetListener<List<ActiveInfo>>() {
             @Override
-            public void onGet(boolean succeed, ActiveInfo info) {
-                if (succeed) {
-                    activeInfo = info;
-                    initHeaderView(headerView);
-                    listView.addHeaderView(headerView);
+            public void onGet(boolean succeed, List<ActiveInfo> activeInfos) {
+                if (succeed == true && activeInfos != null) {
                     if (channelId == 6) {
-                        ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(activeInfo.getTopImage(), imgAct);
+                        initHeaderView(headerView, activeInfos.get(0).getImage(), activeInfos.get(0).getTitle(), activeInfos.get(0).getContent(), activeInfos.get(0).getTopImage());
+                        Log.i("activeInfos title", activeInfos.get(0).getTitle());
+                        listView.addHeaderView(headerView);
+                        ImageLoaderUtils.getImageLoader(MainApplication.UIContext).displayImage(activeInfos.get(0).getTopImage(), imgAct);
                     }
+                } else {
+
                 }
             }
         });
     }
 
-    private void initHeaderView(View headerView) {
+    private void initHeaderView(View headerView, final String url, final String title, final String content, final String imgUrl) {
         this.imgAct = (ImageView) headerView.findViewById(R.id.id_img_active);
 
         this.imgAct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (MainApplication.isLogin()) {
-                    startActivity(new Intent(getActivity(), ActDetailActivity.class));
-                } else {
-                    startActivity(new Intent(getActivity(), LoginActivity.class));
-                }
+                Intent intent = new Intent(getActivity(), MediaWebActivity.class);
+                intent.putExtra(MediaWebActivity.KEY_URL, url);
+//                intent.putExtra(MediaWebActivity.KEY_URL, "http://www.meishuquan.net/H5/ContentDetial.ASPX?ID=10138&from=singlemessage&isappinstalled=1");
+                intent.putExtra(MediaWebActivity.KEY_TITLE, title);
+                intent.putExtra(MediaWebActivity.KEY_DESC, content);
+                intent.putExtra(MediaWebActivity.KEY_IMAGE, imgUrl);
+                Log.i("imgAct target url", url);
+                getActivity().startActivity(intent);
+//                if (MainApplication.isLogin()) {
+//                    startActivity(new Intent(getActivity(), ActDetailActivity.class));
+//                } else {
+//                    startActivity(new Intent(getActivity(), LoginActivity.class));
+//                }
             }
         });
     }

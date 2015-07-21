@@ -232,7 +232,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.my_info_profile_container:
                 Intent intent = new Intent(getActivity(), StudioActivity.class/*InfoActivity.class*/);
-                intent.putExtra(StudioActivity.KEY_USER_ID, MainApplication.userInfo.getUserId());
+                intent.putExtra(StudioActivity.KEY_USER_ID, (long)MainApplication.userInfo.getUserId());
                 startActivity(intent);
                 break;
             case R.id.my_info_profile:

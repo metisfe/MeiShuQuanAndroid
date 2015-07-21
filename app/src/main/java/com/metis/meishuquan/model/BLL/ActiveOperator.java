@@ -39,7 +39,8 @@ public class ActiveOperator {
             URL_ACTIVE_SELECT_STUDIO = "v1.1/Activity/SelectStudio",
             URL_ACTIVE_MY_ACTIVE_INFO = "v1.1/Activity/GetMyActivityInfo?activityId=",
             URL_ACTIVE_GET_STUDIO_STUDENT = "v1.1/Activity/GetStudioStudent",
-            URL_ACTIVE_GET_CANCEL_STUDIO_STUDENT = "v1.1/Activity/GetCancelStudioStudent?activityId=";
+            URL_ACTIVE_GET_CANCEL_STUDIO_STUDENT = "v1.1/Activity/GetCancelStudioStudent?activityId=",
+            URL_ACTIVE_GET_ACTIVITY_LIST = "v1.1/Activity/GetActivityList";
 
     private static final String
             KEY_SESSION = "session",
@@ -59,8 +60,31 @@ public class ActiveOperator {
 
     private static ActiveOperator sOperator = new ActiveOperator();
 
-    public static ActiveOperator getInstance () {
+    public static ActiveOperator getInstance() {
         return sOperator;
+    }
+
+    public void getActivityList(final UserInfoOperator.OnGetListener<List<ActiveInfo>> listener) {
+        if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
+            StringBuilder sb = new StringBuilder(URL_ACTIVE_GET_ACTIVITY_LIST);
+            Log.v(TAG, "getActivityList request=" + sb.toString());
+            ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
+
+                @Override
+                public void onCompleted(ReturnInfo<String> result, Exception exception, ServiceFilterResponse response) {
+                    if (result != null) {
+                        Gson gson = new Gson();
+                        String resultJson = gson.toJson(result);
+                        Result<List<ActiveInfo>> resultAtvInfo = gson.fromJson(resultJson, new TypeToken<Result<List<ActiveInfo>>>() {
+                        }.getType());
+                        if (listener != null && resultAtvInfo.getOption().getStatus() == 0) {
+                            listener.onGet(true, resultAtvInfo.getData());
+                        }
+                        Log.v(TAG, "lstAtvInfo size=" + resultAtvInfo.getData().size() + "getActivityList resultJson=" + resultJson);
+                    }
+                }
+            });
+        }
     }
 
     public void getActiveDetail(final UserInfoOperator.OnGetListener<ActiveInfo> listener) {
@@ -87,7 +111,7 @@ public class ActiveOperator {
         }
     }
 
-    public void getMyActiveInfo (int activeId, final UserInfoOperator.OnGetListener<SimpleActiveInfo> listener) {
+    public void getMyActiveInfo(int activeId, final UserInfoOperator.OnGetListener<SimpleActiveInfo> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_ACTIVE_MY_ACTIVE_INFO);
             sb.append(activeId);
@@ -114,7 +138,7 @@ public class ActiveOperator {
 
     /*api/v1.1/Activity/StudioList?activityId={activityId}&province={province}&city={city}&county={county}&type={type}&collegeId={collegeId}&majorsid={majorsid}&index={index}&query={query}*/
     /*province（省份id）,type(1推荐 2最新 3最热 ),collegeId(学院id),  index（0）{activityId} （活动id）city(市id)county（县id），majorsid(专业id)，query（模糊查询机构名称）*/
-    public void getStudioList (int provinceId, int cityId, int townId, int activityId, int type, int collegeId, int majorsid, int index, String query, final UserInfoOperator.OnGetListener<List<TopListItem>> listener) {
+    public void getStudioList(int provinceId, int cityId, int townId, int activityId, int type, int collegeId, int majorsid, int index, String query, final UserInfoOperator.OnGetListener<List<TopListItem>> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_ACTIVE_STUDIO_LIST);
             sb.append("?" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
@@ -135,7 +159,8 @@ public class ActiveOperator {
                     if (result != null) {
                         Gson gson = new Gson();
                         String resultJson = gson.toJson(result);
-                        Result<List<TopListItem>> resultInfo = gson.fromJson(resultJson, new TypeToken<Result<List<TopListItem>>>(){}.getType());
+                        Result<List<TopListItem>> resultInfo = gson.fromJson(resultJson, new TypeToken<Result<List<TopListItem>>>() {
+                        }.getType());
                         if (listener != null) {
                             listener.onGet(resultInfo.getOption().getStatus() == 0, resultInfo.getData());
                         }
@@ -146,7 +171,7 @@ public class ActiveOperator {
         }
     }
 
-    public void selectStudio (long studioId, int activityId, final UserInfoOperator.OnGetListener<Result> listener) {
+    public void selectStudio(long studioId, int activityId, final UserInfoOperator.OnGetListener<Result> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_ACTIVE_SELECT_STUDIO);
             sb.append("?" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
@@ -170,8 +195,9 @@ public class ActiveOperator {
             });
         }
     }
+
     //URL_ACTIVE_TOP_LIST_BY_STUDENT
-    public void topListByStudent (int type, int region, int index, String queryContent, final UserInfoOperator.OnGetListener<List<TopListItem>> listener) {
+    public void topListByStudent(int type, int region, int index, String queryContent, final UserInfoOperator.OnGetListener<List<TopListItem>> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_ACTIVE_TOP_LIST_BY_STUDENT);
             sb.append("?" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
@@ -189,7 +215,8 @@ public class ActiveOperator {
                     if (result != null) {
                         Gson gson = new Gson();
                         String resultJson = gson.toJson(result);
-                        Result<List<TopListItem>> resultData = gson.fromJson(resultJson, new TypeToken<Result<List<TopListItem>>>(){}.getType());
+                        Result<List<TopListItem>> resultData = gson.fromJson(resultJson, new TypeToken<Result<List<TopListItem>>>() {
+                        }.getType());
                         if (listener != null && resultData.getOption().getStatus() == 0) {
                             listener.onGet(true, resultData.getData());
                         }
@@ -200,7 +227,7 @@ public class ActiveOperator {
         }
     }
 
-    public void topListByStudio (int type, int region, int index, String queryContent, final UserInfoOperator.OnGetListener<List<TopListItem>> listener) {
+    public void topListByStudio(int type, int region, int index, String queryContent, final UserInfoOperator.OnGetListener<List<TopListItem>> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_ACTIVE_TOP_LIST_BY_STUDIO);
             sb.append("?" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
@@ -208,7 +235,7 @@ public class ActiveOperator {
             sb.append("&" + KEY_REGION + "=" + region);
             sb.append("&" + KEY_INDEX + "=" + index);
             //if (!TextUtils.isEmpty(queryContent)) {
-                sb.append("&" + KEY_QUERY_CONTENT + "=" + URLEncoder.encode(queryContent));
+            sb.append("&" + KEY_QUERY_CONTENT + "=" + URLEncoder.encode(queryContent));
             //}
             Log.v(TAG, "topListByStudio request=" + sb.toString());
             ApiDataProvider.getmClient().invokeApi(sb.toString(), null, HttpGet.METHOD_NAME, null, (Class<ReturnInfo<String>>) new ReturnInfo<String>().getClass(), new ApiOperationCallback<ReturnInfo<String>>() {
@@ -218,7 +245,8 @@ public class ActiveOperator {
                     if (result != null) {
                         Gson gson = new Gson();
                         String resultJson = gson.toJson(result);
-                        Result<List<TopListItem>> resultData = gson.fromJson(resultJson, new TypeToken<Result<List<TopListItem>>>(){}.getType());
+                        Result<List<TopListItem>> resultData = gson.fromJson(resultJson, new TypeToken<Result<List<TopListItem>>>() {
+                        }.getType());
                         if (listener != null && resultData.getOption().getStatus() == 0) {
                             listener.onGet(true, resultData.getData());
                         }
@@ -229,7 +257,7 @@ public class ActiveOperator {
         }
     }
 
-    public void changeStudio (long studioId, int activityId, final UserInfoOperator.OnGetListener<Result> listener) {
+    public void changeStudio(long studioId, int activityId, final UserInfoOperator.OnGetListener<Result> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_ACTIVE_CHANGE_STUDIO);
             sb.append("?" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
@@ -254,7 +282,7 @@ public class ActiveOperator {
         }
     }
 
-    public void joinActivity (int activityId, final UserInfoOperator.OnGetListener listener) {
+    public void joinActivity(int activityId, final UserInfoOperator.OnGetListener listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_ACTIVE_JOIN_ACTIVITY);
             sb.append("?" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
@@ -267,7 +295,8 @@ public class ActiveOperator {
                     if (result != null) {
                         Gson gson = new Gson();
                         String resultJson = gson.toJson(result);
-                        Result resultInfo = gson.fromJson(resultJson, new TypeToken<Result>(){}.getType());
+                        Result resultInfo = gson.fromJson(resultJson, new TypeToken<Result>() {
+                        }.getType());
                         if (listener != null) {
                             listener.onGet(resultInfo.getOption().getStatus() == 0, null);
                         }
@@ -278,7 +307,7 @@ public class ActiveOperator {
         }
     }
 
-    public void getStudioStudent (final int activeId, long lastUserId, final UserInfoOperator.OnGetListener<List<StudentListActivity.Student>> listener) {
+    public void getStudioStudent(final int activeId, long lastUserId, final UserInfoOperator.OnGetListener<List<StudentListActivity.Student>> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_ACTIVE_GET_STUDIO_STUDENT);
             sb.append("?" + KEY_SESSION + "=" + MainApplication.userInfo.getCookie());
@@ -292,7 +321,8 @@ public class ActiveOperator {
                     if (result != null) {
                         Gson gson = new Gson();
                         String resultJson = gson.toJson(result);
-                        Result<List<StudentListActivity.Student>> resultInfo = gson.fromJson(resultJson, new TypeToken<Result<List<StudentListActivity.Student>>>(){}.getType());
+                        Result<List<StudentListActivity.Student>> resultInfo = gson.fromJson(resultJson, new TypeToken<Result<List<StudentListActivity.Student>>>() {
+                        }.getType());
                         if (listener != null) {
                             listener.onGet(resultInfo.getOption().getStatus() == 0, resultInfo.getData());
                         }
@@ -303,7 +333,7 @@ public class ActiveOperator {
         }
     }
 
-    public void getCancelStudioStudent (final int activeId, final UserInfoOperator.OnGetListener<List<StudentCanceledFragment.CanceledStudent>> listener) {
+    public void getCancelStudioStudent(final int activeId, final UserInfoOperator.OnGetListener<List<StudentCanceledFragment.CanceledStudent>> listener) {
         if (SystemUtil.isNetworkAvailable(MainApplication.UIContext)) {
             StringBuilder sb = new StringBuilder(URL_ACTIVE_GET_CANCEL_STUDIO_STUDENT);
             sb.append(activeId);
@@ -317,7 +347,8 @@ public class ActiveOperator {
                     if (result != null) {
                         Gson gson = new Gson();
                         String resultJson = gson.toJson(result);
-                        Result<List<StudentCanceledFragment.CanceledStudent>> resultInfo = gson.fromJson(resultJson, new TypeToken<Result<List<StudentCanceledFragment.CanceledStudent>>>(){}.getType());
+                        Result<List<StudentCanceledFragment.CanceledStudent>> resultInfo = gson.fromJson(resultJson, new TypeToken<Result<List<StudentCanceledFragment.CanceledStudent>>>() {
+                        }.getType());
                         if (listener != null) {
                             listener.onGet(resultInfo.getOption().getStatus() == 0, resultInfo.getData());
                         }

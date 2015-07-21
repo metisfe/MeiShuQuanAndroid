@@ -11,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
@@ -23,16 +24,32 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.metis.meishuquan.R;
+import com.metis.meishuquan.view.popup.SharePopupWindow;
 
 public class MediaWebActivity extends FragmentActivity {
 
+    public static final String KEY_URL = "URL",
+            KEY_TITLE = "TITLE",
+            KEY_DESC = "DESC",
+            KEY_IMAGE = "IMG";
+
     private FrameLayout videoview;// 全屏时视频加载view
     private Button videolandport;
+    private ViewGroup rootView;
+
+    private Button btnBack, btnShare;
+    private TextView tvTitle;
+
     private WebView videowebview;
     private Boolean islandport = true;// true表示此时是竖屏，false表示此时横屏。
     private View xCustomView;
     private xWebChromeClient xwebchromeclient;
-    private String url = "http://www.iqiyi.com/v_19rrnqzz0k.html";
+
+    private String url = "";
+    private String title = "";
+    private String content = "";
+    private String imgUrl = "";
+
     // private String url =
     // "http://test.meishuquan.net/H5/ContentDetial.aspx?ID=5695";
     private WebChromeClient.CustomViewCallback xCustomViewCallback;
@@ -54,12 +71,23 @@ public class MediaWebActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);// 去掉应用标题
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);// 去掉应用标题
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_media_web);
         initwidget();
+        initData();
         initListener();
+
+        //接收参数
+        if (getIntent().getExtras() != null) {
+            url = getIntent().getExtras().getString(KEY_URL, "about:blank");
+            title = getIntent().getExtras().getString(KEY_TITLE, "");
+            content = getIntent().getExtras().getString(KEY_DESC, "");
+            imgUrl = getIntent().getExtras().getString(KEY_IMAGE, "");
+//            Toast.makeText(this, url, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, title, Toast.LENGTH_SHORT).show();
+        }
         videowebview.loadUrl(url);
     }
 
@@ -70,6 +98,11 @@ public class MediaWebActivity extends FragmentActivity {
 
     @SuppressWarnings("deprecation")
     private void initwidget() {
+        rootView = (ViewGroup) findViewById(R.id.web_container);
+        btnBack = (Button) findViewById(R.id.id_btn_back);
+        btnShare = (Button) findViewById(R.id.id_btn_share);
+        tvTitle = (TextView) findViewById(R.id.id_tv_title);
+
         // TODO Auto-generated method stub
         videoview = (FrameLayout) findViewById(R.id.video_view);
         videoview.setOnTouchListener(listClick);
@@ -78,7 +111,6 @@ public class MediaWebActivity extends FragmentActivity {
         videoError = (TextView) findViewById(R.id.video_error);
         videoRefresh = (TextView) findViewById(R.id.video_refresh);
         videoError.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View arg0) {
                 // TODO Auto-generated method stub
@@ -106,11 +138,34 @@ public class MediaWebActivity extends FragmentActivity {
         ws.setSaveFormData(true);// 保存表单数据
         ws.setJavaScriptEnabled(true);
         // ws.setGeolocationEnabled(true);// 启用地理定位
-        ws.setGeolocationDatabasePath("/data/data/org.itri.html5webview/databases/");// 设置定位的数据库路径
+//        ws.setGeolocationDatabasePath("/data/data/org.itri.html5webview/databases/");// 设置定位的数据库路径
         ws.setDomStorageEnabled(true);
         xwebchromeclient = new xWebChromeClient();
         videowebview.setWebChromeClient(xwebchromeclient);
         videowebview.setWebViewClient(new xWebViewClientent());
+    }
+
+    private void initData() {
+        title = getIntent().getExtras().getString(KEY_TITLE, "");
+//        Toast.makeText(this, title, Toast.LENGTH_SHORT).show();
+        this.tvTitle.setText(title);
+
+        this.btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 退出时加载空网址防止退出时还在播放视频
+                videowebview.loadUrl("about:blank");
+                finish();
+            }
+        });
+
+        this.btnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharePopupWindow sharePopupWindow = new SharePopupWindow(MediaWebActivity.this, rootView);
+                sharePopupWindow.setShareInfo(title, content, url, imgUrl);
+            }
+        });
     }
 
     class Listener implements View.OnClickListener {

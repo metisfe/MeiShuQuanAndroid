@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.metis.base.fragment.BaseFragment;
 import com.metis.base.utils.Log;
 import com.metis.coursepart.R;
 import com.metis.coursepart.adapter.FilterAdapter;
@@ -27,7 +28,7 @@ import java.util.List;
 /**
  * Created by gaoyunfei on 15/7/12.
  */
-public class FilterPanelFragment extends Fragment {
+public class FilterPanelFragment extends BaseFragment {
 
     private static final String TAG = FilterPanelFragment.class.getSimpleName();
 
@@ -152,7 +153,6 @@ public class FilterPanelFragment extends Fragment {
         mCategoryAdapter.setOnFilterSelectedListener(new FilterAdapter.OnFilterSelectedListener() {
             @Override
             public void onSelected(int position, long id) {
-                //Log.v(TAG, "");
                 if (id != mCurrentCategory) {
                     mCurrentCategory = id;
                     onChange();
@@ -218,5 +218,26 @@ public class FilterPanelFragment extends Fragment {
 
     public static interface OnFilterChangeListener {
         public void onFilterChanged (long state, long category, long studio, long charge);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mStateAdapter != null) {
+            mStateAdapter.clearDataList();
+            mStateAdapter = null;
+        }
+        if (mCategoryAdapter != null) {
+            mCategoryAdapter.clearDataList();
+            mCategoryAdapter = null;
+        }
+        if (mStudioAdapter != null) {
+            mStudioAdapter.clearDataList();
+            mStudioAdapter = null;
+        }
+        if (mChargeRuleAdapter != null) {
+            mChargeRuleAdapter.clearDataList();
+            mChargeRuleAdapter = null;
+        }
     }
 }

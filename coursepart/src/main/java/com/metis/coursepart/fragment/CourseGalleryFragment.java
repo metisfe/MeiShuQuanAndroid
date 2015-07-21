@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.metis.base.fragment.BaseFragment;
 import com.metis.base.manager.RequestCallback;
 import com.metis.base.module.Footer;
 import com.metis.base.widget.callback.OnScrollBottomListener;
@@ -33,7 +34,7 @@ import java.util.Random;
 /**
  * Created by Beak on 2015/7/6.
  */
-public class CourseGalleryFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class CourseGalleryFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private static final String TAG = CourseGalleryFragment.class.getSimpleName();
 
@@ -126,15 +127,17 @@ public class CourseGalleryFragment extends Fragment implements SwipeRefreshLayou
                     List<GalleryItemDelegate> delegates = new ArrayList<GalleryItemDelegate>();
                     final int length = galleryItems.size();
                     for (int i = 0; i < length; i++) {
-                        delegates.add(new GalleryItemDelegate(galleryItems.get(i)));
+                        GalleryItemDelegate delegate = new GalleryItemDelegate(galleryItems.get(i));
+                        delegate.setTag(TAG);
+                        delegates.add(delegate);
                     }
                     if (index == 1) {
                         mAdapter.clearDataList();
                         mAdapter.addDataItem(mFooterDelegate);
-                        GalleryCacheManager.getInstance(getActivity()).clearGalleryItemList();
+                        GalleryCacheManager.getInstance(getActivity()).clearGalleryItemList(TAG);
                     }
                     mAdapter.addDataList(mAdapter.getItemCount() - 1, delegates);
-                    GalleryCacheManager.getInstance(getActivity()).addAll(galleryItems);
+                    GalleryCacheManager.getInstance(getActivity()).addAll(TAG, galleryItems);
 
                     mFooter.setState(galleryItems.isEmpty() ? Footer.STATE_NO_MORE : Footer.STATE_SUCCESS);
                     mIndex = index;

@@ -1,6 +1,7 @@
 package com.metis.coursepart.adapter.holder;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,10 @@ import com.metis.base.widget.adapter.holder.AbsViewHolder;
 import com.metis.coursepart.R;
 import com.metis.coursepart.adapter.delegate.UserInDetailDelegate;
 import com.metis.coursepart.module.ContentItem;
+import com.metis.coursepart.module.Course;
 import com.metis.coursepart.module.CourseAlbum;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.List;
 
@@ -45,12 +49,28 @@ public class UserInDetailHolder extends AbsViewHolder<UserInDetailDelegate>{
     @Override
     public void bindData(final Context context, UserInDetailDelegate userInDetailDelegate, RecyclerView.Adapter adapter, int position) {
         CourseAlbum album = userInDetailDelegate.getSource();
-        titleTv.setText(album.title);
-        subTitleTv.setText(context.getString(R.string.course_play_count_history, album.viewCount));
-        User user = album.author;
+        Course currentCourse = userInDetailDelegate.getCurrentCourse();
+        if (currentCourse != null) {
+            titleTv.setText(currentCourse.subCourseName);
+            subTitleTv.setText(context.getString(R.string.course_play_count_history, currentCourse.viewsCount));
+        } else {
+            titleTv.setText(album.title);
+            subTitleTv.setText(context.getString(R.string.course_play_count_history, album.viewCount));
+        }
+
+        final User user = album.author != null ? album.author : album.studio;
+
         if (user != null) {
             DisplayManager.getInstance(context).display(user.avatar, profileIv);
             nameTv.setText(user.name);
+            View.OnClickListener listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ActivityDispatcher.userActivity(context, user.userId);
+                }
+            };
+            profileIv.setOnClickListener(listener);
+            nameTv.setOnClickListener(listener);
         }
         List<ContentItem> items = userInDetailDelegate.getContentItemList();
         contentContainer.removeAllViews();
@@ -67,7 +87,29 @@ public class UserInDetailHolder extends AbsViewHolder<UserInDetailDelegate>{
                 } else {
                     View child = inflater.inflate(R.layout.layout_course_img_item, null);
                     ImageView iv = (ImageView)child.findViewById(R.id.img_item_content);
-                    DisplayManager.getInstance(context).display(item.data.ThumbnailsURL, iv);
+                    DisplayManager.getInstance(context).display(item.data.ThumbnailsURL, iv/*, new ImageLoadingListener() {
+                        @Override
+                        public void onLoadingStarted(String s, View view) {
+
+                        }
+
+                        @Override
+                        public void onLoadingFailed(String s, View view, FailReason failReason) {
+
+                        }
+
+                        @Override
+                        public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                            if (bitmap != null) {
+
+                            }
+                        }
+
+                        @Override
+                        public void onLoadingCancelled(String s, View view) {
+
+                        }
+                    }*/);
                     contentContainer.addView(child);
                     child.setOnClickListener(new View.OnClickListener() {
                         @Override

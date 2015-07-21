@@ -324,10 +324,10 @@ public class SharePopupWindow extends PopupWindow {
         mContent = content;
         mTargetUrl = targetUrl;
         mImageUrl = imageUrl;
-        /*Log.v(TAG, "setShareInfo title=" + mOutsideTitle);
+        Log.v(TAG, "setShareInfo title=" + mOutsideTitle);
         Log.v(TAG, "setShareInfo content=" +  mContent);
         Log.v(TAG, "setShareInfo mTargetUrl=" + mTargetUrl);
-        Log.v(TAG, "setShareInfo mImageUrl=" + mImageUrl);*/
+        Log.v(TAG, "setShareInfo mImageUrl=" + mImageUrl);
     }
 
     //新闻模块调用

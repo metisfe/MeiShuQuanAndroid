@@ -9,6 +9,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -28,6 +29,13 @@ public class VideoFragment extends Fragment implements
         BVideoView.OnPlayingBufferCacheListener{
 
     private static final String TAG = VideoFragment.class.getSimpleName();
+
+    private static final int FULL_SCREEN_UI_OPTIONS = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ? View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            | View.SYSTEM_UI_FLAG_IMMERSIVE
+            | View.SYSTEM_UI_FLAG_FULLSCREEN : View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            | View.SYSTEM_UI_FLAG_FULLSCREEN;
+
+    private View mDecorView = null;
 
     public static final long BUFFER_SIZE_DEFAULT = 1024 * 1024 * 2;
 
@@ -98,6 +106,22 @@ public class VideoFragment extends Fragment implements
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mAudioManager = (AudioManager)activity.getSystemService(Context.AUDIO_SERVICE);
+        mDecorView = activity.getWindow().getDecorView();
+        mDecorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+            @Override
+            public void onSystemUiVisibilityChange(int visibility) {
+                if (visibility == 0) {
+                    mDecorView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (isFullScreen) {
+                                hideSystemUi();
+                            }
+                        }
+                    }, 5000);
+                }
+            }
+        });
     }
 
     @Override
@@ -167,6 +191,10 @@ public class VideoFragment extends Fragment implements
         mSource = source;
     }
 
+    public String getSource () {
+        return mSource;
+    }
+
     /**
      *
      * @param bufferSize cache buffer size in byte, default is {@link #BUFFER_SIZE_DEFAULT}
@@ -218,6 +246,7 @@ public class VideoFragment extends Fragment implements
     private void doStart () {
         mBvv.setVideoPath(Uri.parse(mSource).toString());
         mBvv.setCacheBufferSize(mBufferSize);
+        mBvv.showCacheInfo(true);
         if (mPausePosition > 0) {
             mBvv.seekTo(mPausePosition);
         }
@@ -239,7 +268,6 @@ public class VideoFragment extends Fragment implements
     }
 
     public int pausePlay () {
-
         if (!isPlaying()) {
             return -1;
         }
@@ -286,6 +314,19 @@ public class VideoFragment extends Fragment implements
     public void setFullScreen (boolean fullScreen) {
         isFullScreen = fullScreen;
         getActivity().setRequestedOrientation(fullScreen ? MODE_FULL_SCREEN : MODE_NORMAL);
+        if (fullScreen) {
+            hideSystemUi();
+        } else {
+            showSystemUi();
+        }
+    }
+
+    private void showSystemUi () {
+        mDecorView.setSystemUiVisibility (0);
+    }
+
+    private void hideSystemUi () {
+        mDecorView.setSystemUiVisibility (FULL_SCREEN_UI_OPTIONS);
     }
 
     public boolean isFullScreen () {
@@ -340,6 +381,9 @@ public class VideoFragment extends Fragment implements
 
     @Override
     public boolean onError(int i, int i1) {
+        if (mPlayCallback != null) {
+            return mPlayCallback.onError(mBvv, i, i1);
+        }
         return false;
     }
 

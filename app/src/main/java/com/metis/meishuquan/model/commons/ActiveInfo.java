@@ -13,13 +13,13 @@ public class ActiveInfo implements Serializable {
     private int pId;
 
     @SerializedName("title")
-    private  String title;
+    private String title;
 
     @SerializedName("desc")
     private String desc;
 
     @SerializedName("image")
-    private String image;
+    private String image;//图片跳转的链接
 
     @SerializedName("activityDatetime")
     private String activityDatetime;
@@ -42,7 +42,17 @@ public class ActiveInfo implements Serializable {
     @SerializedName("content")
     private String content;
 
-    private String topImage;
+    @SerializedName("topImage")
+    private String topImage;//图片本身的地址
+
+//    @SerializedName("height")
+//    private int height=0;
+//
+//    @SerializedName("width")
+//    private int width=0;
+
+    @SerializedName("agreement")
+    private String agreement;
 
     public int getpId() {
         return pId;
@@ -138,5 +148,13 @@ public class ActiveInfo implements Serializable {
 
     public void setTopImage(String topImage) {
         this.topImage = topImage;
+    }
+
+    public String getAgreement() {
+        return agreement;
+    }
+
+    public void setAgreement(String agreement) {
+        this.agreement = agreement;
     }
 }
