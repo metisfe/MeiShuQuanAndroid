@@ -104,7 +104,8 @@ public class DisplayManager extends AbsManager {
 
     public DisplayImageOptions makeRoundDisplayImageOptions (int size) {
         DisplayImageOptions mOptions = new DisplayImageOptions.Builder()
-                .cloneFrom(mDefaultOptions)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
                 .displayer(new SquareRoundDisplayer(size))
                 .build();
         return mOptions;

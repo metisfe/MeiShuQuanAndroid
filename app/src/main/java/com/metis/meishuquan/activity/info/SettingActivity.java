@@ -3,11 +3,14 @@ package com.metis.meishuquan.activity.info;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.metis.base.utils.FileUtils;
+import com.metis.base.utils.Log;
 import com.metis.meishuquan.MainApplication;
 import com.metis.meishuquan.R;
 import com.metis.meishuquan.activity.act.ActDetailActivity;
@@ -23,6 +26,8 @@ import com.metis.meishuquan.view.shared.MyInfoBtn;
 import com.metis.meishuquan.view.shared.TabBar;
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 
+import java.io.File;
+
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = SettingActivity.class.getSimpleName();
@@ -30,6 +35,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private MyInfoBtn mModifyPwdView, mClearCacheView, mVersionBtn = null, mAboutUsView;
 
     private Button mLogoutBtn = null;
+
+    private long mSizeBefore = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,26 +146,25 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 this.finish();
                 break;
             case R.id.setting_clear_cache:
-                final int sizeBefore = getCacheSize();
+                mSizeBefore = getCacheSize();
                 clear();
-                mClearCacheView.setSecondaryText(formatSize(b2m(getCacheSize())));
-                Toast.makeText(this, getString(R.string.setting_cleared, formatSize(b2m(sizeBefore - getCacheSize()))), Toast.LENGTH_SHORT).show();
                 break;
         }
     }
 
-    private int getCacheSize() {
+    private long getCacheSize() {
         DiskCache cache = ImageLoaderUtils.getImageLoader(this).getDiskCache();
-        return (int) cache.getDirectory().getTotalSpace();
+        return FileUtils.getDirectorySpace(cache.getDirectory());
     }
 
-    private float b2m(int size) {
+    private float b2m(long size) {
         return (float) size / (1024 * 1024);
     }
 
     private int clear() {
         DiskCache cache = ImageLoaderUtils.getImageLoader(this).getDiscCache();
-        cache.clear();
+        new ClearTask().execute(cache.getDirectory());
+
         return (int) cache.getDirectory().getTotalSpace();
     }
 
@@ -167,6 +173,25 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         int left = (int) floatSize / 100;
         int right = (int) floatSize % 100;
         return left + "." + right + "M";
+    }
+
+    private class ClearTask extends AsyncTask<File, Integer, Integer> {
+
+
+        @Override
+        protected Integer doInBackground(File... params) {
+            File file = params[0];
+            int count = FileUtils.clearFile(file);
+            Log.v(TAG, "Cache File path=" + file.getAbsolutePath() + " clear count=" + count);
+            return count;
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
+            mClearCacheView.setSecondaryText(formatSize(b2m(getCacheSize())));
+            Toast.makeText(SettingActivity.this, getString(R.string.setting_cleared, formatSize(b2m(mSizeBefore - getCacheSize()))), Toast.LENGTH_SHORT).show();
+        }
     }
 
 }
